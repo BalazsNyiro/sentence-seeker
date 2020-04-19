@@ -1,0 +1,13 @@
+
+seeking: positioning, in this context
+https://www.techopedia.com/definition/3558/seek-time
+
+=======================================
+Definition - What does Seek Time mean?
+
+Seek time is the time taken for a hard disk controller to locate a specific piece of stored data. Other delays include transfer time (data rate) and rotational delay (latency).
+
+When anything is read or written to a disc drive, the read/write head of the disc needs to move to the right position. The actual physical positioning of the read/write head of the disc is called seeking. The amount of time that it takes the read/write head of the disc to to move from on part fo the disk to another is called the seek time. The seek time can differ for a given disc due to the varying distance from the start point to where the read/write head has been instructed to go. Because of these variables, seek time is generally measured as an average seek time.
+
+Seek time is also measured in two other ways - track to track and full stroke. Track to track is the amount of time it takes the read/write head to search or seek between adjacent tracks. It is usually measured in milliseconds, which is typically 2 to 4 ms and as low as 1 ms. Full stroke is the amount of time required to seek the whole disc. Full stroke is also measured in milliseconds. A seek time below 10ms is generally considered acceptable for a hard disk.
+

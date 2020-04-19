@@ -6,7 +6,7 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
 ## Roadmap
 
-In the far, far future one controller process are going to send requests for nodes in same host and in different machines so the whole seeking happens 
+In the far, far future a controller process are going to send requests for nodes in same host and in different hosts too, so the whole seeking happens simultaneously
 
 ### "Naive" v0.1 version: (18 april - april 30, 2020) 
   - text-loader script: from a source load text into working dir.
@@ -95,7 +95,21 @@ Thinking period, how can I refactor the program
     - use more than one node to search parallel
 
 ## Coding guideline - Naming conventions
-Variable names: UpperCamelCase, exception: self.
-Private variables: starts with underscore
+ - Variable names: UpperCamelCase, exception: self.
+   - naming order: ObjectAttribute
+     example: FileOld, FileNew
+     
+ - Private variables: starts with underscore
+ - function naming: 
+     - object_operation(), example: 
+       - file_read(), file_write()
+       - connection_open(), connection_close()
+       
+ - Usage of classes: 
+   I try to minimize the direct usage of classes and OOP techniques.
+   It's a feeling only but at the end, at parallel text processing
+   It's better to use simple data structures and functions.
+     
+ 
 
 

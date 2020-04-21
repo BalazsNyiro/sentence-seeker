@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, platform, user, sys, util
+import os, platform, user, sys, util, time
 
 def PrgConfigCreate(DirWorkFromUserHome=".sentence-seeker", DirPrgRoot="", Os=""):
     print("__file__", __file__, sys.argv)
@@ -12,6 +12,10 @@ def PrgConfigCreate(DirWorkFromUserHome=".sentence-seeker", DirPrgRoot="", Os=""
         Os = platform.system()
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
+    DirLog = os.path.join(DirWorkAbsPath, "log")
+
+    Time = int(time.time())
+    FileLog = f"log_{Time}"
 
     Prg = { "Os": Os,
             "DirPrgRoot":  DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -19,8 +23,10 @@ def PrgConfigCreate(DirWorkFromUserHome=".sentence-seeker", DirPrgRoot="", Os=""
             "DirTmp": os.path.join(DirWorkAbsPath, "tmp"),
             "DirsDeleteAfterRun": list(),
             "FilesDeleteAfterRun": list(),
-            "DirLog": os.path.join(DirWorkAbsPath, "log"),
-            "TestResults" : []
+            "DirLog": DirLog,
+            "FileLog": os.path.join(DirLog, FileLog),
+            "TestResults": [],
+            "TestExecution": False
             }
 
     return Prg

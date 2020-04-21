@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 import os
 
-# here don't
 def dir_create_if_necessary(Prg, Path, LogCreate=True):
-    if not os.path.isdir(Path):
+    if os.path.isdir(Path):
+        Msg = f"not created: dir exists, {Path}"
+
+    elif os.path.isfile(Path):
+        Msg = f"not created: it was a filename, {Path}"
+    else:
         os.mkdir(Path)
-        if LogCreate:
-            log(Prg, f"Dir {Path} Created, it was necessary")
+        Msg = f"dir created, it was necessary: {Path}"
+
+    if LogCreate:
+        log(Prg, Msg)
+
+    return Msg
 
 def log(Prg, Msg):
     print("Log:", Msg)
+
 
 

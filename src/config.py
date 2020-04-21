@@ -13,21 +13,23 @@ def PrgConfigCreate(DirWorkFromUserHome=".sentence-seeker", DirPrgRoot="", Os=""
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
 
-    Prg = {
-        "Os": Os,
-        "DirPrgRoot":  DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
-        "DirWork": DirWorkAbsPath,
-        "DirTmp": os.path.join(DirWorkAbsPath, "tmp"),
-        "DirsDeleteAfterRun": list(),
-        "FilesDeleteAfterRun": list(),
-        "DirLog": os.path.join(DirWorkAbsPath, "log")
-    }
+    Prg = { "Os": Os,
+            "DirPrgRoot":  DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
+            "DirWork": DirWorkAbsPath,
+            "DirTmp": os.path.join(DirWorkAbsPath, "tmp"),
+            "DirsDeleteAfterRun": list(),
+            "FilesDeleteAfterRun": list(),
+            "DirLog": os.path.join(DirWorkAbsPath, "log"),
+            "TestResults" : []
+            }
 
-    for Dir in [Prg["DirWork"], Prg["DirLog"] ]:
+    return Prg
+
+def DirsConfigCreate(Prg):
+    for Dir in [Prg["DirWork"], Prg["DirLog"]]:
         # if these dirs don't exist, I can't create log in the proper file
         util.dir_create_if_necessary(Prg, Dir, LogCreate=False)
 
     # here the log dir exists, so I can save any error message :-)
     util.dir_create_if_necessary(Prg, Prg["DirTmp"])
 
-    return Prg

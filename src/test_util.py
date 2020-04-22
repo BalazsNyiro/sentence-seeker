@@ -1,28 +1,55 @@
 # -*- coding: utf-8 -*-
 import unittest, util_test, util, os
 
-class PathTests(util_test.SentenceSeekerTest):
+class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
-    def test_2(self):
-        if self._test_exec("test_2"):
-            util.log(self.Prg, "test 2")
+    def test_file_write_append_del(self):
+        if self._test_exec("test_file_write_append_del"):
+            Prg = self.Prg
+
+            Ret = util.file_write(Prg, Fname="")
+            self.assertFalse(Ret)
+
+            Content = "apple "
+            Fname = os.path.join(Prg["DirWork"], "test_file_write.txt")
+            RetWrite = util.file_write(Prg, Fname=Fname, Content=Content)
+            RetAppend = util.file_append(Prg, Fname=Fname, Content="tree")
+            self.assertTrue(RetWrite)
+            self.assertTrue(RetAppend)
+            RetRead, ContentRead = util.file_read_all(Prg, Fname)
+
+            self.assertTrue(RetRead)
+            self.assertEqual(ContentRead, "apple tree")
+
+            RetWriteGz = util.file_write(Prg, Fname=Fname, Content="gzipped", Gzipped=True)
+            self.assertTrue(RetWriteGz)
+            RetReadGz, ContentReadGz = util.file_read_all(Prg, Fname, Gzipped=True)
+            self.assertTrue(RetReadGz)
+            self.assertEqual(ContentReadGz, b"gzipped")
+
+            RetDel1 = util.file_del(Fname)
+            RetDel2 = util.file_del(Fname)
+            self.assertTrue(RetDel1)
+            self.assertFalse(RetDel2)
+
 
     def test_dir_create_if_necessary(self):
         if self._test_exec("test_dir_create_if_necessary"):
-            Ret = util.dir_create_if_necessary(self.Prg, "src")
+            Prg = self.Prg
+            Ret = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], "src"))
             self.assertEqual(True, "not created: dir exists" in Ret)
 
-            Ret = util.dir_create_if_necessary(self.Prg, ".gitignore")
+            Ret = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], ".gitignore"))
             self.assertEqual(True, "not created: it was a filename" in Ret)
 
-            DirTryToMake = os.path.join(self.Prg["DirWork"], "TryToMakeThis")
-            util.dir_delete_if_exist(self.Prg, DirTryToMake, Print=True)
-            Ret = util.dir_create_if_necessary(self.Prg, DirTryToMake)
+            DirTryToMake = os.path.join(Prg["DirWork"], "TryToMakeThis")
+            util.dir_delete_if_exist(Prg, DirTryToMake, Print=True)
+            Ret = util.dir_create_if_necessary(Prg, DirTryToMake)
             self.assertEqual(True, "" in Ret)
-            util.dir_delete_if_exist(self.Prg, DirTryToMake, Print=True)
+            util.dir_delete_if_exist(Prg, DirTryToMake, Print=True)
 
 def run_all_tests(Prg):
-    PathTests.Prg = Prg
+    UtilTests.Prg = Prg
     unittest.main(module="test_util", verbosity=2, exit=False)

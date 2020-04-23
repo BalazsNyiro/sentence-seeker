@@ -30,6 +30,22 @@ def dir_create_if_necessary(Prg, Path, LogCreate=True):
     print("\ndir create if necessary Ret:", Msg)
     return Msg
 
+# Tested
+def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
+    Created = False
+
+    if os.path.isfile(Path):
+        Msg = f"file create if necessary - not created: it was a filename, {Path}"
+    else:
+        file_write(Prg, Fname=Path, Content=ContentDefault, LogCreate=LogCreate)
+        Created = True
+        Msg = f"file create if necessary - created: {Path}"
+
+    if LogCreate:
+        log(Prg, Msg)
+
+    return Created
+
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
     print("\nLog received:", Msg)
@@ -37,7 +53,7 @@ def log(Prg, Msg, Caller="-"):
     Msg = str(Msg)
     if Prg["TestExecution"]:
         Msg = "Testing... " + Msg
-    file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", Log=False)
+    file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
     print("Log:", Msg)
 
 # Tested
@@ -68,10 +84,10 @@ def file_append(Prg, Fname="", Content="", Mode="a"):  # you can append in binar
     return file_write(Prg, Fname=Fname, Content=Content, Mode=Mode)
 
 # Tested
-def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel=9, Log=True):
+def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel=9, LogCreate=True):
     if not Fname:
         Msg = "file write error: fname is unknown util:file_write"
-        if Log:
+        if LogCreate:
             log(Prg, Msg)
         return False
 
@@ -88,7 +104,7 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
     try:
         with open(Fname, Mode) as f:
             f.write(Content)
-        if Log:
+        if LogCreate:
             log(Prg, f"File written: {Fname}")
         return True
     except:
@@ -96,6 +112,7 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
 
     return False
 
+# Tested
 def file_is_gzipped(Prg, Path):
     if os.path.isfile(Path):
         try:

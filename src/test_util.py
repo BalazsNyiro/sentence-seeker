@@ -5,6 +5,19 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_file_create_if_necessary(self):
+        if self._test_exec("test_file_write_append_del"):
+            Prg = self.Prg
+            Fname = os.path.join(Prg["DirWork"], "test_file_create_if_necessary.txt")
+            util.file_del(Fname)
+            Created = util.file_create_if_necessary(Prg, Fname, ContentDefault="cloud")
+            self.assertTrue(Created)
+
+            RetRead, ContentRead = util.file_read_all(Prg, Fname)
+            self.assertEqual(ContentRead, "cloud")
+
+            util.file_del(Fname)
+
     def test_file_write_append_del(self):
         if self._test_exec("test_file_write_append_del"):
             Prg = self.Prg

@@ -9,7 +9,7 @@ import config, util_test
 ##########################################################
 
 Prg = config.PrgConfigCreate()
-config.DirsConfigCreate(Prg)
+config.DirsFilesConfigCreate(Prg)
 
 import test_util
 test_util.run_all_tests(Prg)

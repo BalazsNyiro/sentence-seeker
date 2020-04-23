@@ -23,17 +23,28 @@ class UtilTests(util_test.SentenceSeekerTest):
             self.assertTrue(RetRead)
             self.assertEqual(ContentRead, "apple tree")
 
+            FileState, FileGzipped = util.file_is_gzipped(Prg, Fname)
+            self.assertEqual("file_exists", FileState)
+            self.assertEqual("not_gzipped", FileGzipped)
+
             RetWriteGz = util.file_write(Prg, Fname=Fname, Content="gzipped", Gzipped=True)
             self.assertTrue(RetWriteGz)
             RetReadGz, ContentReadGz = util.file_read_all(Prg, Fname, Gzipped=True)
             self.assertTrue(RetReadGz)
             self.assertEqual(ContentReadGz, b"gzipped")
 
+            FileState, FileGzipped = util.file_is_gzipped(Prg, Fname)
+            self.assertEqual("file_exists", FileState)
+            self.assertEqual("gzipped", FileGzipped)
+
             RetDel1 = util.file_del(Fname)
             RetDel2 = util.file_del(Fname)
             self.assertTrue(RetDel1)
             self.assertFalse(RetDel2)
 
+            FileState, FileGzipped = util.file_is_gzipped(Prg, Fname)
+            self.assertEqual("file_not_found", FileState)
+            self.assertEqual("", FileGzipped)
 
     def test_dir_create_if_necessary(self):
         if self._test_exec("test_dir_create_if_necessary"):

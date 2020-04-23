@@ -96,5 +96,16 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
 
     return False
 
-
-
+def file_is_gzipped(Prg, Path):
+    if os.path.isfile(Path):
+        try:
+            with gzip.open(Path, "rb") as f:
+                f.read() # sorry about reading, I don't know a better gzip detect method now
+                log(Prg, f"is_gzipped - file_exists, gzipped: {Path}")
+                return "file_exists", "gzipped"
+        except:
+            log(Prg, f"is_gzipped - file_exists, not gzipped: {Path}")
+            return "file_exists", "not_gzipped"
+    else:
+        log(Prg, f"is_gzipped - file not found: {Path}")
+        return "file_not_found", ""

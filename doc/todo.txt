@@ -1,5 +1,0 @@
-
-# next steps:
-  - create documentation
-  - create unit tests
-  - basic file functions /read/write

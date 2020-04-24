@@ -1,0 +1,25 @@
+=== Simple user guide: ===
+
+ - copy your documents into working_dir/documents/
+   default:  user_home/.sentence-seeker/documents
+
+             the program create it at first start,
+             if it doesn't exist
+
+ The program will detect the files that it can analyse
+
+
+=== User guide ===
+
+The program uses a Working directory, based on config.json
+
+  - DirWorking/documents:
+     - original document
+     - indexed text info to boost up analysing
+
+  - when the program find a document first time, it extract
+    text info to boost up the seeking in the text
+
+  - if the indexed text is available, the program uses it
+
+

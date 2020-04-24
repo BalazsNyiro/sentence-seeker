@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, gzip
+import os, gzip, json
 
 # Tested
 def dir_delete_if_exist(Prg, Path, Print=False):

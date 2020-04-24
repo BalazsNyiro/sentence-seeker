@@ -11,6 +11,8 @@ import config, util_test
 Prg = config.PrgConfigCreate()
 config.DirsFilesConfigCreate(Prg)
 
-import test_util
+import test_util, test_util_json
+
 test_util.run_all_tests(Prg)
+test_util_json.run_all_tests(Prg)
 util_test.result_all(Prg)

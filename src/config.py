@@ -1,25 +1,31 @@
 # -*- coding: utf-8 -*-
-import os, platform, user, sys, util, time
+import os, platform, user, util, time
+from util_json import config
 
-def PrgConfigCreate(DirWorkFromUserHome=".sentence-seeker", DirPrgRoot="", Os=""):
-    print("__file__", __file__, sys.argv)
+def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
+
+    # print("__file__", __file__, sys.argv)
+    if not Os: # "Linux", "Windows" "Darwin"
+        Os = platform.system()
+
     if not DirPrgRoot:
         PathConfigModule = os.path.realpath(__file__)
         DirSrc = os.path.dirname(PathConfigModule)
         DirPrgRoot = os.path.realpath(os.path.join(DirSrc, ".."))
 
-    if not Os: # "Linux", "Windows" "Darwin"
-        Os = platform.system()
+    if not DirWorkFromUserHome:
+        DirWorkFromUserHome = config(DirPrgRoot, "DirWorkFromUserHome", ".sentence-seeker")
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
     DirLog = os.path.join(DirWorkAbsPath, "log")
+    print(f"== sentente seeker work path: {DirWorkAbsPath}")
 
     Time = int(time.time())
     FileLog = f"log_{Time}"
     DirDocuments = os.path.join(DirWorkAbsPath, "documents")
 
     Prg = { "Os": Os,
-            "DirPrgRoot":  DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
+            "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,
             "DirsDeleteAfterRun": list(),

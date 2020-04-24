@@ -126,3 +126,15 @@ def file_is_gzipped(Prg, Path):
     else:
         log(Prg, f"is_gzipped - file not found: {Path}")
         return "file_not_found", ""
+
+# Tested
+def files_collect_from_dir(DirRoot, Recursive=True):
+    Files = []
+    for DirPath, DirNames, FileNames in os.walk(DirRoot):
+        Files += [os.path.join(DirPath, File) for File in FileNames]
+        
+        # https://stackoverflow.com/questions/4117588/non-recursive-os-walk
+        if not Recursive:
+            break
+
+    return Files

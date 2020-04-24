@@ -21,6 +21,7 @@ def config(DirPrgRoot, Key, Default):
         return Json[Key]
     return Default
 
+# Used in tests
 def config_obj(DirPrgRoot):
     FileConfig = os.path.join(DirPrgRoot, "config.json")
     return json_obj_from_file(FileConfig)

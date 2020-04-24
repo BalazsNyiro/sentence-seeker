@@ -1,6 +1,8 @@
 === Simple user guide: ===
 
  - copy your documents into working_dir/documents/
+   you can create subdirs as you want
+
    default:  user_home/.sentence-seeker/documents
 
              the program create it at first start,

@@ -5,6 +5,12 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_files_collect_from_dir(self):
+        if self._test_exec("test_files_collect_from_dir"):
+            Prg = self.Prg
+            Files = util.files_collect_from_dir(Prg["DirPrgRoot"])
+            self.assertIn(os.path.join(Prg["DirPrgRoot"], "src", "util.py"), Files)
+
     def test_file_create_if_necessary(self):
         if self._test_exec("test_file_write_append_del"):
             Prg = self.Prg

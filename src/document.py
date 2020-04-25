@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
 import util, os, pathlib
 
-def collect_docs_from_working_dir(Prg):
+def docs_load_all_to_be_ready_to_seeking(Prg):
+    DocumentsAvailable = docs_collect_filenames_from_working_dir(Prg)
+
+    for Doc in DocumentsAvailable:
+        util.print_dev(Prg, "available>>", Doc)
+        # indexed file created?
+        #
+
+
+# Tested
+def docs_collect_filenames_from_working_dir(Prg):
     DirDocuments = Prg["DirDocuments"]
     Files = util.files_collect_from_dir(DirDocuments)
 

@@ -68,16 +68,20 @@ class UtilTests(util_test.SentenceSeekerTest):
     def test_dir_create_if_necessary(self):
         if self._test_exec("test_dir_create_if_necessary"):
             Prg = self.Prg
-            Ret = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], "src"))
-            self.assertEqual(True, "not created: dir exists" in Ret)
 
-            Ret = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], ".gitignore"))
-            self.assertEqual(True, "not created: it was a filename" in Ret)
+            # dir exists, can't create
+            Created = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], "src"))
+            self.assertFalse(Created)
 
+            # file exists with the same name, can't create
+            Created = util.dir_create_if_necessary(Prg, os.path.join(Prg["DirPrgRoot"], ".gitignore"))
+            self.assertFalse(Created)
+
+            # test dir created
             DirTryToMake = os.path.join(Prg["DirWork"], "TryToMakeThis")
             util.dir_delete_if_exist(Prg, DirTryToMake, Print=True)
-            Ret = util.dir_create_if_necessary(Prg, DirTryToMake)
-            self.assertEqual(True, "" in Ret)
+            Created = util.dir_create_if_necessary(Prg, DirTryToMake)
+            self.assertTrue(Created)
             util.dir_delete_if_exist(Prg, DirTryToMake, Print=True)
 
 def run_all_tests(Prg):

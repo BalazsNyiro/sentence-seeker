@@ -15,6 +15,9 @@ parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect ex
 parser.add_argument("--test", help="execute only tests", action='store_true')
 args = parser.parse_args()
 
+SysArgvOrig = sys.argv
+sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
+
 if args.test:
     import test_util, test_util_json, test_document
 
@@ -22,6 +25,6 @@ if args.test:
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
     util_test.result_all(Prg)
-    sys.exit(0)
+    # sys.exit(0)
 
-DocumentsAvailable = document.collect_docs_from_working_dir(Prg)
+document.docs_load_all_to_be_ready_to_seeking(Prg)

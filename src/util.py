@@ -14,6 +14,8 @@ def dir_delete_if_exist(Prg, Path, Print=False):
 
 # Tested
 def dir_create_if_necessary(Prg, Path, LogCreate=True):
+    Created = False
+
     if os.path.isdir(Path):
         Msg = f"not created: dir exists, {Path}"
 
@@ -23,17 +25,13 @@ def dir_create_if_necessary(Prg, Path, LogCreate=True):
     else:
         os.mkdir(Path)
         Msg = f"dir created, it was necessary: {Path}"
+        Created = True
 
     if LogCreate:
         log(Prg, Msg)
 
     print_dev(Prg, "\ndir create if necessary Ret:", Msg)
-    return Msg
-
-# tested manually
-def print_dev(Prg, *args):
-    if Prg["PrintForDeveloper"]:
-        print(*args)
+    return Created
 
 # Tested
 def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
@@ -50,6 +48,11 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
         log(Prg, Msg)
 
     return Created
+
+# tested manually
+def print_dev(Prg, *args):
+    if Prg["PrintForDeveloper"]:
+        print(*args)
 
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):

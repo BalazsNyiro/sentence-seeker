@@ -35,7 +35,9 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
             "TestExecution": False,
-            "PrintForDeveloper": PrintForDeveloper
+            "PrintForDeveloper": PrintForDeveloper,
+            "DocumentObjectsLoaded": dict(),
+            "Statistics": []
             }
 
     return Prg

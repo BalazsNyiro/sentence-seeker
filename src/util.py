@@ -71,9 +71,10 @@ def file_read_all(Prg, Fname="", Mode="r", Gzipped=False): # if you want read bi
                 try:
                     log(Prg, f"file_read_all - gzip read start: {Fname}")
                     ContentBytes = f.read()
-                    log(Prg, f"file_read_all - gzip utf-8 conv: {Fname}")
+                    log(Prg, f"file_read_all - gzip utf-8 conv BEGIN {Fname}")
                     # Content = str(ContentBytes, 'utf-8', 'ignore')  # errors can be ignored
                     Content = str(ContentBytes, 'utf-8')  # return with "" in this case
+                    log(Prg, f"file_read_all - gzip utf-8 conv END {Fname}")
                     log(Prg, f"file_read_all - gzip utf-8 ok    {Fname}")
                     return True, Content
                 except:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, gzip, json
+import os, gzip, shutil
 
 # Tested
 def dir_delete_if_exist(Prg, Path, Print=False):
@@ -111,6 +111,11 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
         log(Prg, f"File write error: {Fname}")
 
     return False
+
+# not tested, simple wrapper func
+def file_copy(FilePathFrom, FilePathTo):
+    shutil.copyfile(FilePathFrom, FilePathTo)
+
 
 # Tested
 def file_is_gzipped(Prg, Path):

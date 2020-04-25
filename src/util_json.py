@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json, os
+import json, os, user, util
 
 ############ JSON #############################
 
@@ -15,14 +15,18 @@ def json_obj_to_file(JsonFileName, Data):
 
 # Used in tests
 # read wanted key from config file
-def config(DirPrgRoot, Key, Default):
-    Json = config_obj(DirPrgRoot)
+def config_get(Key, DefaultVal, DirPrgRoot, DirConfigFileParent=user.dir_home(), FileConfigBaseName=".sentence-seeker.config"):
+    FileConfigAbsPath = os.path.join(DirConfigFileParent, FileConfigBaseName)
+
+    if not os.path.isfile(FileConfigAbsPath):
+        print(f"create new config file from default: {FileConfigAbsPath}")
+        util.file_copy(os.path.join(DirPrgRoot, FileConfigBaseName), FileConfigAbsPath)
+    else:
+        print(f"config file exists: {FileConfigAbsPath}")
+
+    Json = json_obj_from_file(FileConfigAbsPath)
     if Key in Json:
         return Json[Key]
-    return Default
+    return DefaultVal
 
-# Used in tests
-def config_obj(DirPrgRoot):
-    FileConfig = os.path.join(DirPrgRoot, "config.json")
-    return json_obj_from_file(FileConfig)
 

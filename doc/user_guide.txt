@@ -13,7 +13,7 @@
 
 === User guide ===
 
-The program uses a Working directory, based on config.json
+The program uses a Working directory, based on user_home/.sentence-seeker.config
 
   - DirWorking/documents:
      - original document

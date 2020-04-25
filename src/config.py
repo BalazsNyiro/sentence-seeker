@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, platform, user, util, time
-from util_json import config
+import os, platform, user, util, time, util_json
 
 def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
 
@@ -14,7 +13,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
         DirPrgRoot = os.path.realpath(os.path.join(DirSrc, ".."))
 
     if not DirWorkFromUserHome:
-        DirWorkFromUserHome = config(DirPrgRoot, "DirWorkFromUserHome", ".sentence-seeker")
+        DirWorkFromUserHome = util_json.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
     DirLog = os.path.join(DirWorkAbsPath, "log")

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-import json, os, user, util
+import os, user, util, json
 
 ############ JSON #############################
 
 # Tested
-def json_obj_from_file(JsonFileName):
+def obj_from_file(JsonFileName):
     with open(JsonFileName) as f:
         return json.load(f)
 
 # Tested
-def json_obj_to_file(JsonFileName, Data):
+def obj_to_file(JsonFileName, Data):
     with open(JsonFileName, 'w') as OutFile:
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
@@ -24,7 +24,7 @@ def config_get(Key, DefaultVal, DirPrgRoot, DirConfigFileParent=user.dir_home(),
     else:
         print(f"config file exists: {FileConfigAbsPath}")
 
-    Json = json_obj_from_file(FileConfigAbsPath)
+    Json = obj_from_file(FileConfigAbsPath)
     if Key in Json:
         return Json[Key]
     return DefaultVal

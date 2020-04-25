@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest, util_test, os, util_json, util
+import unittest, util_test, os, util_json_obj, util
 
 class UtilJsonTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
@@ -12,9 +12,9 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             util.file_del(Fname)
 
             ObjExample = {"keyword": "value", "number": 1}
-            util_json.json_obj_to_file(Fname, ObjExample)
+            util_json_obj.obj_to_file(Fname, ObjExample)
 
-            ObjFromFile = util_json.json_obj_from_file(Fname)
+            ObjFromFile = util_json_obj.obj_from_file(Fname)
             self.assertEqual(ObjFromFile, ObjExample)
 
             util.file_del(Fname)

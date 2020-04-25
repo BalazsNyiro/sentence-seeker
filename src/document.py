@@ -13,7 +13,7 @@ def collect_docs_from_working_dir(Prg):
         Extension = pathlib.Path(File).suffix
 
         if Extension == ".txt":
-            print("in documents dir: ", BaseName)
+            print("in documents dir - processed: ", BaseName)
 
             # this document object describe infos about the document
             # for example the version of index algorithm
@@ -24,8 +24,7 @@ def collect_docs_from_working_dir(Prg):
             print("in documents dir - this file type will be processed in the future:", BaseName)
 
         else:
-            pass
-            print("in documents dir - not processed file type:", BaseName)
+            util.print_dev(Prg, "in documents dir - not processed file type:", BaseName)
 
     return Docs
 

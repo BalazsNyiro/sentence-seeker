@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import os, platform, user, util, time, util_json
+import os, platform, user, util, time, util_json_obj
 
-def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
+def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
     # print("__file__", __file__, sys.argv)
     if not Os: # "Linux", "Windows" "Darwin"
@@ -13,7 +13,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
         DirPrgRoot = os.path.realpath(os.path.join(DirSrc, ".."))
 
     if not DirWorkFromUserHome:
-        DirWorkFromUserHome = util_json.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
+        DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
     DirLog = os.path.join(DirWorkAbsPath, "log")
@@ -33,7 +33,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os=""):
             "FileDocumentsDb": os.path.join(DirDocuments, "docs.json"),
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
-            "TestExecution": False
+            "TestExecution": False,
+            "PrintForDeveloper": PrintForDeveloper
             }
 
     return Prg

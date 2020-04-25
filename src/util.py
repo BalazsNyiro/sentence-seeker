@@ -27,8 +27,13 @@ def dir_create_if_necessary(Prg, Path, LogCreate=True):
     if LogCreate:
         log(Prg, Msg)
 
-    print("\ndir create if necessary Ret:", Msg)
+    print_dev(Prg, "\ndir create if necessary Ret:", Msg)
     return Msg
+
+# tested manually
+def print_dev(Prg, *args):
+    if Prg["PrintForDeveloper"]:
+        print(*args)
 
 # Tested
 def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
@@ -48,13 +53,12 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
-    print("\nLog received:", Msg)
+    print_dev(Prg, "\nLog received:", Msg)
     # from func log calls don't use Logging again
     Msg = str(Msg)
     if Prg["TestExecution"]:
         Msg = "Testing... " + Msg
     file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
-    print("Log:", Msg)
 
 # Tested
 def file_read_all(Prg, Fname="", Mode="r", Gzipped=False): # if you want read binary, write "rb"

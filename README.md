@@ -90,6 +90,7 @@ Thinking period, how can I refactor the program
   - ?? do you need plugins, extendibility
 
 # TODO: 
+  - extract gzip files and process them as normal files
   - remove too old log files 
   - REST communication between controller and seeker processes
     - use more than one node to search parallel

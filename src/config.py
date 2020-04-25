@@ -27,6 +27,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,
+            "DirTextSamples": os.path.join(DirPrgRoot, "text_samples"),
             "DirsDeleteAfterRun": list(),
             "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,

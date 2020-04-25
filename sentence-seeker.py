@@ -25,6 +25,6 @@ if args.test:
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
     util_test.result_all(Prg)
-    # sys.exit(0)
+    sys.exit(0)
 
 document.docs_load_all_to_be_ready_to_seeking(Prg)

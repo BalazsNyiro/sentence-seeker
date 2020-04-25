@@ -46,11 +46,12 @@ class UtilTests(util_test.SentenceSeekerTest):
             self.assertEqual("file_exists", FileState)
             self.assertEqual("not_gzipped", FileGzipped)
 
-            RetWriteGz = util.file_write(Prg, Fname=Fname, Content="gzipped", Gzipped=True)
+            Sample = "Árvíztűrő tükörfúrógép"
+            RetWriteGz = util.file_write(Prg, Fname=Fname, Content=Sample, Gzipped=True)
             self.assertTrue(RetWriteGz)
             RetReadGz, ContentReadGz = util.file_read_all(Prg, Fname, Gzipped=True)
             self.assertTrue(RetReadGz)
-            self.assertEqual(ContentReadGz, b"gzipped")
+            self.assertEqual(ContentReadGz, Sample)
 
             FileState, FileGzipped = util.file_is_gzipped(Prg, Fname)
             self.assertEqual("file_exists", FileState)

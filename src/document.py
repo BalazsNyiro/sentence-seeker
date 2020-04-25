@@ -1,11 +1,32 @@
 # -*- coding: utf-8 -*-
-import util, os, pathlib
+import util, os, pathlib, sys
+from util import print_dev
 
 def docs_load_all_to_be_ready_to_seeking(Prg):
     DocumentsAvailable = docs_collect_filenames_from_working_dir(Prg)
 
+    if not DocumentsAvailable:
+        print("Load sample docs into 'documents' because it's empty")
+        DirSamplesInDocuments = os.path.join(Prg["DirDocuments"], "text_samples")
+        util.dir_create_if_necessary(Prg, DirSamplesInDocuments)
+
+        # sample texts are gzipped
+        for FileName in util.files_collect_from_dir(Prg["DirTextSamples"]):
+
+            BaseName = os.path.basename(FileName).replace(".gz", "")
+
+            print(f"Sample doc duplication... {BaseName}   {FileName}")
+            ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
+            print("TextContent type:", type(TextContent))
+            print("len content:", len(TextContent))
+            FileNameSaved = os.path.join(DirSamplesInDocuments, BaseName)
+            print(f"FileNameSaved: {FileNameSaved}")
+            util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
+
+        DocumentsAvailable = docs_collect_filenames_from_working_dir(Prg)
+
     for Doc in DocumentsAvailable:
-        util.print_dev(Prg, "available>>", Doc)
+        print_dev(Prg, "available>>", Doc)
         # indexed file created?
         #
 
@@ -34,7 +55,7 @@ def docs_collect_filenames_from_working_dir(Prg):
             print("in documents dir - this file type will be processed in the future:", BaseName)
 
         else:
-            util.print_dev(Prg, "in documents dir - not processed file type:", BaseName)
+            print_dev(Prg, "in documents dir - not processed file type:", BaseName)
 
     return Docs
 

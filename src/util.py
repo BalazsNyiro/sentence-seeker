@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil
 
-# Tested
+# Tested, it can delete empty dirs
 def dir_delete_if_exist(Prg, Path, Print=False):
+    Ret = ""
     if os.path.isdir(Path):
         Msg = f"Dir exists, delete it: {Path}"
         os.rmdir(Path)
+        Ret = "deleted"
     else:
         Msg = f"Dir doesn't exist: {Path}"
 
-    if Print: print(Msg)
+    if Print:
+        print(Msg)
     log(Prg, Msg)
+
+    return Ret
 
 # Tested
 def dir_create_if_necessary(Prg, Path, LogCreate=True):
@@ -150,12 +155,12 @@ def file_is_gzipped(Prg, Path):
 
 # Tested
 def files_collect_from_dir(DirRoot, Recursive=True):
-    Files = []
+    FilesAbsPath = []
     for DirPath, DirNames, FileNames in os.walk(DirRoot):
-        Files += [os.path.join(DirPath, File) for File in FileNames]
+        FilesAbsPath += [os.path.join(DirPath, File) for File in FileNames]
         
         # https://stackoverflow.com/questions/4117588/non-recursive-os-walk
         if not Recursive:
             break
 
-    return Files
+    return FilesAbsPath

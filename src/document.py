@@ -3,24 +3,14 @@ import util, os, pathlib, stats
 from util import print_dev
 
 
-# TODO: TEST IT, refactor it
+# TODO: TEST IT, refactor it, Think about it
+# maybe use SQL server to store data
 def docs_load_all_to_be_ready_to_seeking(Prg):
     DocumentsAvailable = docs_collect_filenames_from_working_dir(Prg)
 
     if not DocumentsAvailable:
-        print("Load sample docs into 'documents' because it's empty")
-        DirSamplesInDocuments = os.path.join(Prg["DirDocuments"], "text_samples")
-        util.dir_create_if_necessary(Prg, DirSamplesInDocuments)
-
-        # sample texts are gzipped
-        for FileName in util.files_collect_from_dir(Prg["DirTextSamples"]):
-
-            BaseName = os.path.basename(FileName).replace(".gz", "")
-            print(f"Sample doc duplication... {BaseName}   {FileName}")
-            ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
-            FileNameSaved = os.path.join(DirSamplesInDocuments, BaseName)
-            util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
-
+        DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
+        docs_copy_samples_into_dir(Prg, DirTarget)
         DocumentsAvailable = docs_collect_filenames_from_working_dir(Prg)
 
     stats.save(Prg, "docs_load_all, For =>")
@@ -37,6 +27,18 @@ def docs_load_all_to_be_ready_to_seeking(Prg):
         #   convert text: one line, one
         #   Create indexed file if it doesn't exist
     stats.save(Prg, "docs_load_all, For <=")
+
+def docs_copy_samples_into_dir(Prg, DirTarget):
+    util.dir_create_if_necessary(Prg, DirTarget)
+
+    # sample texts are gzipped
+    for FileName in util.files_collect_from_dir(Prg["DirTextSamples"]):
+
+        BaseName = os.path.basename(FileName).replace(".gz", "")
+        print(f"Sample doc duplication... {BaseName}   {FileName}")
+        ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
+        FileNameSaved = os.path.join(DirTarget, BaseName)
+        util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
 
 # Tested
 def docs_collect_filenames_from_working_dir(Prg):

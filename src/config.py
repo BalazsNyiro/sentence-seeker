@@ -23,6 +23,18 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
     FileLog = f"log_{Time}"
     DirDocuments = os.path.join(DirWorkAbsPath, "documents")
 
+
+    # we can use Prg as class, too - but the new code doesn't acceptable for me
+    # Prg.Os would be the result but it's ugly in IDEA
+    # class Dict(dict):
+    #     def join(self, KeyInPrg, OtherVal):
+    #         return os.path.join(self[KeyInPrg], OtherVal)
+
+    # Prg = Dict({"Key":1}) works, too
+
+
+
+
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os, sys, time
+import os, sys
 
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
 
-import config, util_test, document, argparse, stats
+import config, util_test, document, argparse
 ##########################################################
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=True)
@@ -27,27 +27,12 @@ if args.test:
     util_test.result_all(Prg)
     sys.exit(0)
 
-document.docs_load_all_to_be_ready_to_seeking(Prg)
+document.docs_copy_samples_into_dir_if_necessary(Prg)
 
-# REALLY UGLY PROCESSING BUT I WANT TO MEASURE TIME USAGE
-# FIXME LATER and use indexes.
-print("=============  FIRST SEEK ===========")
-LinesSelected = []
-stats.save(Prg, "first seek =>")
-TimeStart = time.time()
-CharCounter = 0
-for DocBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
-    Text = DocObj["Text"]
-
-    print(DocBaseName, len(Text))
-    CharCounter += len(Text)
-    for Line in Text.split("\n"):
-        if "where" in Line:
-            LinesSelected.append(Line)
-
-TimeEnd = time.time()
-print("\n".join(LinesSelected))
-print("Time USED:", TimeEnd - TimeStart, f"CharCounter: {CharCounter}, page: {CharCounter/2000}")
-stats.save(Prg, "first seek <=")
+#########################################
+import method_a_naive_01
+method_a_naive_01.be_ready_to_seeking(Prg)
+method_a_naive_01.seek(Prg, "why")
+#########################################
 
 print(Prg["Statistics"])

@@ -13,7 +13,7 @@ class DocumentTests(util_test.SentenceSeekerTest):
             FilePath = os.path.join(Prg["DirDocuments"], FileName)
             util.file_del(FilePath)
             util.file_write(Prg, Fname=FilePath, Content="example text")
-            DocumentsAvailable = document.docs_collect_filenames_from_working_dir(Prg)
+            DocumentsAvailable = document.document_objects_collect_from_working_dir(Prg)
 
             self.assertIn(FileName, DocumentsAvailable)
             util.file_del(FilePath)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import document, util, stats, time
+import document, util, stats, time, os
 
-SentenceFinishers = ["…", "!", "?", ".", "..."]
 Version = "a_naive_01"
 
 def seek(Prg, Wanted):
@@ -25,23 +24,38 @@ def seek(Prg, Wanted):
     stats.save(Prg, "first seek <=")
 
 def be_ready_to_seeking(Prg):
-    _sentence_separate_from_orig_txt(Prg)
-    _indexes_from_orig_txt(Prg)
-    _docs_load_all_to_be_ready_to_seeking(Prg)
-
-def _sentence_separate_from_orig_txt(Prg):
-    pass
-
-def _indexes_from_orig_txt(Prg):
-    pass
-
-def _docs_load_all_to_be_ready_to_seeking(Prg):
     for FileBaseName, DocumentObj in \
             document.document_objects_collect_from_working_dir(Prg).items():
 
-        _ReadSuccess, Text = util.file_read_all(Prg, Fname=DocumentObj["PathAbs"])
-        DocumentObj["Text"] = Text
-        Prg["DocumentObjectsLoaded"][FileBaseName] = DocumentObj
+        _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=DocumentObj["PathAbs"])
 
-        util.print_dev(Prg, "loaded doc >>", FileBaseName)
+        _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, TextOrig)
+
+        _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj)
+        _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
+
+
+def text_cleaning(Txt):
+    ReplaceAbbreviations = [    ("Mr.", "Mr"),
+                                ("Mrs.", "Mrs"),
+                                ("Ms.", "Ms")]
+    for Old, New in ReplaceAbbreviations:
+        Txt = Txt.replace(Old, New)
+    return Txt
+
+def _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, TextOrig):
+    SentenceEnds = ["…", "!", "?", ".", "..."]
+    DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_sep_" + Version
+    if not os.path.isfile(DocumentObj["SentenceFile"]):
+        TextCleaned = text_cleaning(TextOrig)
+        util.file_write(Prg, DocumentObj["SentenceFile"], TextCleaned)
+
+def _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj):
+    pass
+
+def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
+    DocumentObj["Text"] = TextOrig
+    Prg["DocumentObjectsLoaded"][FileBaseName] = DocumentObj
+
+    util.print_dev(Prg, "loaded doc >>", FileBaseName)
 

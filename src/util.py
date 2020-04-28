@@ -54,19 +54,12 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 
     return Created
 
-# tested manually
-def print_dev(Prg, *args):
-    if Prg["PrintForDeveloper"]:
-        print(*args)
-
-# Tested with usage in tests...
-def log(Prg, Msg, Caller="-"):
-    print_dev(Prg, "\nLog received:", Msg)
-    # from func log calls don't use Logging again
-    Msg = str(Msg)
-    if Prg["TestExecution"]:
-        Msg = "Testing... " + Msg
-    file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
+def file_read_lines(Fname, Strip=False):
+    with open(Fname, 'r') as F:
+        if Strip:
+            return [L.strip() for L in F.readlines()]
+        else:
+            return F.readlines()
 
 # Tested
 def file_read_all(Prg, Fname="", Mode="r", Gzipped=False): # if you want read binary, write "rb"
@@ -164,3 +157,18 @@ def files_collect_from_dir(DirRoot, Recursive=True):
             break
 
     return FilesAbsPath
+
+# tested manually
+def print_dev(Prg, *args):
+    if Prg["PrintForDeveloper"]:
+        print(*args)
+
+# Tested with usage in tests...
+def log(Prg, Msg, Caller="-"):
+    print_dev(Prg, "\nLog received:", Msg)
+    # from func log calls don't use Logging again
+    Msg = str(Msg)
+    if Prg["TestExecution"]:
+        Msg = "Testing... " + Msg
+    file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
+

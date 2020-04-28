@@ -29,7 +29,7 @@ def be_ready_to_seeking(Prg):
 
         _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=DocumentObj["PathAbs"])
 
-        _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, TextOrig)
+        _sentence_separate_from_orig_txt(Prg, DocumentObj, TextOrig)
 
         _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj)
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
@@ -60,6 +60,8 @@ def sentence_separator(Text):
                 # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
             else:
                 InQuotation = False
+                # Quotation End can be in the middle of a sentence:
+                # For some time past vessels had been met by "an enormous thing," a long
 
         if not InSentence:
             if Char in text.AbcEngUpper:
@@ -91,14 +93,15 @@ def sentence_separator(Text):
     return RetSentences
 
 
-def _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, Text):
+def _sentence_separate_from_orig_txt(Prg, DocumentObj, Text):
     DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_sep_" + Version
     if not os.path.isfile(DocumentObj["SentenceFile"]):
         Sentences = sentence_separator(Text)
-        util.file_write(Prg, DocumentObj["SentenceFile"], "\n>>>".join(Sentences))
+        util.file_write(Prg, DocumentObj["SentenceFile"], "\n".join(Sentences))
 
 def _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj):
-    pass
+    for Line in util.file_read_lines(DocumentObj["SentenceFile"]):
+        pass
 
 def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
     DocumentObj["Text"] = TextOrig

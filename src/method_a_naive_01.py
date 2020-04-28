@@ -48,14 +48,22 @@ def sentence_separator(Text):
     SentenceChars = []
     InSentence = False
 
+    InQuotation = False
+
     for Char in Text:
 
         ########## BEGINNING ##########
-        if not InSentence:
-            if Char in text.AbcEngUpper: InSentence = True
+        if Char in text.MarksQuotation:
+            if not InQuotation:
+                InSentence = True
+                InQuotation = True
+                # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+            else:
+                InQuotation = False
 
-            if Char in text.MarksQuotation: InSentence = True
-            # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+        if not InSentence:
+            if Char in text.AbcEngUpper:
+                InSentence = True
 
         ########## BEGINNING ##########
 
@@ -79,7 +87,7 @@ def sentence_separator(Text):
         Sentences.append(SentenceChars)
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    print("Sentences: ", RetSentences)
+    print("\n\nSentences: ", RetSentences)
     return RetSentences
 
 

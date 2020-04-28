@@ -7,10 +7,10 @@ class SentenceSeparatorTests(util_test.SentenceSeekerTest):
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
         if self._test_exec("test_sentence_separator__a_naive_01"):
-            Txt = "Mr. and Mrs. Jones visited their friends... Lisa and Pete lived in a big house, in Boston, did they? Yes, they did"
+            Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
             Wanted = \
             ["Mr and Mrs Jones visited their friends...",
-             "Lisa and Pete lived in a big house, in Boston, did they?",
+             '"Lisa and Pete lived in a big house, in Boston, did they?"',
              "Yes, they did"]
             Sentences = method_a_naive_01.sentence_separator(Txt)
             self.assertEqual(Wanted, Sentences)

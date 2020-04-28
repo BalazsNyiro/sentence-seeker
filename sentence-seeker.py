@@ -19,11 +19,12 @@ SysArgvOrig = sys.argv
 sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
 if args.test:
-    import test_util, test_util_json, test_document
+    import test_util, test_util_json, test_document, test_text
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
+    test_text.run_all_tests(Prg)
     util_test.result_all(Prg)
     sys.exit(0)
 

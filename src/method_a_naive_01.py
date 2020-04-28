@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import document, util, stats, time, os
+import document, util, stats, time, os, text
 
 Version = "a_naive_01"
 
@@ -35,19 +35,13 @@ def be_ready_to_seeking(Prg):
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
 
 
-def text_cleaning(Txt):
-    ReplaceAbbreviations = [    ("Mr.", "Mr"),
-                                ("Mrs.", "Mrs"),
-                                ("Ms.", "Ms")]
-    for Old, New in ReplaceAbbreviations:
-        Txt = Txt.replace(Old, New)
-    return Txt
-
 def _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, TextOrig):
-    SentenceEnds = ["…", "!", "?", ".", "..."]
     DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_sep_" + Version
     if not os.path.isfile(DocumentObj["SentenceFile"]):
-        TextCleaned = text_cleaning(TextOrig)
+
+        Text = text.replace_abbreviations(TextOrig)
+        Text = text.replace_spaces_to_one_space(Text)
+
         util.file_write(Prg, DocumentObj["SentenceFile"], TextCleaned)
 
 def _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj):

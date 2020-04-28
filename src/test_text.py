@@ -18,6 +18,14 @@ class SentenceSeparatorTests(util_test.SentenceSeekerTest):
 
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
+    def test_remove_not_abc_chars(self):
+        if self._test_exec("test_remove_not_abc_chars"):
+            TextOrig = "[pine;a'pp_le\n!"
+            TextNew = text.remove_not_abc_chars(TextOrig)
+            self.assertEqual(TextNew, "pineapple")
+
+            TextNew = text.remove_not_abc_chars(TextOrig, "_")
+            self.assertEqual(TextNew, "_pine_a_pp_le__")
 
     def test_text_replace(self): # replace_abbreviations uses text_replace()
         if self._test_exec("test_text_replace"):

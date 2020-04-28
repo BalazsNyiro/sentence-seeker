@@ -31,7 +31,7 @@ def be_ready_to_seeking(Prg):
 
         _sentence_separate_from_orig_txt(Prg, DocumentObj, TextOrig)
 
-        _indexes_from_orig_txt(Prg, DocumentObj)
+        _indexes_from_sentences(Prg, DocumentObj)
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
 
         print("TODO: LOAD INDEX files for seeking")
@@ -100,17 +100,24 @@ def _sentence_separate_from_orig_txt(Prg, DocumentObj, Text):
         Sentences = sentence_separator(Text)
         util.file_write(Prg, DocumentObj["SentenceFile"], "\n".join(Sentences))
 
-def _indexes_from_orig_txt(Prg, DocumentObj):
+def _indexes_from_sentences(Prg, DocumentObj):
     DocumentObj["WordIndexFile"] = DocumentObj["PathAbs"] + "_wordindex_" + Version
 
     if not os.path.isfile(DocumentObj["WordIndexFile"]):
         DocumentObj["WordIndex"] = dict()
         for LineNum, Line in enumerate(util.file_read_lines(DocumentObj["SentenceFile"])):
-            for Word in Line.split():
-                if Word not in DocumentObj["WordIndex"]:
-                    DocumentObj["WordIndex"][Word] = []
 
-                DocumentObj["WordIndex"][Word].append(LineNum)
+            # THIS word can be spoiled:
+            # word;  for example, I need clean words so remove the not-abc chars
+            Line = text.remove_not_abc_chars(Line, " ")
+
+            for Word in Line.split():
+                Word = Word.strip()
+                if Word: # if it's not empty string
+                    if Word not in DocumentObj["WordIndex"]:
+                        DocumentObj["WordIndex"][Word] = []
+
+                    DocumentObj["WordIndex"][Word].append(LineNum)
 
         Out = []
         for Word, LineNums in DocumentObj["WordIndex"].items():

@@ -5,6 +5,11 @@ SentenceEnds = [".", "!", "?", "…"]
 AbcEngUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 MarksQuotation = '"“”'
 
+# Tested
+_PatternNotAbc = re.compile(r'[^a-zA-Z]')
+def remove_not_abc_chars(Text, TextNew=""):
+    return replace_regexp(Text, _PatternNotAbc, TextNew)
+
 # Tested with abbreviations,
 # FromToPairsExample = [("Mr.", "Mr")]
 def replace(Txt, FromToPairs):
@@ -12,10 +17,10 @@ def replace(Txt, FromToPairs):
         Txt = Txt.replace(Old, New)
     return Txt
 
+_PatternWhitespaces = re.compile(r'\s+')
 # Tested
 def replace_whitespaces_to_one_space(Text):
-    Pattern = re.compile(r'\s+')
-    return replace_regexp(Text, Pattern, " ")
+    return replace_regexp(Text, _PatternWhitespaces, " ")
 
 # Tested
 def replace_regexp(Text, Pattern, TextNew):

@@ -31,9 +31,10 @@ def be_ready_to_seeking(Prg):
 
         _sentence_separate_from_orig_txt(Prg, DocumentObj, TextOrig)
 
-        _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj)
+        _indexes_from_orig_txt(Prg, DocumentObj)
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
 
+        print("TODO: LOAD INDEX files for seeking")
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,
@@ -94,14 +95,27 @@ def sentence_separator(Text):
 
 
 def _sentence_separate_from_orig_txt(Prg, DocumentObj, Text):
-    DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_sep_" + Version
+    DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_separator_" + Version
     if not os.path.isfile(DocumentObj["SentenceFile"]):
         Sentences = sentence_separator(Text)
         util.file_write(Prg, DocumentObj["SentenceFile"], "\n".join(Sentences))
 
-def _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj):
-    for Line in util.file_read_lines(DocumentObj["SentenceFile"]):
-        pass
+def _indexes_from_orig_txt(Prg, DocumentObj):
+    DocumentObj["WordIndexFile"] = DocumentObj["PathAbs"] + "_wordindex_" + Version
+
+    if not os.path.isfile(DocumentObj["WordIndexFile"]):
+        DocumentObj["WordIndex"] = dict()
+        for LineNum, Line in enumerate(util.file_read_lines(DocumentObj["SentenceFile"])):
+            for Word in Line.split():
+                if Word not in DocumentObj["WordIndex"]:
+                    DocumentObj["WordIndex"][Word] = []
+
+                DocumentObj["WordIndex"][Word].append(LineNum)
+
+        Out = []
+        for Word, LineNums in DocumentObj["WordIndex"].items():
+            Out.append(f"{Word} {str(LineNums)}")
+        util.file_write(Prg, Fname=DocumentObj["WordIndexFile"], Content="\n".join(Out))
 
 def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
     DocumentObj["Text"] = TextOrig

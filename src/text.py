@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 
-SentenceEnds = ["...", "!?", "??", "…", "!", "?", "."]
+SentenceEnds = [".", "!", "?", "…"]
+AbcEngUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+MarksQuotation = '"“”'
 
 # Tested with abbreviations,
 # FromToPairsExample = [("Mr.", "Mr")]
@@ -11,8 +13,8 @@ def replace(Txt, FromToPairs):
     return Txt
 
 # Tested
-def replace_spaces_to_one_space(Text):
-    Pattern = re.compile(r'[ ]+')
+def replace_whitespaces_to_one_space(Text):
+    Pattern = re.compile(r'\s+')
     return replace_regexp(Text, Pattern, " ")
 
 # Tested

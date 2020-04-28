@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
-import unittest, text, util_test
+import unittest, text, util_test, method_a_naive_01
+
+class SentenceSeparatorTests(util_test.SentenceSeekerTest):
+    TestsExecutedOnly = []
+    #TestsExecutedOnly = [""]
+
+    def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
+        if self._test_exec("test_sentence_separator__a_naive_01"):
+            Txt = "Mr. and Mrs. Jones visited their friends... Lisa and Pete lived in a big house, in Boston, did they? Yes, they did"
+            Wanted = \
+            ["Mr and Mrs Jones visited their friends...",
+             "Lisa and Pete lived in a big house, in Boston, did they?",
+             "Yes, they did"]
+            Sentences = method_a_naive_01.sentence_separator(Txt)
+            self.assertEqual(Wanted, Sentences)
+
 
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
-    #TestsExecutedOnly = [""]
 
     def test_text_replace(self): # replace_abbreviations uses text_replace()
         if self._test_exec("test_text_replace"):
@@ -23,12 +37,13 @@ class TextTests(util_test.SentenceSeekerTest):
             TextCleaned = text.replace_regexp("alma    repa", Pattern, r"_\1_")
             self.assertEqual(TextCleaned, "alma_rep_a")
 
-            Text = "apple    melon"
-            self.assertEqual("apple melon", text.replace_spaces_to_one_space(Text))
+            Text = "apple    \t\t\nmelon"
+            self.assertEqual("apple melon", text.replace_whitespaces_to_one_space(Text))
 
 
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg
+    SentenceSeparatorTests.Prg = Prg
     unittest.main(module="test_text", verbosity=2, exit=False)
 

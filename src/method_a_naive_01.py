@@ -35,14 +35,59 @@ def be_ready_to_seeking(Prg):
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
 
 
-def _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, TextOrig):
+# what is a sentence: https://simple.wikipedia.org/wiki/Sentence
+# unfortunatelly I can't analyse the text based on the structure of the text,
+# for example to check it after verbs.
+#
+# Sentence
+def sentence_separator(Text):
+    Text = text.replace_abbreviations(Text)
+    Text = text.replace_whitespaces_to_one_space(Text)
+
+    Sentences = []
+    SentenceChars = []
+    InSentence = False
+
+    for Char in Text:
+
+        ########## BEGINNING ##########
+        if not InSentence:
+            if Char in text.AbcEngUpper: InSentence = True
+
+            if Char in text.MarksQuotation: InSentence = True
+            # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+
+        ########## BEGINNING ##########
+
+        if InSentence:
+            SentenceChars.append(Char)
+
+        if not InSentence:
+            if not Sentences: # if it's the first Sentence, Sentences is empty
+                SentenceChars.append(Char)
+            else:
+                Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
+
+        ########## CLOSER ##########
+        if InSentence and Char in text.SentenceEnds:
+            InSentence = False
+            Sentences.append(SentenceChars)
+            SentenceChars = []
+        ########## CLOSER ##########
+
+    if SentenceChars: # if something stayed in collected chars and the sentence wasn't finished, saved it, too
+        Sentences.append(SentenceChars)
+
+    RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
+    print("Sentences: ", RetSentences)
+    return RetSentences
+
+
+def _sentence_separate_from_orig_txt(Prg, FileBaseName, DocumentObj, Text):
     DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_sep_" + Version
     if not os.path.isfile(DocumentObj["SentenceFile"]):
-
-        Text = text.replace_abbreviations(TextOrig)
-        Text = text.replace_spaces_to_one_space(Text)
-
-        util.file_write(Prg, DocumentObj["SentenceFile"], TextCleaned)
+        Sentences = sentence_separator(Text)
+        util.file_write(Prg, DocumentObj["SentenceFile"], "\n>>>".join(Sentences))
 
 def _indexes_from_orig_txt(Prg, FileBaseName, DocumentObj):
     pass

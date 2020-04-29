@@ -9,13 +9,13 @@ def seek(Prg, Wanted):
     TimeStart = time.time()
     ###############################
     CharCounter = 0
-    for DocBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
-        Text = DocObj["Text"]
-        print(DocBaseName, len(Text))
-        CharCounter += len(Text)
-        for Line in Text.split("\n"):
-            if Wanted in Line:
-                LinesSelected.append(Line)
+    # TODO: use CharCounter
+    Result = []
+    for FileBaseName, Doc in Prg["DocumentObjectsLoaded"]:
+        if Wanted in Doc["Index"]:
+            LineNumbers = Doc["Index"][Wanted]
+            print("result, linenumbers: ", FileBaseName, LineNumbers)
+            Result.append((FileBaseName, LineNumbers))
 
     ###############################
     TimeEnd = time.time()
@@ -24,20 +24,24 @@ def seek(Prg, Wanted):
     stats.save(Prg, "first seek <=")
 
 def be_ready_to_seeking(Prg):
-    Objects = document.document_objects_collect_from_working_dir(Prg).items()
-    for FileBaseName, DocumentObj in Objects:
+    DocumentObjects = document.document_objects_collect_from_working_dir(Prg).items()
+    Prg["DocumentObjectsLoaded"] = DocumentObjects
+    for FileBaseName, Doc in DocumentObjects:
 
-        _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=DocumentObj["PathAbs"])
+        _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=Doc["PathAbs"])
 
-        DocumentObj["FileSentences"] = DocumentObj["PathAbs"] + "_sentence_separator_" + Version
-        DocumentObj["FileWordIndex"] = DocumentObj["PathAbs"] + "_wordindex_" + Version
+        Doc["FileSentences"] = Doc["PathAbs"] + "_sentence_separator_" + Version
+        Doc["FileWordIndex"] = Doc["PathAbs"] + "_wordindex_" + Version
 
-        file_create_sentences(Prg, DocumentObj["FileSentences"], TextOrig)
-        file_create_index(Prg, DocumentObj["FileWordIndex"], DocumentObj["FileSentences"])
-        _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
+        file_create_sentences(Prg, Doc["FileSentences"], TextOrig)
+        file_create_index(Prg, Doc["FileWordIndex"], Doc["FileSentences"])
 
+        Doc["Index"] = util_json_obj.obj_from_file(Doc["FileWordIndex"])
+        Doc["Sentences"] = util.file_read_lines(Doc["FileSentences"])
         # util_json_obj.obj_from_file(FileIndex)
         print("TODO: LOAD INDEX files for seeking")
+
+
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,
@@ -132,9 +136,4 @@ def file_create_index(Prg, FileIndex, FileSentences):
         Content="{\n"+"\n,".join(Out) + "\n}"
         util.file_write(Prg, Fname=FileIndex, Content=Content)
 
-def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
-    DocumentObj["Text"] = TextOrig
-    Prg["DocumentObjectsLoaded"][FileBaseName] = DocumentObj
-
-    util.print_dev(Prg, "loaded doc >>", FileBaseName)
 

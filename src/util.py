@@ -61,7 +61,7 @@ def file_read_lines(Fname, Strip=False):
         else:
             return F.readlines()
 
-# Tested
+# Tested, Prg is important for log, or maybe we should skip logging?
 def file_read_all(Prg, Fname="", Mode="r", Gzipped=False): # if you want read binary, write "rb"
     if os.path.isfile(Fname):
         if Gzipped:

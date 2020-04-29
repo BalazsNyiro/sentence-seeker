@@ -33,7 +33,14 @@ document.docs_copy_samples_into_dir_if_necessary(Prg)
 #########################################
 import method_a_naive_01
 method_a_naive_01.be_ready_to_seeking(Prg)
-method_a_naive_01.seek(Prg, "why")
+method_a_naive_01.seek(Prg, "meanwhile")
+
+# neverending cycle :-)
+while True:
+    Wanted = input("wanted: ")
+    Result = method_a_naive_01.seek(Prg, Wanted.lower() )
+    print("Line numbers: ", Result)
+
 #########################################
 
 print(Prg["Statistics"])

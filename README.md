@@ -8,7 +8,12 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
 In the far, far future a controller process are going to send requests for nodes in same host and in different hosts too, so the whole seeking happens simultaneously
 
-### "Naive" v0.1 version: (18 april - april 30, 2020) 
+## Future plans:
+  - "Naive" 0.1 version is finished (please see details below)
+  - I will spend more time to document processes.
+    next version deadline: May 15th
+
+### FINISHED: "Naive" v0.1 version: (18 april - april 30, 2020) 
   - text-loader script: from a source load text into working dir.
     - store original format
     - extract preprocessed simple txt format. 
@@ -24,23 +29,33 @@ In the far, far future a controller process are going to send requests for nodes
     - waiting for user requests (python console)
       (speed tests, regexp usage tests, memory usage analysing)
 
-## "Documentation" v0.11 (1 May - 8 May, 2020) 
+Hi, "Naive" version is ready.
+  - The program extracts sentences, creates index and search in it.
+  - the speed test was manual, I guess with a slow desktop pc 
+    about 40-50 books can be processed in a second.
+    It was a manual test and in the future it can change.
+  - the raw memory usage was about 200 megabytes with 18 books
+    at first manual tests. I try to decrease it
+
+
+
+## "Documentation" v0.11 (1 May - 15 May, 2020) 
   - create diagram about the program structure
 
-## "Get some rest" v0.2 version: (9 May - 31 May)
+## "Get some rest" v0.2 version: (15 May - 15 June)
   - Main program: use REST API to search, 
   - simple user interface, in browsers 
 
-## "Documentation update" v0.21 (1 June - 7 June, 2020)
+## "Documentation update" v0.21 (15 June - 30 June, 2020)
 
-## "Daemons" v0.3 version (8 June, 30 June, 2020)
+## "Daemons" v0.3 version (1 July - 15 July, 2020)
   - use more than one daemon process to speed up the seeking
     separated controller process
   - http user interface, dark mode, 
 
-## "Documentation update" v0.31 (1 July - 8 July)
+## "Documentation update" v0.31 (15 July - 1 Aug)
 
-## "Argus's eyes" v0.4: (8 July - 31 July)
+## "Argus's eyes" v0.4: (1 Aug- 31 Aug)
 Thinking period, how can I refactor the program
 
   - Refine text preprocessing:

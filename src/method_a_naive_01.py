@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import document, util, stats, time, os, text
+import document, util, stats, time, os, text, util_json_obj
 
 Version = "a_naive_01"
 
@@ -24,23 +24,26 @@ def seek(Prg, Wanted):
     stats.save(Prg, "first seek <=")
 
 def be_ready_to_seeking(Prg):
-    for FileBaseName, DocumentObj in \
-            document.document_objects_collect_from_working_dir(Prg).items():
+    Objects = document.document_objects_collect_from_working_dir(Prg).items()
+    for FileBaseName, DocumentObj in Objects:
 
         _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=DocumentObj["PathAbs"])
 
-        _sentence_separate_from_orig_txt(Prg, DocumentObj, TextOrig)
+        DocumentObj["FileSentences"] = DocumentObj["PathAbs"] + "_sentence_separator_" + Version
+        DocumentObj["FileWordIndex"] = DocumentObj["PathAbs"] + "_wordindex_" + Version
 
-        _indexes_from_sentences(Prg, DocumentObj)
+        file_create_sentences(Prg, DocumentObj["FileSentences"], TextOrig)
+        file_create_index(Prg, DocumentObj["FileWordIndex"], DocumentObj["FileSentences"])
         _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig)
 
+        # util_json_obj.obj_from_file(FileIndex)
         print("TODO: LOAD INDEX files for seeking")
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,
 # for example to check it after verbs.
 #
-# Sentence
+# Tested
 def sentence_separator(Text):
     Text = text.replace_abbreviations(Text)
     Text = text.replace_whitespaces_to_one_space(Text)
@@ -93,19 +96,19 @@ def sentence_separator(Text):
     print("\n\nSentences: ", RetSentences)
     return RetSentences
 
-
-def _sentence_separate_from_orig_txt(Prg, DocumentObj, Text):
-    DocumentObj["SentenceFile"] = DocumentObj["PathAbs"] + "_sentence_separator_" + Version
-    if not os.path.isfile(DocumentObj["SentenceFile"]):
+# Tested
+def file_create_sentences(Prg, FileSentences, Text):
+    if not os.path.isfile(FileSentences):
         Sentences = sentence_separator(Text)
-        util.file_write(Prg, DocumentObj["SentenceFile"], "\n".join(Sentences))
+        util.file_write(Prg, FileSentences, "\n".join(Sentences))
 
-def _indexes_from_sentences(Prg, DocumentObj):
-    DocumentObj["WordIndexFile"] = DocumentObj["PathAbs"] + "_wordindex_" + Version
+# Tested
+def file_create_index(Prg, FileIndex, FileSentences):
+    if not os.path.isfile(FileIndex):
+        WordIndex = dict()
 
-    if not os.path.isfile(DocumentObj["WordIndexFile"]):
-        DocumentObj["WordIndex"] = dict()
-        for LineNum, Line in enumerate(util.file_read_lines(DocumentObj["SentenceFile"])):
+        # start LineNum from 1
+        for LineNum, Line in enumerate(util.file_read_lines(FileSentences), 1):
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars
@@ -119,16 +122,15 @@ def _indexes_from_sentences(Prg, DocumentObj):
 
                 Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
                 if Word: # if it's not empty string
-                    if Word not in DocumentObj["WordIndex"]:
-                        DocumentObj["WordIndex"][Word] = []
-
-                    DocumentObj["WordIndex"][Word].append(LineNum)
+                    if Word not in WordIndex:
+                        WordIndex[Word] = list()
+                    WordIndex[Word].append(LineNum)
 
         Out = []
-        for Word, LineNums in DocumentObj["WordIndex"].items():
+        for Word, LineNums in WordIndex.items():
             Out.append(f'"{Word}": {str(LineNums)}')
-        Content="{\n"+"\n".join(Out) + "\n}"
-        util.file_write(Prg, Fname=DocumentObj["WordIndexFile"], Content=Content)
+        Content="{\n"+"\n,".join(Out) + "\n}"
+        util.file_write(Prg, Fname=FileIndex, Content=Content)
 
 def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
     DocumentObj["Text"] = TextOrig

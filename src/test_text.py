@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import unittest, text, util_test, method_a_naive_01
+import unittest, text, util_test, method_a_naive_01, util, os, util_json_obj
 
-class SentenceSeparatorTests(util_test.SentenceSeekerTest):
+class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
@@ -15,6 +15,32 @@ class SentenceSeparatorTests(util_test.SentenceSeekerTest):
             Sentences = method_a_naive_01.sentence_separator(Txt)
             self.assertEqual(Wanted, Sentences)
 
+    def test_file_create_sentences__create_index(self):
+        if self._test_exec("test_file_create_sentences__create_index"):
+            Prg = self.Prg
+
+            FileSentences = os.path.join(Prg["DirWork"], "test_file_create_sentences.txt")
+            util.file_del(FileSentences)
+
+            Sample = 'He is my friend. "This is \n the next - city, London." Is this the third line, or a Book about London?'
+
+            method_a_naive_01.file_create_sentences(Prg, FileSentences, Sample)
+            Wanted = ["He is my friend.\n",
+                      '"This is the next - city, London."\n',
+                      "Is this the third line, or a Book about London?"]
+
+            LinesFromFile = util.file_read_lines(FileSentences)
+            self.assertEqual(Wanted, LinesFromFile)
+
+            FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")
+            util.file_del(FileIndex)
+            method_a_naive_01.file_create_index(Prg, FileIndex, FileSentences)
+
+            Index = util_json_obj.obj_from_file(FileIndex)
+            self.assertEqual(Index["london"], [2, 3])
+
+            util.file_del(FileSentences)
+            util.file_del(FileIndex)
 
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
@@ -52,6 +78,6 @@ class TextTests(util_test.SentenceSeekerTest):
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg
-    SentenceSeparatorTests.Prg = Prg
+    Method_A_Naive_Tests.Prg = Prg
     unittest.main(module="test_text", verbosity=2, exit=False)
 

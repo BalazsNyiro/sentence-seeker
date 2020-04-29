@@ -65,7 +65,7 @@ def sentence_separator(Text):
                 # For some time past vessels had been met by "an enormous thing," a long
 
         if not InSentence:
-            if Char in text.AbcEngUpper:
+            if Char.isupper(): # it works with special national chars, too. Example: É
                 InSentence = True
 
         ########## BEGINNING ##########
@@ -112,7 +112,12 @@ def _indexes_from_sentences(Prg, DocumentObj):
             Line = text.remove_not_abc_chars(Line, " ")
 
             for Word in Line.split():
-                Word = Word.strip()
+
+                # TODO: words short form expand:
+                # I've -> "I", "have" are two separated words,
+                # wouldn't -> would is the real word
+
+                Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
                 if Word: # if it's not empty string
                     if Word not in DocumentObj["WordIndex"]:
                         DocumentObj["WordIndex"][Word] = []
@@ -121,8 +126,9 @@ def _indexes_from_sentences(Prg, DocumentObj):
 
         Out = []
         for Word, LineNums in DocumentObj["WordIndex"].items():
-            Out.append(f"{Word} {str(LineNums)}")
-        util.file_write(Prg, Fname=DocumentObj["WordIndexFile"], Content="\n".join(Out))
+            Out.append(f'"{Word}": {str(LineNums)}')
+        Content="{\n"+"\n".join(Out) + "\n}"
+        util.file_write(Prg, Fname=DocumentObj["WordIndexFile"], Content=Content)
 
 def _docs_load_all_to_be_ready_to_seeking(Prg, FileBaseName, DocumentObj, TextOrig):
     DocumentObj["Text"] = TextOrig

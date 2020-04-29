@@ -2,7 +2,6 @@
 import re
 
 SentenceEnds = [".", "!", "?", "…"]
-AbcEngUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 MarksQuotation = '"“”'
 
 # Tested

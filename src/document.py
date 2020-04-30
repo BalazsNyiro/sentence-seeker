@@ -31,11 +31,10 @@ def document_objects_collect_from_working_dir(Prg,
                                               FunSentenceCreate=None,
                                               FunIndexCreate=None
                                               ):
-    DirDocuments = Prg["DirDocuments"]
-    Files = util.files_collect_from_dir(DirDocuments)
+    Files = util.files_collect_from_dir(Prg["DirDocuments"])
 
     DocumentObjects = dict()
-    ExtensionsInFuture = {".pdf":0, ".html":0, ".htm":0}
+    ExtensionsInFuture = {".pdf": 0, ".html": 0, ".htm": 0}
 
     for File in Files:
         BaseName = os.path.basename(File)
@@ -46,21 +45,19 @@ def document_objects_collect_from_working_dir(Prg,
 
             # this document object describe infos about the document
             # for example the version of index algorithm
-            FileWordIndex = f"{File}_wordindex_{VersionSeeking}"
+            FileIndex = f"{File}_wordindex_{VersionSeeking}"
             FileSentences = f"{File}_sentence_separator_{VersionSeeking}"
 
-            if FunSentenceCreate: FunSentenceCreate(Prg, FileSentences, FilePathOrigText=File)
-            if FunIndexCreate   : FunIndexCreate(Prg, FileWordIndex, FileSentences)
-
-            Sentences = util.file_read_lines(FileSentences) if isfile(FileSentences) else []
-            Index = util_json_obj.obj_from_file(FileWordIndex) if isfile(FileWordIndex) else dict()
+            if FunSentenceCreate and FunIndexCreate:
+                FunSentenceCreate(Prg, FileSentences, FilePathOrigText=File)
+                FunIndexCreate(Prg, FileIndex, FileSentences)
 
             DocumentObj = { "PathAbs": File,
                             "FileSentences": FileSentences,
-                            "FileWordIndex": FileWordIndex,
-                            "Index": Index,
-                            "Sentences": Sentences
-                            }
+                            "FileIndex": FileIndex,
+                            "Index": util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict(),
+                            "Sentences": util.file_read_lines(FileSentences) if isfile(FileSentences) else []
+            }
 
             DocumentObjects[BaseName] = DocumentObj  # we store the documents based on their basename
 
@@ -68,7 +65,8 @@ def document_objects_collect_from_working_dir(Prg,
             print("in documents dir - this file type will be processed in the future:", BaseName)
 
         else:
-            print_dev(Prg, "in documents dir - not processed file type:", BaseName)
+            # print_dev(Prg, "in documents dir - not processed file type:", BaseName)
+            pass
 
     return DocumentObjects
 

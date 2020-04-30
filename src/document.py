@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import util, os, pathlib, stats
 from util import print_dev
+import util_json_obj
+from os.path import isfile
 
 # TODO: TEST it
 def docs_copy_samples_into_dir_if_necessary(Prg):
@@ -24,7 +26,11 @@ def docs_copy_samples_into_dir(Prg, DirTarget):
         util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
 
 # Tested
-def document_objects_collect_from_working_dir(Prg, VersionSeeking="version_not_set"):
+def document_objects_collect_from_working_dir(Prg,
+                                              VersionSeeking="version_not_set",
+                                              FunSentenceCreate=None,
+                                              FunIndexCreate=None
+                                              ):
     DirDocuments = Prg["DirDocuments"]
     Files = util.files_collect_from_dir(DirDocuments)
 
@@ -40,10 +46,22 @@ def document_objects_collect_from_working_dir(Prg, VersionSeeking="version_not_s
 
             # this document object describe infos about the document
             # for example the version of index algorithm
+            FileWordIndex = f"{File}_wordindex_{VersionSeeking}"
+            FileSentences = f"{File}_sentence_separator_{VersionSeeking}"
+
+            if FunSentenceCreate: FunSentenceCreate(Prg, FileSentences, FilePathOrigText=File)
+            if FunIndexCreate   : FunIndexCreate(Prg, FileWordIndex, FileSentences)
+
+            Sentences = util.file_read_lines(FileSentences) if isfile(FileSentences) else []
+            Index = util_json_obj.obj_from_file(FileWordIndex) if isfile(FileWordIndex) else dict()
+
             DocumentObj = { "PathAbs": File,
-                            "FileSentences": f"{File}_sentence_separator_{VersionSeeking}",
-                            "FileWordIndex": f"{File}_wordindex_{VersionSeeking}"
-                          }
+                            "FileSentences": FileSentences,
+                            "FileWordIndex": FileWordIndex,
+                            "Index": Index,
+                            "Sentences": Sentences
+                            }
+
             DocumentObjects[BaseName] = DocumentObj  # we store the documents based on their basename
 
         elif Extension in ExtensionsInFuture:

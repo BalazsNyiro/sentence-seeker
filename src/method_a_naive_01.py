@@ -24,19 +24,12 @@ def seek(Prg, Wanted):
     stats.save(Prg, "first seek <=")
 
 def be_ready_to_seeking(Prg):
-    DocumentObjects = document.document_objects_collect_from_working_dir(Prg, Version).items()
-    Prg["DocumentObjectsLoaded"] = DocumentObjects
-    for FileBaseName, Doc in DocumentObjects:
-
-        file_create_sentences(Prg, Doc)
-        file_create_index(Prg, Doc["FileWordIndex"], Doc["FileSentences"])
-
-        Doc["Index"] = util_json_obj.obj_from_file(Doc["FileWordIndex"])
-        Doc["Sentences"] = util.file_read_lines(Doc["FileSentences"])
-        # util_json_obj.obj_from_file(FileIndex)
-        print("TODO: LOAD INDEX files for seeking")
-
-
+    Prg["DocumentObjectsLoaded"] = \
+        document.document_objects_collect_from_working_dir(
+            Prg, Version,
+            FunSentenceCreate=file_sentence_create,
+            FunIndexCreate=file_index_create
+        ).items()
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,
@@ -96,17 +89,16 @@ def sentence_separator(Text):
     return RetSentences
 
 # Tested
-def file_create_sentences(Prg, Doc, Text=""):
-    FileSentences = Doc["FileSentences"]
+def file_sentence_create(Prg, FileSentences, Text="", FilePathOrigText=""):
     if not os.path.isfile(FileSentences):
-        if not Text: # for testing it's easier to get Text from param - and not create/del tmpfile
-            _ReadSuccess, Text = util.file_read_all(Prg, Fname=Doc["PathAbs"])
+        if FilePathOrigText: # for testing it's easier to get Text from param - and not create/del tmpfile
+            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathOrigText)
 
         Sentences = sentence_separator(Text)
         util.file_write(Prg, FileSentences, "\n".join(Sentences))
 
 # Tested
-def file_create_index(Prg, FileIndex, FileSentences):
+def file_index_create(Prg, FileIndex, FileSentences):
     if not os.path.isfile(FileIndex):
         WordIndex = dict()
 

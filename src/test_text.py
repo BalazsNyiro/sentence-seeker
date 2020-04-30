@@ -24,8 +24,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
 
             Sample = 'He is my friend. "This is \n the next - city, London." Is this the third line, or a Book about London?'
 
-            Doc = {"FileSentences": FileSentences}
-            method_a_naive_01.file_create_sentences(Prg, Doc, Sample)
+            method_a_naive_01.file_sentence_create(Prg, FileSentences, Sample)
             Wanted = ["He is my friend.\n",
                       '"This is the next - city, London."\n',
                       "Is this the third line, or a Book about London?"]
@@ -35,7 +34,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
 
             FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")
             util.file_del(FileIndex)
-            method_a_naive_01.file_create_index(Prg, FileIndex, FileSentences)
+            method_a_naive_01.file_index_create(Prg, FileIndex, FileSentences)
 
             Index = util_json_obj.obj_from_file(FileIndex)
             self.assertEqual(Index["london"], [2, 3])

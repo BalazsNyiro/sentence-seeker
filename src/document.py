@@ -24,7 +24,7 @@ def docs_copy_samples_into_dir(Prg, DirTarget):
         util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
 
 # Tested
-def document_objects_collect_from_working_dir(Prg):
+def document_objects_collect_from_working_dir(Prg, VersionSeeking="version_not_set"):
     DirDocuments = Prg["DirDocuments"]
     Files = util.files_collect_from_dir(DirDocuments)
 
@@ -40,7 +40,10 @@ def document_objects_collect_from_working_dir(Prg):
 
             # this document object describe infos about the document
             # for example the version of index algorithm
-            DocumentObj = {"PathAbs": File}
+            DocumentObj = { "PathAbs": File,
+                            "FileSentences": f"{File}_sentence_separator_{VersionSeeking}",
+                            "FileWordIndex": f"{File}_wordindex_{VersionSeeking}"
+                          }
             DocumentObjects[BaseName] = DocumentObj  # we store the documents based on their basename
 
         elif Extension in ExtensionsInFuture:

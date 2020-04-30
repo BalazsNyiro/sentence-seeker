@@ -24,16 +24,11 @@ def seek(Prg, Wanted):
     stats.save(Prg, "first seek <=")
 
 def be_ready_to_seeking(Prg):
-    DocumentObjects = document.document_objects_collect_from_working_dir(Prg).items()
+    DocumentObjects = document.document_objects_collect_from_working_dir(Prg, Version).items()
     Prg["DocumentObjectsLoaded"] = DocumentObjects
     for FileBaseName, Doc in DocumentObjects:
 
-        _ReadSuccess, TextOrig = util.file_read_all(Prg, Fname=Doc["PathAbs"])
-
-        Doc["FileSentences"] = Doc["PathAbs"] + "_sentence_separator_" + Version
-        Doc["FileWordIndex"] = Doc["PathAbs"] + "_wordindex_" + Version
-
-        file_create_sentences(Prg, Doc["FileSentences"], TextOrig)
+        file_create_sentences(Prg, Doc)
         file_create_index(Prg, Doc["FileWordIndex"], Doc["FileSentences"])
 
         Doc["Index"] = util_json_obj.obj_from_file(Doc["FileWordIndex"])
@@ -101,8 +96,12 @@ def sentence_separator(Text):
     return RetSentences
 
 # Tested
-def file_create_sentences(Prg, FileSentences, Text):
+def file_create_sentences(Prg, Doc, Text=""):
+    FileSentences = Doc["FileSentences"]
     if not os.path.isfile(FileSentences):
+        if not Text: # for testing it's easier to get Text from param - and not create/del tmpfile
+            _ReadSuccess, Text = util.file_read_all(Prg, Fname=Doc["PathAbs"])
+
         Sentences = sentence_separator(Text)
         util.file_write(Prg, FileSentences, "\n".join(Sentences))
 

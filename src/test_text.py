@@ -24,7 +24,8 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
 
             Sample = 'He is my friend. "This is \n the next - city, London." Is this the third line, or a Book about London?'
 
-            method_a_naive_01.file_create_sentences(Prg, FileSentences, Sample)
+            Doc = {"FileSentences": FileSentences}
+            method_a_naive_01.file_create_sentences(Prg, Doc, Sample)
             Wanted = ["He is my friend.\n",
                       '"This is the next - city, London."\n',
                       "Is this the third line, or a Book about London?"]

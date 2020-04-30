@@ -4,27 +4,6 @@ from util import print_dev
 import util_json_obj
 from os.path import isfile
 
-# TODO: TEST it
-def docs_copy_samples_into_dir_if_necessary(Prg):
-    DocumentsAvailable = document_objects_collect_from_working_dir(Prg)
-    if not DocumentsAvailable:
-        DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
-        docs_copy_samples_into_dir(Prg, DirTarget)
-
-# Tested
-def docs_copy_samples_into_dir(Prg, DirTarget):
-    util.dir_create_if_necessary(Prg, DirTarget)
-
-    # sample texts are gzipped
-    for FileName in util.files_collect_from_dir(Prg["DirTextSamples"]):
-
-        BaseName = os.path.basename(FileName).replace(".gz", "")
-        print(f"Sample doc duplication... {BaseName}   {FileName}")
-        ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
-        FileNameSaved = os.path.join(DirTarget, BaseName)
-        # if a previous file exists with same name, it overwrites
-        util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
-
 # Tested
 def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
@@ -53,8 +32,8 @@ def document_objects_collect_from_working_dir(Prg,
                 FunIndexCreate(Prg, FileIndex, FileSentences)
 
             DocumentObj = { "PathAbs": File,
-                            "FileSentences": FileSentences,
                             "FileIndex": FileIndex,
+                            "FileSentences": FileSentences,
                             "Index": util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict(),
                             "Sentences": util.file_read_lines(FileSentences) if isfile(FileSentences) else []
             }
@@ -70,4 +49,24 @@ def document_objects_collect_from_working_dir(Prg,
 
     return DocumentObjects
 
+# TODO: TEST it
+def docs_copy_samples_into_dir_if_necessary(Prg):
+    DocumentsAvailable = document_objects_collect_from_working_dir(Prg)
+    if not DocumentsAvailable:
+        DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
+        docs_copy_samples_into_dir(Prg, DirTarget)
+
+# Tested
+def docs_copy_samples_into_dir(Prg, DirTarget):
+    util.dir_create_if_necessary(Prg, DirTarget)
+
+    # sample texts are gzipped
+    for FileName in util.files_collect_from_dir(Prg["DirTextSamples"]):
+
+        BaseName = os.path.basename(FileName).replace(".gz", "")
+        print(f"Sample doc duplication... {BaseName}   {FileName}")
+        ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
+        FileNameSaved = os.path.join(DirTarget, BaseName)
+        # if a previous file exists with same name, it overwrites
+        util.file_write(Prg, Fname=FileNameSaved, Content=TextContent)
 

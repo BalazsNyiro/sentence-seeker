@@ -35,8 +35,11 @@ def replace_whitespaces_to_one_space(Text):
     return replace_regexp(Text, _PatternWhitespaces, " ")
 
 # Tested
-def replace_regexp(Text, Pattern, TextNew):
-    P = re.compile(Pattern)
+def replace_regexp(Text, Pattern, TextNew, IgnoreCase=False):
+    if IgnoreCase:
+        P = re.compile(Pattern, re.IGNORECASE)
+    else:
+        P = re.compile(Pattern)
     return P.sub(TextNew, Text)
 
 # Tested
@@ -115,9 +118,12 @@ def linenumbers_sorted_by_seek_result_length(LineNumbersAllWord):
 def linenumbers_with_group_of_words(WordsWantedOneString, Index):
     LineNumbersAllWord = dict()
 
+    WordsWantedCleaned = []
+
     WordsWanted = WordsWantedOneString.replace(",", " ").split()
     for WordWanted in WordsWanted:
         WordWanted = WordWanted.strip().lower()
+        WordsWantedCleaned.append(WordWanted)
 
         if WordWanted and WordWanted in Index:
             LineNumbersCurrentWord = Index[WordWanted]
@@ -127,4 +133,11 @@ def linenumbers_with_group_of_words(WordsWantedOneString, Index):
                     LineNumbersAllWord[LineNum] = []
                 LineNumbersAllWord[LineNum].append(WordWanted)
 
-    return len(WordsWanted), LineNumbersAllWord
+    return WordsWantedCleaned, LineNumbersAllWord
+
+def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
+    for Word in Words:
+        Pattern = fr"\b({Word})\b"
+        TextNew = fr"{HighlightBefore}\1{HighlightAfter}"
+        Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
+    return Text

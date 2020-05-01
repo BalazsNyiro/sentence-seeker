@@ -3,7 +3,7 @@ import document, util, stats, time, os, text
 
 Version = "a_naive_01"
 
-def seek(Prg, WordsWanted):
+def seek(Prg, WordsWantedOneString):
     LinesSelected = []
     stats.save(Prg, "first seek =>")
     TimeStart = time.time()
@@ -11,10 +11,10 @@ def seek(Prg, WordsWanted):
 
     Result = dict()
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-        _WordsWantedNum, LineNumbers = text.linenumbers_with_group_of_words(WordsWanted, Doc["Index"])
+        WordsWanted, LineNumbers = text.linenumbers_with_group_of_words(WordsWantedOneString, Doc["Index"])
         if LineNumbers:
-            LineNumbersSorted = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
-            Result[FileBaseName] = LineNumbersSorted
+            WordNum__LineNum__Words = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
+            Result[FileBaseName] = WordNum__LineNum__Words
 
     ###############################
     TimeEnd = time.time()
@@ -22,7 +22,7 @@ def seek(Prg, WordsWanted):
     print("Time USED:", TimeEnd - TimeStart)
     stats.save(Prg, "first seek <=")
 
-    return Result
+    return WordsWanted, Result
 
 def be_ready_to_seeking(Prg):
     Prg["DocumentObjectsLoaded"] = \

@@ -50,7 +50,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "PrintForDeveloper": PrintForDeveloper,
             "DocumentObjectsLoaded": dict(),
             "Statistics": []
-            }
+    }
 
     return Prg
 

@@ -4,6 +4,15 @@ import unittest, text, util_test, method_a_naive_01, util, os, util_json_obj
 class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
+    def test_word_highlight(self):
+        if self._test_exec("test_word_highlight"):
+            # Prg = self.Prg
+            Text = "Apple has a lot of apple in his Tree garden"
+            Words = ["apple", "tree"]
+            Highlighted = text.word_highlight(Words, Text)
+
+            TextWanted = ">>Apple<< has a lot of >>apple<< in his >>Tree<< garden"
+            self.assertEqual(Highlighted, TextWanted)
 
     def test_seek_linenumbers_with_group_of_words(self):
         if self._test_exec("test_seek_linenumbers_with_group_of_words"):
@@ -14,7 +23,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                       "mouse": [3, 4],
                       "tree":  [0, 2]
                     }
-            WordsWantedNum, ResultLineNumbersAllWord = text.linenumbers_with_group_of_words(WordsWanted, Index)
+            WordsWanted, ResultLineNumbersAllWord = text.linenumbers_with_group_of_words(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],
@@ -22,10 +31,10 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                         3: ['apple']
                       }
             self.assertEqual(ResultLineNumbersAllWord, Correct)
-            self.assertEqual(WordsWantedNum, 2)
+            self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            LineNumbersSorted = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbersAllWord)
-            # print("\n>>>>>>", LineNumbersSorted)
+            WordNum__LineNum__Words = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbersAllWord)
+            # print("\n>>>>>>", WordNum__LineNum__Words)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
@@ -33,7 +42,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                                              3: ['apple']},
                                         2: { 2: ['apple', 'tree']}
             }
-            self.assertEqual(LineNumbersSorted, WantedLineNumbersSorted)
+            self.assertEqual(WordNum__LineNum__Words, WantedLineNumbersSorted)
 
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
@@ -68,7 +77,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
             method_a_naive_01.file_index_create(Prg, FileIndex, FileSentences)
 
             Index = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(Index["london"], [2, 3])
+            self.assertEqual(Index["london"], [1, 2])
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

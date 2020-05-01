@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import method_a_naive_01
-
-def color_reset():
-    return color('Default') + color('Plain')
-
+import method_a_naive_01, text
 
 def user_interface_start(Prg, Args):
     if Args.gui == "cli":
@@ -14,31 +10,32 @@ def user_interface_start(Prg, Args):
             if not Wanted:
                 print(color_reset())
                 break
-            Result = method_a_naive_01.seek(Prg, Wanted.lower() )
-            result_display(Prg, Result)
+            WordsWanted, Result = method_a_naive_01.seek(Prg, Wanted.lower() )
+            result_display(Prg, Result, WordsWanted)
         #########################################
 
-def result_display(Prg, Res, LimitDisplayed=6):
-    for FileBaseName, NumOfResults_and_LineNumbersWithWords in Res.items():
+def result_display(Prg, Result, WordsWanted, LimitDisplayed=6):
+    for FileBaseName, WordNum__LineNum__Words in Result.items():
         print("====", f"{color('Green')}{FileBaseName}{color_reset()}")
 
-        NumOfResultDescending = list(NumOfResults_and_LineNumbersWithWords.keys())
+        NumOfResultDescending = list(WordNum__LineNum__Words.keys())
         NumOfResultDescending.sort(reverse=True)
 
         DisplayedCounter = 0
         Sentences = Prg["DocumentObjectsLoaded"][FileBaseName]["Sentences"]
 
         for NumOfResult in NumOfResultDescending:
-            LineNumWithWord__Elems = NumOfResults_and_LineNumbersWithWords[NumOfResult]
-            for LineNumWithWord in LineNumWithWord__Elems:
+            LineNum__Words = WordNum__LineNum__Words[NumOfResult]
+            for LineNum, Words in LineNum__Words.items():
 
-                LineResult = Sentences[LineNumWithWord]
-                LineResultColored =
-                print(f"line: {LineNumWithWord} {LineResultColored}")
+                LineResult = Sentences[LineNum]
+                LineResultColored = text.word_highlight(Words, LineResult, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
+                print(f"line: {LineNum} {LineResultColored}")
 
                 DisplayedCounter += 1
                 if DisplayedCounter >= LimitDisplayed: break
             if DisplayedCounter >= LimitDisplayed: break
+
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors

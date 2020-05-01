@@ -6,8 +6,21 @@ MarksQuotation = '"“”'
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
-def remove_not_abc_chars(Text, TextNew=""):
-    return replace_regexp(Text, _PatternNotAbc, TextNew)
+def remove_not_abc_chars(Text, TextNew="", CharsKeepThem=""):
+
+    # in other, none English languate other chars can be letters, too.
+    # the traditional a-z method doesn't match with them
+    #    return replace_regexp(Text, _PatternNotAbc, TextNew)
+
+    Cleaned = []
+    for Char in Text:
+        # cliché - é is not in common Eng chars, but isalpha keep it
+        if Char.isalpha() or Char in CharsKeepThem:
+            Cleaned.append(Char)
+        else:
+            Cleaned.append(TextNew)
+    return "".join(Cleaned)
+
 
 # Tested with abbreviations,
 # FromToPairsExample = [("Mr.", "Mr")]

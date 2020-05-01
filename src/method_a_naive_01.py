@@ -107,7 +107,13 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars
-            Line = text.remove_not_abc_chars(Line, " ")
+
+            # I replace with space because:
+            # This rock-hard cake is absolutely impossible to eat.
+            # We’re looking for a dog-friendly hotel.
+            # ’ -   signs has to be replaced with word separator char
+
+            Line = text.remove_not_abc_chars(Line, " ", CharsKeepThem="-")
 
             for Word in Line.split():
 

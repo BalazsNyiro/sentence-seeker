@@ -43,7 +43,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DirsDeleteAfterRun": list(),
             "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,
-            "FileDocumentsDb": os.path.join(DirDocuments, "docs.json"),
+            "FileDocumentsDb": os.path.join(DirDocuments, "documents.json"),
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
             "TestExecution": False,

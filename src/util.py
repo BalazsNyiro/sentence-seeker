@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil
 
+
+def dict_key_insert_if_necessary(Dict, Key, Default):
+    if Key not in Dict:
+        Dict[Key] = Default
+
 # Tested, it can delete empty dirs
 def dir_delete_if_exist(Prg, Path, Print=False):
     Ret = ""
@@ -172,3 +177,9 @@ def log(Prg, Msg, Caller="-"):
         Msg = "Testing... " + Msg
     file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 
+
+def result_display(Res):
+    for Key, LineNumbersWithWords in Res.items():
+        print("====", Key)
+        for NumOfResult, Word in LineNumbersWithWords.items():
+            print(NumOfResult, Word)

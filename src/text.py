@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
+import re, util
 
 SentenceEnds = [".", "!", "?", "…"]
 MarksQuotation = '"“”'
@@ -102,9 +102,17 @@ def sentence_separator(Text):
     print("\n\nSentences: ", RetSentences)
     return RetSentences
 
+def linenumbers_sorted_by_seek_result_length(LineNumbersAllWord):
+    LineNumbersSorted = dict()
+    for LineNum, Words in LineNumbersAllWord.items():
+        NumOfWords = len(Words)
+        util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWords, dict())
+        LineNumbersSorted[NumOfWords][LineNum] = Words
+    return LineNumbersSorted
+
 # Tested - Words can be separated with comma or space chars
 # return
-def seek_linenumbers_with_group_of_words(WordsWantedOneString, Index):
+def linenumbers_with_group_of_words(WordsWantedOneString, Index):
     LineNumbersAllWord = dict()
 
     WordsWanted = WordsWantedOneString.replace(",", " ").split()

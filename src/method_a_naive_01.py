@@ -11,9 +11,10 @@ def seek(Prg, WordsWanted):
 
     Result = dict()
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"]:
-        _WordsWantedNum, LineNumbers = text.seek_linenumbers_with_group_of_words(WordsWanted, Doc["Index"])
+        _WordsWantedNum, LineNumbers = text.linenumbers_with_group_of_words(WordsWanted, Doc["Index"])
         if LineNumbers:
-            Result[FileBaseName] = LineNumbers
+            LineNumbersSorted = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
+            Result[FileBaseName] = LineNumbersSorted
 
     ###############################
     TimeEnd = time.time()

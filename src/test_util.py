@@ -5,6 +5,14 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_dict_key_insert_if_necessary(self):
+        if self._test_exec("test_dict_key_insert_if_necessary"):
+            Dict = dict()
+            Key = "numbers"
+            Default = []
+            util.dict_key_insert_if_necessary(Dict, Key, Default)
+            self.assertEqual(Dict, {Key: Default})
+
     def test_files_collect_from_dir(self):
         if self._test_exec("test_files_collect_from_dir"):
             Prg = self.Prg

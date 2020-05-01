@@ -14,7 +14,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                       "mouse": [3, 4],
                       "tree":  [0, 2]
                     }
-            WordsWantedNum, ResultLineNumbersAllWord = text.seek_linenumbers_with_group_of_words(WordsWanted, Index)
+            WordsWantedNum, ResultLineNumbersAllWord = text.linenumbers_with_group_of_words(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],
@@ -23,6 +23,17 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                       }
             self.assertEqual(ResultLineNumbersAllWord, Correct)
             self.assertEqual(WordsWantedNum, 2)
+
+            LineNumbersSorted = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbersAllWord)
+            # print("\n>>>>>>", LineNumbersSorted)
+
+            # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
+            # length with 2 results has one elem: in line 2 both words is found
+            WantedLineNumbersSorted =  {1: { 0: ['tree'],
+                                             3: ['apple']},
+                                        2: { 2: ['apple', 'tree']}
+            }
+            self.assertEqual(LineNumbersSorted, WantedLineNumbersSorted)
 
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()

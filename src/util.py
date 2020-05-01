@@ -178,8 +178,3 @@ def log(Prg, Msg, Caller="-"):
     file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 
 
-def result_display(Res):
-    for Key, LineNumbersWithWords in Res.items():
-        print("====", Key)
-        for NumOfResult, Word in LineNumbersWithWords.items():
-            print(NumOfResult, Word)

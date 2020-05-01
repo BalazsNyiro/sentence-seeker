@@ -10,7 +10,7 @@ def seek(Prg, WordsWanted):
     ###############################
 
     Result = dict()
-    for FileBaseName, Doc in Prg["DocumentObjectsLoaded"]:
+    for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
         _WordsWantedNum, LineNumbers = text.linenumbers_with_group_of_words(WordsWanted, Doc["Index"])
         if LineNumbers:
             LineNumbersSorted = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
@@ -30,7 +30,7 @@ def be_ready_to_seeking(Prg):
             Prg, Version,
             FunSentenceCreate=file_sentence_create,
             FunIndexCreate=file_index_create
-        ).items()
+        )
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,
@@ -53,7 +53,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
         WordIndex = dict()
 
         # start LineNum from 1
-        for LineNum, Line in enumerate(util.file_read_lines(FileSentences), 1):
+        for LineNum, Line in enumerate(util.file_read_lines(FileSentences)):
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars

@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-import document, util, stats, time, os, text, util_json_obj
+import document, util, stats, time, os, text
 
 Version = "a_naive_01"
 
-def seek(Prg, Wanted):
+def seek(Prg, WordsWanted):
     LinesSelected = []
     stats.save(Prg, "first seek =>")
     TimeStart = time.time()
     ###############################
-    CharCounter = 0
-    # TODO: use CharCounter
-    Result = []
+
+    Result = dict()
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"]:
-        if Wanted in Doc["Index"]:
-            LineNumbers = Doc["Index"][Wanted]
-            print("result, linenumbers: ", FileBaseName, LineNumbers)
-            Result.append((FileBaseName, LineNumbers))
+        _WordsWantedNum, LineNumbers = text.seek_linenumbers_with_group_of_words(WordsWanted, Doc["Index"])
+        if LineNumbers:
+            Result[FileBaseName] = LineNumbers
 
     ###############################
     TimeEnd = time.time()
     print("\n".join(LinesSelected))
-    print("Time USED:", TimeEnd - TimeStart, f"CharCounter: {CharCounter}, page: {CharCounter / 2000}")
+    print("Time USED:", TimeEnd - TimeStart)
     stats.save(Prg, "first seek <=")
+
+    return Result
 
 def be_ready_to_seeking(Prg):
     Prg["DocumentObjectsLoaded"] = \
@@ -36,56 +36,6 @@ def be_ready_to_seeking(Prg):
 # for example to check it after verbs.
 #
 # Tested
-def sentence_separator(Text):
-    Text = text.replace_abbreviations(Text)
-    Text = text.replace_whitespaces_to_one_space(Text)
-
-    Sentences = []
-    Sentence = []
-
-    InSentence = False
-    InQuotation = False
-
-    for Char in Text:
-
-        ########## BEGINNING ##########
-        if Char in text.MarksQuotation:
-            if not InQuotation:
-                InSentence = True
-                InQuotation = True
-                # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
-            else:
-                InQuotation = False
-                # Quotation End can be in the middle of a sentence:
-                # For some time past vessels had been met by "an enormous thing," a long
-
-        if not InSentence:
-            if Char.isupper(): # it works with special national chars, too. Example: É
-                InSentence = True
-
-        ########## --BEGINNING-- part finished ##########
-
-        if InSentence: # DECISION:
-            Sentence.append(Char)
-        else: # not InSentence
-            if not Sentences: # if it's the first Sentence, Sentences is empty
-                Sentence.append(Char)
-            else:
-                Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
-
-        ########## CLOSER ##########
-        if InSentence and Char in text.SentenceEnds:
-            InSentence = False
-            Sentences.append(Sentence)
-            Sentence = []
-        ########## CLOSER ##########
-
-    if Sentence: # if something stayed in collected chars and the sentence wasn't finished, saved it, too
-        Sentences.append(Sentence)
-
-    RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    print("\n\nSentences: ", RetSentences)
-    return RetSentences
 
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathOrigText=""):
@@ -93,7 +43,7 @@ def file_sentence_create(Prg, FileSentences, Text="", FilePathOrigText=""):
         if FilePathOrigText: # for testing it's easier to get Text from param - and not create/del tmpfile
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathOrigText)
 
-        Sentences = sentence_separator(Text)
+        Sentences = text.sentence_separator(Text)
         util.file_write(Prg, FileSentences, "\n".join(Sentences))
 
 # Tested

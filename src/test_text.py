@@ -5,6 +5,26 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_seek_linenumbers_with_group_of_words(self):
+        if self._test_exec("test_seek_linenumbers_with_group_of_words"):
+            # Prg = self.Prg
+            WordsWanted = "apple, tree"
+            Index = { "apple": [2, 3],
+                      "house": [1, 2],
+                      "mouse": [3, 4],
+                      "tree":  [0, 2]
+                    }
+            WordsWantedNum, ResultLineNumbersAllWord = text.seek_linenumbers_with_group_of_words(WordsWanted, Index)
+
+            # print("\n>>>>>>", LineNumbersAllWord)
+            Correct = { 0: ['tree'],
+                        2: ['apple', 'tree'],
+                        3: ['apple']
+                      }
+            self.assertEqual(ResultLineNumbersAllWord, Correct)
+            self.assertEqual(WordsWantedNum, 2)
+
+
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
         if self._test_exec("test_sentence_separator__a_naive_01"):
             Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
@@ -12,7 +32,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
             ["Mr and Mrs Jones visited their friends...",
              '"Lisa and Pete lived in a big house, in Boston, did they?"',
              "Yes, they did"]
-            Sentences = method_a_naive_01.sentence_separator(Txt)
+            Sentences = text.sentence_separator(Txt)
             self.assertEqual(Wanted, Sentences)
 
     def test_file_create_sentences__create_index(self):

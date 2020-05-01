@@ -6,7 +6,7 @@ MarksQuotation = '"“”'
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
-def remove_not_abc_chars(Text, TextNew="", CharsKeepThem=""):
+def remove_not_alpha_chars(Text, TextNew="", CharsKeepThem=""):
 
     # in other, none English languate other chars can be letters, too.
     # the traditional a-z method doesn't match with them

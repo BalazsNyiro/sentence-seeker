@@ -41,9 +41,9 @@ def sentence_separator(Text):
     Text = text.replace_whitespaces_to_one_space(Text)
 
     Sentences = []
-    SentenceChars = []
-    InSentence = False
+    Sentence = []
 
+    InSentence = False
     InQuotation = False
 
     for Char in Text:
@@ -63,26 +63,25 @@ def sentence_separator(Text):
             if Char.isupper(): # it works with special national chars, too. Example: É
                 InSentence = True
 
-        ########## BEGINNING ##########
+        ########## --BEGINNING-- part finished ##########
 
         if InSentence:
-            SentenceChars.append(Char)
-
-        if not InSentence:
+            Sentence.append(Char)
+        else: # not InSentence
             if not Sentences: # if it's the first Sentence, Sentences is empty
-                SentenceChars.append(Char)
+                Sentence.append(Char)
             else:
                 Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
 
         ########## CLOSER ##########
         if InSentence and Char in text.SentenceEnds:
             InSentence = False
-            Sentences.append(SentenceChars)
-            SentenceChars = []
+            Sentences.append(Sentence)
+            Sentence = []
         ########## CLOSER ##########
 
-    if SentenceChars: # if something stayed in collected chars and the sentence wasn't finished, saved it, too
-        Sentences.append(SentenceChars)
+    if Sentence: # if something stayed in collected chars and the sentence wasn't finished, saved it, too
+        Sentences.append(Sentence)
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     print("\n\nSentences: ", RetSentences)
@@ -113,7 +112,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
             # We’re looking for a dog-friendly hotel.
             # ’ -   signs has to be replaced with word separator char
 
-            Line = text.remove_not_abc_chars(Line, " ", CharsKeepThem="-")
+            Line = text.remove_not_alpha_chars(Line, " ", CharsKeepThem="-")
 
             for Word in Line.split():
 

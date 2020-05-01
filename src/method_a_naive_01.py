@@ -65,7 +65,7 @@ def sentence_separator(Text):
 
         ########## --BEGINNING-- part finished ##########
 
-        if InSentence:
+        if InSentence: # DECISION:
             Sentence.append(Char)
         else: # not InSentence
             if not Sentences: # if it's the first Sentence, Sentences is empty

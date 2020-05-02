@@ -39,6 +39,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,
             "DirTextSamples": os.path.join(DirPrgRoot, "text_samples"),
+            "DirTestFiles": os.path.join(DirPrgRoot, "test_files"),
             "DirsDeleteAfterRun": list(),
             "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,
@@ -49,7 +50,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "PrintForDeveloper": PrintForDeveloper,
             "PdfToTextConvert": fun_pdf_to_text_converter(Os),
             "DocumentObjectsLoaded": dict(),
-            "Statistics": []
+            "Statistics": [],
+
     }
 
     return Prg
@@ -65,9 +67,12 @@ def DirsFilesConfigCreate(Prg):
     Default = "{}"
     util.file_create_if_necessary(Prg, Prg["FileDocumentsDb"], ContentDefault=Default)
 
+# Tested
 def fun_pdf_to_text_converter(Os):
-    PdfToTextFun = lambda _PathSource, _PathOutput: ""
-    Detected = False
+    ConverterDetected = False
+
+    def PdfToTextFun(_PathInput, _PathOutput):
+        return False
 
     # pdfminer.six inserts unwanted (cid:XXX) and binary chars
     # into output so if it's possible I use pdftotext, if both are available
@@ -85,17 +90,24 @@ def fun_pdf_to_text_converter(Os):
 
             print(f"pdf converter detected: {Interpreter}, {PathPdfMinerSix}")
             # python2 Path/pdf2txt.py   test.pdf --outfile test.txt
-            PdfToTextFun = lambda PathSource, PathOutput: util.shell(f"{Interpreter} {PathPdfMinerSix} {shlex.quote(PathSource)} --outfile {shlex.quote(PathOutput)}")
-            Detected = True
+            def PdfToTextFun(PathInput, PathOutput):
+                util.shell(f"{Interpreter} {PathPdfMinerSix} {shlex.quote(PathInput)} --outfile {shlex.quote(PathOutput)}")
+                return True
+
+            ConverterDetected = True
 
     if True:
-        PathPrgConv = util.shell("which pdftotext").strip()
-        if "linux" in Os.lower() and "/pdftotext" in PathPrgConv:
-            print(f"pdf converter detected: {PathPrgConv}")
-            PdfToTextFun = lambda PathIn, PathOut: util.shell(f"{PathPrgConv} -nopgbrk {quote(PathIn)} {quote(PathOut)}")
-            Detected = True
+        PathPdfToText = util.shell("which pdftotext").strip()
+        if "linux" in Os.lower() and "/pdftotext" in PathPdfToText:
+            print(f"pdf converter detected: {PathPdfToText}")
 
-    if not Detected:
+            def PdfToTextFun(PathInput, PathOutput):
+                util.shell(f"{PathPdfToText} -nopgbrk {quote(PathInput)} {quote(PathOutput)}")
+                return True
+
+            ConverterDetected = True
+
+    if not ConverterDetected:
         print("\n== There are more available pdf to text converters ==\n\n"
                 "Win/Linux/Mac pdf to text converter - pdfminer.six:  \n"
                 "    pip install pdfminer.six \n"

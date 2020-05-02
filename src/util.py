@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
-import os, gzip, shutil
+import os, gzip, shutil, subprocess
 
 # Tested
 def shell(Cmd):
-    return os.popen(Cmd).read()
+    with os.popen(Cmd) as OsProcess:
+        return OsProcess.read()
+
+    # the subprocess solution is not correct with shell grep commands
+
+    # if isinstance(Cmd, str):
+    #     Cmd = Cmd.split()
+
+    # # https://stackoverflow.com/questions/51124745/inexplicable-resourcewarning-unclosed-file-io-textiowrapper-name-3
+    # # with os.popen(Cmd) as os_process:
+    # Result = subprocess.run(Cmd, capture_output=True)
+    # if StdoutOnly:
+    #     return str(Result.stdout, 'utf-8')
+    # return Result
 
 # Tested
 def dict_key_insert_if_necessary(Dict, Key, Default):

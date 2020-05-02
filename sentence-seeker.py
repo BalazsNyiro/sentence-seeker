@@ -22,11 +22,13 @@ sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a p
 
 if Args.test:
     import test_util, test_util_json, test_document, test_text
+    import test_converter
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
     test_text.run_all_tests(Prg)
+    test_converter.run_all_tests(Prg)
     util_test.result_all(Prg)
     sys.exit(0)
 

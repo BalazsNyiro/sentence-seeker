@@ -23,10 +23,13 @@ def document_objects_collect_from_working_dir(Prg,
             FilePathWithoutExtension = File.rsplit(".", 1)[0]
             FilePathTxt = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathTxt):
-                Prg["PdfToTextConvert"](File, FilePathTxt)
-                Extension = ".txt"
+                ConversionExecuted = Prg["PdfToTextConvert"](File, FilePathTxt)
+                if ConversionExecuted:
+                    Extension = ".txt"
 
-        if Extension == ".txt":
+        # errors can happen if we convert pdf/html/other to txt
+        # so if Extension is .txt, I check the existing of the file
+        if Extension == ".txt" and os.path.isfile(File):
             print("in documents dir - processed: ", BaseName)
 
             # this document object describe infos about the document

@@ -102,7 +102,7 @@ def sentence_separator(Text):
         Sentences.append(Sentence)
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    print("\n\nSentences: ", RetSentences)
+    # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
 def linenumbers_sorted_by_seek_result_length(LineNumbersAllWord):

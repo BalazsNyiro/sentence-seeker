@@ -12,6 +12,13 @@ def seek(Prg, WordsWantedOneString):
     Result = dict()
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
         WordsWanted, LineNumbers = text.linenumbers_with_group_of_words(WordsWantedOneString, Doc["Index"])
+
+       # TODO: here sort the results based on
+       # - length of sentence (shorter is better)
+       # - the words distance (shorter is better)
+       # - if it's possible keep the word order?
+
+
         if LineNumbers:
             WordNum__LineNum__Words = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
             Result[FileBaseName] = WordNum__LineNum__Words

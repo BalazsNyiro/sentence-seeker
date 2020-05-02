@@ -5,6 +5,13 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_shell(self):
+        if self._test_exec("test_files_collect_from_dir"):
+            Prg = self.Prg
+            if self.Prg["Os"] == "Linux":
+                Result = util.shell(f"ls {Prg['DirPrgRoot']} | grep READ").strip()
+                self.assertEqual(Result, "README.md")
+
     def test_dict_key_insert_if_necessary(self):
         if self._test_exec("test_dict_key_insert_if_necessary"):
             Dict = dict()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, platform, user, util, time, util_json_obj
+from shlex import quote
 
 def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
@@ -33,8 +34,6 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
     # Prg = Dict({"Key":1}) works, too
 
 
-
-
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
@@ -48,6 +47,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "TestResults": [],
             "TestExecution": False,
             "PrintForDeveloper": PrintForDeveloper,
+            "PdfToTextConvert": fun_pdf_to_text_converter(Os),
             "DocumentObjectsLoaded": dict(),
             "Statistics": []
     }
@@ -65,4 +65,44 @@ def DirsFilesConfigCreate(Prg):
     Default = "{}"
     util.file_create_if_necessary(Prg, Prg["FileDocumentsDb"], ContentDefault=Default)
 
+def fun_pdf_to_text_converter(Os):
+    PdfToTextFun = lambda _PathSource, _PathOutput: ""
+    Detected = False
 
+    # pdfminer.six inserts unwanted (cid:XXX) and binary chars
+    # into output so if it's possible I use pdftotext, if both are available
+
+    Location = ""
+    for Line in util.shell("pip show pdfminer.six -f").split("\n"):
+        if "Location" in Line:
+            print(Line)
+            Location = Line.split()[1]
+
+        if ".pyc" not in Line and "pdf2txt.py" in Line:
+            PathRelative = Line.strip()
+            PathPdfMinerSix = os.path.join(Location, PathRelative)
+            Interpreter = "python3" if "python3" in PathPdfMinerSix else "python2"
+
+            print(f"pdf converter detected: {Interpreter}, {PathPdfMinerSix}")
+            # python2 Path/pdf2txt.py   test.pdf --outfile test.txt
+            PdfToTextFun = lambda PathSource, PathOutput: util.shell(f"{Interpreter} {PathPdfMinerSix} {shlex.quote(PathSource)} --outfile {shlex.quote(PathOutput)}")
+            Detected = True
+
+    if True:
+        PathPrgConv = util.shell("which pdftotext").strip()
+        if "linux" in Os.lower() and "/pdftotext" in PathPrgConv:
+            print(f"pdf converter detected: {PathPrgConv}")
+            PdfToTextFun = lambda PathIn, PathOut: util.shell(f"{PathPrgConv} -nopgbrk {quote(PathIn)} {quote(PathOut)}")
+            Detected = True
+
+    if not Detected:
+        print("\n== There are more available pdf to text converters ==\n\n"
+                "Win/Linux/Mac pdf to text converter - pdfminer.six:  \n"
+                "    pip install pdfminer.six \n"
+                "    https://github.com/pdfminer/pdfminer.six\n"
+                "\n"
+                "Linux/Mac: you can install poppler-utils,\n"
+                "    apt install poppler-utils    (on Ubuntu Linux)"
+              )
+
+    return PdfToTextFun

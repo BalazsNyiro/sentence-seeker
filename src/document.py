@@ -17,7 +17,14 @@ def document_objects_collect_from_working_dir(Prg,
 
     for File in Files:
         BaseName = os.path.basename(File)
-        Extension = pathlib.Path(File).suffix
+        Extension = pathlib.Path(File).suffix.lower()
+
+        if Extension == ".pdf":
+            FilePathWithoutExtension = File.rsplit(".", 1)[0]
+            FilePathTxt = f"{FilePathWithoutExtension}.txt"
+            if not os.path.isfile(FilePathTxt):
+                Prg["PdfToTextConvert"](File, FilePathTxt)
+                Extension = ".txt"
 
         if Extension == ".txt":
             print("in documents dir - processed: ", BaseName)

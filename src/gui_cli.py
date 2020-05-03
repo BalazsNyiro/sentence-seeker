@@ -9,7 +9,7 @@ def user_interface_start(Prg, Args):
         while True:
             Wanted = input("wanted: ").strip()
             if not Wanted:
-                print(color_reset())
+                print(color_reset(Prg))
                 break
             WordsWanted, MatchNums__ResultInfo = method_a_naive_01.seek(Prg, Wanted.lower() )
             result_all_display(Prg, MatchNums__ResultInfo)
@@ -24,8 +24,9 @@ def result_one_display(Prg, Result):
     # print(Result)
 
     Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
-    LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
-    print(f"[{WordsDetectedNum}] {LineResultColored}")
+    Sentence = Sentence.strip() # remove possible newline at end
+    LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
+    print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}\n")
 
 
 def results_sort_by_sentence_length(Prg, Results):
@@ -59,7 +60,7 @@ def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
         print("\n===> MatchNum: ", MatchNum)
         Results = MatchNums__ResultsInfo[MatchNum]
         # print("#### Results ####", Results)
-        # print("====", f"{color('Green')}{FileBaseName}{color_reset()}")
+        # print("====", f"{color(Prg, 'Green')}{FileBaseName}{color_reset(Prg)}")
 
         for Result in results_sort_by_sentence_length(Prg, Results):
             DisplayedCounter += 1
@@ -93,8 +94,8 @@ Colors = {
     'CursorHide':    '?25l',
     'CursorShow':    '?25h'
 }
-def color_reset():
-    return color("Plain")+color("Default")
+def color_reset(Prg):
+    return color(Prg, "Plain")+color(Prg, "Default")
 
 CSI = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python
 
@@ -103,7 +104,12 @@ __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
 # cname lehet csak szam, 0-255 kozotti. 
 # lehet szoveg, akkor a fenti tablabol veszi a kodokat.
-def color(ColorName, CnameBackground=""):
+def color(Prg, ColorName, CnameBackground=""):
+
+    if Prg["Os"] == "Windows": return ""
+    # If os == windows, return with empty string, because
+    # we have to test colors in Windows terminal
+
     ColorBackground=""
     global __color_name_last_used, __style_last_used
 

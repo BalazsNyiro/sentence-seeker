@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import method_a_naive_01, text
-import sys
+import util
 
 def user_interface_start(Prg, Args):
     if Args.gui == "cli":
@@ -23,9 +23,28 @@ def result_one_display(Prg, Result):
     WordsDetectedNum = len(WordsDetected)
     # print(Result)
 
-    LineResult = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
-    LineResultColored = text.word_highlight(WordsDetected, LineResult, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
+    Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
     print(f"[{WordsDetectedNum}] {LineResultColored}")
+
+def results_sort_by_sentence_length(Prg, Results):
+    Sorted = []
+
+    GroupsByLen = dict()
+    for Result in Results:
+        Source = Result["Source"]
+        LineNum = Result["LineNum"]
+        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum].strip()
+        SentenceLen = len(Sentence)
+        util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
+        GroupsByLen[SentenceLen].append(Result)
+
+    LenKeys = list(GroupsByLen.keys())
+    LenKeys.sort()
+    for Key in LenKeys:
+        Sorted.extend(GroupsByLen[Key])
+
+    return Sorted
 
 def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
     MatchNums__Descending = list(MatchNums__ResultsInfo.keys())
@@ -39,7 +58,7 @@ def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
         # print("#### Results ####", Results)
         # print("====", f"{color('Green')}{FileBaseName}{color_reset()}")
 
-        for Result in Results:
+        for Result in results_sort_by_sentence_length(Prg, Results):
             DisplayedCounter += 1
             if DisplayedCounter <= LimitDisplayed:
                 result_one_display(Prg, Result)

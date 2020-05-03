@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import method_a_naive_01, text
+import sys
 
 def user_interface_start(Prg, Args):
     if Args.gui == "cli":
@@ -10,31 +11,40 @@ def user_interface_start(Prg, Args):
             if not Wanted:
                 print(color_reset())
                 break
-            WordsWanted, Result = method_a_naive_01.seek(Prg, Wanted.lower() )
-            result_display(Prg, Result, WordsWanted)
+            WordsWanted, MatchNums__ResultInfo = method_a_naive_01.seek(Prg, Wanted.lower() )
+            result_all_display(Prg, MatchNums__ResultInfo)
         #########################################
 
-def result_display(Prg, Result, WordsWanted, LimitDisplayed=6):
-    for FileBaseName, WordNum__LineNum__Words in Result.items():
-        print("====", f"{color('Green')}{FileBaseName}{color_reset()}")
 
-        NumOfResultDescending = list(WordNum__LineNum__Words.keys())
-        NumOfResultDescending.sort(reverse=True)
+def result_one_display(Prg, Result):
+    Source = Result["Source"]
+    LineNum = Result["LineNum"]
+    WordsDetected = Result["WordsDetected"]
+    WordsDetectedNum = len(WordsDetected)
+    # print(Result)
 
-        DisplayedCounter = 0
-        Sentences = Prg["DocumentObjectsLoaded"][FileBaseName]["Sentences"]
+    LineResult = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    LineResultColored = text.word_highlight(WordsDetected, LineResult, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
+    print(f"[{WordsDetectedNum}] {LineResultColored}")
 
-        for NumOfResult in NumOfResultDescending:
-            LineNum__Words = WordNum__LineNum__Words[NumOfResult]
-            for LineNum, Words in LineNum__Words.items():
+def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
+    MatchNums__Descending = list(MatchNums__ResultsInfo.keys())
+    MatchNums__Descending.sort(reverse=True)
 
-                LineResult = Sentences[LineNum]
-                LineResultColored = text.word_highlight(Words, LineResult, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
-                print(f"line: {LineNum} {LineResultColored}")
+    DisplayedCounter = 0
 
-                DisplayedCounter += 1
-                if DisplayedCounter >= LimitDisplayed: break
-            if DisplayedCounter >= LimitDisplayed: break
+    for MatchNum in MatchNums__Descending:
+        print("\n===> MatchNum: ", MatchNum)
+        Results = MatchNums__ResultsInfo[MatchNum]
+        # print("#### Results ####", Results)
+        # print("====", f"{color('Green')}{FileBaseName}{color_reset()}")
+
+        for Result in Results:
+            DisplayedCounter += 1
+            if DisplayedCounter <= LimitDisplayed:
+                result_one_display(Prg, Result)
+            else:
+                return
 
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/

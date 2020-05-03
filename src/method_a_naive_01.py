@@ -23,10 +23,11 @@ def seek(Prg, WordsWantedOneString):
        # - if it's possible keep the word order?
 
         if LineNums__WordsDetected:
-            for MatchNum, SourceInfo in text.linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
+            for MatchNum, ResultInfos in text.linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
                 if MatchNum not in Result:
                     Result[MatchNum] = list()
-                    Result[MatchNum].append(SourceInfo)
+                    # print("DEBUG:::::  ", ResultInfos)
+                    Result[MatchNum].extend(ResultInfos)
 
     ###############################
     TimeEnd = time.time()

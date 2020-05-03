@@ -14,7 +14,7 @@ config.DirsFilesConfigCreate(Prg)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')
-parser.add_argument("--gui", help="select user interface. (cli, tkinter, web)", action='store')
+parser.add_argument("--gui", help="select user interface. (cli, tkinter, web)", action='store', default='cli')
 Args = parser.parse_args()
 
 SysArgvOrig = sys.argv

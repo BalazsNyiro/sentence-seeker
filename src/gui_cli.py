@@ -27,8 +27,9 @@ def result_one_display(Prg, Result):
     LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color("Yellow"), HighlightAfter=color_reset())
     print(f"[{WordsDetectedNum}] {LineResultColored}")
 
+
 def results_sort_by_sentence_length(Prg, Results):
-    Sorted = []
+    ResultsSorted = []
 
     GroupsByLen = dict()
     for Result in Results:
@@ -42,9 +43,11 @@ def results_sort_by_sentence_length(Prg, Results):
     LenKeys = list(GroupsByLen.keys())
     LenKeys.sort()
     for Key in LenKeys:
-        Sorted.extend(GroupsByLen[Key])
+        # TODO: first where the words are in the same clause
+        # TODO: where words are in same order?
+        ResultsSorted.extend(GroupsByLen[Key])
 
-    return Sorted
+    return ResultsSorted
 
 def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
     MatchNums__Descending = list(MatchNums__ResultsInfo.keys())

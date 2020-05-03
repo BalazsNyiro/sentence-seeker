@@ -105,35 +105,42 @@ def sentence_separator(Text):
     # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
-def linenumbers_sorted_by_seek_result_length(LineNumbersAllWord):
+def linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, Source):
     LineNumbersSorted = dict()
-    for LineNum, Words in LineNumbersAllWord.items():
-        NumOfWords = len(Words)
-        util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWords, dict())
-        LineNumbersSorted[NumOfWords][LineNum] = Words
+    for LineNum, WordsDetected in LineNums__WordsDetected.items():
+        NumOfWordsDetected = len(WordsDetected)
+        util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWordsDetected, list())
+        Source__LineNum__Words = {"Source": Source,
+                                  "LineNum": LineNum,
+                                  "WordsDetected": WordsDetected}
+        LineNumbersSorted[NumOfWordsDetected].append(Source__LineNum__Words)
     return LineNumbersSorted
+
+def words_wanted_clean(WordsOneString):
+    WordsCleaned = []
+    WordsWanted = WordsOneString.replace(",", " ").split()
+    for Word in WordsWanted:
+        Word = Word.strip().lower()
+        if Word and Word not in WordsCleaned:
+            WordsCleaned.append(Word)
+    return WordsCleaned
 
 # Tested - Words can be separated with comma or space chars
 # return
-def linenumbers_with_group_of_words(WordsWantedOneString, Index):
-    LineNumbersAllWord = dict()
-
-    WordsWantedCleaned = []
-
-    WordsWanted = WordsWantedOneString.replace(",", " ").split()
+def linenums__words_detected__collect(WordsWanted, Index):
+    LineNums__WordsDetected = dict()
     for WordWanted in WordsWanted:
-        WordWanted = WordWanted.strip().lower()
-        WordsWantedCleaned.append(WordWanted)
 
         if WordWanted and WordWanted in Index:
             LineNumbersCurrentWord = Index[WordWanted]
-
+            # WARNING: if the sentence has the word two times,
+            # the current detection append it two times!
             for LineNum in LineNumbersCurrentWord:
-                if LineNum not in LineNumbersAllWord:
-                    LineNumbersAllWord[LineNum] = []
-                LineNumbersAllWord[LineNum].append(WordWanted)
+                if LineNum not in LineNums__WordsDetected:
+                    LineNums__WordsDetected[LineNum] = []
+                LineNums__WordsDetected[LineNum].append(WordWanted)
 
-    return WordsWantedCleaned, LineNumbersAllWord
+    return LineNums__WordsDetected
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

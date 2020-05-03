@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import document, util, stats, time, os, text
+import sys
 
 Version = "a_naive_01"
 
@@ -10,18 +11,22 @@ def seek(Prg, WordsWantedOneString):
     ###############################
 
     Result = dict()
+    WordsWanted = text.words_wanted_clean(WordsWantedOneString)
+
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-        WordsWanted, LineNumbers = text.linenumbers_with_group_of_words(WordsWantedOneString, Doc["Index"])
+        LineNums__WordsDetected = text.linenums__words_detected__collect(
+            WordsWanted, Doc["Index"])
 
        # TODO: here sort the results based on
        # - length of sentence (shorter is better)
        # - the words distance (shorter is better)
        # - if it's possible keep the word order?
 
-
-        if LineNumbers:
-            WordNum__LineNum__Words = text.linenumbers_sorted_by_seek_result_length(LineNumbers)
-            Result[FileBaseName] = WordNum__LineNum__Words
+        if LineNums__WordsDetected:
+            for MatchNum, SourceInfo in text.linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
+                if MatchNum not in Result:
+                    Result[MatchNum] = list()
+                    Result[MatchNum].append(SourceInfo)
 
     ###############################
     TimeEnd = time.time()

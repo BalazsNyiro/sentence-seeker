@@ -18,31 +18,33 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
         if self._test_exec("test_seek_linenumbers_with_group_of_words"):
             # Prg = self.Prg
             WordsWanted = "apple, tree"
-            Index = { "apple": [2, 3],
+            Index = { "apple": [4, 3],
                       "house": [1, 2],
                       "mouse": [3, 4],
-                      "tree":  [0, 2]
+                      "tree":  [0, 4]
                     }
-            WordsWanted, ResultLineNumbersAllWord = text.linenumbers_with_group_of_words(WordsWanted, Index)
+            WordsWanted = text.words_wanted_clean(WordsWanted)
+            ResultLineNumbers__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],
-                        2: ['apple', 'tree'],
+                        4: ['apple', 'tree'],
                         3: ['apple']
                       }
-            self.assertEqual(ResultLineNumbersAllWord, Correct)
+            self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            WordNum__LineNum__Words = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbersAllWord)
-            # print("\n>>>>>>", WordNum__LineNum__Words)
+            MatchNum__SourceAndDetectedWords = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbers__WordsDetected, "test")
+            # print("\n>>>>>>", MatchNum__SourceAndDetectedWords)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
-            WantedLineNumbersSorted =  {1: { 0: ['tree'],
-                                             3: ['apple']},
-                                        2: { 2: ['apple', 'tree']}
+            Wanted__MatchNum__SourceAndDetectedWords = {
+                1: [{'Source': 'test', 'LineNum': 3, 'Words': ['apple']},
+                    {'Source': 'test', 'LineNum': 0, 'Words': ['tree']}],
+                2: [{'Source': 'test', 'LineNum': 4, 'Words': ['apple', 'tree']}]
             }
-            self.assertEqual(WordNum__LineNum__Words, WantedLineNumbersSorted)
+            self.assertEqual(MatchNum__SourceAndDetectedWords, Wanted__MatchNum__SourceAndDetectedWords)
 
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()

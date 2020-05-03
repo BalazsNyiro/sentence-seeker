@@ -8,7 +8,7 @@ class UtilTests(util_test.SentenceSeekerTest):
     def test_shell(self):
         if self._test_exec("test_files_collect_from_dir"):
             Prg = self.Prg
-            if self.Prg["Os"] == "Linux":
+            if self.Prg["Os"] == "Linux": # the tests with ls/grep don't work on Windows
                 Result = util.shell(f"ls {Prg['DirPrgRoot']} | grep READ").strip()
                 self.assertEqual(Result, "README.md")
 

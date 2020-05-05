@@ -3,8 +3,8 @@ import method_a_naive_01, text
 import util
 
 def user_interface_start(Prg, Args):
-    if Args.gui == "cli":
-        print("Exit: press enter, with empty wanted word")
+    if Args.ui == "cli":
+        user_welcome_message(Prg, Args.ui)
         # neverending cycle :-)
         while True:
             Wanted = input("wanted: ").strip()
@@ -15,6 +15,10 @@ def user_interface_start(Prg, Args):
             result_all_display(Prg, MatchNums__ResultInfo)
         #########################################
 
+def user_welcome_message(Prg, UserInterface):
+    if UserInterface == "cli":
+        print("Exit: press enter, with empty wanted word")
+        print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
 def result_one_display(Prg, Result):
     Source = Result["Source"]
@@ -46,6 +50,8 @@ def results_sort_by_sentence_length(Prg, Results):
     for Key in LenKeys:
         # TODO: first where the words are in the same clause
         # TODO: where words are in same order?
+        # TODO: avoid same sentences in different results
+        # TODO: choose samples from different sources, not only from one
         ResultsSorted.extend(GroupsByLen[Key])
 
     return ResultsSorted

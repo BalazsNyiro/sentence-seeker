@@ -40,9 +40,9 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
             Wanted__MatchNum__SourceAndDetectedWords = {
-                1: [{'Source': 'test', 'LineNum': 3, 'Words': ['apple']},
-                    {'Source': 'test', 'LineNum': 0, 'Words': ['tree']}],
-                2: [{'Source': 'test', 'LineNum': 4, 'Words': ['apple', 'tree']}]
+                1: [{'Source': 'test', 'LineNum': 3, 'WordsDetected': ['apple']},
+                    {'Source': 'test', 'LineNum': 0, 'WordsDetected': ['tree']}],
+                2: [{'Source': 'test', 'LineNum': 4, 'WordsDetected': ['apple', 'tree']}]
             }
             self.assertEqual(MatchNum__SourceAndDetectedWords, Wanted__MatchNum__SourceAndDetectedWords)
 

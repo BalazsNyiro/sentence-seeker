@@ -134,6 +134,21 @@ def file_del(Path):
 def file_append(Prg, Fname="", Content="", Mode="a"):  # you can append in binary mode, too
     return file_write(Prg, Fname=Fname, Content=Content, Mode=Mode)
 
+
+def file_write_utf8_error_avoid(Prg, Fname, Content):
+    # convert text to bytes. On Linux without any error
+    # we can write texts but on Windows I receive conversion error message:
+    # I don't understand why it doesn't use utf8 instead of cp1252
+    # File "C:\Users\dioge\AppData\Local\Programs\Python\Python38-32\lib\encodings\cp1252.py", line
+    # 19, in encode return codecs.charmap_encode(input, self.errors, encoding_table)[0]
+    # UnicodeEncodeError: 'charmap'
+    # codec
+    # can
+    # 't encode character '\ufeff
+    # ' in position 0: character maps to <undefined>
+
+    file_write(Prg, Fname, Content.encode(), Mode="wb")
+
 # Tested
 def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel=9, LogCreate=True):
     if not Fname:

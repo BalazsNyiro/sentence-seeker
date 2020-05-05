@@ -58,7 +58,7 @@ def file_sentence_create(Prg, FileSentences, Text="", FilePathOrigText=""):
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathOrigText)
 
         Sentences = text.sentence_separator(Text)
-        util.file_write(Prg, FileSentences, "\n".join(Sentences))
+        util.file_write_utf8_error_avoid(Prg, FileSentences, "\n".join(Sentences))
 
 # Tested
 def file_index_create(Prg, FileIndex, FileSentences):

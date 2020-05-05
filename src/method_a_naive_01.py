@@ -4,6 +4,22 @@ import sys
 
 Version = "a_naive_01"
 
+def group_maker(Prg, WordsWanted):
+    Groups_MatchNums_SentenceObjects = dict()
+    for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
+        LineNums__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Doc["Index"])
+
+        for MatchNum, ResultInfos in \
+                text.result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, FileBaseName).items():
+
+            if MatchNum not in Groups_MatchNums_SentenceObjects:
+                Groups_MatchNums_SentenceObjects[MatchNum] = list()
+            Groups_MatchNums_SentenceObjects[MatchNum].extend(ResultInfos)
+
+    MatchNums__Descending = list(Groups_MatchNums_SentenceObjects.keys())
+    MatchNums__Descending.sort(reverse=True)
+
+    return Groups_MatchNums_SentenceObjects, MatchNums__Descending
 
 # TODO: here sort the results based on
 # - length of sentence (shorter is better)
@@ -15,29 +31,11 @@ def seek(Prg, WordsWantedOneString):
 
     ###############################
     WordsWanted = text.words_wanted_clean(WordsWantedOneString)
-
-    ######### GROUPING by MatchNums #############
-    if True: # I can close this block in ide :-)
-        MatchNums__SentenceObjects = dict()
-
-        for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-            LineNums__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Doc["Index"])
-
-            for MatchNum, ResultInfos in \
-                    text.result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, FileBaseName).items():
-
-                if MatchNum not in MatchNums__SentenceObjects:
-                    MatchNums__SentenceObjects[MatchNum] = list()
-                MatchNums__SentenceObjects[MatchNum].extend(ResultInfos)
-
-    ######### insert SentenceObjects by num of Matches #############
-
-    MatchNums__Descending = list(MatchNums__SentenceObjects.keys())
-    MatchNums__Descending.sort(reverse=True)
+    Groups_MatchNums_SentenceObjects, MatchNums__Descending = group_maker(Prg, WordsWanted)
 
     SelectedSentenceObjs = []
     for MatchNum in MatchNums__Descending:
-        SentenceObjects_Group = MatchNums__SentenceObjects[MatchNum]
+        SentenceObjects_Group = Groups_MatchNums_SentenceObjects[MatchNum]
         SelectedSentenceObjs.extend(SentenceObjects_Group)
 
     ###############################

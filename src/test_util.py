@@ -44,7 +44,7 @@ class UtilTests(util_test.SentenceSeekerTest):
             Prg = self.Prg
             Fname = os.path.join(Prg["DirWork"], "test_file_read_lines.txt")
             util.file_write(Prg, Fname=Fname, Content="cat\ndog\nelephant")
-            Lines = util.file_read_lines(Fname, Strip=True)
+            Lines = util.file_read_lines(Prg, Fname, Strip=True)
             self.assertEqual(Lines, ["cat", "dog", "elephant"])
             util.file_del(Fname)
 

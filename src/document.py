@@ -45,7 +45,7 @@ def document_objects_collect_from_working_dir(Prg,
                             "FileIndex": FileIndex,
                             "FileSentences": FileSentences,
                             "Index": util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict(),
-                            "Sentences": util.file_read_lines(FileSentences) if isfile(FileSentences) else []
+                            "Sentences": util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else []
             }
 
             DocumentObjects[BaseName] = DocumentObj  # we store the documents based on their basename

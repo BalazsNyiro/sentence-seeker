@@ -71,7 +71,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                       '"This is the next - city, London."\n',
                       "Is this the third line, or a Book about London?"]
 
-            LinesFromFile = util.file_read_lines(FileSentences)
+            LinesFromFile = util.file_read_lines(Prg, FileSentences)
             self.assertEqual(Wanted, LinesFromFile)
 
             FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")

@@ -66,8 +66,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
         WordIndex = dict()
 
         # start LineNum from 1
-        _Success, TextAll= util.file_read_all(Prg, FileSentences)
-        for LineNum, Line in enumerate(TextAll.split("\n")):
+        for LineNum, Line in enumerate(util.file_read_lines(Prg, FileSentences)):
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars

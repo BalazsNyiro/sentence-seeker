@@ -79,12 +79,26 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 # FIXME?
 # you can't use this version on windows because utf8 conversion error.
 # now I read the whole text and split it to lines in file_index_create func
-def file_read_lines(Fname, Strip=False):
+def file_read_lines_orig(_Prg, Fname, Strip=False):
     with open(Fname, 'r') as F:
         if Strip:
             return [L.strip() for L in F.readlines()]
         else:
             return F.readlines()
+
+def file_read_lines(Prg, Fname, Strip=False):
+    _Success, TextAll = file_read_all(Prg, Fname)
+    Lines = []
+    for Line in TextAll.split("\n"):
+        if Strip:
+            Lines.append(Line.strip())
+        else:
+            Lines.append(Line+"\n") # give back ending newline
+
+    if  Lines:
+        Lines[-1] = Lines[-1].replace("\n", '') # the last elem can't have \n at end
+
+    return Lines
 
 # Tested with the life
 # of course somehow I have to test it, it's a magic :-)

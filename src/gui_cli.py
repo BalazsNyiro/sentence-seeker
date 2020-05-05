@@ -12,15 +12,16 @@ def user_interface_start(Prg, Args):
                 print(color_reset(Prg))
                 break
             WordsWanted, MatchNums__ResultInfo = method_a_naive_01.seek(Prg, Wanted.lower() )
-            result_all_display(Prg, MatchNums__ResultInfo)
+            sentence_result_all_display(Prg, MatchNums__ResultInfo)
         #########################################
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "cli":
+        print("test word: elephant")
         print("Exit: press enter, with empty wanted word")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
-def result_one_display(Prg, Result):
+def sentence_result_one_display(Prg, Result):
     Source = Result["Source"]
     LineNum = Result["LineNum"]
     WordsDetected = Result["WordsDetected"]
@@ -32,49 +33,11 @@ def result_one_display(Prg, Result):
     LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
     print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}\n")
 
-
-def results_sort_by_sentence_length(Prg, Results):
-    ResultsSorted = []
-
-    GroupsByLen = dict()
-    for Result in Results:
-        Source = Result["Source"]
-        LineNum = Result["LineNum"]
-        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum].strip()
-        SentenceLen = len(Sentence)
-        util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
-        GroupsByLen[SentenceLen].append(Result)
-
-    LenKeys = list(GroupsByLen.keys())
-    LenKeys.sort()
-    for Key in LenKeys:
-        # TODO: first where the words are in the same clause
-        # TODO: where words are in same order?
-        # TODO: avoid same sentences in different results
-        # TODO: choose samples from different sources, not only from one
-        ResultsSorted.extend(GroupsByLen[Key])
-
-    return ResultsSorted
-
-def result_all_display(Prg, MatchNums__ResultsInfo, LimitDisplayed=6):
-    MatchNums__Descending = list(MatchNums__ResultsInfo.keys())
-    MatchNums__Descending.sort(reverse=True)
-
-    DisplayedCounter = 0
-
-    for MatchNum in MatchNums__Descending:
-        print("\n===> MatchNum: ", MatchNum)
-        Results = MatchNums__ResultsInfo[MatchNum]
-        # print("#### Results ####", Results)
-        # print("====", f"{color(Prg, 'Green')}{FileBaseName}{color_reset(Prg)}")
-
-        for Result in results_sort_by_sentence_length(Prg, Results):
-            DisplayedCounter += 1
-            if DisplayedCounter <= LimitDisplayed:
-                result_one_display(Prg, Result)
-            else:
-                return
-
+def sentence_result_all_display(Prg, SentenceObjects, LimitDisplayed=6):
+    for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):
+        sentence_result_one_display(Prg, SentenceObj)
+        if DisplayedCounter >= LimitDisplayed:
+            break
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors

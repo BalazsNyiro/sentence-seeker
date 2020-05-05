@@ -4,38 +4,88 @@ import sys
 
 Version = "a_naive_01"
 
+
+# TODO: here sort the results based on
+# - length of sentence (shorter is better)
+# - the words distance (shorter is better)
+# - if it's possible keep the word order?
 def seek(Prg, WordsWantedOneString):
-    LinesSelected = []
     stats.save(Prg, "first seek =>")
     TimeStart = time.time()
-    ###############################
 
-    Result = dict()
+    ###############################
     WordsWanted = text.words_wanted_clean(WordsWantedOneString)
 
-    for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-        LineNums__WordsDetected = text.linenums__words_detected__collect(
-            WordsWanted, Doc["Index"])
+    ######### GROUPING by MatchNums #############
+    if True: # I can close this block in ide :-)
+        MatchNums__SentenceObjects = dict()
 
-       # TODO: here sort the results based on
-       # - length of sentence (shorter is better)
-       # - the words distance (shorter is better)
-       # - if it's possible keep the word order?
+        for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
+            LineNums__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Doc["Index"])
 
-        if LineNums__WordsDetected:
-            for MatchNum, ResultInfos in text.linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
-                if MatchNum not in Result:
-                    Result[MatchNum] = list()
-                    # print("DEBUG:::::  ", ResultInfos)
-                    Result[MatchNum].extend(ResultInfos)
+            for MatchNum, ResultInfos in \
+                    text.result_object_building___insert_source____linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
+
+                if MatchNum not in MatchNums__SentenceObjects:
+                    MatchNums__SentenceObjects[MatchNum] = list()
+                MatchNums__SentenceObjects[MatchNum].extend(ResultInfos)
+    ######### GROUPING by MatchNums #############
+
+    MatchNums__Descending = list(MatchNums__SentenceObjects.keys())
+    MatchNums__Descending.sort(reverse=True)
+
+    SelectedSentenceObjs = []
+    for MatchNum in MatchNums__Descending:
+        SentenceObjects_Group = MatchNums__SentenceObjects[MatchNum]
+        SelectedSentenceObjs.extend(SentenceObjects_Group)
 
     ###############################
     TimeEnd = time.time()
-    print("\n".join(LinesSelected))
     print("Time USED:", TimeEnd - TimeStart)
     stats.save(Prg, "first seek <=")
 
-    return WordsWanted, Result
+    return WordsWanted, SelectedSentenceObjs
+
+
+
+def results_sort_by_sentence_length(Prg, Results):
+    ResultsSorted = []
+
+    GroupsByLen = dict()
+    for Result in Results:
+        Source = Result["Source"]
+        LineNum = Result["LineNum"]
+        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum].strip()
+        SentenceLen = len(Sentence)
+        util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
+        GroupsByLen[SentenceLen].append(Result)
+
+    LenKeys = list(GroupsByLen.keys())
+    LenKeys.sort()
+    for Key in LenKeys:
+        # TODO: first where the words are in the same clause
+        # TODO: where words are in same order?
+        # TODO: avoid same sentences in different results
+        # TODO: choose samples from different sources, not only from one
+        ResultsSorted.extend(GroupsByLen[Key])
+
+    return ResultsSorted
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def be_ready_to_seeking(Prg):
     Prg["DocumentObjectsLoaded"] = \

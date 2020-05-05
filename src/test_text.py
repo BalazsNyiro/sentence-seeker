@@ -34,7 +34,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            MatchNum__SourceAndDetectedWords = text.linenumbers_sorted_by_seek_result_length(ResultLineNumbers__WordsDetected, "test")
+            MatchNum__SourceAndDetectedWords = text.result_object_building___insert_source____linenumbers_sorted_by_seek_result_length(ResultLineNumbers__WordsDetected, "test")
             # print("\n>>>>>>", MatchNum__SourceAndDetectedWords)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.

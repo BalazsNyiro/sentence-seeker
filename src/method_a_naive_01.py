@@ -24,12 +24,13 @@ def seek(Prg, WordsWantedOneString):
             LineNums__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Doc["Index"])
 
             for MatchNum, ResultInfos in \
-                    text.result_object_building___insert_source____linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, FileBaseName).items():
+                    text.result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, FileBaseName).items():
 
                 if MatchNum not in MatchNums__SentenceObjects:
                     MatchNums__SentenceObjects[MatchNum] = list()
                 MatchNums__SentenceObjects[MatchNum].extend(ResultInfos)
-    ######### GROUPING by MatchNums #############
+
+    ######### insert SentenceObjects by num of Matches #############
 
     MatchNums__Descending = list(MatchNums__SentenceObjects.keys())
     MatchNums__Descending.sort(reverse=True)

@@ -105,7 +105,7 @@ def sentence_separator(Text):
     # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
-def result_object_building___insert_source____linenumbers_sorted_by_seek_result_length(LineNums__WordsDetected, Source):
+def result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, Source):
     LineNumbersSorted = dict()
     for LineNum, WordsDetected in LineNums__WordsDetected.items():
         NumOfWordsDetected = len(WordsDetected)
@@ -116,6 +116,24 @@ def result_object_building___insert_source____linenumbers_sorted_by_seek_result_
         LineNumbersSorted[NumOfWordsDetected].append(Source__LineNum__Words)
     return LineNumbersSorted
 
+# Tested - Words can be separated with comma or space chars
+# It's a separated step from result_object_building
+def linenums__words_detected__collect(WordsWanted, Index):
+    LineNums__WordsDetected = dict()
+    for WordWanted in WordsWanted:
+        if WordWanted and WordWanted in Index:
+
+            LineNumbersCurrentWord = Index[WordWanted]
+
+            for LineNum in LineNumbersCurrentWord:
+                util.dict_key_insert_if_necessary(LineNums__WordsDetected, LineNum, list())
+
+                # Save it only once if the words is more than once in a sentence
+                if WordWanted not in LineNums__WordsDetected[LineNum]:
+                    LineNums__WordsDetected[LineNum].append(WordWanted)
+
+    return LineNums__WordsDetected
+
 def words_wanted_clean(WordsOneString):
     WordsCleaned = []
     WordsWanted = WordsOneString.replace(",", " ").split()
@@ -124,27 +142,6 @@ def words_wanted_clean(WordsOneString):
         if Word and Word not in WordsCleaned:
             WordsCleaned.append(Word)
     return WordsCleaned
-
-# Tested - Words can be separated with comma or space chars
-# return
-def linenums__words_detected__collect(WordsWanted, Index):
-    LineNums__WordsDetected = dict()
-    for WordWanted in WordsWanted:
-
-        if WordWanted and WordWanted in Index:
-            LineNumbersCurrentWord = Index[WordWanted]
-            for LineNum in LineNumbersCurrentWord:
-                if LineNum not in LineNums__WordsDetected:
-                    LineNums__WordsDetected[LineNum] = []
-
-                # WARNING: if the sentence has the word two times,
-                # the current detection append it two times!
-                # if the words can be found more than once in a sentence,
-                # save it only once
-                if WordWanted not in LineNums__WordsDetected[LineNum]:
-                    LineNums__WordsDetected[LineNum].append(WordWanted)
-
-    return LineNums__WordsDetected
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

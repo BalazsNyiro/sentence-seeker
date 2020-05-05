@@ -76,6 +76,9 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 
     return Created
 
+# FIXME?
+# you can't use this version on windows because utf8 conversion error.
+# now I read the whole text and split it to lines in file_index_create func
 def file_read_lines(Fname, Strip=False):
     with open(Fname, 'r') as F:
         if Strip:

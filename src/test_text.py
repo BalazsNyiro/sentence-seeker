@@ -1,21 +1,40 @@
 # -*- coding: utf-8 -*-
-import unittest, text, util_test, method_a_naive_01, util, os, util_json_obj
+import unittest, text, util_test, seeker, util, os, util_json_obj
 
 class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    # TODO: think about it, how can test it
+    # def test_group_maker(self):
+    #     if self._test_exec("test_group_maker"):
+    #         Prg = self.Prg
+    #         WordsWanted = ["looks", "like", "bird"]
+    #         Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.group_maker(Prg, WordsWanted)
+
+    #         GroupsWanted = {1: []}
+    #         print("\nMatchNums__Descending", MatchNums__Descending)
+    #         self.assertEqual(MatchNums__Descending, [3, 2, 1])
+
+    #         # self.assertEqual(GroupsDetected, GroupsWanted)
+    #         print("ResultsTotalNum:", ResultsTotalNum)
+
+    #         # restore original state
+    #         Prg["DocumentObjectsLoaded"] = dict()
+
     def test_match_num_max_in_subsentences(self):
-        WordsWanted = ["what", "do", "like"] # do is two times in second subsentence
-        MatchNumInSentences = 3              # but 'do'+'do'+'like' = 2 only because 'do' is repeated
-        Sentence = "What is your favourite color, for example do you like black like I do?"
-        MatchNumMaxSubsentences = text.match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence)
-        self.assertEqual(MatchNumMaxSubsentences, 2)
+        if self._test_exec("test_match_num_max_in_subsentences"):
+            WordsWanted = ["what", "do", "like"] # do is two times in second subsentence
+            MatchNumInSentences = 3              # but 'do'+'do'+'like' = 2 only because 'do' is repeated
+            Sentence = "What is your favourite color, for example do you like black like I do?"
+            MatchNumMaxSubsentences = text.match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence)
+            self.assertEqual(MatchNumMaxSubsentences, 2)
 
     def test_words_wanted_clean(self):
-        WordsWanted = "apple, tree"
-        WordsWantedCleaned = text.words_wanted_clean(WordsWanted)
-        self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
+        if self._test_exec("test_words_wanted_clean"):
+            WordsWanted = "apple, tree"
+            WordsWantedCleaned = text.words_wanted_clean(WordsWanted)
+            self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
 
     def test_word_count_in_text(self):
         if self._test_exec("test_word_count_in_text"):
@@ -85,7 +104,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
 
             Sample = 'He is my friend. "This is \n the next - city, London." Is this the third line, or a Book about London?'
 
-            method_a_naive_01.file_sentence_create(Prg, FileSentences, Sample)
+            seeker.file_sentence_create(Prg, FileSentences, Sample)
             Wanted = ["He is my friend.\n",
                       '"This is the next - city, London."\n',
                       "Is this the third line, or a Book about London?"]
@@ -95,7 +114,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
 
             FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")
             util.file_del(FileIndex)
-            method_a_naive_01.file_index_create(Prg, FileIndex, FileSentences)
+            seeker.file_index_create(Prg, FileIndex, FileSentences)
 
             Index = util_json_obj.obj_from_file(FileIndex)
             self.assertEqual(Index["london"], [1, 2])

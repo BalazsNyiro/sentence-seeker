@@ -115,8 +115,8 @@ def sentence_separator(Text):
     return RetSentences
 
 # Tested
-def match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence):
-    if MatchNumInSentences == 1:
+def match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Sentence):
+    if MatchNumInSentence == 1:
         return 1
 
     SubsentencesNum = 1
@@ -124,7 +124,7 @@ def match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence):
         SubsentencesNum += Sentence.count(SubSep)
 
     if SubsentencesNum == 1:
-        return MatchNumInSentences
+        return MatchNumInSentence
 
     SentenceTmp = Sentence
     for SubSep in SubsentenceEnds:

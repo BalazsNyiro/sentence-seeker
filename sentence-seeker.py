@@ -10,6 +10,8 @@ import config, util_test, document, argparse
 ##########################################################
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
+import seeker, gui_cli
+
 config.DirsFilesConfigCreate(Prg)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
@@ -27,16 +29,18 @@ if Args.test:
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
-    test_text.run_all_tests(Prg)
     test_converter.run_all_tests(Prg)
     util_test.result_all(Prg)
+    test_text.run_all_tests(Prg)
+
+    seeker.be_ready_to_seeking(Prg)
+    gui_cli.seek_and_display(Prg, "looks, like, bird")
     sys.exit(0)
 
 document.docs_copy_samples_into_dir_if_necessary(Prg)
 
 #########################################
-import method_a_naive_01, gui_cli
-method_a_naive_01.be_ready_to_seeking(Prg)
+seeker.be_ready_to_seeking(Prg)
 
 gui_cli.user_interface_start(Prg, Args)
 

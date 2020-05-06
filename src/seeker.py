@@ -6,25 +6,28 @@ Version = "a_naive_01"
 
 # TODO: test it
 def group_maker(Prg, WordsWanted):
-    Groups_MatchNums_SentenceObjects = dict()
+    Groups_MatchNums_ResultInfos = dict()
+    ResultsTotalNum = 0
+
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
 
         LineNumsInLine__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Doc["Index"])
 
-        for MatchNum, ResultInfos in \
+        for MatchNumInSentence, Results in \
                 text.result_obj_maker__words_detected_group_by_match_num(LineNumsInLine__WordsDetected, FileBaseName).items():
 
-            for ResultInfo in ResultInfos:
-                Sentence = text.sentence_loaded(Prg, ResultInfo["Source"], ResultInfo["LineNum"])
-                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNum, WordsWanted, Sentence)
+            for Result in Results:
+                Sentence = text.sentence_loaded(Prg, Result["Source"], Result["LineNum"])
+                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Sentence)
 
-                util.dict_key_insert_if_necessary(Groups_MatchNums_SentenceObjects, MatchNumMaxInSubsentences, list())
-                Groups_MatchNums_SentenceObjects[MatchNumMaxInSubsentences].append(ResultInfo)
+                util.dict_key_insert_if_necessary(Groups_MatchNums_ResultInfos, MatchNumMaxInSubsentences, list())
+                Groups_MatchNums_ResultInfos[MatchNumMaxInSubsentences].append(Result)
+                ResultsTotalNum += 1
 
-    MatchNums__Descending = list(Groups_MatchNums_SentenceObjects.keys())
+    MatchNums__Descending = list(Groups_MatchNums_ResultInfos.keys())
     MatchNums__Descending.sort(reverse=True)
 
-    return Groups_MatchNums_SentenceObjects, MatchNums__Descending
+    return Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum
 
 def seek(Prg, WordsWantedOneString):
     stats.save(Prg, "first seek =>")
@@ -32,25 +35,27 @@ def seek(Prg, WordsWantedOneString):
 
     ###############################
     WordsWanted = text.words_wanted_clean(WordsWantedOneString)
-    Groups_MatchNums_SentenceObjects, MatchNums__Descending = group_maker(Prg, WordsWanted)
+    Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = group_maker(Prg, WordsWanted)
 
-    SelectedSentenceObjs = []
+    ResultsSelected = []
     for MatchNum in MatchNums__Descending:
+
+        # PLUGIN ATTACH POINT
 
         # TODO: here sort the results based on
         # - length of sentence (shorter is better)
         # - the words distance (shorter is better)
         # - if it's possible keep the word order?
 
-        SentenceObjects_Group = Groups_MatchNums_SentenceObjects[MatchNum]
-        SelectedSentenceObjs.extend(SentenceObjects_Group)
+        Results__Group = Groups_MatchNums_ResultInfos[MatchNum]
+        ResultsSelected.extend(Results__Group)
 
     ###############################
     TimeEnd = time.time()
     print("Time USED:", TimeEnd - TimeStart)
     stats.save(Prg, "first seek <=")
 
-    return WordsWanted, SelectedSentenceObjs
+    return WordsWanted, ResultsSelected, ResultsTotalNum
 
 def results_sort_by_sentence_length(Prg, Results):
     ResultsSorted = []

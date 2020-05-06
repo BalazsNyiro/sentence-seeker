@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-import method_a_naive_01, text
-import util
+import seeker, text
+
+def seek_and_display(Prg, Wanted):
+    _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(Prg, Wanted)
+    sentence_result_all_display(Prg, MatchNums__ResultInfo)
+    print(f"Results Total: {ResultsTotalNum}")
 
 def user_interface_start(Prg, Args):
     if Args.ui == "cli":
@@ -11,8 +15,7 @@ def user_interface_start(Prg, Args):
             if not Wanted:
                 print(color_reset(Prg))
                 break
-            WordsWanted, MatchNums__ResultInfo = method_a_naive_01.seek(Prg, Wanted.lower() )
-            sentence_result_all_display(Prg, MatchNums__ResultInfo)
+            seek_and_display(Prg, Wanted)
         #########################################
 
 def user_welcome_message(Prg, UserInterface):
@@ -78,6 +81,9 @@ __style_last_used=["Plain"]
 def color(Prg, ColorName, CnameBackground=""):
 
     if Prg["Os"] == "Windows": return ""
+    # MAYBE: win terminal has color display option, detailed here:
+    # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
+
     # If os == windows, return with empty string, because
     # we have to test colors in Windows terminal
 

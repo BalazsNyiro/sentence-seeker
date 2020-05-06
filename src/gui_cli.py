@@ -17,7 +17,9 @@ def user_interface_start(Prg, Args):
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "cli":
-        print("test word: elephant")
+        print("interesting search: looks, like, bird")
+        print("interesting search: elephant")
+
         print("Exit: press enter, with empty wanted word")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
@@ -28,7 +30,7 @@ def sentence_result_one_display(Prg, Result):
     WordsDetectedNum = len(WordsDetected)
     # print(Result)
 
-    Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    Sentence = text.sentence_loaded(Prg, Source, LineNum)
     Sentence = Sentence.strip() # remove possible newline at end
     LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
     print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}\n")

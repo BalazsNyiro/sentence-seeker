@@ -4,27 +4,28 @@ import sys
 
 Version = "a_naive_01"
 
+# TODO: test it
 def group_maker(Prg, WordsWanted):
     Groups_MatchNums_SentenceObjects = dict()
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-        LineNums__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Doc["Index"])
+
+        LineNumsInLine__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Doc["Index"])
 
         for MatchNum, ResultInfos in \
-                text.result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, FileBaseName).items():
+                text.result_obj_maker__words_detected_group_by_match_num(LineNumsInLine__WordsDetected, FileBaseName).items():
 
-            if MatchNum not in Groups_MatchNums_SentenceObjects:
-                Groups_MatchNums_SentenceObjects[MatchNum] = list()
-            Groups_MatchNums_SentenceObjects[MatchNum].extend(ResultInfos)
+            for ResultInfo in ResultInfos:
+                Sentence = text.sentence_loaded(Prg, ResultInfo["Source"], ResultInfo["LineNum"])
+                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNum, WordsWanted, Sentence)
+
+                util.dict_key_insert_if_necessary(Groups_MatchNums_SentenceObjects, MatchNumMaxInSubsentences, list())
+                Groups_MatchNums_SentenceObjects[MatchNumMaxInSubsentences].append(ResultInfo)
 
     MatchNums__Descending = list(Groups_MatchNums_SentenceObjects.keys())
     MatchNums__Descending.sort(reverse=True)
 
     return Groups_MatchNums_SentenceObjects, MatchNums__Descending
 
-# TODO: here sort the results based on
-# - length of sentence (shorter is better)
-# - the words distance (shorter is better)
-# - if it's possible keep the word order?
 def seek(Prg, WordsWantedOneString):
     stats.save(Prg, "first seek =>")
     TimeStart = time.time()
@@ -35,6 +36,12 @@ def seek(Prg, WordsWantedOneString):
 
     SelectedSentenceObjs = []
     for MatchNum in MatchNums__Descending:
+
+        # TODO: here sort the results based on
+        # - length of sentence (shorter is better)
+        # - the words distance (shorter is better)
+        # - if it's possible keep the word order?
+
         SentenceObjects_Group = Groups_MatchNums_SentenceObjects[MatchNum]
         SelectedSentenceObjs.extend(SentenceObjects_Group)
 
@@ -45,8 +52,6 @@ def seek(Prg, WordsWantedOneString):
 
     return WordsWanted, SelectedSentenceObjs
 
-
-
 def results_sort_by_sentence_length(Prg, Results):
     ResultsSorted = []
 
@@ -54,7 +59,7 @@ def results_sort_by_sentence_length(Prg, Results):
     for Result in Results:
         Source = Result["Source"]
         LineNum = Result["LineNum"]
-        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum].strip()
+        Sentence = text.sentence_loaded(Prg, Source, LineNum)
         SentenceLen = len(Sentence)
         util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
         GroupsByLen[SentenceLen].append(Result)
@@ -69,22 +74,6 @@ def results_sort_by_sentence_length(Prg, Results):
         ResultsSorted.extend(GroupsByLen[Key])
 
     return ResultsSorted
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def be_ready_to_seeking(Prg):
     Prg["DocumentObjectsLoaded"] = \

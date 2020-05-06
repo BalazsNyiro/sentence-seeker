@@ -2,7 +2,15 @@
 import re, util
 
 SentenceEnds = [".", "!", "?", "…"]
+SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
+
+
+def sentence_loaded(Prg, Source, LineNum, Strip=True):
+    Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    if Strip:
+        return Sentence.strip()
+    return Sentence
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
@@ -54,6 +62,7 @@ def replace_abbreviations(Txt):
                             ("Ms.", "Ms")]
     return replace(Txt, ReplaceAbbreviations)
 
+# TODO: test it
 def sentence_separator(Text):
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
@@ -105,6 +114,44 @@ def sentence_separator(Text):
     # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
+# Tested
+def match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence):
+    if MatchNumInSentences == 1:
+        return 1
+
+    SubsentencesNum = 1
+    for SubSep in SubsentenceEnds:
+        SubsentencesNum += Sentence.count(SubSep)
+
+    if SubsentencesNum == 1:
+        return MatchNumInSentences
+
+    SentenceTmp = Sentence
+    for SubSep in SubsentenceEnds:
+        SentenceTmp = SentenceTmp.replace(SubSep, ";")
+    SubSentences = SentenceTmp.split(";")
+
+    MatchNumMax = 0
+    for SubSentence in SubSentences:
+        WordCount = 0
+        for Word in WordsWanted:
+            # if 'the' is two times in subsentence, count it as 1
+            # repetition is not important
+            WordCountInSubsentence = word_count_in_text(Word, SubSentence)
+            if WordCountInSubsentence > 0:
+                WordCount += 1
+        if WordCount > MatchNumMax:
+            MatchNumMax = WordCount
+    return MatchNumMax
+
+# Tested
+_PatternWordsWithBoundary = dict()
+def word_count_in_text(Word, Text):
+    if Word not in _PatternWordsWithBoundary:
+        _PatternWordsWithBoundary[Word] = re.compile(fr'\b{Word}\b', re.IGNORECASE)
+    Pattern = _PatternWordsWithBoundary[Word]
+    return len(Pattern.findall(Text))
+
 def result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, Source):
     LineNumbersSorted = dict()
     for LineNum, WordsDetected in LineNums__WordsDetected.items():
@@ -118,7 +165,7 @@ def result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected,
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
-def linenums__words_detected__collect(WordsWanted, Index):
+def linenums__words_detected_in_line__collect(WordsWanted, Index):
     LineNums__WordsDetected = dict()
     for WordWanted in WordsWanted:
         if WordWanted and WordWanted in Index:
@@ -134,6 +181,7 @@ def linenums__words_detected__collect(WordsWanted, Index):
 
     return LineNums__WordsDetected
 
+# Tested
 def words_wanted_clean(WordsOneString):
     WordsCleaned = []
     WordsWanted = WordsOneString.replace(",", " ").split()

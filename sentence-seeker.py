@@ -9,7 +9,7 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config, util_test, document, argparse
 ##########################################################
 
-Prg = config.PrgConfigCreate(PrintForDeveloper=True)
+Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 config.DirsFilesConfigCreate(Prg)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")

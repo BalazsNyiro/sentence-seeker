@@ -4,6 +4,25 @@ import unittest, text, util_test, method_a_naive_01, util, os, util_json_obj
 class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
+
+    def test_match_num_max_in_subsentences(self):
+        WordsWanted = ["what", "do", "like"] # do is two times in second subsentence
+        MatchNumInSentences = 3              # but 'do'+'do'+'like' = 2 only because 'do' is repeated
+        Sentence = "What is your favourite color, for example do you like black like I do?"
+        MatchNumMaxSubsentences = text.match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence)
+        self.assertEqual(MatchNumMaxSubsentences, 2)
+
+    def test_words_wanted_clean(self):
+        WordsWanted = "apple, tree"
+        WordsWantedCleaned = text.words_wanted_clean(WordsWanted)
+        self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
+
+    def test_word_count_in_text(self):
+        if self._test_exec("test_word_count_in_text"):
+            Sentence = "There are appletrees in Apple's applegarden - the owner wanted to eat more apple"
+            WordCount = text.word_count_in_text("apple", Sentence)
+            self.assertEqual(WordCount, 2)
+
     def test_word_highlight(self):
         if self._test_exec("test_word_highlight"):
             # Prg = self.Prg
@@ -24,7 +43,7 @@ class Method_A_Naive_Tests(util_test.SentenceSeekerTest):
                       "tree":  [0, 4]
                     }
             WordsWanted = text.words_wanted_clean(WordsWanted)
-            ResultLineNumbers__WordsDetected = text.linenums__words_detected__collect(WordsWanted, Index)
+            ResultLineNumbers__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],

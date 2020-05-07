@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import document, util, stats, time, os, text
-import sys
+import result_selectors
 
 Version = "v02_simple"
 
-# TODO: test it
+# Tested
 def group_maker(Prg, WordsWanted):
     Groups_MatchNums_ResultInfos = dict()
     ResultsTotalNum = 0
@@ -23,8 +23,7 @@ def group_maker(Prg, WordsWanted):
                 Groups_MatchNums_ResultInfos[MatchNumMaxInSubsentences].append(Result)
                 ResultsTotalNum += 1
 
-    MatchNums__Descending = list(Groups_MatchNums_ResultInfos.keys())
-    MatchNums__Descending.sort(reverse=True)
+    MatchNums__Descending = util.dict_key_sorted(Groups_MatchNums_ResultInfos)
 
     return Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum
 
@@ -42,12 +41,12 @@ def seek(Prg, WordsWantedOneString):
         # PLUGIN ATTACH POINT
 
         # TODO: here sort the results based on
-        # - length of sentence (shorter is better)
         # - the words distance (shorter is better)
         # - if it's possible keep the word order?
 
-        Results__Group = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
-        ResultsSelected.extend(Results__Group)
+        ResultsGroup_1_orig = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
+        ResultsGroup_2_ShorterIsBetter = result_selectors.shorters_are_better(ResultsGroup_1_orig)
+        ResultsSelected.extend(ResultsGroup_2_ShorterIsBetter)
 
     ###############################
     TimeEnd = time.time()
@@ -68,8 +67,7 @@ def results_sort_by_sentence_length(Prg, Results):
         util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
         GroupsByLen[SentenceLen].append(Result)
 
-    LenKeys = list(GroupsByLen.keys())
-    LenKeys.sort()
+    LenKeys = util.dict_key_sorted(GroupsByLen)
     for Key in LenKeys:
         # TODO: first where the words are in the same clause
         # TODO: where words are in same order?

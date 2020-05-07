@@ -19,9 +19,14 @@ def shell(Cmd):
     # return Result
 
 # Tested
-def dict_key_insert_if_necessary(Dict, Key, Default):
+def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
     if Key not in Dict:
         Dict[Key] = Default
+
+def dict_key_sorted(Dict: dict, Reverse=True):
+    Keys = list(Dict.keys())
+    Keys.sort(reverse=Reverse)
+    return Keys
 
 # Tested, it can delete empty dirs
 def dir_delete_if_exist(Prg, Path, Print=False):

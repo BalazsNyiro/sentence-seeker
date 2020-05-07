@@ -23,7 +23,7 @@ class UtilTests(util_test.SentenceSeekerTest):
     def test_files_collect_from_dir(self):
         if self._test_exec("test_files_collect_from_dir"):
             Prg = self.Prg
-            Files = util.files_collect_from_dir(Prg["DirPrgRoot"])
+            Files = util.files_abspath_collect_from_dir(Prg["DirPrgRoot"])
             self.assertIn(os.path.join(Prg["DirPrgRoot"], "src", "util.py"), Files)
 
     def test_file_create_if_necessary(self):

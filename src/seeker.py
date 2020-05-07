@@ -2,7 +2,7 @@
 import document, util, stats, time, os, text
 import sys
 
-Version = "a_naive_01"
+Version = "v02_simple"
 
 # TODO: test it
 def group_maker(Prg, WordsWanted):
@@ -14,11 +14,10 @@ def group_maker(Prg, WordsWanted):
         LineNumsInLine__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Doc["Index"])
 
         for MatchNumInSentence, Results in \
-                text.result_obj_maker__words_detected_group_by_match_num(LineNumsInLine__WordsDetected, FileBaseName).items():
+                text.result_obj_maker__words_detected_group_by_match_num(Prg, LineNumsInLine__WordsDetected, FileBaseName).items():
 
             for Result in Results:
-                Sentence = text.sentence_loaded(Prg, Result["Source"], Result["LineNum"])
-                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Sentence)
+                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Result["Sentence"])
 
                 util.dict_key_insert_if_necessary(Groups_MatchNums_ResultInfos, MatchNumMaxInSubsentences, list())
                 Groups_MatchNums_ResultInfos[MatchNumMaxInSubsentences].append(Result)
@@ -35,7 +34,7 @@ def seek(Prg, WordsWantedOneString):
 
     ###############################
     WordsWanted = text.words_wanted_clean(WordsWantedOneString)
-    Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = group_maker(Prg, WordsWanted)
+    GroupsSubsentenceBased_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = group_maker(Prg, WordsWanted)
 
     ResultsSelected = []
     for MatchNum in MatchNums__Descending:
@@ -47,7 +46,7 @@ def seek(Prg, WordsWantedOneString):
         # - the words distance (shorter is better)
         # - if it's possible keep the word order?
 
-        Results__Group = Groups_MatchNums_ResultInfos[MatchNum]
+        Results__Group = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
         ResultsSelected.extend(Results__Group)
 
     ###############################
@@ -96,10 +95,10 @@ def be_ready_to_seeking(Prg, Verbose=True):
 # Tested
 
 # Tested
-def file_sentence_create(Prg, FileSentences, Text="", FilePathOrigText=""):
+def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
     if not os.path.isfile(FileSentences):
-        if FilePathOrigText: # for testing it's easier to get Text from param - and not create/del tmpfile
-            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathOrigText)
+        if FilePathText: # for testing it's easier to get Text from param - and not create/del tmpfile
+            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathText)
 
         Sentences = text.sentence_separator(Text)
         util.file_write_utf8_error_avoid(Prg, FileSentences, "\n".join(Sentences))

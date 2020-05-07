@@ -29,13 +29,13 @@ def user_welcome_message(Prg, UserInterface):
 def sentence_result_one_display(Prg, Result):
     Source = Result["Source"]
     LineNum = Result["LineNum"]
-    WordsDetected = Result["WordsDetected"]
-    WordsDetectedNum = len(WordsDetected)
+    WordsDetectedInSentence = Result["WordsDetectedInSentence"]
+    WordsDetectedNum = len(WordsDetectedInSentence)
     # print(Result)
 
     Sentence = text.sentence_loaded(Prg, Source, LineNum)
     Sentence = Sentence.strip() # remove possible newline at end
-    LineResultColored = text.word_highlight(WordsDetected, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
+    LineResultColored = text.word_highlight(WordsDetectedInSentence, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
     print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}\n")
 
 def sentence_result_all_display(Prg, SentenceObjects, LimitDisplayed=6):

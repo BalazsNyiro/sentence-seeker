@@ -27,7 +27,7 @@ class DocumentTests(util_test.SentenceSeekerTest):
             util.dir_create_if_necessary(Prg, DirTest)
 
             document.docs_copy_samples_into_dir(Prg, DirTest)
-            Files = util.files_collect_from_dir(DirTest)
+            Files = util.files_abspath_collect_from_dir(DirTest)
             FileNamesInOneLine = " ".join(Files)
             Wanted = "DanielDefoe__LifeAdventuresRobinsonCrusoe_gutenberg_org_521-0.txt"
             self.assertIn(Wanted, FileNamesInOneLine)

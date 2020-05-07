@@ -141,10 +141,15 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
     return False, ""
 
 # Tested
-def file_del(Path):
+def file_del(Path, Verbose=False):
     if os.path.isfile(Path):
         os.remove(Path)
+        if Verbose:
+            print(f"\nfile removed: {Path}")
         return True
+
+    if Verbose:
+        print(f"\nfile NOT EXISTS to remove: {Path}")
     return False
 
 # Tested
@@ -216,7 +221,7 @@ def file_is_gzipped(Prg, Path):
         return "file_not_found", ""
 
 # Tested
-def files_collect_from_dir(DirRoot, Recursive=True):
+def files_abspath_collect_from_dir(DirRoot, Recursive=True):
     FilesAbsPath = []
     for DirPath, DirNames, FileNames in os.walk(DirRoot):
         FilesAbsPath += [os.path.join(DirPath, File) for File in FileNames]
@@ -242,3 +247,7 @@ def log(Prg, Msg, Caller="-"):
     file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 
 
+def display_groups_matchnum_resultinfo(GroupsObj):
+    for MatchNum, ResultInfos in GroupsObj.items():
+        for ResultInfo in ResultInfos:
+            print(MatchNum, ResultInfo)

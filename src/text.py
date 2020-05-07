@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-import re, util
+import re, util, text
 
 SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
-
 def sentence_loaded(Prg, Source, LineNum, Strip=True):
-    Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
-    if Strip:
-        return Sentence.strip()
-    return Sentence
+    if Source in Prg["DocumentObjectsLoaded"]:
+        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+        if Strip:
+            return Sentence.strip()
+        return Sentence
+    else:
+        return f"DocumentsObjectsLoaded: {Source} is not loaded"
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
@@ -152,14 +154,16 @@ def word_count_in_text(Word, Text):
     Pattern = _PatternWordsWithBoundary[Word]
     return len(Pattern.findall(Text))
 
-def result_obj_maker__words_detected_group_by_match_num(LineNums__WordsDetected, Source):
+def result_obj_maker__words_detected_group_by_match_num(Prg, LineNums__WordsDetected, FileSource):
     LineNumbersSorted = dict()
-    for LineNum, WordsDetected in LineNums__WordsDetected.items():
-        NumOfWordsDetected = len(WordsDetected)
+    for LineNum, WordsDetectedInSentence in LineNums__WordsDetected.items():
+        NumOfWordsDetected = len(WordsDetectedInSentence)
         util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWordsDetected, list())
-        Source__LineNum__Words = {"Source": Source,
+        Source__LineNum__Words = {"Source": FileSource,
                                   "LineNum": LineNum,
-                                  "WordsDetected": WordsDetected}
+                                  "WordsDetectedInSentence": WordsDetectedInSentence,
+                                  "Sentence": text.sentence_loaded(Prg, FileSource, LineNum)
+        }
         LineNumbersSorted[NumOfWordsDetected].append(Source__LineNum__Words)
     return LineNumbersSorted
 

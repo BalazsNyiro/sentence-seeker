@@ -10,7 +10,7 @@ import config, util_test, document, argparse
 ##########################################################
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
-import seeker, gui_cli
+import seeker, ui_cli
 
 config.DirsFilesConfigCreate(Prg)
 
@@ -23,7 +23,7 @@ SysArgvOrig = sys.argv
 sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
 if Args.test:
-    import test_util, test_util_json, test_document, test_text
+    import test_util, test_util_json, test_document, test_text, test_seek
     import test_converter
 
     test_util.run_all_tests(Prg)
@@ -32,9 +32,12 @@ if Args.test:
     test_converter.run_all_tests(Prg)
     util_test.result_all(Prg)
     test_text.run_all_tests(Prg)
+    test_seek.run_all_tests(Prg)
+    ################################
 
+    # execute search from ui
     seeker.be_ready_to_seeking(Prg)
-    gui_cli.seek_and_display(Prg, "looks, like, bird")
+    ui_cli.seek_and_display(Prg, "looks, like, bird")
     sys.exit(0)
 
 document.docs_copy_samples_into_dir_if_necessary(Prg)
@@ -42,7 +45,7 @@ document.docs_copy_samples_into_dir_if_necessary(Prg)
 #########################################
 seeker.be_ready_to_seeking(Prg)
 
-gui_cli.user_interface_start(Prg, Args)
+ui_cli.user_interface_start(Prg, Args)
 
 print(Prg["Statistics"])
 

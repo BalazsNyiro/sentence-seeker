@@ -8,8 +8,12 @@ from os.path import isfile
 def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
                                               FunSentenceCreate=None,
-                                              FunIndexCreate=None
+                                              FunIndexCreate=None,
+                                              Verbose=True
                                               ):
+    def info(Txt):
+        if Verbose: print(Txt)
+
     Files = util.files_collect_from_dir(Prg["DirDocuments"])
 
     DocumentObjects = dict()
@@ -20,6 +24,7 @@ def document_objects_collect_from_working_dir(Prg,
         Extension = pathlib.Path(File).suffix.lower()
 
         if Extension == ".pdf":
+            info(f"in documents dir - pdf -> txt conversion: {BaseName}")
             FilePathWithoutExtension = File.rsplit(".", 1)[0]
             FilePathTxt = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathTxt):
@@ -30,7 +35,7 @@ def document_objects_collect_from_working_dir(Prg,
         # errors can happen if we convert pdf/html/other to txt
         # so if Extension is .txt, I check the existing of the file
         if Extension == ".txt" and os.path.isfile(File):
-            print("in documents dir - processed: ", BaseName)
+            info(f"in documents dir - processed: {BaseName}")
 
             # this document object describe infos about the document
             # for example the version of index algorithm
@@ -51,7 +56,7 @@ def document_objects_collect_from_working_dir(Prg,
             DocumentObjects[BaseName] = DocumentObj  # we store the documents based on their basename
 
         elif Extension in ExtensionsInFuture:
-            print("in documents dir - this file type will be processed in the future:", BaseName)
+            info(f"in documents dir - this file type will be processed in the future: {BaseName}")
 
         else:
             # print_dev(Prg, "in documents dir - not processed file type:", BaseName)

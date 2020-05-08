@@ -88,7 +88,7 @@ def docs_copy_samples_into_dir(Prg, DirTarget):
         # don't duplicate other files, document info json for example
         if ".gz" in FileName[-3:]:
             BaseName = os.path.basename(FileName).replace(".gz", "")
-            print(f"Sample doc duplication... {BaseName}   {FileName}")
+            # print(f"Sample doc duplication... {BaseName}   {FileName}")
             ReadSuccess, TextContent = util.file_read_all(Prg, FileName, Gzipped=True)
             FileNameSaved = os.path.join(DirTarget, BaseName)
             # if a previous file exists with same name, it overwrites

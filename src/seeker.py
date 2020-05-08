@@ -36,6 +36,9 @@ def seek(Prg, WordsWantedOneString):
     GroupsSubsentenceBased_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = group_maker(Prg, WordsWanted)
 
     ResultsSelected = []
+    Selectors = [result_selectors.shorters_are_better,
+                 result_selectors.duplication_removing]
+
     for MatchNum in MatchNums__Descending:
 
         # PLUGIN ATTACH POINT
@@ -44,9 +47,10 @@ def seek(Prg, WordsWantedOneString):
         # - the words distance (shorter is better)
         # - if it's possible keep the word order?
 
-        ResultsGroup_1_orig = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
-        ResultsGroup_2_ShorterIsBetter = result_selectors.shorters_are_better(ResultsGroup_1_orig)
-        ResultsSelected.extend(ResultsGroup_2_ShorterIsBetter)
+        ResultsGroup = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
+        for Selector in Selectors:
+            ResultsGroup = Selector(ResultsGroup)
+        ResultsSelected.extend(ResultsGroup)
 
     ###############################
     TimeEnd = time.time()

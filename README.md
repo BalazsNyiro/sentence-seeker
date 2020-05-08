@@ -37,7 +37,9 @@ Hi, "Naive" version is ready.
   - the raw memory usage was about 200 megabytes with 18 books
     at first manual tests. I try to decrease it
 
-
+Hi, "v0.11 Documentation/refactor period" is ready, the program's main structure is represented in doc.
+  - variable names'/func names' first refactor happened
+  - NEXT: "Simple user interfaces" (15 May - 15 June)
 
 ## "Documentation" v0.11 (1 May - 15 May, 2020) 
   - create diagram about the program structure

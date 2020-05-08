@@ -3,6 +3,10 @@ import util
 
 LimitGeneral = 200
 
+def text_source_mixing(ResultGroup, Limit=LimitGeneral):
+    # TODO : source mixing
+    return ResultGroup
+
 # TODO: test it
 def shorters_are_better(ResultGroup, Limit=LimitGeneral):
     Length__Results__Pairs = dict()

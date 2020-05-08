@@ -42,10 +42,8 @@ def seek(Prg, WordsWantedOneString):
     for MatchNum in MatchNums__Descending:
 
         # PLUGIN ATTACH POINT
-
-        # TODO: here sort the results based on
+        # - if it's possible keep the search word order?
         # - the words distance (shorter is better)
-        # - if it's possible keep the word order?
 
         ResultsGroup = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
         for Selector in Selectors:

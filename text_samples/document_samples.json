@@ -1,4 +1,17 @@
-{ "docs": [
+{ "docs":
+  [
+        {"filename":"AlbertFBlaisdell__PracticalPhysiology_gutenberg_org_10453.html.gz",
+         "url":"https://www.gutenberg.org/files/10453/10453-h/10453-h.htm",
+         "rights":"public_domain"},
+        {"filename":"HenryHasse__ThiefOfMars__gutenberg_org_pg62042.txt.gz",
+         "url":"https://www.gutenberg.org/cache/epub/62042/pg62042.txt",
+         "rights":"public_domain"},
+        {"filename":"RobertAChristman__GeologyOfMtMansfieldStateForest_gutenberg_org_62053-0.txt.gz",
+         "url":"https://www.gutenberg.org/files/62053/62053-0.txt",
+         "rights":"public_domain"},
+        {"filename":"JWDuffield__RadioBoysSecretService_gutenberg_org_62000.html.gz",
+          "url":"https://www.gutenberg.org/files/62000/62000-h/62000-h.htm",
+          "rights":"public_domain"},
         {"filename":"LeighBrackett__ChildOfTheSun_gutenberg_org_pg62037.txt.gz",
          "url":"https://www.gutenberg.org/cache/epub/62037/pg62037.txt",
          "rights":"public_domain"},

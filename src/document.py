@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import util, os, pathlib, stats
-from util import print_dev
+import util, os
 import util_json_obj
 from os.path import isfile
 
@@ -16,27 +15,35 @@ def document_objects_collect_from_working_dir(Prg,
 
 
     DocumentObjects = dict()
-    ExtensionsInFuture = {".html": 0, ".htm": 0}
+    ExtensionsInFuture = {}
 
-    for FileText in util.files_abspath_collect_from_dir(Prg["DirDocuments"]):
+    for FileOrig in util.files_abspath_collect_from_dir(Prg["DirDocuments"]):
 
-        FileOrig = FileText
-        BaseNameOrig = BaseNameText = os.path.basename(FileText)
-        Extension = pathlib.Path(FileText).suffix.lower()
+        FileText = FileOrig
+        BaseNameOrig = BaseNameText = os.path.basename(FileOrig)
+        Extension = util.filename_extension(FileOrig)
 
-        if Extension == ".pdf":
-            info(f"in documents dir - pdf -> txt conversion: {BaseNameText}")
-            FilePathWithoutExtension = FileText.rsplit(".", 1)[0]
-            FilePathTxt = f"{FilePathWithoutExtension}.txt"
-            if not os.path.isfile(FilePathTxt):
-                ConversionExecuted = Prg["PdfToTextConvert"](FileText, FilePathTxt)
+        if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
+            info(f"in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
+            FilePathWithoutExtension = util.filename_without_extension(FileOrig)
+            FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
+            if not os.path.isfile(FilePathConvertedToText):
+                #print("not exists: ", FilePathConvertedToText )
+                if Extension == ".pdf":
+                    ConversionExecuted = Prg["PdfToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
+                if Extension == ".htm" or Extension == ".html":
+                    ConversionExecuted = Prg["HtmlToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
+
                 if ConversionExecuted:
                     Extension = ".txt"
-                    FileText = FileText[:-4] + Extension  # FileText: pdf -> txt
+                    FileText = util.filename_without_extension(FileOrig) + Extension
                     BaseNameText = os.path.basename(FileText)
                 else:
-                    print(f"Error: pdf -> txt conversion: {FileOrig}")
+                    print(f"Error, file conversion: {FileOrig}")
                     continue
+            else:
+                # print("   exists: ", FilePathConvertedToText )
+                pass
 
         # errors can happen if we convert pdf/html/other to txt
         # so if Extension is .txt, I check the existing of the file

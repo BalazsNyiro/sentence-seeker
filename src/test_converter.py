@@ -11,7 +11,7 @@ class ConverterTests(util_test.SentenceSeekerTest):
             FileTxt = os.path.join(Prg["DirWork"], "test_converted_from_pdf.txt")
             util.file_del(FileTxt)
             FilePdf = os.path.join(Prg["DirTestFiles"], "test_pdf_conversion.pdf")
-            Prg["PdfToTextConvert"](FilePdf, FileTxt)
+            Prg["PdfToTextConvert"](Prg, FilePdf, FileTxt)
             FileLines = util.file_read_lines(Prg, FileTxt, Strip=True)
             self.assertEqual(FileLines[0], "This is new document.")
             util.file_del(FileTxt)

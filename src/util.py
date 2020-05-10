@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, gzip, shutil, subprocess
+import os, gzip, shutil, pathlib
 
 # Tested
 def shell(Cmd):
@@ -81,6 +81,15 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 
     return Created
 
+def filename_extension(Fname):
+    return pathlib.Path(Fname).suffix.lower()
+
+def filename_without_extension(Fname):
+    Extension = filename_extension(Fname)
+    if not Extension:
+        return Fname
+    return Fname.rsplit(Extension, 1)[0]
+
 # FIXME?
 # you can't use this version on windows because utf8 conversion error.
 # now I read the whole text and split it to lines in file_index_create func
@@ -105,19 +114,15 @@ def file_read_lines(Prg, Fname, Strip=False):
 
     return Lines
 
-# Tested with the life
-# of course somehow I have to test it, it's a magic :-)
-def utf8_conversion_with_warning(Bytes, FileName):
-    try:
-        Content = str(Bytes, 'utf-8')
-    except:
-        print(f"WARNING: one or more char not convertable to utf-8 in: {FileName}")
-        Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
-    return Content
-
 # Tested, Prg is important for log, or maybe we should skip logging?
 def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, write "rb"
-    if os.path.isfile(Fname):
+    # print("Fname:", Fname, "isfile:", os.path.isfile(Fname))
+    if not os.path.isfile(Fname):
+        Msg = f"file_read_all - file doesn't exist: {Fname}"
+        log(Prg, Msg)
+        print(Msg)
+        return False, Msg
+    else:
         if Gzipped:
             with gzip.open(Fname, 'rb') as f:
                 try:
@@ -137,13 +142,16 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
                     return False, "gzip read error"
         else:
             # with bytes the utf-8 conversion can be tuned, errors ignored
-            with open(Fname, 'rb') as f:
-                ContentBytes = f.read()
-                Content = utf8_conversion_with_warning(ContentBytes, Fname)
-                log(Prg, f"file_read_all - text: {Fname}")
-                return True, Content
+            try:
+                with open(Fname, 'rb') as f:
+                    ContentBytes = f.read()
+                    Content = utf8_conversion_with_warning(ContentBytes, Fname)
+                    log(Prg, f"file_read_all - text: {Fname}")
+                    return True, Content
+            except:
+                log(Prg, f"file_read_all - read error, in 'with' block: {Fname}")
+                return False, "read error"
 
-    return False, ""
 
 # Tested
 def file_del(Path, Verbose=False):
@@ -239,20 +247,34 @@ def files_abspath_collect_from_dir(DirRoot, Recursive=True):
 
 # tested manually
 def print_dev(Prg, *args):
-    if Prg["PrintForDeveloper"]:
-        print(*args)
+    if "PrintForDeveloper" in Prg:
+        if Prg["PrintForDeveloper"]:
+            print(*args)
 
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
     print_dev(Prg, "\nLog received:", Msg)
     # from func log calls don't use Logging again
     Msg = str(Msg)
-    if Prg["TestExecution"]:
-        Msg = "Testing... " + Msg
-    file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
+    if "TestExecution" in Prg:
+        if Prg["TestExecution"]:
+            Msg = "Testing... " + Msg
+    if "FileLog" in Prg:
+        file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 
 
 def display_groups_matchnum_resultinfo(GroupsObj):
     for MatchNum, ResultInfos in GroupsObj.items():
         for ResultInfo in ResultInfos:
             print(MatchNum, ResultInfo)
+
+# Tested with the life
+# of course somehow I have to test it, it's a magic :-)
+def utf8_conversion_with_warning(Bytes, FileName):
+    try:
+        Content = str(Bytes, 'utf-8')
+    except:
+        print(f"WARNING: one or more char not convertable to utf-8 in: {FileName}")
+        Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
+    return Content
+

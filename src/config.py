@@ -2,6 +2,9 @@
 import os, platform, user, util, time, util_json_obj
 from shlex import quote
 
+from html.parser import HTMLParser
+from html.entities import name2codepoint
+
 def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
     # print("__file__", __file__, sys.argv)
@@ -49,6 +52,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "TestExecution": False,
             "PrintForDeveloper": PrintForDeveloper,
             "PdfToTextConvert": fun_pdf_to_text_converter(Os),
+            "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
             "Statistics": [],
 
@@ -67,11 +71,66 @@ def DirsFilesConfigCreate(Prg):
     Default = "{}"
     util.file_create_if_necessary(Prg, Prg["FileDocumentsDb"], ContentDefault=Default)
 
+# Naive html text extractor.
+# it saves css data tags, too
+# TODO: save only <p>, <h>, <div>, <ul>, <li> elems instead of all
+class DocHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.data = []
+
+    def handle_starttag(self, tag, attrs):
+        # print("Start tag:", tag)
+        for attr in attrs:
+            pass
+            # print("     attr:", attr)
+
+    def handle_endtag(self, tag):
+        # print("End tag  :", tag)
+        pass
+
+    def handle_data(self, data):
+        #print("Data     :", data)
+        self.data.append(data)
+
+    def handle_comment(self, data):
+        #print("Comment  :", data)
+        pass
+
+    def handle_entityref(self, name):
+        # c = chr(name2codepoint[name])
+        # print("Named ent:", c)
+        pass
+
+    def handle_charref(self, name):
+        # if name.startswith('x'):
+        #     c = chr(int(name[1:], 16))
+        # else:
+        #     c = chr(int(name))
+        # print("Num ent  :", c)
+        pass
+
+    def handle_decl(self, data):
+        # print("Decl     :", data)
+        pass
+
+def fun_html_to_text_converter(Prg, PathInput, PathOutput):
+    parser = DocHTMLParser()
+    RetStatus, Src = util.file_read_all(Prg, PathInput)
+
+    if not RetStatus: # error with reading
+        print("READING ERROR: ", PathInput)
+        return False
+    parser.feed(Src)  # file_write: return with success/failure of writing
+    # print("WRITE: ", PathOutput)
+    # print("DATA", parser.data)
+    return util.file_write(Prg, Fname=PathOutput, Content=parser.data)
+
 # Tested
 def fun_pdf_to_text_converter(Os):
     ConverterDetected = False
 
-    def PdfToTextFun(_PathInput, _PathOutput):
+    def PdfToTextFun(_Prg, _PathInput, _PathOutput):
         return False
 
     # pdfminer.six inserts unwanted (cid:XXX) and binary chars
@@ -90,7 +149,7 @@ def fun_pdf_to_text_converter(Os):
 
             print(f"pdf converter detected: {Interpreter}, {PathPdfMinerSix}")
             # python2 Path/pdf2txt.py   test.pdf --outfile test.txt
-            def PdfToTextFun(PathInput, PathOutput):
+            def PdfToTextFun(_Prg, PathInput, PathOutput):
                 util.shell(f"{Interpreter} {PathPdfMinerSix} {shlex.quote(PathInput)} --outfile {shlex.quote(PathOutput)}")
                 return True
 
@@ -101,7 +160,7 @@ def fun_pdf_to_text_converter(Os):
         if "linux" in Os.lower() and "/pdftotext" in PathPdfToText:
             print(f"pdf converter detected: {PathPdfToText}")
 
-            def PdfToTextFun(PathInput, PathOutput):
+            def PdfToTextFun(_Prg, PathInput, PathOutput):
                 util.shell(f"{PathPdfToText} -nopgbrk {quote(PathInput)} {quote(PathOutput)}")
                 return True
 

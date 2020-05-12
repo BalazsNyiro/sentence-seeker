@@ -1,5 +1,8 @@
 { "docs":
   [
+        {"filename":"WillisThomasLee__FaceOfEarth_gutenberg_org_62068-0.txt.gz",
+         "url":"https://www.gutenberg.org/files/62068/62068-0.txt",
+         "rights":"public_domain"},
         {"filename":"AlbertFBlaisdell__PracticalPhysiology_gutenberg_org_10453.html.gz",
          "url":"https://www.gutenberg.org/files/10453/10453-h/10453-h.htm",
          "rights":"public_domain"},
@@ -69,7 +72,7 @@
         {"filename":"BernardShaw__Pygmalion_gutenberg_org_pg3825.txt.gz", 
          "url":"http://www.gutenberg.org/ebooks/3825", 
          "rights":"public_domain"},
-        {"filename":"science_fiction/youth__IsaacAsimov_gutenberg_org_pg31547.txt.gz", 
+        {"filename":"IsaacAsimov__youth_gutenberg_org_pg31547.txt.gz", 
          "url":"http://www.gutenberg.org/ebooks/31547", 
          "rights":"public_domain"},
         {"filename":"CamilleFlammarion__AstronomyAmateurs_gutenberg_org_pg25267.txt.gz", 

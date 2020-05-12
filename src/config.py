@@ -72,7 +72,7 @@ def DirsFilesConfigCreate(Prg):
     util.file_create_if_necessary(Prg, Prg["FileDocumentsDb"], ContentDefault=Default)
 
 # Naive html text extractor.
-# it saves css data tags, too
+# unfortunatelly it saves css data tags, too
 # TODO: save only <p>, <h>, <div>, <ul>, <li> elems instead of all
 class DocHTMLParser(HTMLParser):
     def __init__(self):

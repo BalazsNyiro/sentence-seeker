@@ -15,7 +15,7 @@ def document_objects_collect_from_working_dir(Prg,
 
 
     DocumentObjects = dict()
-    ExtensionsInFuture = {}
+    ExtensionsInFuture = {".epub": 0, ".mobi": 0}
 
     for FileOrig in util.files_abspath_collect_from_dir(Prg["DirDocuments"]):
 

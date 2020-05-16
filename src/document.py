@@ -8,11 +8,13 @@ def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
                                               FunSentenceCreate=None,
                                               FunIndexCreate=None,
-                                              Verbose=True
+                                              Verbose=True,
+
+                                              # in testcases we want to load only selected files, not all
+                                              LoadOnlyTheseFileBaseNames=None # ['FileBaseName'] is the positive example
                                               ):
     def info(Txt):
         if Verbose: print(Txt)
-
 
     DocumentObjects = dict()
     ExtensionsInFuture = {".epub": 0, ".mobi": 0}
@@ -21,6 +23,10 @@ def document_objects_collect_from_working_dir(Prg,
 
         FileText = FileOrig
         BaseNameOrig = BaseNameText = os.path.basename(FileOrig)
+        if LoadOnlyTheseFileBaseNames:
+            if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
+                continue
+
         Extension = util.filename_extension(FileOrig)
 
         if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":

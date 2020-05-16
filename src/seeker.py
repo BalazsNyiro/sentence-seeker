@@ -79,13 +79,14 @@ def results_sort_by_sentence_length(Prg, Results):
 
     return ResultsSorted
 
-def be_ready_to_seeking(Prg, Verbose=True):
+def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
     Prg["DocumentObjectsLoaded"] = \
         document.document_objects_collect_from_working_dir(
             Prg, Version,
             FunSentenceCreate=file_sentence_create,
             FunIndexCreate=file_index_create,
-            Verbose=Verbose
+            Verbose=Verbose,
+            LoadOnlyTheseFileBaseNames=LoadOnlyTheseFileBaseNames
         )
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence

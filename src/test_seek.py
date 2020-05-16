@@ -21,13 +21,7 @@ class SeekTests(util_test.SentenceSeekerTest):
             util.file_del(FilePathBird)
             util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
 
-            seeker.be_ready_to_seeking(Prg, Verbose=False)
-            DocsSaved = Prg["DocumentObjectsLoaded"][self.FileBaseNameBird]
-            Prg["DocumentObjectsLoaded"] = dict()        # clear everything
-
-            # load back only the test obj
-            Prg["DocumentObjectsLoaded"][self.FileBaseNameBird] = DocsSaved
-            print("\nDocumentObjectsLoaded", Prg["DocumentObjectsLoaded"])
+            seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
             #####################################################
 
             WordsWanted = ["looks", "like", "bird", "this"]
@@ -42,10 +36,10 @@ class SeekTests(util_test.SentenceSeekerTest):
             }
 
             ################ restore original state #####################################
-            self.Prg = PrgOrig
             util.file_del(FilePathBird)
             util.file_del(Prg["DocumentObjectsLoaded"][self.FileBaseNameBird]["FileIndex"])
             util.file_del(Prg["DocumentObjectsLoaded"][self.FileBaseNameBird]["FileSentences"])
+            self.Prg = PrgOrig
             ################ restore original state #####################################
 
             print("ResultsTotalNum:", ResultsTotalNum)

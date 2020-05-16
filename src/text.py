@@ -154,15 +154,16 @@ def word_count_in_text(Word, Text):
     Pattern = _PatternWordsWithBoundary[Word]
     return len(Pattern.findall(Text))
 
-def result_obj_maker__words_detected_group_by_match_num(Prg, LineNums__WordsDetected, FileSource):
+# Tested in: test_seek_linenumbers_with_group_of_words
+def result_obj_maker__words_detected_group_by_match_num(Prg, LineNums__WordsDetected, FileSourceBaseName):
     LineNumbersSorted = dict()
     for LineNum, WordsDetectedInSentence in LineNums__WordsDetected.items():
         NumOfWordsDetected = len(WordsDetectedInSentence)
         util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWordsDetected, list())
-        Source__LineNum__Words = {"Source": FileSource,
-                                  "LineNum": LineNum,
+        Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
+                                  "LineNumInSentenceFile": LineNum,
                                   "WordsDetectedInSentence": WordsDetectedInSentence,
-                                  "Sentence": text.sentence_loaded(Prg, FileSource, LineNum)
+                                  "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
         }
         LineNumbersSorted[NumOfWordsDetected].append(Source__LineNum__Words)
     return LineNumbersSorted

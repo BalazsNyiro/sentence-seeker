@@ -11,6 +11,7 @@ def group_maker(Prg, WordsWanted):
 
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
 
+        # this is an implemented Select LineNums, words from DB...
         LineNumsInLine__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Doc["Index"])
 
         for MatchNumInSentence, Results in \
@@ -62,9 +63,7 @@ def results_sort_by_sentence_length(Prg, Results):
 
     GroupsByLen = dict()
     for Result in Results:
-        Source = Result["Source"]
-        LineNum = Result["LineNum"]
-        Sentence = text.sentence_loaded(Prg, Source, LineNum)
+        Sentence = text.sentence_loaded(Prg, Result["FileSourceBaseName"], Result["LineNumInSentenceFile"])
         SentenceLen = len(Sentence)
         util.dict_key_insert_if_necessary(GroupsByLen, SentenceLen, list())
         GroupsByLen[SentenceLen].append(Result)

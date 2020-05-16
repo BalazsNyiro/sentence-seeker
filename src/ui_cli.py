@@ -27,8 +27,8 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
 def sentence_result_one_display(Prg, Result):
-    Source = Result["Source"]
-    LineNum = Result["LineNum"]
+    Source = Result["FileSourceBaseName"]
+    LineNum = Result["LineNumInSentenceFile"]
     WordsDetectedInSentence = Result["WordsDetectedInSentence"]
     WordsDetectedNum = len(WordsDetectedInSentence)
     # print(Result)

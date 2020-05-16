@@ -29,10 +29,10 @@ class SeekTests(util_test.SentenceSeekerTest):
 
             # the first num: MatchNumMaxInSubsentences
             GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
-                2: [{'Source': 'test_group_maker_document.txt', 'LineNum': 1, 'WordsDetectedInSentence': ['looks', 'like', 'this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
-                    {'Source': 'test_group_maker_document.txt', 'LineNum': 3, 'WordsDetectedInSentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
-                1: [{'Source': 'test_group_maker_document.txt', 'LineNum': 0, 'WordsDetectedInSentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
-                    {'Source': 'test_group_maker_document.txt', 'LineNum': 2, 'WordsDetectedInSentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage."}]
+                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSentence': ['looks', 'like', 'this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
+                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage."}]
             }
 
             ################ restore original state #####################################
@@ -111,9 +111,9 @@ class SeekTests(util_test.SentenceSeekerTest):
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
             Wanted__MatchNum__SourceAndDetectedWords = {
-                1: [{'Source': 'test_seek_linenumbers_with_group_of_words', 'LineNum': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
-                    {'Source': 'test_seek_linenumbers_with_group_of_words', 'LineNum': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
-                2: [{'Source': 'test_seek_linenumbers_with_group_of_words', 'LineNum': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
+                1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
+                    {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
+                2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
             }
             # util.display_groups_matchnum_resultinfo(MatchNum__SourceAndDetectedWords)
             # util.display_groups_matchnum_resultinfo(Wanted__MatchNum__SourceAndDetectedWords)

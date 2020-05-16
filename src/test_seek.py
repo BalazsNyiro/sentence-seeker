@@ -25,10 +25,11 @@ class SeekTests(util_test.SentenceSeekerTest):
             #####################################################
 
             WordsWanted = ["looks", "like", "bird", "this"]
-            Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.group_maker(Prg, WordsWanted)
+            Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.match_in_subsentence__results(Prg, WordsWanted)
 
-            # the first num: MatchNumMaxInSubsentences
             GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
+                # the first num:
+                # MatchNumMaxInSubsentences
                 2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSentence': ['looks', 'like', 'this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
                     {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
                 1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
@@ -95,7 +96,7 @@ class SeekTests(util_test.SentenceSeekerTest):
                       "tree":  [0, 4]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
-            ResultLineNumbers__WordsDetected = text.linenums__words_detected_in_line__collect(WordsWanted, Index)
+            ResultLineNumbers__WordsDetected = text.linenums__words_in_line__collect(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],

@@ -170,21 +170,16 @@ def result_obj_maker__words_detected_group_by_match_num(Prg, LineNums__WordsDete
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
-def linenums__words_detected_in_line__collect(WordsWanted, Index):
-    LineNums__WordsDetected = dict()
+def linenums__words_in_line__collect(WordsWanted, Index):
+    LineNums__Words = dict()
     for WordWanted in WordsWanted:
-        if WordWanted and WordWanted in Index:
 
-            LineNumbersCurrentWord = Index[WordWanted]
+        for LineNum in Index.get(WordWanted, []):
+            util.dict_key_insert_if_necessary(LineNums__Words, LineNum, list())
+            if WordWanted not in LineNums__Words[LineNum]:     # Save it only once if the words
+                LineNums__Words[LineNum].append(WordWanted)    # is more than once in a sentence
 
-            for LineNum in LineNumbersCurrentWord:
-                util.dict_key_insert_if_necessary(LineNums__WordsDetected, LineNum, list())
-
-                # Save it only once if the words is more than once in a sentence
-                if WordWanted not in LineNums__WordsDetected[LineNum]:
-                    LineNums__WordsDetected[LineNum].append(WordWanted)
-
-    return LineNums__WordsDetected
+    return LineNums__Words
 
 # Tested
 def words_wanted_clean(WordsOneString):

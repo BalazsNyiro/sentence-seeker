@@ -96,7 +96,7 @@ class SeekTests(util_test.SentenceSeekerTest):
                       "tree":  [0, 4]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
-            ResultLineNumbers__WordsDetected = text.linenums__words_in_line__collect(WordsWanted, Index)
+            ResultLineNumbers__WordsDetected = text.linenums__words__collect(WordsWanted, Index)
 
             # print("\n>>>>>>", LineNumbersAllWord)
             Correct = { 0: ['tree'],
@@ -106,8 +106,8 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            MatchNum__SourceAndDetectedWords = text.result_obj_maker__words_detected_group_by_match_num(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words")
-            # print("\n>>>>>>", MatchNum__SourceAndDetectedWords)
+            MatchNum__Source_Words = text.match_num__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words")
+            # print("\n>>>>>>", MatchNum__Source_Words)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
@@ -116,9 +116,9 @@ class SeekTests(util_test.SentenceSeekerTest):
                     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
                 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
             }
-            # util.display_groups_matchnum_resultinfo(MatchNum__SourceAndDetectedWords)
+            # util.display_groups_matchnum_resultinfo(MatchNum__Source_Words)
             # util.display_groups_matchnum_resultinfo(Wanted__MatchNum__SourceAndDetectedWords)
-            self.assertEqual(MatchNum__SourceAndDetectedWords, Wanted__MatchNum__SourceAndDetectedWords)
+            self.assertEqual(MatchNum__Source_Words, Wanted__MatchNum__SourceAndDetectedWords)
 
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()

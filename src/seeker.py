@@ -25,10 +25,10 @@ def match_in_subsentence__results(Prg, WordsWanted):
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
 
         # this is an implemented Select LineNums, words from DB...
-        LineNumsInLine__WordsDetected = text.linenums__words_in_line__collect(WordsWanted, Doc["Index"])
+        LineNums__WordsWanted = text.linenums__words__collect(WordsWanted, Doc["Index"])
 
         for MatchNumInSentence, Results in \
-                text.result_obj_maker__words_detected_group_by_match_num(Prg, LineNumsInLine__WordsDetected, FileBaseName).items():
+                text.match_num__result_obj(Prg, LineNums__WordsWanted, FileBaseName).items():
 
             for Result in Results:
                 MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Result["Sentence"])

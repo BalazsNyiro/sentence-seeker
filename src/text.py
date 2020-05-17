@@ -156,17 +156,17 @@ def word_count_in_text(Word, Text):
 
 # Tested in: test_seek_linenumbers_with_group_of_words
 def match_num__result_obj(Prg, LineNums__WordsDetected, FileSourceBaseName):
-    LineNumbersSorted = dict()
+    MatchNum__Results = dict()
     for LineNum, WordsDetectedInSentence in LineNums__WordsDetected.items():
         NumOfWordsDetected = len(WordsDetectedInSentence)
-        util.dict_key_insert_if_necessary(LineNumbersSorted, NumOfWordsDetected, list())
+        util.dict_key_insert_if_necessary(MatchNum__Results, NumOfWordsDetected, list())
         Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
                                   "LineNumInSentenceFile": LineNum,
                                   "WordsDetectedInSentence": WordsDetectedInSentence,
                                   "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
         }
-        LineNumbersSorted[NumOfWordsDetected].append(Source__LineNum__Words)
-    return LineNumbersSorted
+        MatchNum__Results[NumOfWordsDetected].append(Source__LineNum__Words)
+    return MatchNum__Results
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building

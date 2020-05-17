@@ -4,19 +4,6 @@ import result_selectors
 
 Version = "v02_simple"
 
-# # MatchNumMaxInSubsentences
-# 2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1,
-#      'WordsDetectedInSentence': ['looks', 'like', 'this'],
-#      'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
-#     {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3,
-#      'WordsDetectedInSentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
-# 1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0,
-#      'WordsDetectedInSentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
-#     {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2,
-#      'WordsDetectedInSentence': ['this'],
-#      'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage."}]
-
-
 # Tested
 def match_in_subsentence__results(Prg, WordsWanted):
     Groups_MatchNums_ResultInfos = dict()
@@ -25,7 +12,14 @@ def match_in_subsentence__results(Prg, WordsWanted):
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
 
         # this is an implemented Select LineNums, words from DB...
+        #  {0: ['tree'],
+        #   4: ['apple', 'tree'],
+        #   3: ['apple'] }
         LineNums__WordsWanted = text.linenums__words__collect(WordsWanted, Doc["Index"])
+
+        # 1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
+        #     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
+        # 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
 
         for MatchNumInSentence, Results in \
                 text.match_num__result_obj(Prg, LineNums__WordsWanted, FileBaseName).items():

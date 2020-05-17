@@ -126,7 +126,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
             # We’re looking for a dog-friendly hotel.
             # ’ -   signs has to be replaced with word separator char
 
-            Line = text.remove_not_alpha_chars(Line, " ", CharsKeepThem="-")
+            Line = text.remove_non_alpha_chars(Line, " ", CharsKeepThem="-")
 
             for Word in Line.split():
 
@@ -136,8 +136,8 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
                 Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
                 if Word: # if it's not empty string
-                    if Word not in WordIndex:
-                        WordIndex[Word] = list()
+                    util.dict_key_insert_if_necessary(WordIndex, Word, list())
+
                     WordIndex[Word].append(LineNum)
 
         Out = []

@@ -16,7 +16,7 @@ def sentence_loaded(Prg, Source, LineNum, Strip=True):
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
-def remove_not_alpha_chars(Text, TextNew="", CharsKeepThem=""):
+def remove_non_alpha_chars(Text, TextNew="", CharsKeepThem=""):
 
     # in other, none English languate other chars can be letters, too.
     # the traditional a-z method doesn't match with them

@@ -138,11 +138,11 @@ class SeekTests(util_test.SentenceSeekerTest):
             FileSentences = os.path.join(Prg["DirWork"], "test_file_create_sentences.txt")
             util.file_del(FileSentences)
 
-            Sample = 'He is my friend. "This is \n the next - city, London." Is this the third line, or a Book about London?'
+            Sample = 'He is my friend. "This is \n the next - city, London -- here, in London, the sky is nice." Is this the third line, or a Book about London?'
 
             seeker.file_sentence_create(Prg, FileSentences, Sample)
-            Wanted = ["He is my friend.\n",
-                      '"This is the next - city, London."\n',
+            Wanted = ["He is my friend.\n", # detect London only once from this sentence:
+                      '"This is the next - city, London -- here, in London, the sky is nice."\n',
                       "Is this the third line, or a Book about London?"]
 
             LinesFromFile = util.file_read_lines(Prg, FileSentences)

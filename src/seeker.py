@@ -126,6 +126,9 @@ def file_index_create(Prg, FileIndex, FileSentences):
             # We’re looking for a dog-friendly hotel.
             # ’ -   signs has to be replaced with word separator char
 
+            # more than one minus: -- or --- signs: replace them
+            Line = text.replace_regexp(Line, "[-][-]+", " ")
+
             Line = text.remove_non_alpha_chars(Line, " ", CharsKeepThem="-")
 
             for Word in Line.split():
@@ -138,7 +141,8 @@ def file_index_create(Prg, FileIndex, FileSentences):
                 if Word: # if it's not empty string
                     util.dict_key_insert_if_necessary(WordIndex, Word, list())
 
-                    WordIndex[Word].append(LineNum)
+                    if LineNum not in WordIndex[Word]: # save the word only once
+                        WordIndex[Word].append(LineNum)
 
         Out = []
         for Word, LineNums in WordIndex.items():

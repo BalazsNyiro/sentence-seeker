@@ -15,14 +15,14 @@ def match_in_subsentence__results(Prg, WordsWanted):
         #  {0: ['tree'],
         #   4: ['apple', 'tree'],
         #   3: ['apple'] }
-        LineNums__WordsWanted = text.linenums__words__collect(WordsWanted, Doc["Index"])
+        LineNums__WordsDetected = text.linenums__words__collect(WordsWanted, Doc["Index"])
 
         # 1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
         #     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
         # 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
 
         for MatchNumInSentence, Results in \
-                text.match_num__result_obj(Prg, LineNums__WordsWanted, FileBaseName).items():
+                text.match_num__result_obj(Prg, LineNums__WordsDetected, FileBaseName).items():
 
             for Result in Results:
                 MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Result["Sentence"])

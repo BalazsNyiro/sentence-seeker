@@ -6,6 +6,11 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
 ## Roadmap
 
+19 may, 2020: 
+ - Web page development with desktop Text analyser logic is in progress. 
+ - First Refactor period is over.
+
+
 In the far, far future a controller process are going to send requests for nodes in same host and in different hosts too, so the whole seeking happens simultaneously
 
 ## Future plans:

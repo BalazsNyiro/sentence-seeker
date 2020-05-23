@@ -6,6 +6,25 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
 ## Roadmap
 
+23 may, 2020:
+ - facebook channel:  sentence-seeker.net
+   https://www.facebook.com/groups/2449430305347843
+ 
+ - I implemented the simple sentence analyser logic
+   in the online version of the program:
+   http://www.sentence-seeker.net
+   
+   and I realised that I know a more efficient way to
+   find the wanted result from database
+   so I want to rewrite the result selection
+   logic in desktop and online version, too.
+
+   The current desktop version can analyse
+   about 20 books in 0.02 second so it's fast enough
+   but this solution has too wide response time
+   on the web server   
+   
+
 19 may, 2020: 
  - Web page development with desktop Text analyser logic is in progress. 
  - First Refactor period is over.

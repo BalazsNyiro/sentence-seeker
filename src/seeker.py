@@ -114,12 +114,13 @@ def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
 def file_index_create(Prg, FileIndex, FileSentences):
     if not os.path.isfile(FileIndex):
         WordIndex = dict()
+        WordIndexOnlyLineNums = dict()
 
         Lines = util.file_read_lines(Prg, FileSentences, Strip=False, Lower=True)
 
         for LineNum, Line in enumerate(Lines):
 
-            if LineNum % 3000 == 0:
+            if LineNum % 1000 == 0:
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %")#, end="", flush=True)
 
@@ -136,7 +137,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
             Line = text.replace_regexp(Line, "[-][-]+", " ")
 
             for SubSentenceNum, SubSentence in enumerate(text.subsentences(Line)):
-                indexing(WordIndex, LineNum, SubSentence, SubSentenceNum)
+                indexing(WordIndex, WordIndexOnlyLineNums, LineNum, SubSentence, SubSentenceNum)
 
         Out = []
         for Word, LineNums in WordIndex.items():
@@ -145,7 +146,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
         util.file_write(Prg, Fname=FileIndex, Content=Content)
 
 
-def indexing(WordIndex, LineNum, SubSentence, SubSentenceNum):
+def indexing(WordIndex, WordIndexOnlyLineNums,  LineNum, SubSentence, SubSentenceNum):
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
 
@@ -154,6 +155,9 @@ def indexing(WordIndex, LineNum, SubSentence, SubSentenceNum):
         # I've -> "I", "have" are two separated words,
         # wouldn't -> would is the real word
         util.dict_key_insert_if_necessary(WordIndex, Word, list())
+        util.dict_key_insert_if_necessary(WordIndexOnlyLineNums, Word, dict())
 
-        if LineNum not in WordIndex[Word]: # save the word only once
-            WordIndex[Word].append("{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}")
+        Index = "{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}"
+        if LineNum not in WordIndexOnlyLineNums[Word]: # save the word only once
+            WordIndex[Word].append(Index)
+            WordIndexOnlyLineNums[Word][LineNum] = True

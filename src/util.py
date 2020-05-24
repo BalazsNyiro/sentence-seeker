@@ -100,10 +100,12 @@ def file_read_lines_orig(_Prg, Fname, Strip=False):
         else:
             return F.readlines()
 
-def file_read_lines(Prg, Fname, Strip=False):
+def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)
     Lines = []
     for Line in TextAll.split("\n"):
+        if Lower:
+            Line = Line.lower()
         if Strip:
             Lines.append(Line.strip())
         else:

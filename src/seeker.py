@@ -115,7 +115,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
     if not os.path.isfile(FileIndex):
         WordIndex = dict()
 
-        Lines = util.file_read_lines(Prg, FileSentences)
+        Lines = util.file_read_lines(Prg, FileSentences, Strip=False, Lower=True)
 
         for LineNum, Line in enumerate(Lines):
 
@@ -133,8 +133,11 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
             # more than one minus: -- or --- signs: replace them
 
+            Line = text.replace_regexp(Line, "[-][-]+", " ")
+
             for SubSentenceNum, SubSentence in enumerate(text.subsentences(Line)):
                 indexing(WordIndex, LineNum, SubSentence, SubSentenceNum)
+
         Out = []
         for Word, LineNums in WordIndex.items():
             Out.append(f'"{Word}": [{",".join(LineNums)}]')
@@ -143,17 +146,14 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
 
 def indexing(WordIndex, LineNum, SubSentence, SubSentenceNum):
-    SubSentence = text.replace_regexp(SubSentence, "[-][-]+", " ")
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
-    for Word in SubSentence.split():
+
+    for Word in SubSentence.split(): # split at space, tab, newline
         # TODO: words short form expand:
         # I've -> "I", "have" are two separated words,
         # wouldn't -> would is the real word
+        util.dict_key_insert_if_necessary(WordIndex, Word, list())
 
-        Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
-        if Word: # if it's not empty string
-            util.dict_key_insert_if_necessary(WordIndex, Word, list())
-
-            if LineNum not in WordIndex[Word]: # save the word only once
-                WordIndex[Word].append("{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}")
+        if LineNum not in WordIndex[Word]: # save the word only once
+            WordIndex[Word].append("{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}")

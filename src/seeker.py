@@ -2,7 +2,7 @@
 import document, util, stats, time, os, text
 import result_selectors
 
-Version = "v02_simple"
+Version = "v03_index_in_subsentence"
 
 # Tested
 def match_in_subsentence__results(Prg, WordsWanted):
@@ -130,19 +130,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
             Line = text.replace_regexp(Line, "[-][-]+", " ")
 
             Line = text.remove_non_alpha_chars(Line, " ", CharsKeepThem="-")
-
-            for Word in Line.split():
-
-                # TODO: words short form expand:
-                # I've -> "I", "have" are two separated words,
-                # wouldn't -> would is the real word
-
-                Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
-                if Word: # if it's not empty string
-                    util.dict_key_insert_if_necessary(WordIndex, Word, list())
-
-                    if LineNum not in WordIndex[Word]: # save the word only once
-                        WordIndex[Word].append(LineNum)
+            indexing(WordIndex, LineNum, Line)
 
         Out = []
         for Word, LineNums in WordIndex.items():
@@ -151,3 +139,15 @@ def file_index_create(Prg, FileIndex, FileSentences):
         util.file_write(Prg, Fname=FileIndex, Content=Content)
 
 
+def indexing(WordIndex, LineNum, SubSentence):
+    for Word in SubSentence.split():
+        # TODO: words short form expand:
+        # I've -> "I", "have" are two separated words,
+        # wouldn't -> would is the real word
+
+        Word = Word.strip().lower() # The == the, capitals are not important from the viewpoint of words
+        if Word: # if it's not empty string
+            util.dict_key_insert_if_necessary(WordIndex, Word, list())
+
+            if LineNum not in WordIndex[Word]: # save the word only once
+                WordIndex[Word].append(LineNum)

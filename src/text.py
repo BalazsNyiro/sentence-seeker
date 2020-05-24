@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import re, util, text
+import re, util, text, time
 
 SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
@@ -75,7 +75,14 @@ def sentence_separator(Text):
     InSentence = False
     InQuotation = False
 
+    TimeStart = time.time()
+    LoopCounter = 0
     for Char in Text:
+
+        LoopCounter += 1
+        if time.time() - TimeStart > 1:
+            if LoopCounter % 2000 == 0:
+                print("t", end="", flush=True)
 
         ########## BEGINNING ##########
         if Char in MarksQuotation:

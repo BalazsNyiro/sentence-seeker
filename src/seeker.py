@@ -115,8 +115,13 @@ def file_index_create(Prg, FileIndex, FileSentences):
     if not os.path.isfile(FileIndex):
         WordIndex = dict()
 
-        # start LineNum from 1
-        for LineNum, Line in enumerate(util.file_read_lines(Prg, FileSentences)):
+        Lines = util.file_read_lines(Prg, FileSentences)
+
+        for LineNum, Line in enumerate(Lines):
+
+            if LineNum % 3000 == 0:
+                Percent = int(LineNum / len(Lines)* 100)
+                print(f"index create: {Percent} %")#, end="", flush=True)
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars
@@ -127,7 +132,6 @@ def file_index_create(Prg, FileIndex, FileSentences):
             # ’ -   signs has to be replaced with word separator char
 
             # more than one minus: -- or --- signs: replace them
-
 
             for SubSentenceNum, SubSentence in enumerate(text.subsentences(Line)):
                 indexing(WordIndex, LineNum, SubSentence, SubSentenceNum)

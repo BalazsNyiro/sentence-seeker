@@ -127,19 +127,21 @@ def file_index_create(Prg, FileIndex, FileSentences):
             # ’ -   signs has to be replaced with word separator char
 
             # more than one minus: -- or --- signs: replace them
-            Line = text.replace_regexp(Line, "[-][-]+", " ")
 
-            Line = text.remove_non_alpha_chars(Line, " ", CharsKeepThem="-")
-            indexing(WordIndex, LineNum, Line)
 
+            for SubSentenceNum, SubSentence in enumerate(text.subsentences(Line)):
+                indexing(WordIndex, LineNum, SubSentence, SubSentenceNum)
         Out = []
         for Word, LineNums in WordIndex.items():
-            Out.append(f'"{Word}": {str(LineNums)}')
+            Out.append(f'"{Word}": [{",".join(LineNums)}]')
         Content="{\n"+"\n,".join(Out) + "\n}"
         util.file_write(Prg, Fname=FileIndex, Content=Content)
 
 
-def indexing(WordIndex, LineNum, SubSentence):
+def indexing(WordIndex, LineNum, SubSentence, SubSentenceNum):
+    SubSentence = text.replace_regexp(SubSentence, "[-][-]+", " ")
+    SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
+
     for Word in SubSentence.split():
         # TODO: words short form expand:
         # I've -> "I", "have" are two separated words,
@@ -150,4 +152,4 @@ def indexing(WordIndex, LineNum, SubSentence):
             util.dict_key_insert_if_necessary(WordIndex, Word, list())
 
             if LineNum not in WordIndex[Word]: # save the word only once
-                WordIndex[Word].append(LineNum)
+                WordIndex[Word].append("{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}")

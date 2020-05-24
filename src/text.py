@@ -116,22 +116,20 @@ def sentence_separator(Text):
     # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
+#FIXME: TEST IT
+def subsentences(Sentence):
+    for SubSep in SubsentenceEnds:
+        Sentence = Sentence.replace(SubSep, ";")
+    return Sentence.split(";")
+
 # Tested
 def match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Sentence):
     if MatchNumInSentence == 1:
         return 1
 
-    SubsentencesNum = 1
-    for SubSep in SubsentenceEnds:
-        SubsentencesNum += Sentence.count(SubSep)
-
-    if SubsentencesNum == 1:
+    SubSentences = subsentences(Sentence)
+    if len(SubSentences) < 2:
         return MatchNumInSentence
-
-    SentenceTmp = Sentence
-    for SubSep in SubsentenceEnds:
-        SentenceTmp = SentenceTmp.replace(SubSep, ";")
-    SubSentences = SentenceTmp.split(";")
 
     MatchNumMax = 0
     for SubSentence in SubSentences:
@@ -174,7 +172,9 @@ def linenums__words__collect(WordsWanted, Index):
     LineNums__Words = dict()
     for WordWanted in WordsWanted:
 
-        for LineNum in Index.get(WordWanted, []):
+        for IndexObj in Index.get(WordWanted, []):
+            LineNum = IndexObj["line"]
+            SubSentenceNum = IndexObj["subsentence"]
             util.dict_key_insert_if_necessary(LineNums__Words, LineNum, list())
             if WordWanted not in LineNums__Words[LineNum]:     # Save it only once if the words
                 LineNums__Words[LineNum].append(WordWanted)    # is more than once in a sentence

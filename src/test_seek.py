@@ -12,6 +12,7 @@ class SeekTests(util_test.SentenceSeekerTest):
                "Have you ever seen a brown blackbird, like this one?\n")
 
     def test_group_maker(self):
+        self.maxDiff = None
         if self._test_exec("test_group_maker"):
             Prg = self.Prg
             FilePathBird = self.FilePathBird
@@ -57,6 +58,7 @@ class SeekTests(util_test.SentenceSeekerTest):
 
 
     def test_match_num_max_in_subsentences(self):
+        self.maxDiff = None
         if self._test_exec("test_match_num_max_in_subsentences"):
             WordsWanted = ["what", "do", "like"] # do is two times in second subsentence
             MatchNumInSentences = 3              # but 'do'+'do'+'like' = 2 only because 'do' is repeated
@@ -65,18 +67,21 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.assertEqual(MatchNumMaxSubsentences, 2)
 
     def test_words_wanted_clean(self):
+        self.maxDiff = None
         if self._test_exec("test_words_wanted_clean"):
             WordsWanted = "apple, tree"
             WordsWantedCleaned = text.words_wanted_clean(WordsWanted)
             self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
 
     def test_word_count_in_text(self):
+        self.maxDiff = None
         if self._test_exec("test_word_count_in_text"):
             Sentence = "There are appletrees in Apple's applegarden - the owner wanted to eat more apple"
             WordCount = text.word_count_in_text("apple", Sentence)
             self.assertEqual(WordCount, 2)
 
     def test_word_highlight(self):
+        self.maxDiff = None
         if self._test_exec("test_word_highlight"):
             # Prg = self.Prg
             Text = "Apple has a lot of apple in his Tree garden"
@@ -87,13 +92,14 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.assertEqual(Highlighted, TextWanted)
 
     def test_seek_linenumbers_with_group_of_words(self):
+        self.maxDiff = None
         if self._test_exec("test_seek_linenumbers_with_group_of_words"):
             Prg = self.Prg
             WordsWanted = "apple, tree"
-            Index = { "apple": [4, 3],
-                      "house": [1, 2],
-                      "mouse": [3, 4],
-                      "tree":  [0, 4]
+            Index = { "apple": [{"line": 4, "subsentence": 0}, {"line":3, "subsentence": 0} ],
+                      "house": [{"line": 1, "subsentence": 0}, {"line":2, "subsentence": 0} ],
+                      "mouse": [{"line": 3, "subsentence": 0}, {"line":4, "subsentence": 0} ],
+                      "tree":  [{"line": 0, "subsentence": 0}, {"line":4, "subsentence": 0} ]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
             ResultLineNumbers__WordsDetected = text.linenums__words__collect(WordsWanted, Index)
@@ -122,6 +128,7 @@ class SeekTests(util_test.SentenceSeekerTest):
 
 
     def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
+        self.maxDiff = None
         if self._test_exec("test_sentence_separator__a_naive_01"):
             Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
             Wanted = \
@@ -132,6 +139,7 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.assertEqual(Wanted, Sentences)
 
     def test_file_create_sentences__create_index(self):
+        self.maxDiff = None
         if self._test_exec("test_file_create_sentences__create_index"):
             Prg = self.Prg
 
@@ -151,9 +159,14 @@ class SeekTests(util_test.SentenceSeekerTest):
             FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")
             util.file_del(FileIndex)
             seeker.file_index_create(Prg, FileIndex, FileSentences)
+            #seeker.file_index_create(Prg, "/tmp/index.txt", FileSentences)
+            # print(util.file_read_all(Prg, FileIndex))
 
             Index = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(Index["london"], [1, 2])
+            self.assertEqual(Index["london"], [{"line": 1, "subsentence": 1},
+                                               {"line": 1, "subsentence": 2},
+                                               {"line": 2, "subsentence": 1}
+                                              ])
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

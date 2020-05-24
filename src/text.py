@@ -130,28 +130,6 @@ def subsentences(Sentence):
     return Sentence.split(";")
 
 # Tested
-def match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Sentence):
-    if MatchNumInSentence == 1:
-        return 1
-
-    SubSentences = subsentences(Sentence)
-    if len(SubSentences) < 2:
-        return MatchNumInSentence
-
-    MatchNumMax = 0
-    for SubSentence in SubSentences:
-        WordCount = 0
-        for Word in WordsWanted:
-            # if 'the' is two times in subsentence, count it as 1
-            # repetition is not important
-            WordCountInSubsentence = word_count_in_text(Word, SubSentence)
-            if WordCountInSubsentence > 0:
-                WordCount += 1
-        if WordCount > MatchNumMax:
-            MatchNumMax = WordCount
-    return MatchNumMax
-
-# Tested
 _PatternWordsWithBoundary = dict()
 def word_count_in_text(Word, Text):
     if Word not in _PatternWordsWithBoundary:
@@ -160,33 +138,45 @@ def word_count_in_text(Word, Text):
     return len(Pattern.findall(Text))
 
 # Tested in: test_seek_linenumbers_with_group_of_words
-def match_num__result_obj(Prg, LineNums__WordsDetected, FileSourceBaseName):
-    MatchNum__Results = dict()
-    for LineNum, WordsDetectedInSentence in LineNums__WordsDetected.items():
-        NumOfWordsDetected = len(WordsDetectedInSentence)
-        util.dict_key_insert_if_necessary(MatchNum__Results, NumOfWordsDetected, list())
-        Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
-                                  "LineNumInSentenceFile": LineNum,
-                                  "WordsDetectedInSentence": WordsDetectedInSentence,
-                                  "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
-        }
-        MatchNum__Results[NumOfWordsDetected].append(Source__LineNum__Words)
-    return MatchNum__Results
+def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileSourceBaseName):
+    MatchNumInSubsentence__Results = dict()
+    MatchNumMax = 0
+
+    for LineNum in LineNum__SubsentenceNum__WordsDetected:
+        for SubsentenceNum in LineNum__SubsentenceNum__WordsDetected[LineNum]:
+
+            WordsDetectedInSubsentence = LineNum__SubsentenceNum__WordsDetected[LineNum][SubsentenceNum]
+            NumOfDetected = len(WordsDetectedInSubsentence)
+
+            util.dict_key_insert_if_necessary(MatchNumInSubsentence__Results, NumOfDetected, list())
+            Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
+                                      "LineNumInSentenceFile": LineNum,
+                                      "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
+                                      "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
+            }
+            MatchNumInSubsentence__Results[NumOfDetected].append(Source__LineNum__Words)
+            if NumOfDetected > MatchNumMax:
+                MatchNumMax = NumOfDetected
+    return MatchNumMax, MatchNumInSubsentence__Results
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
 def linenums__words__collect(WordsWanted, Index):
-    LineNums__Words = dict()
+    LineNums__SubsentenceNum__Words = dict()
     for WordWanted in WordsWanted:
 
         for IndexObj in Index.get(WordWanted, []):
+
             LineNum = IndexObj["line"]
             SubSentenceNum = IndexObj["subsentence"]
-            util.dict_key_insert_if_necessary(LineNums__Words, LineNum, list())
-            if WordWanted not in LineNums__Words[LineNum]:     # Save it only once if the words
-                LineNums__Words[LineNum].append(WordWanted)    # is more than once in a sentence
 
-    return LineNums__Words
+            util.dict_key_insert_if_necessary(LineNums__SubsentenceNum__Words, LineNum, dict())
+            util.dict_key_insert_if_necessary(LineNums__SubsentenceNum__Words[LineNum], SubSentenceNum, list())
+
+            if WordWanted not in LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum]:     # Save it only once if the words
+                LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+
+    return LineNums__SubsentenceNum__Words
 
 # Tested
 def words_wanted_clean(WordsOneString):

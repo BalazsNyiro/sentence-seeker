@@ -26,15 +26,17 @@ class SeekTests(util_test.SentenceSeekerTest):
             #####################################################
 
             WordsWanted = ["looks", "like", "bird", "this"]
-            Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.match_in_subsentence__results(Prg, WordsWanted)
+            MatchNumsInSubsentences_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.match_in_subsentence__results(Prg, WordsWanted)
 
             GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
                 # the first num:
                 # MatchNumMaxInSubsentences
-                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSentence': ['looks', 'like', 'this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
-                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage."}]
+                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['looks', 'like'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
+                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage."}
+                   ]
             }
 
             ################ restore original state #####################################
@@ -44,27 +46,18 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.Prg = PrgOrig
             ################ restore original state #####################################
 
-            print("ResultsTotalNum:", ResultsTotalNum)
+            # print("ResultsTotalNum:", ResultsTotalNum)
 
-            print("Assert, Matchnums descending...")
-            print("\nMatchNums__Descending", MatchNums__Descending)
+            # print("Assert, Matchnums descending...")
+            # print("\nMatchNums__Descending", MatchNums__Descending)
             self.assertEqual(MatchNums__Descending, [2, 1])
 
-            # print("Assert, Groups_MatchNums_ResultInfos...")
-            # util.display_groups_matchnum_resultinfo(Groups_MatchNums_ResultInfos)
+            #print("Assert, MatchNumsInSubsentences_ResultInfos...")
+            #util.display_groups_matchnum_resultinfo(MatchNumsInSubsentences_ResultInfos)
             # print("Group, wanted:")
             # util.display_groups_matchnum_resultinfo(GroupsSubsentenceBasedWanted)
-            self.assertEqual(GroupsSubsentenceBasedWanted, Groups_MatchNums_ResultInfos)
+            self.assertEqual(GroupsSubsentenceBasedWanted, MatchNumsInSubsentences_ResultInfos)
 
-
-    def test_match_num_max_in_subsentences(self):
-        self.maxDiff = None
-        if self._test_exec("test_match_num_max_in_subsentences"):
-            WordsWanted = ["what", "do", "like"] # do is two times in second subsentence
-            MatchNumInSentences = 3              # but 'do'+'do'+'like' = 2 only because 'do' is repeated
-            Sentence = "What is your favourite color, for example do you like black like I do?"
-            MatchNumMaxSubsentences = text.match_num_max_in_subsentences(MatchNumInSentences, WordsWanted, Sentence)
-            self.assertEqual(MatchNumMaxSubsentences, 2)
 
     def test_words_wanted_clean(self):
         self.maxDiff = None
@@ -104,23 +97,29 @@ class SeekTests(util_test.SentenceSeekerTest):
             WordsWanted = text.words_wanted_clean(WordsWanted)
             ResultLineNumbers__WordsDetected = text.linenums__words__collect(WordsWanted, Index)
 
-            # print("\n>>>>>>", LineNumbersAllWord)
-            Correct = { 0: ['tree'],
-                        4: ['apple', 'tree'],
-                        3: ['apple']
-                        }
+            # print("\n>>>>>>",ResultLineNumbers__WordsDetected )
+            Correct = { 0: {0: ['tree']},
+                        3: {0: ['apple']},
+                        4: {0: ['apple', 'tree']}
+                      }
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            MatchNum__Source_Words = text.match_num__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words")
+            _MatchNumMax, MatchNum__Source_Words = text.match_num_in_subsentence__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words")
             # print("\n>>>>>>", MatchNum__Source_Words)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
             # length with 2 results has one elem: in line 2 both words is found
             Wanted__MatchNum__SourceAndDetectedWords = {
-                1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
-                    {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
-                2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
+                 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4,
+                      'WordsDetectedInSubsentence': ['apple', 'tree'],
+                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
+                 1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3,
+                      'WordsDetectedInSubsentence': ['apple'],
+                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
+                     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0,
+                      'WordsDetectedInSubsentence': ['tree'],
+                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
             }
             # util.display_groups_matchnum_resultinfo(MatchNum__Source_Words)
             # util.display_groups_matchnum_resultinfo(Wanted__MatchNum__SourceAndDetectedWords)

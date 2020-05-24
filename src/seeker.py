@@ -6,34 +6,28 @@ Version = "v03_index_in_subsentence"
 
 # Tested
 def match_in_subsentence__results(Prg, WordsWanted):
-    Groups_MatchNums_ResultInfos = dict()
+    MatchNumInSubsentences__Results = dict()
     ResultsTotalNum = 0
 
+    #######################################################################
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
+        LineNum__SubsentenceNum__WordsDetected = text.linenums__words__collect(WordsWanted, Doc["Index"])
 
-        # this is an implemented Select LineNums, words from DB...
-        #  {0: ['tree'],
-        #   4: ['apple', 'tree'],
-        #   3: ['apple'] }
-        LineNums__WordsDetected = text.linenums__words__collect(WordsWanted, Doc["Index"])
+        # one Line with any result => one result
+        ResultsTotalNum += len(LineNum__SubsentenceNum__WordsDetected)
 
-        # 1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3, 'WordsDetectedInSentence': ['apple'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
-        #     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0, 'WordsDetectedInSentence': ['tree'],  'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
-        # 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4, 'WordsDetectedInSentence': ['apple', 'tree'], 'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
+        _MatchNumMax, MatchNumInSubsentence__Results__in_file = \
+            text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName)
 
-        for MatchNumInSentence, Results in \
-                text.match_num__result_obj(Prg, LineNums__WordsDetected, FileBaseName).items():
-
+        for MatchNum, Results in MatchNumInSubsentence__Results__in_file.items():
             for Result in Results:
-                MatchNumMaxInSubsentences = text.match_num_max_in_subsentences(MatchNumInSentence, WordsWanted, Result["Sentence"])
+                util.dict_key_insert_if_necessary(MatchNumInSubsentences__Results, MatchNum, list())
+                MatchNumInSubsentences__Results[MatchNum].append(Result)
+    #######################################################################
 
-                util.dict_key_insert_if_necessary(Groups_MatchNums_ResultInfos, MatchNumMaxInSubsentences, list())
-                Groups_MatchNums_ResultInfos[MatchNumMaxInSubsentences].append(Result)
-                ResultsTotalNum += 1
+    MatchNums__Descending = util.dict_key_sorted(MatchNumInSubsentences__Results)
 
-    MatchNums__Descending = util.dict_key_sorted(Groups_MatchNums_ResultInfos)
-
-    return Groups_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum
+    return MatchNumInSubsentences__Results, MatchNums__Descending, ResultsTotalNum
 
 def seek(Prg, WordsWantedOneString):
     stats.save(Prg, "first seek =>")

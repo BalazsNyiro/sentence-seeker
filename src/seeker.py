@@ -149,7 +149,6 @@ def file_index_create(Prg, FileIndex, FileSentences):
 def indexing(WordIndex, WordIndexOnlyLineNums,  LineNum, SubSentence, SubSentenceNum):
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
-
     for Word in SubSentence.split(): # split at space, tab, newline
         # TODO: words short form expand:
         # I've -> "I", "have" are two separated words,
@@ -158,6 +157,6 @@ def indexing(WordIndex, WordIndexOnlyLineNums,  LineNum, SubSentence, SubSentenc
         util.dict_key_insert_if_necessary(WordIndexOnlyLineNums, Word, dict())
 
         Index = "{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}"
-        if LineNum not in WordIndexOnlyLineNums[Word]: # save the word only once
+        if Index not in WordIndexOnlyLineNums[Word]: # save the word only once
             WordIndex[Word].append(Index)
-            WordIndexOnlyLineNums[Word][LineNum] = True
+            WordIndexOnlyLineNums[Word][Index] = True

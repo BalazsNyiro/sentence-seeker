@@ -78,20 +78,21 @@ class DocHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.data = []
+        self.Level_P = 0
 
     def handle_starttag(self, tag, attrs):
         # print("Start tag:", tag)
-        for attr in attrs:
-            pass
-            # print("     attr:", attr)
+        if tag == "p":
+            self.Level_P += 1
 
     def handle_endtag(self, tag):
-        # print("End tag  :", tag)
-        pass
+        if tag == "p":
+            self.Level_P -= 1
 
     def handle_data(self, data):
-        #print("Data     :", data)
-        self.data.append(data)
+        # self.data.append(data)
+        if self.Level_P > 0:
+            self.data.append(data)
 
     def handle_comment(self, data):
         #print("Comment  :", data)

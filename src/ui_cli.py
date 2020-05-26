@@ -20,6 +20,8 @@ def user_interface_start(Prg, Args):
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "cli":
+        print("Licenses: Books from Gutenberg.org are in Public Domain.")
+        print("The Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page")
         print("interesting search: looks, like, bird")
         print("interesting search: elephant")
 
@@ -36,7 +38,12 @@ def sentence_result_one_display(Prg, Result):
     Sentence = text.sentence_loaded(Prg, Source, LineNum)
     Sentence = Sentence.strip() # remove possible newline at end
     LineResultColored = text.word_highlight(WordsDetectedInSubsentence, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
-    print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}\n")
+    print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
+
+    Url = ""
+    if Source in Prg["DocumentInfo"]:
+        Url = Prg["DocumentInfo"][Source]["url"]
+        print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
 def sentence_result_all_display(Prg, SentenceObjects, LimitDisplayed=6):
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):

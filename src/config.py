@@ -36,6 +36,12 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
     # Prg = Dict({"Key":1}) works, too
 
+    DocumentInfo = dict()
+    for Doc in util_json_obj.obj_from_file(os.path.join(DirPrgRoot, "text_samples", "document_samples.json"))["docs"]:
+        FileName = Doc["file_name"]
+        if FileName[-3:] == ".gz":
+            FileName = FileName[:-3]
+        DocumentInfo[FileName] = Doc
 
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -55,6 +61,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
             "Statistics": [],
+            "DocumentInfo": DocumentInfo
 
     }
 

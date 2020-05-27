@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import util, os
+import util, os, gzip
 import util_json_obj
 from os.path import isfile
 
@@ -96,6 +96,14 @@ def document_objects_collect_from_working_dir(Prg,
 def docs_copy_samples_into_dir_if_necessary(Prg):
     DocumentsAvailable = document_objects_collect_from_working_dir(Prg)
     if not DocumentsAvailable:
+        WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+        if WikiPagesUse.strip().lower() == "y":
+            Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
+            BinaryFromWeb = util.web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+            Bytes = gzip.decompress(BinaryFromWeb)
+            Text = util.utf8_conversion_with_warning(Bytes, Url)
+            print(Text)
+
         DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
         docs_copy_samples_into_dir(Prg, DirTarget)
 

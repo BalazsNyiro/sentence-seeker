@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, gzip, shutil, pathlib
+import os, gzip, shutil, pathlib, urllib.request
 
 # Tested
 def shell(Cmd):
@@ -278,11 +278,22 @@ def display_groups_matchnum_resultinfo(GroupsObj):
 
 # Tested with the life
 # of course somehow I have to test it, it's a magic :-)
-def utf8_conversion_with_warning(Bytes, FileName):
+def utf8_conversion_with_warning(Bytes, Source):
     try:
         Content = str(Bytes, 'utf-8')
     except:
-        print(f"WARNING: one or more char not convertable to utf-8 in: {FileName}")
+        print(f"WARNING: one or more char not convertable to utf-8 in: {Source}")
         Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
     return Content
 
+def web_get(Url, Binary=False):
+    Url = Url.strip()
+    print(f"web html get: {Url}, Binary:{Binary}")
+
+    with urllib.request.urlopen(Url) as Response:
+        if Binary:
+            # https://stackoverflow.com/questions/9419162/download-returned-zip-file-from-url
+            return Response.read()
+        else:
+            # Html = str(Response.read())
+            return Response.read().decode('utf-8')

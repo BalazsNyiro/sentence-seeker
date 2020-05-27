@@ -19,8 +19,9 @@ def doc_db_update(Prg, BaseNameOrig):
     if not _DocsSampleInfo: # read only once, save it into global var
         _DocsSampleInfo = obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
     DocDb = obj_from_file(Prg["FileDocumentsDb"])
-    DocDb["docs"][BaseNameOrig] = _DocsSampleInfo["docs"][BaseNameOrig]
-    obj_to_file(Prg["FileDocumentsDb"], DocDb)
+    if BaseNameOrig in _DocsSampleInfo["docs"]:
+        DocDb["docs"][BaseNameOrig] = _DocsSampleInfo["docs"][BaseNameOrig]
+        obj_to_file(Prg["FileDocumentsDb"], DocDb)
 
 # Used in tests
 # read wanted key from config file

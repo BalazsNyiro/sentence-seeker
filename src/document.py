@@ -95,16 +95,55 @@ def document_objects_collect_from_working_dir(Prg,
 # TODO: TEST it
 def docs_copy_samples_into_dir_if_necessary(Prg):
     DocumentsAvailable = document_objects_collect_from_working_dir(Prg)
+    DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
+
+    util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
+    util.dir_create_if_necessary(Prg, DirTarget)
+
     if not DocumentsAvailable:
         WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
         if WikiPagesUse.strip().lower() == "y":
             Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
-            BinaryFromWeb = util.web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
-            Bytes = gzip.decompress(BinaryFromWeb)
-            Text = util.utf8_conversion_with_warning(Bytes, Url)
-            print(Text)
+            try:
+                BinaryFromWeb = util.web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+                Bytes = gzip.decompress(BinaryFromWeb)
+                print("Url downloading is finished:", Url)
+                Lines = util.utf8_conversion_with_warning(Bytes, Url)
+                print("Utf8 conversion finished...")
+                # file_write(FilePack, f"\n\npage>>>{Url}\nlicense>>>{License}\n{Text}\nEND>>>\n", "a")
 
-        DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
+                SourceName = "wikipedia"
+
+                Url = ""
+                License = ""
+                FileName = ""
+
+                LinesDoc = []
+
+                for LineNum, Line in enumerate(Lines.split("\n")):
+                    # print(Line)
+                    if "###" == Line[:3]:
+
+                        Token, Data = Line[3:].split(">>>")
+                        #print("token, data",Token, Data)
+                        if Token == "Url":      Url = Data
+                        if Token == "License":  License = Data
+                        if Token == "FileName": FileName = Data
+
+                        if Token == "End":
+                            FileHtmlFullPath = os.path.join(DirTarget, FileName + ".txt")
+                            Written = util.file_write(Prg, Fname=FileHtmlFullPath, Content="\n".join(LinesDoc))
+                            print("Written:", Written)
+
+                            # TODO: UPDATE DbDoc info after writing
+
+                            LinesDoc = []
+                    else:
+                        LinesDoc.append(Line)
+
+            except:
+                print("Download problem:", Url)
+
         docs_copy_samples_into_dir(Prg, DirTarget)
 
 # Tested

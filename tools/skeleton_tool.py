@@ -11,7 +11,6 @@ import config
 ##########################################################
 
 Prg = config.PrgConfigCreate()
-config.DirsFilesConfigCreate(Prg)
 
 # use argparse to detect options
 

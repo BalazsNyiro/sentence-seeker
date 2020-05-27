@@ -41,8 +41,8 @@ def sentence_result_one_display(Prg, Result):
     print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
 
     Url = ""
-    if Source in Prg["DocumentInfo"]:
-        Url = Prg["DocumentInfo"][Source]["url"]
+    if Source in Prg["DocumentsDb"]:
+        Url = Prg["DocumentsDb"][Source]["url"]
         print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
 def sentence_result_all_display(Prg, SentenceObjects, LimitDisplayed=6):

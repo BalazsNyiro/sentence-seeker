@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, platform, user, util, time, util_json_obj
 from shlex import quote
+from pathlib import Path
 
 from html.parser import HTMLParser
 from html.entities import name2codepoint
@@ -20,13 +21,16 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
         DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
 
     DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
+    Path(DirWorkAbsPath).mkdir(parents=True, exist_ok=True)
+
     DirLog = os.path.join(DirWorkAbsPath, "log")
+    Path(DirLog).mkdir(parents=True, exist_ok=True)
     print(f"== sentente seeker work path: {DirWorkAbsPath}")
 
     Time = int(time.time())
     FileLog = f"log_{Time}"
     DirDocuments = os.path.join(DirWorkAbsPath, "documents")
-
+    Path(DirDocuments).mkdir(parents=True, exist_ok=True)
 
     # we can use Prg as class, too - but the new code doesn't acceptable for me
     # Prg.Os would be the result but it's ugly in IDEA
@@ -36,12 +40,18 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
     # Prg = Dict({"Key":1}) works, too
 
-    DocumentInfo = dict()
-    for Doc in util_json_obj.obj_from_file(os.path.join(DirPrgRoot, "text_samples", "document_samples.json"))["docs"]:
+    FileDocumentsDb = os.path.join(DirDocuments, "documents.json")
+
+    PathSamples = os.path.join(DirPrgRoot, "text_samples", "document_samples.json")
+    DocumentsDbDefault = util.file_read_all_simple(PathSamples)
+    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=DocumentsDbDefault, LogCreate=False)
+
+    DocumentsDb = dict()
+    for Doc in util_json_obj.obj_from_file(FileDocumentsDb)["docs"]:
         FileName = Doc["file_name"]
         if FileName[-3:] == ".gz":
             FileName = FileName[:-3]
-        DocumentInfo[FileName] = Doc
+        DocumentsDb[FileName] = Doc
 
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -52,7 +62,10 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DirsDeleteAfterRun": list(),
             "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,
+
             "FileDocumentsDb": os.path.join(DirDocuments, "documents.json"),
+            "DocumentsDb": DocumentsDb,
+
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
             "TestExecution": False,
@@ -61,22 +74,10 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
             "Statistics": [],
-            "DocumentInfo": DocumentInfo
 
     }
 
     return Prg
-
-def DirsFilesConfigCreate(Prg):
-    for Dir in [Prg["DirWork"], Prg["DirLog"]]:
-        # if these dirs don't exist, I can't create log in the proper file
-        util.dir_create_if_necessary(Prg, Dir, LogCreate=False)
-
-    # here the log dir exists, so I can save any error message :-)
-    util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
-
-    Default = "{}"
-    util.file_create_if_necessary(Prg, Prg["FileDocumentsDb"], ContentDefault=Default)
 
 # Naive html text extractor.
 # unfortunatelly it saves css data tags, too

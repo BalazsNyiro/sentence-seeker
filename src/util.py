@@ -72,9 +72,10 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
     if os.path.isfile(Path):
         Msg = f"file create if necessary - not created: it was a filename, {Path}"
     else:
-        file_write(Prg, Fname=Path, Content=ContentDefault, LogCreate=LogCreate)
-        Created = True
-        Msg = f"file create if necessary - created: {Path}"
+        print("File creation:", Path)
+        Created = file_write(Prg, Fname=Path, Content=ContentDefault, LogCreate=LogCreate)
+        Msg = f"file create if necessary - created: {Created}  {Path}"
+        print(Msg)
 
     if LogCreate:
         log(Prg, Msg)
@@ -115,6 +116,11 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
         Lines[-1] = Lines[-1].replace("\n", '') # the last elem can't have \n at end
 
     return Lines
+
+# no PRG usage
+def file_read_all_simple(Fname="",mode="r"): # if you want read binary, write "rb"
+    with open(Fname, mode) as f:
+        return f.read()
 
 # Tested, Prg is important for log, or maybe we should skip logging?
 def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, write "rb"

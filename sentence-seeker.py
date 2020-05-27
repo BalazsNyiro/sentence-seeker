@@ -9,10 +9,9 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config, util_test, document, argparse
 ##########################################################
 
-Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 import seeker, ui_cli
 
-config.DirsFilesConfigCreate(Prg)
+Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')

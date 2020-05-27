@@ -42,16 +42,9 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
     FileDocumentsDb = os.path.join(DirDocuments, "documents.json")
 
-    PathSamples = os.path.join(DirPrgRoot, "text_samples", "document_samples.json")
-    DocumentsDbDefault = util.file_read_all_simple(PathSamples)
-    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=DocumentsDbDefault, LogCreate=False)
-
-    DocumentsDb = dict()
-    for Doc in util_json_obj.obj_from_file(FileDocumentsDb)["docs"]:
-        FileName = Doc["file_name"]
-        if FileName[-3:] == ".gz":
-            FileName = FileName[:-3]
-        DocumentsDb[FileName] = Doc
+    Default = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg"}}'
+    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=Default, LogCreate=False)
+    DocumentsDb = util_json_obj.obj_from_file(FileDocumentsDb)["docs"]
 
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -63,7 +56,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,
 
-            "FileDocumentsDb": os.path.join(DirDocuments, "documents.json"),
+            "FileDocumentsDb": FileDocumentsDb,
             "DocumentsDb": DocumentsDb,
 
             "FileLog": os.path.join(DirLog, FileLog),

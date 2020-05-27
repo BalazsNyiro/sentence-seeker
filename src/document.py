@@ -19,6 +19,7 @@ def document_objects_collect_from_working_dir(Prg,
     DocumentObjects = dict()
     ExtensionsInFuture = {".epub": 0, ".mobi": 0}
 
+    DbDocumentUpdated = False
     for FileOrig in util.files_abspath_collect_from_dir(Prg["DirDocuments"]):
 
         FileText = FileOrig
@@ -63,7 +64,10 @@ def document_objects_collect_from_working_dir(Prg,
 
             if FunSentenceCreate and FunIndexCreate:
                 FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
-                FunIndexCreate(Prg, FileIndex, FileSentences)
+                IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
+                if IndexCreated:
+                    util_json_obj.doc_db_update(Prg, BaseNameOrig) # and reload the updated db
+                    DbDocumentUpdated = True
 
             DocumentObj = { "FileOrigPathAbs": FileOrig,  # if you use pdf/html, the original
                             "FileTextPathAbs": FileText,  # and text files are different
@@ -82,6 +86,9 @@ def document_objects_collect_from_working_dir(Prg,
         else:
             # print_dev(Prg, "in documents dir - not processed file type:", BaseNameText)
             pass
+
+    if DbDocumentUpdated: # then reload infos
+        Prg["DocumentsDb"] = util_json_obj.obj_from_file(Prg["FileDocumentsDb"])["docs"]
 
     return DocumentObjects
 

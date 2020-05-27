@@ -13,6 +13,15 @@ def obj_to_file(JsonFileName, Data):
     with open(JsonFileName, 'w') as OutFile:
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
+_DocsSampleInfo = None
+def doc_db_update(Prg, BaseNameOrig):
+    global _DocsSampleInfo
+    if not _DocsSampleInfo: # read only once, save it into global var
+        _DocsSampleInfo = obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+    DocDb = obj_from_file(Prg["FileDocumentsDb"])
+    DocDb["docs"][BaseNameOrig] = _DocsSampleInfo["docs"][BaseNameOrig]
+    obj_to_file(Prg["FileDocumentsDb"], DocDb)
+
 # Used in tests
 # read wanted key from config file
 def config_get(Key, DefaultVal, DirPrgRoot, DirConfigFileParent=user.dir_home(), FileConfigBaseName=".sentence-seeker.config"):

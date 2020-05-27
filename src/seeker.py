@@ -97,16 +97,22 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
 
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
+    Created = False
     if not os.path.isfile(FileSentences):
         if FilePathText: # for testing it's easier to get Text from param - and not create/del tmpfile
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathText)
 
         Sentences = text.sentence_separator(Text)
         util.file_write_utf8_error_avoid(Prg, FileSentences, "\n".join(Sentences))
+        Created = True
+
+    return Created
 
 # Tested
 def file_index_create(Prg, FileIndex, FileSentences):
+    Created = False
     if not os.path.isfile(FileIndex):
+        Created = True
         WordIndex = dict()
         WordIndexOnlyLineNums = dict()
 
@@ -139,6 +145,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
         Content="{\n"+"\n,".join(Out) + "\n}"
         util.file_write(Prg, Fname=FileIndex, Content=Content)
 
+    return Created
 
 def indexing(WordIndex, WordIndexOnlyLineNums,  LineNum, SubSentence, SubSentenceNum):
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")

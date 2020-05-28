@@ -66,7 +66,7 @@ def document_objects_collect_from_working_dir(Prg,
                 FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
                 IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
                 if IndexCreated:
-                    util_json_obj.doc_db_update(Prg, BaseNameOrig) # and reload the updated db
+                    util_json_obj.doc_db_update(Prg, FileOrig) # and reload the updated db
                     DbDocumentUpdated = True
 
             DocumentObj = { "FileOrigPathAbs": FileOrig,  # if you use pdf/html, the original
@@ -101,49 +101,7 @@ def docs_copy_samples_into_dir_if_necessary(Prg):
     util.dir_create_if_necessary(Prg, DirTarget)
 
     if not DocumentsAvailable:
-        WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
-        if WikiPagesUse.strip().lower() == "y":
-            Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
-            try:
-                BinaryFromWeb = util.web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
-                Bytes = gzip.decompress(BinaryFromWeb)
-                print("Url downloading is finished:", Url)
-                Lines = util.utf8_conversion_with_warning(Bytes, Url)
-                print("Utf8 conversion finished...")
-                # file_write(FilePack, f"\n\npage>>>{Url}\nlicense>>>{License}\n{Text}\nEND>>>\n", "a")
-
-                SourceName = "wikipedia"
-
-                Url = ""
-                License = ""
-                FileName = ""
-
-                LinesDoc = []
-
-                for LineNum, Line in enumerate(Lines.split("\n")):
-                    # print(Line)
-                    if "###" == Line[:3]:
-
-                        Token, Data = Line[3:].split(">>>")
-                        #print("token, data",Token, Data)
-                        if Token == "Url":      Url = Data
-                        if Token == "License":  License = Data
-                        if Token == "FileName": FileName = Data
-
-                        if Token == "End":
-                            FileHtmlFullPath = os.path.join(DirTarget, FileName + ".txt")
-                            Written = util.file_write(Prg, Fname=FileHtmlFullPath, Content="\n".join(LinesDoc))
-                            print("Written:", Written)
-
-                            # TODO: UPDATE DbDoc info after writing
-
-                            LinesDoc = []
-                    else:
-                        LinesDoc.append(Line)
-
-            except:
-                print("Download problem:", Url)
-
+        util.web_get_pack_wikipedia(Prg, DirTarget)
         docs_copy_samples_into_dir(Prg, DirTarget)
 
 # Tested

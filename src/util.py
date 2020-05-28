@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request
+import util_json_obj, sys
 
 # Tested
 def shell(Cmd):
@@ -297,3 +298,51 @@ def web_get(Url, Binary=False):
         else:
             # Html = str(Response.read())
             return Response.read().decode('utf-8')
+
+# TODO: test
+def web_get_pack_wikipedia(Prg, DirTarget):
+    WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+    if WikiPagesUse.strip().lower() == "y":
+        Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
+        try:
+            BinaryFromWeb = web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+            Bytes = gzip.decompress(BinaryFromWeb)
+            print("Url downloading is finished:", Url)
+            Lines = utf8_conversion_with_warning(Bytes, Url)
+            print("Utf8 conversion finished...")
+
+            SourceName = "wikipedia"
+            Url = "-"
+            License = "-"
+            FileName = "-"
+
+            LinesDoc = []
+
+            for LineNum, Line in enumerate(Lines.split("\n")):
+                # print(Line)
+                if "###" == Line[:3]:
+
+                    Token, Data = Line[3:].split(">>>")
+                    # print("token, data",Token, Data)
+                    if Token == "Url":      Url = Data
+                    if Token == "License":  License = Data.strip()
+                    if Token == "FileName": FileName = Data
+
+                    if Token == "End":
+                        FileHtmlFullPath = os.path.join(DirTarget, FileName + ".txt")
+                        Written = file_write(Prg, Fname=FileHtmlFullPath, Content="\n".join(LinesDoc))
+                        # print("Written:", Written, FileHtmlFullPath)
+
+                        DocObj = {"url": Url,
+                                  "source_name": SourceName,
+                                  "license": License}
+                        # print("DocObj", DocObj)
+                        util_json_obj.doc_db_update(Prg, FileHtmlFullPath, DocObj)  # and reload the updated db
+
+                        Url = License = FileName = "-"
+                        LinesDoc = []
+                else:
+                    LinesDoc.append(Line)
+        except:
+            print("Download problem:", Url)
+

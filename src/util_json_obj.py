@@ -14,13 +14,19 @@ def obj_to_file(JsonFileName, Data):
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
 _DocsSampleInfo = None
-def doc_db_update(Prg, BaseNameOrig):
+def doc_db_update(Prg, File, DocObj=None):
+    BaseNameOrig = os.path.basename(File)
     global _DocsSampleInfo
     if not _DocsSampleInfo: # read only once, save it into global var
         _DocsSampleInfo = obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
     DocDb = obj_from_file(Prg["FileDocumentsDb"])
-    if BaseNameOrig in _DocsSampleInfo["docs"]:
-        DocDb["docs"][BaseNameOrig] = _DocsSampleInfo["docs"][BaseNameOrig]
+
+    if not DocObj:
+        if BaseNameOrig in _DocsSampleInfo["docs"]:
+            DocObj = _DocsSampleInfo["docs"][BaseNameOrig]
+
+    if DocObj:
+        DocDb["docs"][BaseNameOrig] = DocObj
         obj_to_file(Prg["FileDocumentsDb"], DocDb)
 
 # Used in tests

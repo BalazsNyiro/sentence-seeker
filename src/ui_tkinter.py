@@ -5,7 +5,7 @@ import webbrowser
 import seeker, util_ui
 
 SentencesWidth = 100
-SentencesHeight = 50
+SentencesHeight = 30
 WordsEntry = None
 SentencesArea = None
 PrgGlob = None
@@ -13,22 +13,25 @@ PrgGlob = None
 def seek_and_display(KeypressEvent=""):
     Wanted = WordsEntry.get()
     # msg_box(Words)
+    SentencesArea.delete('1.0', tk.END)
     _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Wanted)
     # sentence_result_all_display(Prg, MatchNums__ResultInfo)
     # print(f"Results Total: {ResultsTotalNum}")
-    SentencesArea.insert(tk.END, "\nSentences:\n", "TextTitle")
+    SentencesArea.insert(tk.END, "Sentences:\n", "TextTitle")
 
     ##############################################################
-    # Sentences.insert(tk.END, str(MatchNums__ResultInfo), "color")
     for DisplayedCounter, SentenceObj in enumerate(MatchNums__ResultInfo, start=1):
         sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea)
         if DisplayedCounter >= PrgGlob["LimitDisplayedSampleSentences"]:
             break
+
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
 
-def sentence_result_one_display(Prg, Result, Area):
+def sentence_result_one_display(Prg, Result, SentencesArea):
     WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
-    Area.insert(tk.END, Sentence+"\n\n", "color")
+    SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
+    SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
+    SentencesArea.insert(tk.END, Url + "\n\n", "UrlDisplayed")
 
 def win_main(Prg, Args):
     global PrgGlob
@@ -67,12 +70,17 @@ def win_main(Prg, Args):
 
     SentencesArea.tag_configure('bold_italics', font=('Arial', 12, 'bold', 'italic'))
     SentencesArea.tag_configure('TextTitle', font=('Verdana', 20, 'bold'))
-    SentencesArea.tag_configure('color',
+    SentencesArea.tag_configure('SentenceDisplayed',
                                 foreground='#476042',
                                 font=('Tempus Sans ITC', 12, 'bold'))
-    SentencesArea.tag_bind('follow',
-                   '<1>',
-                           lambda e, t=SentencesArea: t.insert(tk.END, "Not now, maybe later!"))
+    SentencesArea.tag_configure('UrlDisplayed',
+                                foreground='#476042',
+                                font=('Tempus Sans ITC', 9, 'normal'))
+    SentencesArea.tag_configure('SourceDisplayed',
+                                foreground='#476042',
+                                font=('Tempus Sans ITC', 9, 'normal'))
+    SentencesArea.tag_bind('follow', '<1>',
+                           lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 
     Root.mainloop()
 

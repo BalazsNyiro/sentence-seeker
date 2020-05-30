@@ -72,8 +72,6 @@ CSI = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python
 
 __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
-# cname lehet csak szam, 0-255 kozotti. 
-# lehet szoveg, akkor a fenti tablabol veszi a kodokat.
 def color(Prg, ColorName, CnameBackground=""):
 
     if Prg["Os"] == "Windows": return ""

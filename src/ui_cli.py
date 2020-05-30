@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import seeker, text
+import seeker, text, util_ui
 
 def seek_and_display(Prg, Wanted):
     _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(Prg, Wanted)
@@ -28,21 +28,11 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
 def sentence_result_one_display(Prg, Result):
-    Source = Result["FileSourceBaseName"]
-    LineNum = Result["LineNumInSentenceFile"]
-    WordsDetectedInSubsentence = Result["WordsDetectedInSubsentence"]
-    WordsDetectedNum = len(WordsDetectedInSubsentence)
-    # print(Result)
+    WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
 
-    Sentence = text.sentence_loaded(Prg, Source, LineNum)
-    Sentence = Sentence.strip() # remove possible newline at end
     LineResultColored = text.word_highlight(WordsDetectedInSubsentence, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
     print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
-
-    Url = ""
-    if Source in Prg["DocumentsDb"]:
-        Url = Prg["DocumentsDb"][Source]["url"]
-        print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
+    print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
 def sentence_result_all_display(Prg, SentenceObjects):
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):

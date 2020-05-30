@@ -2,7 +2,7 @@
 import tkinter as tk
 import tkinter.messagebox
 import webbrowser
-import seeker, text
+import seeker, util_ui
 
 SentencesWidth = 100
 SentencesHeight = 50
@@ -26,25 +26,9 @@ def seek_and_display(KeypressEvent=""):
             break
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
 
-# FIXME working but refactor!
 def sentence_result_one_display(Prg, Result, Area):
-    Source = Result["FileSourceBaseName"]
-    LineNum = Result["LineNumInSentenceFile"]
-    WordsDetectedInSubsentence = Result["WordsDetectedInSubsentence"]
-    WordsDetectedNum = len(WordsDetectedInSubsentence)
-    # print(Result)
-
-    Sentence = text.sentence_loaded(Prg, Source, LineNum)
-    Sentence = Sentence.strip() # remove possible newline at end
-
-    #LineResultColored = text.word_highlight(WordsDetectedInSubsentence, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
-    #print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
+    WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
     Area.insert(tk.END, Sentence+"\n\n", "color")
-
-    # Url = ""
-    # if Source in Prg["DocumentsDb"]:
-    #     Url = Prg["DocumentsDb"][Source]["url"]
-    #     print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
 def win_main(Prg, Args):
     global PrgGlob
@@ -54,9 +38,6 @@ def win_main(Prg, Args):
     Root.title("sentence-seeker")
 
     MenuBar = tk.Menu(Root)
-
-    # MenuSettings = tk.Menu(MenuBar, tearoff=1)
-    # MenuBar.add_cascade(label='Settings', menu=MenuSettings)
 
     MenuAbout = tk.Menu(MenuBar, tearoff=1)
     MenuBar.add_cascade(label='About', menu=MenuAbout)
@@ -92,12 +73,6 @@ def win_main(Prg, Args):
     SentencesArea.tag_bind('follow',
                    '<1>',
                            lambda e, t=SentencesArea: t.insert(tk.END, "Not now, maybe later!"))
-
-    ################################################
-    # Sentences.insert(tk.END, '\nWilliam Shakespeare\n', 'TextTitle')
-    # Sentences.insert(tk.END, "quote", 'color')
-    # Sentences.insert(tk.END, 'follow-up\n', 'follow')
-    ################################################
 
     Root.mainloop()
 

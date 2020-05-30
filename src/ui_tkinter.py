@@ -21,17 +21,28 @@ def seek_and_display(KeypressEvent=""):
 
     ##############################################################
     for DisplayedCounter, SentenceObj in enumerate(MatchNums__ResultInfo, start=1):
-        sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea)
+        sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea, DisplayedCounter)
         if DisplayedCounter >= PrgGlob["LimitDisplayedSampleSentences"]:
             break
 
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
 
-def sentence_result_one_display(Prg, Result, SentencesArea):
+
+def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
     SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
     SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
-    SentencesArea.insert(tk.END, Url + "\n\n", "UrlDisplayed")
+
+    TagName = f"tag_{DisplayedCounter}"
+    SentencesArea.tag_configure(TagName,
+                                foreground="blue",
+                                underline=1,
+                                font=('Tempus Sans ITC', 9, 'normal'))
+    SentencesArea.tag_bind(TagName, "<1>",
+                           lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
+                          )
+
+    SentencesArea.insert(tk.END, Url + "\n\n",  TagName)
 
 def win_main(Prg, Args):
     global PrgGlob

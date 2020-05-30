@@ -7,16 +7,15 @@ def seek_and_display(Prg, Wanted):
     print(f"Results Total: {ResultsTotalNum}")
 
 def user_interface_start(Prg, Args):
-    if Args.ui == "cli":
-        user_welcome_message(Prg, Args.ui)
-        # neverending cycle :-)
-        while True:
-            Wanted = input("wanted: ").strip()
-            if not Wanted:
-                print(color_reset(Prg))
-                break
-            seek_and_display(Prg, Wanted)
-        #########################################
+    user_welcome_message(Prg, Args.ui)
+    # neverending cycle :-)
+    while True:
+        Wanted = input("wanted: ").strip()
+        if not Wanted:
+            print(color_reset(Prg))
+            break
+        seek_and_display(Prg, Wanted)
+    #########################################
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "cli":
@@ -45,10 +44,10 @@ def sentence_result_one_display(Prg, Result):
         Url = Prg["DocumentsDb"][Source]["url"]
         print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
-def sentence_result_all_display(Prg, SentenceObjects, LimitDisplayed=6):
+def sentence_result_all_display(Prg, SentenceObjects):
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):
         sentence_result_one_display(Prg, SentenceObj)
-        if DisplayedCounter >= LimitDisplayed:
+        if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
             break
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/

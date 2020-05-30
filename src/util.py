@@ -300,8 +300,9 @@ def web_get(Url, Binary=False):
             return Response.read().decode('utf-8')
 
 # TODO: test
-def web_get_pack_wikipedia(Prg, DirTarget):
-    WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
+    if not WikiPagesUse:
+        WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
     if WikiPagesUse.strip().lower() == "y":
         Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
         try:

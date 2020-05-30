@@ -67,7 +67,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
             "Statistics": [],
-
+            "LimitDisplayedSampleSentences": 6
     }
 
     return Prg

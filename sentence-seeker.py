@@ -2,20 +2,20 @@
 # -*- coding: utf-8 -*-
 import os, sys
 
-
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
 
 import config, util_test, document, argparse
 ##########################################################
 
-import seeker, ui_cli
+import seeker, ui_cli, ui_tkinter
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')
-parser.add_argument("--ui", help="select user interface. (cli, tkinter, web)", action='store', default='cli')
+
+parser.add_argument("--ui", help="select user interface. (cli, tkinter, web)", action='store', default='tkinter')
 Args = parser.parse_args()
 
 SysArgvOrig = sys.argv
@@ -44,7 +44,10 @@ document.docs_copy_samples_into_dir_if_necessary(Prg)
 #########################################
 seeker.be_ready_to_seeking(Prg)
 
-ui_cli.user_interface_start(Prg, Args)
+if Args.ui == "cli":
+    ui_cli.user_interface_start(Prg, Args)
+elif Args.ui == "tkinter":
+    ui_tkinter.win_main(Prg, Args)
 
 print(Prg["Statistics"])
 

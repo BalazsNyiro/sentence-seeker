@@ -72,6 +72,10 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "UiThemes": {
                 "ThemeNameActual": "SunSet",
                 "SunSet":{
+
+                    "SentencesWidth": 70,
+                    "SentencesHeight": 30,
+
                     "FontTitle": ("Tempus Sans ITC", 12, "bold"),
                     "FontUrl": ("Tempus Sans ITC", 12, "bold"),
                     "FontSource": ('Tempus Sans ITC', 9, 'normal'),

@@ -4,19 +4,18 @@ import tkinter.messagebox
 import webbrowser
 import seeker, util_ui
 
-SentencesWidth = 100
-SentencesHeight = 30
 WordsEntry = None
 SentencesArea = None
 PrgGlob = None
 
 def seek_and_display(KeypressEvent=""):
-    Wanted = WordsEntry.get()
+    Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Wanted)
+    _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Words)
     # sentence_result_all_display(Prg, MatchNums__ResultInfo)
     # print(f"Results Total: {ResultsTotalNum}")
+    SentencesArea.insert(tk.END, f"words: {Words}\n\n", "TextTitle")
     SentencesArea.insert(tk.END, "Sentences:\n", "TextTitle")
 
     ##############################################################
@@ -57,6 +56,7 @@ def win_main(Prg, Args):
     MenuBar.add_cascade(label='About', menu=MenuAbout)
     MenuAbout.add_command(label="Site", compound='left', command=website_open)
     MenuAbout.add_command(label="Facebook group", compound='left', command=facebook_group_open)
+    MenuAbout.add_command(label="Contact", compound='left', command=msg_contact)
 
     Root.config(menu=MenuBar)
 
@@ -68,13 +68,14 @@ def win_main(Prg, Args):
     WordsEntry = tk.Entry(Root, background=Theme["BgWords"])
     WordsEntry.focus()
     WordsEntry.bind("<Return>", seek_and_display)
+    WordsEntry.bind("<FocusIn>", lambda _: WordsEntry.delete(0, 999)) # clear when clicked
     WordsEntry.grid(row=0, column=1, sticky=tk.W)
 
     tk.Button(Root, text="Get example sentences", command=seek_and_display).grid(row=2, column=1, sticky=tk.W)
 
     ################################################
     global SentencesArea
-    SentencesArea = tk.Text(Root, height=SentencesHeight, width=SentencesWidth,
+    SentencesArea = tk.Text(Root, height=Theme["SentencesHeight"], width=Theme["SentencesWidth"],
                             background=Theme["BgAreaSentences"], foreground=Theme["FgAreaSentences"])
     SentencesArea.grid(row=3, column=1, sticky=tk.E)
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
@@ -105,3 +106,6 @@ def facebook_group_open():
 
 def msg_box(Msg="no msg", Title="Info"):
     tkinter.messagebox.showinfo(Title, Msg)
+
+def msg_contact():
+    msg_box("Author: Balazs Nyiro\ndiogenesz@pergamen.hu")

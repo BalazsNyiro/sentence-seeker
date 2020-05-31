@@ -21,8 +21,11 @@ def shell(Cmd):
 
 # Tested
 def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
+    Inserted = False
     if Key not in Dict:
         Dict[Key] = Default
+        Inserted = True
+    return Inserted
 
 def dict_key_sorted(Dict: dict, Reverse=True):
     Keys = list(Dict.keys())
@@ -83,9 +86,10 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 
     return Created
 
+# Tested
 def filename_extension(Fname):
     return pathlib.Path(Fname).suffix.lower()
-
+# Tested
 def filename_without_extension(Fname):
     Extension = filename_extension(Fname)
     if not Extension:
@@ -347,5 +351,6 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
         except:
             print("Download problem:", Url)
 
+# No test - because wrapper
 def dir_user_home():
     return str(pathlib.Path.home())

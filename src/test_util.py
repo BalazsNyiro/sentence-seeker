@@ -5,14 +5,42 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
-    def test_shell(self):
-        if self._test_exec("test_files_collect_from_dir"):
+    def test_util_dict_key_sorted(self):
+        if self._test_exec("test_util_dict_key_sorted"):
+            Dict = {"Aphrodite": 0, "Zeus": 2, "Xena": 1,  "Athene": 3}
+
+            Sorted = util.dict_key_sorted(Dict, Reverse=True)
+            self.assertEqual(Sorted, ["Zeus", "Xena", "Athene", "Aphrodite"])
+
+    def test_util_dict_key_insert_if_necessary(self):
+        if self._test_exec("test_util_dict_key_insert_if_necessary"):
+            Dict = {"Xena": 1, "Zeus": 2, "Athene": 3}
+            Inserted = util.dict_key_insert_if_necessary(Dict, "Zeus", 99)
+            self.assertFalse(Inserted)
+
+            Inserted = util.dict_key_insert_if_necessary(Dict, "Hermes", 33)
+            self.assertTrue(Inserted)
+            self.assertTrue(Dict["Hermes"] == 33)
+
+    def test_util_filename_extension__without_extension(self):
+        if self._test_exec("test_filename_extension__without_extension"):
+            Ext = util.filename_extension("file.py")
+            self.assertEqual(Ext, ".py")
+
+            Ext = util.filename_extension("noext")
+            self.assertEqual(Ext, "")
+
+            FnameOnly = util.filename_without_extension("file.py")
+            self.assertEqual(FnameOnly, "file")
+
+    def test_util_shell(self):
+        if self._test_exec("test_shell"):
             Prg = self.Prg
             if self.Prg["Os"] == "Linux": # the tests with ls/grep don't work on Windows
                 Result = util.shell(f"ls {Prg['DirPrgRoot']} | grep READ").strip()
                 self.assertEqual(Result, "README.md")
 
-    def test_dict_key_insert_if_necessary(self):
+    def test_util_dict_key_insert_if_necessary(self):
         if self._test_exec("test_dict_key_insert_if_necessary"):
             Dict = dict()
             Key = "numbers"
@@ -20,14 +48,14 @@ class UtilTests(util_test.SentenceSeekerTest):
             util.dict_key_insert_if_necessary(Dict, Key, Default)
             self.assertEqual(Dict, {Key: Default})
 
-    def test_files_collect_from_dir(self):
+    def test_util_files_collect_from_dir(self):
         if self._test_exec("test_files_collect_from_dir"):
             Prg = self.Prg
             Files = util.files_abspath_collect_from_dir(Prg["DirPrgRoot"])
             self.assertIn(os.path.join(Prg["DirPrgRoot"], "src", "util.py"), Files)
 
-    def test_file_create_if_necessary(self):
-        if self._test_exec("test_file_write_append_del"):
+    def test_util_file_create_if_necessary(self):
+        if self._test_exec("test_file_create_if_necessary"):
             Prg = self.Prg
             Fname = os.path.join(Prg["DirWork"], "test_file_create_if_necessary.txt")
             util.file_del(Fname)
@@ -39,7 +67,7 @@ class UtilTests(util_test.SentenceSeekerTest):
 
             util.file_del(Fname)
 
-    def test_file_read_lines(self):
+    def test_util_file_read_lines(self):
         if self._test_exec("test_file_read_lines"):
             Prg = self.Prg
             Fname = os.path.join(Prg["DirWork"], "test_file_read_lines.txt")
@@ -48,7 +76,7 @@ class UtilTests(util_test.SentenceSeekerTest):
             self.assertEqual(Lines, ["cat", "dog", "elephant"])
             util.file_del(Fname)
 
-    def test_file_write_append_del(self):
+    def test_util_file_write_append_del(self):
         if self._test_exec("test_file_write_append_del"):
             Prg = self.Prg
 
@@ -90,7 +118,7 @@ class UtilTests(util_test.SentenceSeekerTest):
             self.assertEqual("file_not_found", FileState)
             self.assertEqual("", FileGzipped)
 
-    def test_dir_create_if_necessary(self):
+    def test_util_dir_create_if_necessary(self):
         if self._test_exec("test_dir_create_if_necessary"):
             Prg = self.Prg
 

@@ -12,7 +12,7 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Words)
+    WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Words)
     # sentence_result_all_display(Prg, MatchNums__ResultInfo)
     # print(f"Results Total: {ResultsTotalNum}")
     SentencesArea.insert(tk.END, f"words: {Words}\n\n", "TextTitle")
@@ -25,6 +25,49 @@ def seek_and_display(KeypressEvent=""):
             break
 
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
+    for WordWanted in WordsWanted:
+        SentencesArea.highlight_pattern(WordWanted, "Highlighted")
+
+# This class came from here
+# https://stackoverflow.com/questions/3781670/how-to-highlight-text-in-a-tkinter-text-widget
+class CustomText(tk.Text):
+    '''A text widget with a new method, highlight_pattern()
+
+    example:
+
+    text = CustomText()
+    text.tag_configure("red", foreground="#ff0000")
+    text.highlight_pattern("this should be red", "red")
+
+    The highlight_pattern method is a simplified python
+    version of the tcl code at http://wiki.tcl.tk/3246
+    '''
+    def __init__(self, *args, **kwargs):
+        tk.Text.__init__(self, *args, **kwargs)
+
+    def highlight_pattern(self, pattern, tag, start="1.0", end="end",
+                          regexp=False):
+        '''Apply the given tag to all text that matches the given pattern
+
+        If 'regexp' is set to True, pattern will be treated as a regular
+        expression according to Tcl's regular expression syntax.
+        '''
+
+        start = self.index(start)
+        end = self.index(end)
+        self.mark_set("matchStart", start)
+        self.mark_set("matchEnd", start)
+        self.mark_set("searchLimit", end)
+
+        count = tk.IntVar()
+        while True:
+            index = self.search(pattern, "matchEnd","searchLimit",
+                                count=count, regexp=regexp)
+            if index == "": break
+            if count.get() == 0: break # degenerate pattern which matches zero-length strings
+            self.mark_set("matchStart", index)
+            self.mark_set("matchEnd", "%s+%sc" % (index, count.get()))
+            self.tag_add(tag, "matchStart", "matchEnd")
 
 
 def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
@@ -75,25 +118,25 @@ def win_main(Prg, Args):
 
     ################################################
     global SentencesArea
-    SentencesArea = tk.Text(Root, height=Theme["SentencesHeight"], width=Theme["SentencesWidth"],
+    SentencesArea = CustomText(Root, height=Theme["SentencesHeight"], width=Theme["SentencesWidth"],
                             background=Theme["BgAreaSentences"], foreground=Theme["FgAreaSentences"])
     SentencesArea.grid(row=3, column=1, sticky=tk.E)
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
     SentencesArea.configure(yscrollcommand=scroll.set)
     scroll.grid(row=3, column=2, sticky=tk.NS)
 
-    SentencesArea.tag_configure('bold_italics', font=('Arial', 12, 'bold', 'italic'))
-    SentencesArea.tag_configure('TextTitle', font=('Verdana', 20, 'bold'))
-    SentencesArea.tag_configure('SentenceDisplayed',
+    SentencesArea.tag_configure("Highlighted", background="yellow")
+    SentencesArea.tag_configure("TextTitle", font=("Verdana", 20, "bold"))
+    SentencesArea.tag_configure("SentenceDisplayed",
                                 foreground=Theme["FgSentence"],
                                 font=Theme["FontTitle"])
-    SentencesArea.tag_configure('UrlDisplayed',
+    SentencesArea.tag_configure("UrlDisplayed",
                                 foreground=Theme["FgUrl"],
                                 font=Theme["FontUrl"])
-    SentencesArea.tag_configure('SourceDisplayed',
+    SentencesArea.tag_configure("SourceDisplayed",
                                 foreground=Theme["FgSource"],
                                 font=Theme["FontSource"])
-    SentencesArea.tag_bind('follow', '<1>',
+    SentencesArea.tag_bind("follow", "<1>",
                            lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 
     Root.mainloop()

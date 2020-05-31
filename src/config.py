@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import os, platform, user, util, time, util_json_obj
+import os, platform, util, time, util_json_obj
 from shlex import quote
 from pathlib import Path
 
 from html.parser import HTMLParser
-from html.entities import name2codepoint
 
 def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
@@ -20,7 +19,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
     if not DirWorkFromUserHome:
         DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
 
-    DirWorkAbsPath = os.path.join(user.dir_home(), DirWorkFromUserHome)
+    DirWorkAbsPath = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
     Path(DirWorkAbsPath).mkdir(parents=True, exist_ok=True)
 
     DirLog = os.path.join(DirWorkAbsPath, "log")

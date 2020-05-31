@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request
-import util_json_obj, sys
+import util_json_obj
 
 # Tested
 def shell(Cmd):
@@ -347,3 +347,5 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
         except:
             print("Download problem:", Url)
 
+def dir_user_home():
+    return str(pathlib.Path.home())

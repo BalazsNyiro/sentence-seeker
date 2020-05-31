@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, user, util, json
+import os, util, json
 
 ############ JSON #############################
 
@@ -31,7 +31,13 @@ def doc_db_update(Prg, File, DocObj=None):
 
 # Used in tests
 # read wanted key from config file
-def config_get(Key, DefaultVal, DirPrgRoot, DirConfigFileParent=user.dir_home(), FileConfigBaseName=".sentence-seeker.config"):
+def config_get(Key, DefaultVal, DirPrgRoot,
+               DirConfigFileParent=None,
+               FileConfigBaseName=".sentence-seeker.config"):
+
+    if not DirConfigFileParent:
+        DirConfigFileParent = util.dir_user_home()
+
     FileConfigAbsPath = os.path.join(DirConfigFileParent, FileConfigBaseName)
 
     if not os.path.isfile(FileConfigAbsPath):

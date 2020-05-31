@@ -14,3 +14,8 @@ def sentence_get_from_result(Prg, Result):
         Url = Prg["DocumentsDb"][Source]["url"]
 
     return WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source
+
+def theme_actual(Prg):
+    ThemeActual = Prg["UiThemes"]["ThemeNameActual"]
+    Theme = Prg["UiThemes"][ThemeActual]
+    return Theme

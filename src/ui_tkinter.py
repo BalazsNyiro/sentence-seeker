@@ -60,11 +60,12 @@ def win_main(Prg, Args):
 
     Root.config(menu=MenuBar)
 
+    Theme = util_ui.theme_actual(Prg)
     ################################################
     tk.Label(Root, text="Words").grid(row=0, sticky=tk.W)
 
     global WordsEntry
-    WordsEntry = tk.Entry(Root)
+    WordsEntry = tk.Entry(Root, background=Theme["BgWords"])
     WordsEntry.focus()
     WordsEntry.bind("<Return>", seek_and_display)
     WordsEntry.grid(row=0, column=1, sticky=tk.W)
@@ -73,7 +74,8 @@ def win_main(Prg, Args):
 
     ################################################
     global SentencesArea
-    SentencesArea = tk.Text(Root, height=SentencesHeight, width=SentencesWidth)
+    SentencesArea = tk.Text(Root, height=SentencesHeight, width=SentencesWidth,
+                            background=Theme["BgAreaSentences"], foreground=Theme["FgAreaSentences"])
     SentencesArea.grid(row=3, column=1, sticky=tk.E)
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
     SentencesArea.configure(yscrollcommand=scroll.set)
@@ -82,14 +84,14 @@ def win_main(Prg, Args):
     SentencesArea.tag_configure('bold_italics', font=('Arial', 12, 'bold', 'italic'))
     SentencesArea.tag_configure('TextTitle', font=('Verdana', 20, 'bold'))
     SentencesArea.tag_configure('SentenceDisplayed',
-                                foreground='#476042',
-                                font=('Tempus Sans ITC', 12, 'bold'))
+                                foreground=Theme["FgSentence"],
+                                font=Theme["FontTitle"])
     SentencesArea.tag_configure('UrlDisplayed',
-                                foreground='#476042',
-                                font=('Tempus Sans ITC', 9, 'normal'))
+                                foreground=Theme["FgUrl"],
+                                font=Theme["FontUrl"])
     SentencesArea.tag_configure('SourceDisplayed',
-                                foreground='#476042',
-                                font=('Tempus Sans ITC', 9, 'normal'))
+                                foreground=Theme["FgSource"],
+                                font=Theme["FontSource"])
     SentencesArea.tag_bind('follow', '<1>',
                            lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 

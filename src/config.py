@@ -67,7 +67,22 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
             "Statistics": [],
-            "LimitDisplayedSampleSentences": 6
+            "LimitDisplayedSampleSentences": 6,
+
+            "UiThemes": {
+                "ThemeNameActual": "SunSet",
+                "SunSet":{
+                    "FontTitle": ("Tempus Sans ITC", 12, "bold"),
+                    "FontUrl": ("Tempus Sans ITC", 12, "bold"),
+                    "FontSource": ('Tempus Sans ITC', 9, 'normal'),
+                    "BgWords": "#FFE2BC",
+                    "BgAreaSentences": "#FFE2BC",
+                    "FgAreaSentences": "#101010",
+                    "FgUrl": "#35D0BA", # "blue"
+                    "FgSource": "#D92027",
+                    "FgSentence": "#7C3C21"   # https://colorhunt.co/palette/183389   browns
+                }
+            }
     }
 
     return Prg

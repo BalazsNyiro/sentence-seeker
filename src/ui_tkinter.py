@@ -25,9 +25,12 @@ def seek_and_display(KeypressEvent=""):
         if DisplayedCounter >= PrgGlob["LimitDisplayedSampleSentences"]:
             break
 
+    Theme = util_ui.theme_actual(PrgGlob)
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
-    for WordWanted in WordsWanted:
-        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", "Highlighted", regexp=True)
+    for WordId, WordWanted in enumerate(WordsWanted):
+        TagName = f"Highlighted_{WordId}"
+        SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
+        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True)
 
 # This class came from here
 # https://stackoverflow.com/questions/3781670/how-to-highlight-text-in-a-tkinter-text-widget
@@ -69,7 +72,6 @@ class CustomText(tk.Text):
             self.mark_set("matchStart", index)
             self.mark_set("matchEnd", "%s+%sc" % (index, count.get()))
             self.tag_add(tag, "matchStart", "matchEnd")
-
 
 def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
@@ -126,7 +128,6 @@ def win_main(Prg, Args):
     SentencesArea.configure(yscrollcommand=scroll.set)
     scroll.grid(row=3, column=2, sticky=tk.NS)
 
-    SentencesArea.tag_configure("Highlighted", background="yellow")
     SentencesArea.tag_configure("TextTitle", font=("Verdana", 20, "bold"))
     SentencesArea.tag_configure("SentenceDisplayed",
                                 foreground=Theme["FgSentence"],

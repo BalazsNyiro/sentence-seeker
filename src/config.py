@@ -71,8 +71,23 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
             "UiThemes": {
                 "ThemeNameActual": "SunSet",
-                "SunSet":{
-
+                "SunSet": {
+                    # https://www.schemecolor.com/collection-of-beautiful-pastel-color-schemes.php
+                    # coolors.co
+                    "Highlights": [
+                                   "yellow",
+                                   "#6BF178", # light green
+                                   "orange",
+                                   "pink",
+                                   "#90F1EF", # light blue "cyan",
+                                   "#85DE77", # light green
+                                   "#FF756D",
+                                   "black",
+                                   "white",
+                                   "gray",
+                                   "red",
+                                   "green",
+                                   ],
                     "SentencesWidth": 70,
                     "SentencesHeight": 30,
 

@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.messagebox
 import webbrowser
 import seeker, util_ui
+import re
 
 WordsEntry = None
 SentencesArea = None
@@ -26,7 +27,7 @@ def seek_and_display(KeypressEvent=""):
 
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
     for WordWanted in WordsWanted:
-        SentencesArea.highlight_pattern(WordWanted, "Highlighted")
+        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", "Highlighted", regexp=True)
 
 # This class came from here
 # https://stackoverflow.com/questions/3781670/how-to-highlight-text-in-a-tkinter-text-widget

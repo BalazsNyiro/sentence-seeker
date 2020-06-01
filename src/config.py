@@ -41,7 +41,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
     FileDocumentsDb = os.path.join(DirDocuments, "documents.json")
 
-    Default = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg"}}'
+    Default = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg", "wikipedia": "Wikipedia"}}'
     util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=Default, LogCreate=False)
     DocumentsDb = util_json_obj.obj_from_file(FileDocumentsDb)["docs"]
 

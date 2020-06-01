@@ -27,6 +27,7 @@ def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
         Inserted = True
     return Inserted
 
+# Tested
 def dict_key_sorted(Dict: dict, Reverse=True):
     Keys = list(Dict.keys())
     Keys.sort(reverse=Reverse)
@@ -275,7 +276,7 @@ def log(Prg, Msg, Caller="-"):
     if "FileLog" in Prg:
         file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 
-
+# used only in test creation process
 def display_groups_matchnum_resultinfo(GroupsObj):
     for MatchNum, ResultInfos in GroupsObj.items():
         for ResultInfo in ResultInfos:
@@ -291,6 +292,7 @@ def utf8_conversion_with_warning(Bytes, Source):
         Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
     return Content
 
+# TODO? Test??
 def web_get(Url, Binary=False):
     Url = Url.strip()
     print(f"web html get: {Url}, Binary:{Binary}")

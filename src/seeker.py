@@ -11,12 +11,12 @@ def match_in_subsentence__results(Prg, WordsWanted):
 
     #######################################################################
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
-        LineNum__SubsentenceNum__WordsDetected = text.linenums__words__collect(WordsWanted, Doc["Index"])
+        LineNum__SubsentenceNum__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Doc["Index"])
 
         # one Line with any result => one result
         ResultsTotalNum += len(LineNum__SubsentenceNum__WordsDetected)
 
-        _MatchNumMax, MatchNumInSubsentence__Results__in_file = \
+        MatchNumInSubsentence__Results__in_file = \
             text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName)
 
         for MatchNum, Results in MatchNumInSubsentence__Results__in_file.items():

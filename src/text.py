@@ -136,7 +136,6 @@ def word_count_in_text(Word, Text):
 # Tested in: test_seek_linenumbers_with_group_of_words
 def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileSourceBaseName):
     MatchNumInSubsentence__Results = dict()
-    MatchNumMax = 0
 
     for LineNum in LineNum__SubsentenceNum__WordsDetected:
         for SubsentenceNum in LineNum__SubsentenceNum__WordsDetected[LineNum]:
@@ -151,13 +150,11 @@ def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDete
                                       "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
             }
             MatchNumInSubsentence__Results[NumOfDetected].append(Source__LineNum__Words)
-            if NumOfDetected > MatchNumMax:
-                MatchNumMax = NumOfDetected
-    return MatchNumMax, MatchNumInSubsentence__Results
+    return MatchNumInSubsentence__Results
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
-def linenums__words__collect(WordsWanted, Index):
+def linenum__subsentnum__words__collect(WordsWanted, Index):
     LineNums__SubsentenceNum__Words = dict()
     for WordWanted in WordsWanted:
 

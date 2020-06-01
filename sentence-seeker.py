@@ -8,7 +8,7 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config, util_test, document, argparse
 ##########################################################
 
-import seeker, ui_cli, ui_tkinter
+import seeker, ui_cli, ui_tkinter, util
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 
@@ -44,8 +44,10 @@ document.docs_copy_samples_into_dir_if_necessary(Prg)
 #########################################
 seeker.be_ready_to_seeking(Prg)
 
+sys.setprofile(util.TraceFunc)
 if Args.ui == "cli":
     ui_cli.user_interface_start(Prg, Args)
+
 elif Args.ui == "tkinter":
     ui_tkinter.win_main(Prg, Args)
 

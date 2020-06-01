@@ -5,14 +5,10 @@ SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
-def sentence_loaded(Prg, Source, LineNum, Strip=True):
+def sentence_loaded(Prg, Source, LineNum):
     if Source in Prg["DocumentObjectsLoaded"]:
-        Sentence = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
-        if Strip:
-            return Sentence.strip()
-        return Sentence
-    else:
-        return f"DocumentsObjectsLoaded: {Source} is not loaded"
+        return Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    return f"DocumentsObjectsLoaded: {Source} is not loaded"
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')

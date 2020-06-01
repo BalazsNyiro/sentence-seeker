@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request
-import util_json_obj
+from util_json_obj import doc_db_update
 
 # Tested
 def shell(Cmd):
@@ -21,11 +21,10 @@ def shell(Cmd):
 
 # Tested
 def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
-    Inserted = False
     if Key not in Dict:
         Dict[Key] = Default
-        Inserted = True
-    return Inserted
+        return True
+    return False
 
 # Tested
 def dict_key_sorted(Dict: dict, Reverse=True):
@@ -344,7 +343,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                                   "source_name": SourceName,
                                   "license": License}
                         # print("DocObj", DocObj)
-                        util_json_obj.doc_db_update(Prg, FileHtmlFullPath, DocObj)  # and reload the updated db
+                        doc_db_update(Prg, FileHtmlFullPath, DocObj)  # and reload the updated db
 
                         Url = License = FileName = "-"
                         LinesDoc = []
@@ -356,3 +355,85 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
 # No test - because wrapper
 def dir_user_home():
     return str(pathlib.Path.home())
+
+# https://stackoverflow.com/a/8315566/13281559
+def TraceFunc(Frame, Event, Arg, Indent=[0]):
+    Fun = Frame.f_code.co_name
+
+    NotImportant = [
+        # very often used
+        "dict_key_insert_if_necessary",
+        "dict_key_sorted",
+        "sentence_loaded",
+        
+        
+        
+        "<lambda>",
+        "<listcomp>",
+        "<module>",
+        "__call__",
+        "__contains__",
+        "__del__",
+        "__getitem__",
+        "__init__",
+        "__new__",
+        "__str__",
+        "_bind",
+        "_cnfmerge",
+        "_configure",
+        "_get_sep",
+        "_handle_fromlist",
+        "_loadtk",
+        "_options",
+        "_register",
+        "_root",
+        "_setup",
+        "_splitext",
+        "_stringify",
+        "_substitute",
+        "add",
+        "add_cascade",
+        "add_command",
+        "basename",
+        "bind",
+        "configure",
+        "daemon",
+        "decode",
+        "delete",
+        "destroy",
+        "encode",
+        "flush",
+        "focus_set",
+        "get",
+        "getint_event",
+        "grid_configure",
+        "index",
+        "insert",
+        "isfile",
+        "join",
+        "mainloop",
+        "mark_set",
+        "nametowidget",
+        "readprofile",
+        "release",
+        "search",
+        "set",
+        "shutdown",
+        "splitext",
+        "stream",
+        "tag_add",
+        "tag_bind",
+        "tag_configure",
+        "wm_title",
+        "wm_protocol",
+    ]
+    if Fun not in NotImportant:
+
+        if Event == "call":
+            Indent[0] += 2
+            print("-" * Indent[0] + "> call function", Fun)
+        elif Event == "return":
+            print("<" + "-" * Indent[0], "exit function", Fun)
+            Indent[0] -= 2
+
+    return TraceFunc

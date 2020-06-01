@@ -30,8 +30,7 @@ def match_in_subsentence__results(Prg, WordsWanted):
     return MatchNumInSubsentences__Results, MatchNums__Descending, ResultsTotalNum
 
 def seek(Prg, WordsWantedOneString):
-    stats.save(Prg, "first seek =>")
-    TimeStart = time.time()
+    TimeStart = stats.time_save(Prg, "first seek =>")
 
     ###############################
     WordsWanted = text.words_wanted_clean(WordsWantedOneString)
@@ -53,10 +52,8 @@ def seek(Prg, WordsWantedOneString):
         ResultsSelected.extend(ResultsGroup)
 
     ###############################
-    TimeEnd = time.time()
+    TimeEnd = stats.time_save(Prg, "first seek <=")
     print("Time USED:", TimeEnd - TimeStart)
-    stats.save(Prg, "first seek <=")
-
     return WordsWanted, ResultsSelected, ResultsTotalNum
 
 def results_sort_by_sentence_length(Prg, Results):

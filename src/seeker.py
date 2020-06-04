@@ -6,27 +6,43 @@ Version = "v03_index_in_subsentence"
 
 # Tested
 def match_in_subsentence__results(Prg, WordsWanted):
+    TimeStart = stats.time_save(Prg, "match_in_subsentence__results =>")
     MatchNumInSubsentences__Results = dict()
     ResultsTotalNum = 0
 
+    TimeUsedCollectTotal = 0
+    TimeUsedResultTotal = 0
+    TimeMatchNumTotal = 0
     #######################################################################
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
+        TimeUsedCollectStart = time.time()
         LineNum__SubsentenceNum__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Doc["Index"])
+        TimeUsedCollectTotal += time.time() - TimeUsedCollectStart
 
         # one Line with any result => one result
         ResultsTotalNum += len(LineNum__SubsentenceNum__WordsDetected)
 
+        TimeUsedResultStart = time.time()
         MatchNumInSubsentence__Results__in_file = \
             text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName)
+        TimeUsedResultTotal += time.time() - TimeUsedResultStart
 
+        TimeMatch = time.time()
         for MatchNum, Results in MatchNumInSubsentence__Results__in_file.items():
-            for Result in Results:
-                util.dict_key_insert_if_necessary(MatchNumInSubsentences__Results, MatchNum, list())
-                MatchNumInSubsentences__Results[MatchNum].append(Result)
+            util.dict_key_insert_if_necessary(MatchNumInSubsentences__Results, MatchNum, list())
+            MatchNumInSubsentences__Results[MatchNum].extend(Results)
+        TimeMatchNumTotal += time.time()-TimeMatch
     #######################################################################
 
     MatchNums__Descending = util.dict_key_sorted(MatchNumInSubsentences__Results)
 
+    TimeEnd = stats.time_save(Prg, "match_in_subsentence__results <=")
+    print("\n\n")
+    print("Time USED collect: ", TimeUsedCollectTotal)
+    print("Time USED  result: ", TimeUsedResultTotal)
+    print("Time USED   match: ", TimeMatchNumTotal)
+    print("Time USED (match_in_subsentence__results ):", TimeEnd - TimeStart)
+    print("\n\n")
     return MatchNumInSubsentences__Results, MatchNums__Descending, ResultsTotalNum
 
 def seek(Prg, WordsWantedOneString):
@@ -53,7 +69,7 @@ def seek(Prg, WordsWantedOneString):
 
     ###############################
     TimeEnd = stats.time_save(Prg, "first seek <=")
-    print("Time USED:", TimeEnd - TimeStart)
+    print("Time USED (seek):", TimeEnd - TimeStart)
     return WordsWanted, ResultsSelected, ResultsTotalNum
 
 def results_sort_by_sentence_length(Prg, Results):

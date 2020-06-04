@@ -143,7 +143,9 @@ def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDete
             WordsDetectedInSubsentence = LineNum__SubsentenceNum__WordsDetected[LineNum][SubsentenceNum]
             NumOfDetected = len(WordsDetectedInSubsentence)
 
-            util.dict_key_insert_if_necessary(MatchNumInSubsentence__Results, NumOfDetected, list())
+            if NumOfDetected not in MatchNumInSubsentence__Results:
+                MatchNumInSubsentence__Results[NumOfDetected] = list()
+
             Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
                                       "LineNumInSentenceFile": LineNum,
                                       "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
@@ -163,11 +165,17 @@ def linenum__subsentnum__words__collect(WordsWanted, Index):
             LineNum = IndexObj["line"]
             SubSentenceNum = IndexObj["subsentence"]
 
-            util.dict_key_insert_if_necessary(LineNums__SubsentenceNum__Words, LineNum, dict())
-            util.dict_key_insert_if_necessary(LineNums__SubsentenceNum__Words[LineNum], SubSentenceNum, list())
+            # here I can't use util functions because of performance
+            if LineNum not in LineNums__SubsentenceNum__Words:
+                # insert LineNum And SubSentenceNum in one step
+                LineNums__SubsentenceNum__Words[LineNum] = {SubSentenceNum: [WordWanted]}
+                continue
 
-            if WordWanted not in LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum]:     # Save it only once if the words
-                LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+            if SubSentenceNum not in LineNums__SubsentenceNum__Words[LineNum]:
+                LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum] = [WordWanted]
+                continue
+
+            LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
 
     return LineNums__SubsentenceNum__Words
 

@@ -14,7 +14,10 @@ def shorters_are_better(ResultGroup, Limit=LimitGeneral):
 
     for Result in ResultGroup:
         Len = len(Result["Sentence"])
-        util.dict_key_insert_if_necessary(Length__Results__Pairs, Len, list())
+
+        if Len not in Length__Results__Pairs:
+            Length__Results__Pairs[Len] = list()
+
         Length__Results__Pairs[Len].append(Result)
 
     Counter = 0

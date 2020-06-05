@@ -154,7 +154,7 @@ def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDete
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
 def linenum__subsentnum__words__collect(WordsWanted, Index):
-    LineNums__SubsentenceNum__Words = dict()
+    LineNum__SubsentenceNum__WordsDetected = dict()
     for WordWanted in WordsWanted:
 
         for IndexObj in Index.get(WordWanted, []):
@@ -163,18 +163,23 @@ def linenum__subsentnum__words__collect(WordsWanted, Index):
             SubSentenceNum = IndexObj["subsentence"]
 
             # here I can't use util functions because of performance
-            if LineNum not in LineNums__SubsentenceNum__Words:
+            if LineNum not in LineNum__SubsentenceNum__WordsDetected:
                 # insert LineNum And SubSentenceNum in one step
-                LineNums__SubsentenceNum__Words[LineNum] = {SubSentenceNum: [WordWanted]}
+                LineNum__SubsentenceNum__WordsDetected[LineNum] = {SubSentenceNum: [WordWanted]}
                 continue
 
-            if SubSentenceNum not in LineNums__SubsentenceNum__Words[LineNum]:
-                LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum] = [WordWanted]
+            if SubSentenceNum not in LineNum__SubsentenceNum__WordsDetected[LineNum]:
+                LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum] = [WordWanted]
                 continue
 
-            LineNums__SubsentenceNum__Words[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+            LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
 
-    return LineNums__SubsentenceNum__Words
+            # if LineNum not in LineNum__SubsentenceNum__WordsDetected: LineNum__SubsentenceNum__WordsDetected[LineNum] = dict()
+            # if SubSentenceNum not in LineNum__SubsentenceNum__WordsDetected[LineNum]: LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum] = list()
+
+            # if WordWanted not in LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum]:     # Save it only once if the words
+            #     LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+    return LineNum__SubsentenceNum__WordsDetected
 
 # Tested
 def words_wanted_clean(WordsOneString):

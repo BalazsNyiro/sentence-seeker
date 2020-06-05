@@ -12,7 +12,6 @@ def match_in_subsentence__results(Prg, WordsWanted):
 
     TimeUsedCollectTotal = 0
     TimeUsedResultTotal = 0
-    TimeMatchNumTotal = 0
     #######################################################################
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
         TimeUsedCollectStart = time.time()
@@ -25,7 +24,6 @@ def match_in_subsentence__results(Prg, WordsWanted):
         TimeUsedResultStart = time.time()
         text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName, MatchNumInSubsentences__Results)
         TimeUsedResultTotal += time.time() - TimeUsedResultStart
-
     #######################################################################
 
     MatchNums__Descending = util.dict_key_sorted(MatchNumInSubsentences__Results)
@@ -34,7 +32,6 @@ def match_in_subsentence__results(Prg, WordsWanted):
     print("\n\n")
     print("Time USED collect: ", TimeUsedCollectTotal)
     print("Time USED  result: ", TimeUsedResultTotal)
-    print("Time USED   match: ", TimeMatchNumTotal)
     print("Time USED (match_in_subsentence__results ):", TimeEnd - TimeStart)
     print("\n\n")
     return MatchNumInSubsentences__Results, MatchNums__Descending, ResultsTotalNum

@@ -23,15 +23,9 @@ def match_in_subsentence__results(Prg, WordsWanted):
         ResultsTotalNum += len(LineNum__SubsentenceNum__WordsDetected)
 
         TimeUsedResultStart = time.time()
-        MatchNumInSubsentence__Results__in_file = \
-            text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName)
+        text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName, MatchNumInSubsentences__Results)
         TimeUsedResultTotal += time.time() - TimeUsedResultStart
 
-        TimeMatch = time.time()
-        for MatchNum, Results in MatchNumInSubsentence__Results__in_file.items():
-            util.dict_key_insert_if_necessary(MatchNumInSubsentences__Results, MatchNum, list())
-            MatchNumInSubsentences__Results[MatchNum].extend(Results)
-        TimeMatchNumTotal += time.time()-TimeMatch
     #######################################################################
 
     MatchNums__Descending = util.dict_key_sorted(MatchNumInSubsentences__Results)

@@ -134,25 +134,22 @@ def word_count_in_text(Word, Text):
     return len(Pattern.findall(Text))
 
 # Tested in: test_seek_linenumbers_with_group_of_words
-def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileSourceBaseName):
-    MatchNumInSubsentence__Results = dict()
-
+def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileSourceBaseName, MatchNumInSubsentences__Results):
     for LineNum in LineNum__SubsentenceNum__WordsDetected:
         for SubsentenceNum in LineNum__SubsentenceNum__WordsDetected[LineNum]:
 
             WordsDetectedInSubsentence = LineNum__SubsentenceNum__WordsDetected[LineNum][SubsentenceNum]
             NumOfDetected = len(WordsDetectedInSubsentence)
 
-            if NumOfDetected not in MatchNumInSubsentence__Results:
-                MatchNumInSubsentence__Results[NumOfDetected] = list()
+            if NumOfDetected not in MatchNumInSubsentences__Results:
+                MatchNumInSubsentences__Results[NumOfDetected] = list()
 
             Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
                                       "LineNumInSentenceFile": LineNum,
                                       "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
                                       "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
             }
-            MatchNumInSubsentence__Results[NumOfDetected].append(Source__LineNum__Words)
-    return MatchNumInSubsentence__Results
+            MatchNumInSubsentences__Results[NumOfDetected].append(Source__LineNum__Words)
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building

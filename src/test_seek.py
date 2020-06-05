@@ -108,7 +108,8 @@ class SeekTests(util_test.SentenceSeekerTest):
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
 
-            MatchNum__Source_Words = text.match_num_in_subsentence__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words")
+            MatchNum__Source_Words = dict()
+            text.match_num_in_subsentence__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words", MatchNum__Source_Words)
             # print("\n>>>>>>", MatchNum__Source_Words)
 
             # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.

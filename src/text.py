@@ -140,18 +140,20 @@ def match_num_in_subsentence__result_obj(Prg, LineNum_SubSentenceNum__WordsDetec
         if LineNum_SubSentenceNum < 100: # I store 2 numbers info in one number and LineNum can be zero, too
             LineNum = 0                  # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
         else:                            # and if the num is smaller than 100 it means LineNum = 0
-            LineNum = int( str(LineNum_SubSentenceNum)[:-2] )
+            SubsentenceNum = LineNum_SubSentenceNum % 100
+            LineNum = (LineNum_SubSentenceNum - SubsentenceNum)//100
 
         NumOfDetected = len(WordsDetectedInSubsentence)
-
-        if NumOfDetected not in MatchNumInSubsentences__Results:
-            MatchNumInSubsentences__Results[NumOfDetected] = list()
 
         Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
                                   "LineNumInSentenceFile": LineNum,
                                   "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
                                   "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)}
-        MatchNumInSubsentences__Results[NumOfDetected].append(Source__LineNum__Words)
+
+        if NumOfDetected not in MatchNumInSubsentences__Results:
+            MatchNumInSubsentences__Results[NumOfDetected] = [Source__LineNum__Words]
+        else:
+            MatchNumInSubsentences__Results[NumOfDetected].append(Source__LineNum__Words)
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building

@@ -36,8 +36,8 @@ class SeekTests(util_test.SentenceSeekerTest):
                     {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
                 # FIXME: why we don't have \n at the end of this?
 
-                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
+                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
                     {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
                    ]
             }
@@ -92,18 +92,22 @@ class SeekTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_seek_linenumbers_with_group_of_words"):
             Prg = self.Prg
             WordsWanted = "apple, tree"
-            Index = { "apple": ["4_0", "3_0" ],
-                      "house": ["1_0", "2_0" ],
-                      "mouse": ["3_0", "4_0" ],
-                      "tree":  ["0_0", "4_0" ]
+            Index = { "apple": [400, 300 ],
+                      "house": [100, 200 ],
+                      "mouse": [300, 400 ],
+                      "tree":  [  0, 400 ]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
             ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Index)
 
             # print("\n>>>>>>",ResultLineNumbers__WordsDetected )
-            Correct = { 0: {0: ['tree']},
-                        3: {0: ['apple']},
-                        4: {0: ['apple', 'tree']}
+
+            # 400 means: Line 4, subsentence 0
+            # 501 means: Line 5, subsentence 1
+            #   2 means: Line 0, Subsentence 2 - line 0 can't be represented, if value < 100, it means LineNum == 0
+            Correct = { 0:   ['tree'],
+                        300: ['apple'],
+                        400: ['apple', 'tree']
                       }
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
@@ -166,7 +170,7 @@ class SeekTests(util_test.SentenceSeekerTest):
             # print(util.file_read_all(Prg, FileIndex))
 
             Index = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(Index["london"], ["1_1", "1_2", "2_1" ])
+            self.assertEqual(Index["london"], [101, 102, 201])
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

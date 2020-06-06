@@ -8,7 +8,11 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 ##### Empty Ubuntu Linux
  - apt install python3-tk
    apt install python3-pip
- - the program uses about 1Gb memory with all default texts   
+ - the program uses about 280Mb memory with all default texts,
+   I try to decrease the memory usage.
+   
+   The speed of search is extremely fast because of 
+   int based line/subsentence positioning
    
 
 

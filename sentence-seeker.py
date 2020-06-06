@@ -22,6 +22,8 @@ SysArgvOrig = sys.argv
 sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
 if Args.test:
+    print("\n"*22)
+    print("##########################################################")
     import test_util, test_util_json, test_document, test_text, test_seek
     import test_converter
 
@@ -32,7 +34,8 @@ if Args.test:
     util_test.result_all(Prg)
     test_text.run_all_tests(Prg)
     test_seek.run_all_tests(Prg)
-    ################################
+    print("##########################################################")
+    print("\n"*22)
 
     # execute search from ui
     seeker.be_ready_to_seeking(Prg)

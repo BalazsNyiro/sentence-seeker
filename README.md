@@ -4,6 +4,14 @@ Sentence seeker, text analyzer program to find examples from real texts
 
 Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
+## Install
+##### Empty Ubuntu Linux
+ - apt install python3-tk
+   apt install python3-pip
+ - the program uses about 1Gb memory with all default texts   
+   
+
+
 ## Roadmap
 31 may, 2020:
  - Desktop Gui implemented 

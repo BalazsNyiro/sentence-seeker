@@ -161,7 +161,7 @@ def indexing(WordIndex, WordIndexOnlyLineNums,  LineNum, SubSentence, SubSentenc
         util.dict_key_insert_if_necessary(WordIndex, Word, list())
         util.dict_key_insert_if_necessary(WordIndexOnlyLineNums, Word, dict())
 
-        Index = "{" + f'"line": {LineNum}, "subsentence": {SubSentenceNum}' + "}"
+        Index = f'"{LineNum}_{SubSentenceNum}"'
         if Index not in WordIndexOnlyLineNums[Word]: # save the word only once
             WordIndex[Word].append(Index)
             WordIndexOnlyLineNums[Word][Index] = True

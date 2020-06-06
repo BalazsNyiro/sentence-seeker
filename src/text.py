@@ -136,9 +136,11 @@ def word_count_in_text(Word, Text):
 # Tested in: test_seek_linenumbers_with_group_of_words
 def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileSourceBaseName, MatchNumInSubsentences__Results):
     for LineNum in LineNum__SubsentenceNum__WordsDetected:
-        for SubsentenceNum in LineNum__SubsentenceNum__WordsDetected[LineNum]:
 
-            WordsDetectedInSubsentence = LineNum__SubsentenceNum__WordsDetected[LineNum][SubsentenceNum]
+        LineRecord = LineNum__SubsentenceNum__WordsDetected[LineNum]
+        for SubsentenceNum in LineRecord:
+
+            WordsDetectedInSubsentence = LineRecord[SubsentenceNum]
             NumOfDetected = len(WordsDetectedInSubsentence)
 
             if NumOfDetected not in MatchNumInSubsentences__Results:
@@ -148,7 +150,7 @@ def match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDete
                                       "LineNumInSentenceFile": LineNum,
                                       "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
                                       "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)
-            }
+                                     }
             MatchNumInSubsentences__Results[NumOfDetected].append(Source__LineNum__Words)
 
 # Tested - Words can be separated with comma or space chars
@@ -159,8 +161,9 @@ def linenum__subsentnum__words__collect(WordsWanted, Index):
 
         for IndexObj in Index.get(WordWanted, []):
 
-            LineNum = IndexObj["line"]
-            SubSentenceNum = IndexObj["subsentence"]
+            LineNum, SubSentenceNum = IndexObj.split("_")
+            LineNum = int(LineNum)
+            SubSentenceNum = int(SubSentenceNum)
 
             # here I can't use util functions because of performance
             if LineNum not in LineNum__SubsentenceNum__WordsDetected:
@@ -168,11 +171,12 @@ def linenum__subsentnum__words__collect(WordsWanted, Index):
                 LineNum__SubsentenceNum__WordsDetected[LineNum] = {SubSentenceNum: [WordWanted]}
                 continue
 
-            if SubSentenceNum not in LineNum__SubsentenceNum__WordsDetected[LineNum]:
-                LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum] = [WordWanted]
+            LineRecord = LineNum__SubsentenceNum__WordsDetected[LineNum]
+            if SubSentenceNum not in LineRecord:
+                LineRecord[SubSentenceNum] = [WordWanted]
                 continue
 
-            LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+            LineRecord[SubSentenceNum].append(WordWanted)    # is more than once in a sentence
 
             # if LineNum not in LineNum__SubsentenceNum__WordsDetected: LineNum__SubsentenceNum__WordsDetected[LineNum] = dict()
             # if SubSentenceNum not in LineNum__SubsentenceNum__WordsDetected[LineNum]: LineNum__SubsentenceNum__WordsDetected[LineNum][SubSentenceNum] = list()

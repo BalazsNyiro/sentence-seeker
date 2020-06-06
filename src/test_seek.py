@@ -92,10 +92,10 @@ class SeekTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_seek_linenumbers_with_group_of_words"):
             Prg = self.Prg
             WordsWanted = "apple, tree"
-            Index = { "apple": [{"line": 4, "subsentence": 0}, {"line":3, "subsentence": 0} ],
-                      "house": [{"line": 1, "subsentence": 0}, {"line":2, "subsentence": 0} ],
-                      "mouse": [{"line": 3, "subsentence": 0}, {"line":4, "subsentence": 0} ],
-                      "tree":  [{"line": 0, "subsentence": 0}, {"line":4, "subsentence": 0} ]
+            Index = { "apple": ["4_0", "3_0" ],
+                      "house": ["1_0", "2_0" ],
+                      "mouse": ["3_0", "4_0" ],
+                      "tree":  ["0_0", "4_0" ]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
             ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Index)
@@ -166,10 +166,7 @@ class SeekTests(util_test.SentenceSeekerTest):
             # print(util.file_read_all(Prg, FileIndex))
 
             Index = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(Index["london"], [{"line": 1, "subsentence": 1},
-                                               {"line": 1, "subsentence": 2},
-                                               {"line": 2, "subsentence": 1}
-                                              ])
+            self.assertEqual(Index["london"], ["1_1", "1_2", "2_1" ])
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

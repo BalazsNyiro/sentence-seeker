@@ -173,20 +173,16 @@ def linenum__subsentnum__words__collect(Prg, WordsWanted, Index):
             #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum].append(WordWanted)    # is more than once in a sentence
             ####################################################################################
 
-
             ### Here I store the possible word set variations in a common global store,
             ### and same sets are created only ONCE instead of a lot of lists with same elems
             if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
                 WordSet = (WordWanted,)
-                WordSetSaved = wordset_save_and_get_saved(WordSetsFounded, WordSet)
-                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = WordSetSaved
-                continue
+            else:
+                WordSet = LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]
+                if WordWanted not in WordSet:
+                    WordSet = WordSet + (WordWanted,)
 
-            WordSetOld = LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]
-            if WordWanted not in WordSetOld:
-                WordSet = WordSetOld + (WordWanted,)
-                WordSetSaved = wordset_save_and_get_saved(WordSetsFounded, WordSet)
-                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = WordSetSaved
+            LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = wordset_save_and_get_saved(WordSetsFounded, WordSet)
 
     return LineNum_SubsentenceNum__WordsDetected
 

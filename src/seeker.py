@@ -15,7 +15,7 @@ def match_in_subsentence__results(Prg, WordsWanted):
     #######################################################################
     for FileBaseName, Doc in Prg["DocumentObjectsLoaded"].items():
         TimeUsedCollectStart = time.time()
-        LineNum__SubsentenceNum__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Doc["Index"])
+        LineNum__SubsentenceNum__WordsDetected = text.linenum__subsentnum__words__collect(Prg, WordsWanted, Doc["Index"])
         TimeUsedCollectTotal += time.time() - TimeUsedCollectStart
 
         # one Line with any result => one result

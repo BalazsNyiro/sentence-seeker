@@ -157,18 +157,48 @@ def match_num_in_subsentence__result_obj(Prg, LineNum_SubSentenceNum__WordsDetec
 
 # Tested - Words can be separated with comma or space chars
 # It's a separated step from result_object_building
-def linenum__subsentnum__words__collect(WordsWanted, Index):
+def linenum__subsentnum__words__collect(Prg, WordsWanted, Index):
     LineNum_SubsentenceNum__WordsDetected = dict()
+    WordSetsFounded = Prg["WordSetsFounded"]
+
     for WordWanted in WordsWanted:
         for LineNum_SubSentenceNum in Index.get(WordWanted, []):
 
+            ############ This is the pure logic - but here we always create new lists with words
+            # if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
+            #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = [WordWanted] # always create new lists
+            #     continue
+
+            # if WordWanted not in LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]:     # Save it only once if the words
+            #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+            ####################################################################################
+
+
+            ### Here I store the possible word set variations in a common global store,
+            ### and same sets are created only ONCE instead of a lot of lists with same elems
             if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
-                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = [WordWanted]
+                WordSet = (WordWanted,)
+                WordSetSaved = wordset_save_and_get_saved(WordSetsFounded, WordSet)
+                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = WordSetSaved
                 continue
 
-            if WordWanted not in LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]:     # Save it only once if the words
-                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum].append(WordWanted)    # is more than once in a sentence
+            WordSetOld = LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]
+            if WordWanted not in WordSetOld:
+                WordSet = WordSetOld + (WordWanted,)
+                WordSetSaved = wordset_save_and_get_saved(WordSetsFounded, WordSet)
+                LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = WordSetSaved
+
     return LineNum_SubsentenceNum__WordsDetected
+
+# TODO: TEST IT
+# two tuples with same values can have different id -
+# I want to use tuple from stored wordsets
+def wordset_save_and_get_saved(WordSetsFounded, WordSet):
+    if WordSet not in WordSetsFounded:
+        WordSetsFounded[WordSet] = WordSet # the key and the value are same. very rare but valid
+        return WordSet
+    else:
+        return WordSetsFounded[WordSet]
 
 # Tested
 def words_wanted_clean(WordsOneString):

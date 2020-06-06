@@ -98,7 +98,7 @@ class SeekTests(util_test.SentenceSeekerTest):
                       "tree":  [  0, 400 ]
                       }
             WordsWanted = text.words_wanted_clean(WordsWanted)
-            ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(WordsWanted, Index)
+            ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(Prg, WordsWanted, Index)
 
             # print("\n>>>>>>",ResultLineNumbers__WordsDetected )
 

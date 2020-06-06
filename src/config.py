@@ -100,7 +100,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
                     "FgSource": "#D92027",
                     "FgSentence": "#7C3C21"   # https://colorhunt.co/palette/183389   browns
                 }
-            }
+            },
+            "WordSetsFounded": dict()
     }
 
     return Prg

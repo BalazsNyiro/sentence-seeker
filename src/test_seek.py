@@ -31,14 +31,14 @@ class SeekTests(util_test.SentenceSeekerTest):
             GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
                 # the first num:
                 # MatchNumMaxInSubsentences
-                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['looks', 'like'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
+                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('looks', 'like'), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
 
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ['like', 'this'], 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ('like', 'this'), 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
                 # FIXME: why we don't have \n at the end of this?
 
-                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ['bird'], 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ['this'], 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ['this'], 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
+                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ('bird',), 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('this',), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
+                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ('this',), 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
                    ]
             }
 
@@ -105,9 +105,9 @@ class SeekTests(util_test.SentenceSeekerTest):
             # 400 means: Line 4, subsentence 0
             # 501 means: Line 5, subsentence 1
             #   2 means: Line 0, Subsentence 2 - line 0 can't be represented, if value < 100, it means LineNum == 0
-            Correct = { 0:   ['tree'],
-                        300: ['apple'],
-                        400: ['apple', 'tree']
+            Correct = { 0:   ('tree',),
+                        300: ('apple',),
+                        400: ('apple', 'tree')
                       }
             self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
             self.assertEqual(WordsWanted, ['apple', 'tree'])
@@ -120,13 +120,13 @@ class SeekTests(util_test.SentenceSeekerTest):
             # length with 2 results has one elem: in line 2 both words is found
             Wanted__MatchNum__SourceAndDetectedWords = {
                  2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4,
-                      'WordsDetectedInSubsentence': ['apple', 'tree'],
+                      'WordsDetectedInSubsentence': ('apple', 'tree'),
                       'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
                  1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3,
-                      'WordsDetectedInSubsentence': ['apple'],
+                      'WordsDetectedInSubsentence': ('apple',),
                       'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
                      {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0,
-                      'WordsDetectedInSubsentence': ['tree'],
+                      'WordsDetectedInSubsentence': ('tree',),
                       'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
             }
             # util.display_groups_matchnum_resultinfo(MatchNum__Source_Words)

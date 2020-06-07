@@ -1,28 +1,38 @@
 # sentence-seeker
 
-Sentence seeker, text analyzer program to find examples from real texts
+Text analyzer program to find examples from real texts
 
-Developer: Balazs Nyiro, diogenesz@pergamen.hu
+ - Developer: Balazs Nyiro, diogenesz@pergamen.hu
+ - facebook channel:  sentence-seeker.net
+ - https://www.facebook.com/groups/2449430305347843
+ 
+## In progress development
+  - REST API to search (ui_http.py)
+  - skip poor results if we have enough good ones
+    - text.py (match_num_in_subsentence__result_obj)
 
 ## Install
 ##### Empty Ubuntu Linux
  - apt install python3-tk
-   apt install python3-pip
+ - apt install python3-pip
    
 ## Performance
  - the program uses about 280Mb memory with all default texts,
    I try to decrease the memory usage.
    
-   The speed of search is extremely fast because of 
+ - The speed of search is extremely fast because of 
    int based line/subsentence positioning
-
-## Roadmap
+   
+## History
+07 June: 
+ - 4x faster seeking speed and lower memory usage because
+   integer based indexing
+ - small fixes in tkinter gui
+   
 31 may, 2020:
  - Desktop Gui implemented 
 
 23 may, 2020:
- - facebook channel:  sentence-seeker.net
-   https://www.facebook.com/groups/2449430305347843
  
  - I implemented the simple sentence analyser logic
    in the online version of the program:
@@ -44,64 +54,37 @@ Developer: Balazs Nyiro, diogenesz@pergamen.hu
 
 In the far, far future a controller process are going to send requests for nodes in same host and in different hosts too, so the whole seeking happens simultaneously
 
-### "Future plans:"
-##### "Get some rest"
-  - Main program: use REST API to search, 
-  - simple user interface, in browsers 
-
-##### "Documentation update"
-
-##### "Daemons"
+##### Future functions:
   - use more than one daemon process to speed up the seeking
     separated controller process
   - http user interface, dark mode, 
 
-##### "Documentation update"
-
-##### "Argus's eyes"
-Thinking period, how can I refactor the program
-
-  - Refine text preprocessing:
-    - what is a sentence? 
-    - how fast is seeking?
-
-##### "My Business - Import from offered sources"
-  - user can import texts from precollected categories:
-    - newspapers, wikipedia sites 
-    - slow importing:
-      - robots.txt usage
-      - mix different domains in download order and wait 
-        enough time between two importing
+  - document importing
+    - user can import texts from precollected categories:
+      - newspapers, wikipedia sites 
+      - slow importing:
+        - robots.txt usage
+        - mix different domains in download order and wait 
+          enough time between two importing
 
   - user can update his source if he wants
   - delete or temporarily skipped files in library?
 
-"The Call v1.1" - use external dictionaries, Learner's dict for example 
-  - it's an interesting possibility to use them, it's an idea only
+  - use external dictionaries, Learner's dict for example 
+    - it's an interesting possibility to use them, it's an idea only
+    
+  - use .epub, .mobi, .pdf, .doc, .rtf sources?
+    - ?? do you need plugins, extendibility
 
 #### "Get into Ubuntu repo"
   - https://askubuntu.com/questions/16446/how-to-get-my-software-into-ubuntu
     - https://wiki.debian.org/DebianMentorsFaq
     - https://www.debian.org/doc/manuals/developers-reference/pkgs.html#newpackage
 
-
-#### "A little pause"
-  - At this point 
-    - the user can search in his own library
-    - the user can import from predefined articles, sets
-
 #### More that we can do:
-
-  - store precompiled format for faster processing
-    (it can be recompiled after version switchting)
-
   - parallel text processing: 
     - one controller process
     - more worker process in same and different hosts
-
-  - use .epub, .mobi, .pdf, .doc, .rtf sources?
-
-  - ?? do you need plugins, extendibility
 
 ## Coding guideline - Naming conventions
  - Variable names: UpperCamelCase, exception: self.

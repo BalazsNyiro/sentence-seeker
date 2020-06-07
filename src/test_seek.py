@@ -65,9 +65,12 @@ class SeekTests(util_test.SentenceSeekerTest):
     def test_words_wanted_clean(self):
         self.maxDiff = None
         if self._test_exec("test_words_wanted_clean"):
+            Prg = {"DocumentObjectsLoadedWordsCounterGlobal": {"apple":200, "tree": 100}}
             WordsWanted = "apple, tree"
-            WordsWantedCleaned = text.words_wanted_clean(WordsWanted)
+            WordsWantedCleaned, WordsWantedSortedForDbSearch = text.words_wanted_clean(Prg, WordsWanted)
             self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
+
+            self.assertEqual(WordsWantedSortedForDbSearch, ["tree", "apple"])
 
     def test_word_count_in_text(self):
         self.maxDiff = None
@@ -97,7 +100,7 @@ class SeekTests(util_test.SentenceSeekerTest):
                       "mouse": [300, 400 ],
                       "tree":  [  0, 400 ]
                       }
-            WordsWanted = text.words_wanted_clean(WordsWanted)
+            WordsWanted, WordsWantedSortedForDbSearch = text.words_wanted_clean(Prg, WordsWanted)
             ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(Prg, WordsWanted, Index)
 
             # print("\n>>>>>>",ResultLineNumbers__WordsDetected )

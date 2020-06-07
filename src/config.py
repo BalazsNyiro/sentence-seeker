@@ -65,6 +65,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "PdfToTextConvert": fun_pdf_to_text_converter(Os),
             "HtmlToTextConvert": fun_html_to_text_converter,
             "DocumentObjectsLoaded": dict(),
+            "DocumentObjectsLoadedWordsCounterGlobal": dict(),
             "Statistics": [],
             "LimitDisplayedSampleSentences": 6,
 

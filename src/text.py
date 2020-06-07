@@ -150,6 +150,7 @@ def match_num_in_subsentence__result_obj(Prg, LineNum_SubSentenceNum__WordsDetec
                                   "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
                                   "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)}
 
+        # TODO: skip poor results if we have enough good ones
         if NumOfDetected not in MatchNumInSubsentences__Results:
             MatchNumInSubsentences__Results[NumOfDetected] = [Source__LineNum__Words]
         else:
@@ -164,6 +165,8 @@ def linenum__subsentnum__words__collect(Prg, WordsWanted, Index):
     for WordWanted in WordsWanted:
         for LineNum_SubSentenceNum in Index.get(WordWanted, []):
 
+            ####################################################################################
+            #  KEEP THIS PART IN WORKING STATE
             ############ This is the pure logic - but here we always create new lists with words
             # if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
             #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = [WordWanted] # always create new lists
@@ -197,14 +200,27 @@ def wordset_save_and_get_saved(WordSetsFounded, WordSet):
         return WordSetsFounded[WordSet]
 
 # Tested
-def words_wanted_clean(WordsOneString):
-    WordsCleaned = []
+def words_wanted_clean(Prg, WordsOneString):
+    WordsCleanedOriginalOrder = []
     WordsWanted = WordsOneString.replace(",", " ").split()
     for Word in WordsWanted:
         Word = Word.strip().lower()
-        if Word and Word not in WordsCleaned:
-            WordsCleaned.append(Word)
-    return WordsCleaned
+        if Word and Word not in WordsCleanedOriginalOrder:
+            WordsCleanedOriginalOrder.append(Word)
+
+    WordsCounter = Prg["DocumentObjectsLoadedWordsCounterGlobal"]
+    Tmp = dict()
+    for Word in WordsCleanedOriginalOrder:
+        UsedInTexts = 100 # default value, based on experience
+        if Word in WordsCounter:   UsedInTexts = WordsCounter[Word]
+        if UsedInTexts not in Tmp: Tmp[UsedInTexts] = list()
+        Tmp[UsedInTexts].append(Word)
+
+    WordsCleanedSorted_RareToOftenForDbSearch = []
+    for Key in util.dict_key_sorted(Tmp, Reverse=False):
+        WordsCleanedSorted_RareToOftenForDbSearch.extend(Tmp[Key])
+
+    return WordsCleanedOriginalOrder, WordsCleanedSorted_RareToOftenForDbSearch
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

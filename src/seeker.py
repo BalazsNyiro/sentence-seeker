@@ -22,7 +22,8 @@ def match_in_subsentence__results(Prg, WordsWanted):
         ResultsTotalNum += len(LineNum__SubsentenceNum__WordsDetected)
 
         TimeUsedResultStart = time.time()
-        text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected, FileBaseName, MatchNumInSubsentences__Results)
+        text.match_num_in_subsentence__result_obj(Prg, LineNum__SubsentenceNum__WordsDetected,
+                                                  FileBaseName, MatchNumInSubsentences__Results)
         TimeUsedResultTotal += time.time() - TimeUsedResultStart
     #######################################################################
 
@@ -37,11 +38,13 @@ def match_in_subsentence__results(Prg, WordsWanted):
     return MatchNumInSubsentences__Results, MatchNums__Descending, ResultsTotalNum
 
 def seek(Prg, WordsWantedOneString):
+    Prg["WordSetsFounded"]: dict() # delete previous tables
+
     TimeStart = stats.time_save(Prg, "first seek =>")
 
     ###############################
-    WordsWanted = text.words_wanted_clean(WordsWantedOneString)
-    GroupsSubsentenceBased_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = match_in_subsentence__results(Prg, WordsWanted)
+    WordsWantedOrigOrder, WordsWantedSortedForDbSearch = text.words_wanted_clean(Prg, WordsWantedOneString)
+    GroupsSubsentenceBased_MatchNums_ResultInfos, MatchNums__Descending, ResultsTotalNum = match_in_subsentence__results(Prg, WordsWantedSortedForDbSearch )
 
     ResultsSelected = []
     Selectors = [result_selectors.shorters_are_better,
@@ -61,7 +64,7 @@ def seek(Prg, WordsWantedOneString):
     ###############################
     TimeEnd = stats.time_save(Prg, "first seek <=")
     print("Time USED (seek):", TimeEnd - TimeStart)
-    return WordsWanted, ResultsSelected, ResultsTotalNum
+    return WordsWantedOrigOrder, ResultsSelected, ResultsTotalNum
 
 def results_sort_by_sentence_length(Prg, Results):
     ResultsSorted = []
@@ -92,6 +95,12 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
             Verbose=Verbose,
             LoadOnlyTheseFileBaseNames=LoadOnlyTheseFileBaseNames
         )
+    WordsCounter = Prg["DocumentObjectsLoadedWordsCounterGlobal"] = dict()
+    for Doc in Prg["DocumentObjectsLoaded"].values():
+        for Word, LineNums in Doc["Index"].items():
+            if Word not in WordsCounter:
+                WordsCounter[Word] = 0
+            WordsCounter[Word] += len(LineNums)
 
 # what is a sentence: https://simple.wikipedia.org/wiki/Sentence
 # unfortunatelly I can't analyse the text based on the structure of the text,

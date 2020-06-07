@@ -30,7 +30,8 @@ def seek_and_display(KeypressEvent=""):
     for WordId, WordWanted in enumerate(WordsWanted):
         TagName = f"Highlighted_{WordId}"
         SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
-        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True)
+        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
+
 
 # This class came from here
 # https://stackoverflow.com/questions/3781670/how-to-highlight-text-in-a-tkinter-text-widget
@@ -50,7 +51,7 @@ class CustomText(tk.Text):
         tk.Text.__init__(self, *args, **kwargs)
 
     def highlight_pattern(self, pattern, tag, start="1.0", end="end",
-                          regexp=False):
+                          regexp=False, NoCase=False):
         '''Apply the given tag to all text that matches the given pattern
 
         If 'regexp' is set to True, pattern will be treated as a regular
@@ -66,7 +67,7 @@ class CustomText(tk.Text):
         count = tk.IntVar()
         while True:
             index = self.search(pattern, "matchEnd","searchLimit",
-                                count=count, regexp=regexp)
+                                count=count, regexp=regexp, nocase=NoCase)
             if index == "": break
             if count.get() == 0: break # degenerate pattern which matches zero-length strings
             self.mark_set("matchStart", index)

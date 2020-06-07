@@ -9,8 +9,8 @@ class UtilTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_util_dict_key_sorted"):
             Dict = {"Aphrodite": 0, "Zeus": 2, "Xena": 1,  "Athene": 3}
 
-            Sorted = util.dict_key_sorted(Dict, Reverse=True)
-            self.assertEqual(Sorted, ["Zeus", "Xena", "Athene", "Aphrodite"])
+            SortedKeys = util.dict_key_sorted(Dict, Reverse=True)
+            self.assertEqual(SortedKeys, ["Zeus", "Xena", "Athene", "Aphrodite"])
 
     def test_util_dict_key_insert_if_necessary(self):
         if self._test_exec("test_util_dict_key_insert_if_necessary"):

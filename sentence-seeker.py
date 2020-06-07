@@ -23,7 +23,7 @@ sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a p
 
 if Args.test:
     print("\n"*22)
-    print("##########################################################")
+    print("##################### TEST BEGIN #####################################")
     import test_util, test_util_json, test_document, test_text, test_seek
     import test_converter
 
@@ -34,7 +34,7 @@ if Args.test:
     util_test.result_all(Prg)
     test_text.run_all_tests(Prg)
     test_seek.run_all_tests(Prg)
-    print("##########################################################")
+    print("##################### TEST END #####################################")
     print("\n"*22)
 
     # execute search from ui

@@ -19,7 +19,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         print(QueryParams)
         if "words" in QueryParams:
             _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(self.Prg, QueryParams["words"][0])
-            Reply = MatchNums__ResultInfo
+            Reply = MatchNums__ResultInfo[:self.Prg["LimitDisplayedSampleSentences"]]
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')

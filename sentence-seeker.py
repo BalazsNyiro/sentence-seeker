@@ -8,7 +8,7 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config, util_test, document, argparse
 ##########################################################
 
-import seeker, ui_cli, ui_tkinter, ui_http
+import seeker, ui_cli, ui_tkinter, ui_json, ui_html
 from http.server import HTTPServer
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
@@ -54,9 +54,13 @@ if Args.ui == "cli":
 
 elif Args.ui == "tkinter":
     ui_tkinter.win_main(Prg, Args)
-elif Args.ui == "http":
-    ui_http.SimpleHTTPRequestHandler.Prg = Prg
-    httpd = HTTPServer(('localhost', 8000), ui_http.SimpleHTTPRequestHandler)
+elif Args.ui == "json":
+    ui_json.SimpleHTTPRequestHandler.Prg = Prg
+    httpd = HTTPServer(('localhost', 8000), ui_json.SimpleHTTPRequestHandler)
+    httpd.serve_forever()
+elif Args.ui == "html":
+    ui_html.SimpleHTTPRequestHandler.Prg = Prg
+    httpd = HTTPServer(('localhost', 8000), ui_html.SimpleHTTPRequestHandler)
     httpd.serve_forever()
 
 print(Prg["Statistics"])

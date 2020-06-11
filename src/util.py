@@ -123,8 +123,8 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     return Lines
 
 # no PRG usage
-def file_read_all_simple(Fname="",mode="r"): # if you want read binary, write "rb"
-    with open(Fname, mode) as f:
+def file_read_all_simple(Fname="", Mode="r"): # if you want read binary, write "rb"
+    with open(Fname, Mode) as f:
         return f.read()
 
 # Tested, Prg is important for log, or maybe we should skip logging?

@@ -16,7 +16,7 @@ Prg = config.PrgConfigCreate()
 
 # use json lib to manage book db
 
-# receive file name/http address/web site dirname as input
+# receive file name/html address/web site dirname as input
 # first, simple case: file name
 # if gzipped, extract it
 # save it into Documents dir

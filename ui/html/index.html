@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<style>
+body {
+  background-image: url('img/bg.jpg');
+}
+
+.source_name {
+    color: green;
+    text-align: right;
+}
+
+.seek {
+    width: 800px;
+    margin-left:auto;
+    margin-right:auto;
+}
+table {
+    width: 800px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>sentence-seeker.net - Get sentence examples from docs</title>
+</head>
+<body id="body">
+<p><a href="https://www.facebook.com/groups/2449430305347843">Facebook group</a></p>
+<div class="seek">
+    <label>Words: (development is in progress)</label><br>
+    <input type="text" id="words" name="words" value="looks, like, bird"><br>
+    <button id="button_seek" onclick="seek_func()">Get example sentences...</button>
+    <p id="message"></p>
+
+</div>
+
+<script type="text/javascript" src="hilitor.js"></script>
+<p id="demo"></p>
+
+<script>
+
+    var input = document.getElementById("words");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) { // Number 13 is the "Enter" key on the keyboard
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("button_seek").click();
+      }
+    });
+
+    var wordHilitor; // https://e-motiv.github.io/hilitor/example/#example
+    var Words = document.getElementById("words").value;
+
+    function source_display(BaseName){
+        var Basename__Displayed = {};
+        DocInfo = PLACEHOLDER_DOCUMENT_JSON;
+        for (var key in DocInfo.docs) {
+            if (key == BaseName) {
+                Elem = DocInfo.docs[key];
+                return "<a href='"+Elem.url+"'>" + DocInfo["source_names"][Elem.source_name] + "</a>";
+            }
+        }
+        return BaseName;
+    }
+    function message(Msg){
+        document.getElementById("message").innerHTML = Msg;
+    }
+
+    function seek_func(){
+        message("<b>Seeking...</b>");
+
+        var obj, dbParam, xmlhttp, myObj, x, txt = "";
+        obj = { table: "sentences", limit: 20 };
+        dbParam = JSON.stringify(obj);
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+
+          wordHilitor = new Hilitor("body");
+
+          if (this.readyState == 4 && this.status == 200) {
+            myObj = JSON.parse(this.responseText);
+            txt += "<table border='1'>";
+            for (x in myObj) {
+              txt += "<tr><td>" + myObj[x].Sentence + "<br /><div class='source_name'>" + source_display(myObj[x].FileSourceBaseName) + "</div>" + "</td></tr>";
+            }
+            txt += "</table>";
+            document.getElementById("demo").innerHTML = txt;
+            wordHilitor.apply(Words);
+
+            message("<b></b>");
+          }
+        };
+        Words = document.getElementById("words").value;
+
+        //xmlhttp.open("GET", "data.sentence-seeker.net:8000?words=" + Words, true);
+        xmlhttp.open("GET", "http://localhost:8000/seek?words=" + Words, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send("x=" + dbParam);
+    }
+
+    </script>
+
+
+</body>
+</html>

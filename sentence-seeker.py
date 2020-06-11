@@ -56,11 +56,11 @@ elif Args.ui == "tkinter":
     ui_tkinter.win_main(Prg, Args)
 elif Args.ui == "json":
     ui_json.SimpleHTTPRequestHandler.Prg = Prg
-    httpd = HTTPServer(('localhost', 8000), ui_json.SimpleHTTPRequestHandler)
+    httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_json.SimpleHTTPRequestHandler)
     httpd.serve_forever()
 elif Args.ui == "html":
     ui_html.SimpleHTTPRequestHandler.Prg = Prg
-    httpd = HTTPServer(('localhost', 8000), ui_html.SimpleHTTPRequestHandler)
+    httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)
     httpd.serve_forever()
 
 print(Prg["Statistics"])

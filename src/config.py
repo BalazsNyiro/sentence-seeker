@@ -2,6 +2,7 @@
 import os, platform, util, time, util_json_obj
 from shlex import quote
 from pathlib import Path
+import socket
 
 from html.parser import HTMLParser
 
@@ -103,7 +104,9 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
                     "FgSentence": "#7C3C21"   # https://colorhunt.co/palette/183389   browns
                 }
             },
-            "WordSetsFounded": dict()
+            "WordSetsFounded": dict(),
+            "ServerHost": "data.sentence-seeker.net" if socket.gethostname() == "vps" else "localhost",
+            "ServerPort": 8000
     }
 
     return Prg

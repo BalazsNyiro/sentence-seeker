@@ -68,6 +68,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             Reply = file_local_read(File, EncodeUtf8=False)
             if "index.html" in File:
                 Reply = Reply.replace("PLACEHOLDER_DOCUMENT_JSON", self.Prg["FileDocumentsDbContent"])
+                Reply = Reply.replace("PLACEHOLDER_HOST", self.Prg["ServerHost"])
+                Reply = Reply.replace("PLACEHOLDER_PORT", str(self.Prg["ServerPort"]))
+
             Reply = Reply.encode("UTF-8")
             self.send_response(200)
             self.content_type("html")

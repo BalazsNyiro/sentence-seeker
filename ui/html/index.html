@@ -96,7 +96,7 @@ table {
         Words = document.getElementById("words").value;
 
         //xmlhttp.open("GET", "data.sentence-seeker.net:8000?words=" + Words, true);
-        xmlhttp.open("GET", "http://localhost:8000/seek?words=" + Words, true);
+        xmlhttp.open("GET", "http://PLACEHOLDER_HOST:PLACEHOLDER_PORT/seek?words=" + Words, true);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send("x=" + dbParam);
     }

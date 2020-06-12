@@ -69,7 +69,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DocumentObjectsLoaded": dict(),
             "DocumentObjectsLoadedWordsCounterGlobal": dict(),
             "Statistics": [],
-            "LimitDisplayedSampleSentences": 6,
+            "LimitDisplayedSampleSentences": 20,
 
             "UiThemes": {
                 "ThemeNameActual": "SunSet",

@@ -296,9 +296,10 @@ def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is un
     return Content
 
 # TODO? Test??
-def web_get(Url, Binary=False):
+def web_get(Url, Binary=False, Verbose=True):
     Url = Url.strip()
-    print(f"web html get: {Url}, Binary:{Binary}")
+    if Verbose:
+        print(f"web html get: {Url}, Binary:{Binary}")
 
     with urllib.request.urlopen(Url) as Response:
         if Binary:

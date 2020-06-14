@@ -75,7 +75,7 @@ def document_objects_collect_from_working_dir(Prg,
             Index = dict()
             if isfile(FileIndex):
                 for Word, IndexList  in util_json_obj.obj_from_file(FileIndex).items():
-                    Index[Word] = array.array("i", IndexList)
+                    Index[Word] = array.array("I", IndexList)
 
             DocumentObj = { "FileOrigPathAbs": FileOrig,  # if you use pdf/html, the original
                             "FileTextPathAbs": FileText,  # and text files are different

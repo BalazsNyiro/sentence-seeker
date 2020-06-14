@@ -15,7 +15,11 @@ ThreadNum = 1
 MaxI = 6000
 MaxI = 1000000000000000
 HostPort = "http://localhost:8000"
-HostPort = "http://data.sentence-seeker.net:8000"
+
+# this is a live exampe program. You can use it, try out it
+# but I test the program in live environment so please
+# don't use it too much. 1 request / 10 seconds is acceptable
+#HostPort = "http://data.sentence-seeker.net:8000"
 
 # local performance: circa
 def thread_function(ThreadName):

@@ -178,7 +178,7 @@ def fun_pdf_to_text_converter(Os):
     # into output so if it's possible I use pdftotext, if both are available
 
     Location = ""
-    for Line in util.shell("pip show pdfminer.six -f").split("\n"):
+    for Line in util.shell("pip3 show pdfminer.six -f").split("\n"):
         if "Location" in Line:
             print(Line)
             Location = Line.split()[1]
@@ -210,7 +210,7 @@ def fun_pdf_to_text_converter(Os):
     if not ConverterDetected:
         print("\n== There are more available pdf to text converters ==\n\n"
                 "Win/Linux/Mac pdf to text converter - pdfminer.six:  \n"
-                "    pip install pdfminer.six \n"
+                "    pip3 install pdfminer.six \n"
                 "    https://github.com/pdfminer/pdfminer.six\n"
                 "\n"
                 "Linux/Mac: you can install poppler-utils,\n"

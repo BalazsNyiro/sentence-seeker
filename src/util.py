@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request
 from util_json_obj import doc_db_update
+import sys
 
 # Tested
 def shell(Cmd):
@@ -143,7 +144,7 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
                     ContentBytes = f.read()
                     log(Prg, f"file_read_all - gzip utf-8 conv BEGIN {Fname}")
 
-                    Content = utf8_conversion_with_warning(ContentBytes, Fname)
+                    Content = utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_all gzipped")
                     # Content = str(ContentBytes, 'utf-8', 'ignore')  # errors can be ignored
                     # Content = str(ContentBytes, 'utf-8')  # return with "" in this case
 
@@ -158,7 +159,7 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
             try:
                 with open(Fname, 'rb') as f:
                     ContentBytes = f.read()
-                    Content = utf8_conversion_with_warning(ContentBytes, Fname)
+                    Content = utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_all simple")
                     log(Prg, f"file_read_all - text: {Fname}")
                     return True, Content
             except:
@@ -281,14 +282,17 @@ def display_groups_matchnum_resultinfo(GroupsObj):
         for ResultInfo in ResultInfos:
             print(MatchNum, ResultInfo)
 
-# Tested with the life
 # of course somehow I have to test it, it's a magic :-)
-def utf8_conversion_with_warning(Bytes, Source):
+# TODO: test it with texts
+def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is unknown"):
     try:
         Content = str(Bytes, 'utf-8')
     except:
         print(f"WARNING: one or more char not convertable to utf-8 in: {Source}")
-        Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
+        log(Prg, f"utf8 conversion error: {Source}")
+        #Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
+        #Content = str(Bytes, 'utf-8', 'xmlcharrefreplace')
+        Content = str(Bytes, 'utf-8', 'backslashreplace')  # errors can be ignored
     return Content
 
 # TODO? Test??
@@ -314,7 +318,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
             BinaryFromWeb = web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
             Bytes = gzip.decompress(BinaryFromWeb)
             print("Url downloading is finished:", Url)
-            Lines = utf8_conversion_with_warning(Bytes, Url)
+            Lines = utf8_conversion_with_warning(Prg, Bytes, Url, FunCaller="web_get_pack_wikipedia")
             print("Utf8 conversion finished...")
 
             SourceName = "wikipedia"
@@ -437,3 +441,14 @@ def TraceFunc(Frame, Event, Arg, Indent=[0]):
             Indent[0] -= 2
 
     return TraceFunc
+
+def dict_mem_usage(Dict, Level=0):
+    for Key, Val in Dict.items():
+        IsDict = isinstance(Val, dict)
+        print(" "*Level, end="")
+        if IsDict:
+            print(Key, sys.getsizeof(Val), type(Val))
+            dict_mem_usage(Val, Level=Level+1)
+        else:
+            print(Key, sys.getsizeof(Val), type(Val))
+

@@ -29,7 +29,7 @@ class DocumentTests(util_test.SentenceSeekerTest):
             document.docs_copy_samples_into_dir(Prg, DirTest)
             Files = util.files_abspath_collect_from_dir(DirTest)
             FileNamesInOneLine = " ".join(Files)
-            Wanted = "DanielDefoe__LifeAdventuresRobinsonCrusoe_gutenberg_org_521-0.txt"
+            Wanted = "DanielDefoe__LifeAdventuresRobinsonCrusoe__gutenberg_org_521-0.txt"
             self.assertIn(Wanted, FileNamesInOneLine)
 
             for FileAbsPath in Files:

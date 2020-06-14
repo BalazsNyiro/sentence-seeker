@@ -2,7 +2,7 @@
 import util, os, gzip
 import util_json_obj
 from os.path import isfile
-
+import array
 # Tested
 def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
@@ -69,12 +69,20 @@ def document_objects_collect_from_working_dir(Prg,
                     util_json_obj.doc_db_update(Prg, FileOrig) # and reload the updated db
                     DbDocumentUpdated = True
 
+            # Original: lists.
+            #Arrays are more complex, less memory usage:
+            #Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict()
+            Index = dict()
+            if isfile(FileIndex):
+                for Word, IndexList  in util_json_obj.obj_from_file(FileIndex).items():
+                    Index[Word] = array.array("i", IndexList)
+
             DocumentObj = { "FileOrigPathAbs": FileOrig,  # if you use pdf/html, the original
                             "FileTextPathAbs": FileText,  # and text files are different
 
                             "FileIndex": FileIndex,
                             "FileSentences": FileSentences,
-                            "Index": util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict(),
+                            "Index": Index,
                             "Sentences": util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else []
             }
 

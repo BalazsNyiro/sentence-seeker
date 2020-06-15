@@ -25,15 +25,16 @@ def document_objects_collect_from_working_dir(Prg,
 
         FileText = FileOrig
         BaseNameOrig = BaseNameText = os.path.basename(FileOrig)
+        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
         if LoadOnlyTheseFileBaseNames:
             if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
                 continue
 
         Extension = util.filename_extension(FileOrig)
-        FilePathWithoutExtension = util.filename_without_extension(FileOrig)
 
         if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
             info(f"in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
+            FilePathWithoutExtension = util.filename_without_extension(FileOrig)
             FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathConvertedToText):
                 #print("not exists: ", FilePathConvertedToText )
@@ -67,7 +68,7 @@ def document_objects_collect_from_working_dir(Prg,
                 FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
                 IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
                 if IndexCreated:
-                    util_json_obj.doc_db_update(Prg, FileOrig) # and reload the updated db
+                    util_json_obj.doc_db_update(Prg, BaseNameOrigWithoutExtension) # and reload the updated db
                     DbDocumentUpdated = True
 
             # Original: lists.
@@ -87,7 +88,7 @@ def document_objects_collect_from_working_dir(Prg,
                             "Sentences": util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else []
             }
 
-            DocumentObjects[BaseNameOrig] = DocumentObj  # we store the documents based on their basename
+            DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename
 
         elif Extension in ExtensionsInFuture:
             info(f"in documents dir - this file type will be processed in the future: {BaseNameText}")

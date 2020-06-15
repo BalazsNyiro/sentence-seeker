@@ -31,21 +31,22 @@ class SeekTests(util_test.SentenceSeekerTest):
             GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
                 # the first num:
                 # MatchNumMaxInSubsentences
-                2: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('looks', 'like'), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
+                2: [{'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('looks', 'like'), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
 
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ('like', 'this'), 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
+                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ('like', 'this'), 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
                 # FIXME: why we don't have \n at the end of this?
 
-                1: [{'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ('bird',), 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('this',), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document.txt', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ('this',), 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
+                1: [{'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ('bird',), 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
+                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('this',), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
+                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ('this',), 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
                    ]
             }
 
             ################ restore original state #####################################
             util.file_del(FilePathBird)
-            util.file_del(Prg["DocumentObjectsLoaded"][self.FileBaseNameBird]["FileIndex"])
-            util.file_del(Prg["DocumentObjectsLoaded"][self.FileBaseNameBird]["FileSentences"])
+            FileNameWithoutExtension = util.filename_without_extension(self.FileBaseNameBird)
+            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileIndex"])
+            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileSentences"])
             self.Prg = PrgOrig
             ################ restore original state #####################################
 

@@ -15,7 +15,7 @@ class DocumentTests(util_test.SentenceSeekerTest):
             util.file_write(Prg, Fname=FilePath, Content="example text")
             DocumentsAvailable = document.document_objects_collect_from_working_dir(Prg)
 
-            self.assertIn(FileName, DocumentsAvailable)
+            self.assertIn(util.filename_without_extension(FileName), DocumentsAvailable)
             util.file_del(FilePath)
 
     def test_docs_copy_samples_into_dir(self):

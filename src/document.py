@@ -20,7 +20,8 @@ def document_objects_collect_from_working_dir(Prg,
     ExtensionsInFuture = {".epub": 0, ".mobi": 0}
 
     DbDocumentUpdated = False
-    for FileOrig in util.files_abspath_collect_from_dir(Prg["DirDocuments"]):
+    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
+    for FileOrig in Files:
 
         FileText = FileOrig
         BaseNameOrig = BaseNameText = os.path.basename(FileOrig)
@@ -29,10 +30,10 @@ def document_objects_collect_from_working_dir(Prg,
                 continue
 
         Extension = util.filename_extension(FileOrig)
+        FilePathWithoutExtension = util.filename_without_extension(FileOrig)
 
         if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
             info(f"in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
-            FilePathWithoutExtension = util.filename_without_extension(FileOrig)
             FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathConvertedToText):
                 #print("not exists: ", FilePathConvertedToText )

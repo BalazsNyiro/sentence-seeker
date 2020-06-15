@@ -67,9 +67,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             File = FilesHtml[Req.path]
             Reply = file_local_read(File, EncodeUtf8=False)
             if "index.html" in File:
-                Reply = Reply.replace("PLACEHOLDER_DOCUMENT_JSON", self.Prg["FileDocumentsDbContent"])
-                Reply = Reply.replace("PLACEHOLDER_HOST", self.Prg["ServerHost"])
-                Reply = Reply.replace("PLACEHOLDER_PORT", str(self.Prg["ServerPort"]))
+                License = self.Prg["Licenses"].replace("\n", "<br />")
+
+                Replaces = (
+                    ("PLACEHOLDER_DOCUMENT_JSON", self.Prg["FileDocumentsDbContent"]),
+                    ("PLACEHOLDER_HOST", self.Prg["ServerHost"]),
+                    ("PLACEHOLDER_PORT", str(self.Prg["ServerPort"])),
+                    ("PLACEHOLDER_LICENSE", License)
+                )
+                Reply = util.replace_pairs(Reply, Replaces)
 
             Reply = Reply.encode("UTF-8")
             self.send_response(200)

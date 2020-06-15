@@ -453,3 +453,9 @@ def dict_mem_usage(Dict, Level=0):
         else:
             print(Key, sys.getsizeof(Val), type(Val))
 
+
+def replace_pairs(Txt, Replaces):
+    for Old, New in Replaces:
+        Txt = Txt.replace(Old, New)
+    return Txt
+

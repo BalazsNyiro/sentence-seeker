@@ -142,6 +142,8 @@ def win_main(Prg, Args):
     SentencesArea.tag_bind("follow", "<1>",
                            lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 
+    SentencesArea.insert(tk.END, "License info\n\n", "TextTitle")
+    SentencesArea.insert(tk.END, Prg["Licenses"], "SentenceDisplayed")
     Root.mainloop()
 
 def website_open():

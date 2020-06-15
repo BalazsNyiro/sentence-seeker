@@ -106,7 +106,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             },
             "WordSetsFounded": dict(),
             "ServerHost": "data.sentence-seeker.net" if socket.gethostname() == "vps" else "localhost",
-            "ServerPort": 8000
+            "ServerPort": 8000,
+            "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page."""
     }
 
     return Prg

@@ -19,8 +19,7 @@ def user_interface_start(Prg, Args):
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "cli":
-        print("Licenses: Books from Gutenberg.org are in Public Domain.")
-        print("The Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page")
+        print(Prg["Licenses"])
         print("interesting search: looks, like, bird")
         print("interesting search: elephant")
 

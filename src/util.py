@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, gzip, shutil, pathlib, urllib.request
-from util_json_obj import doc_db_update
+import os, gzip, shutil, pathlib, urllib.request, util_json_obj
 import sys
 
 # Tested
@@ -340,7 +339,8 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                     if Token == "FileName": FileName = Data
 
                     if Token == "End":
-                        FileHtmlFullPath = os.path.join(DirTarget, FileName + ".txt")
+                        FileNameWithoutExtension = filename_without_extension(FileName)
+                        FileHtmlFullPath = os.path.join(DirTarget, FileNameWithoutExtension + ".txt")
                         Written = file_write(Prg, Fname=FileHtmlFullPath, Content="\n".join(LinesDoc))
                         # print("Written:", Written, FileHtmlFullPath)
 
@@ -348,8 +348,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                                   "source_name": SourceName,
                                   "license": License}
                         # print("DocObj", DocObj)
-                        FileNameWithoutExtension = filename_without_extension(FileName)
-                        doc_db_update(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
+                        util_json_obj.doc_db_update_in_file_and_reload(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
 
                         Url = License = FileName = "-"
                         LinesDoc = []

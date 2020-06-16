@@ -13,20 +13,11 @@ def obj_to_file(JsonFileName, Data):
     with open(JsonFileName, 'w') as OutFile:
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
-_DocsSampleInfo = None
-def doc_db_update(Prg, FileWithoutExtension, DocObj=None):
-    global _DocsSampleInfo
-    if not _DocsSampleInfo: # read only once, save it into global var
-        _DocsSampleInfo = obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+def doc_db_update_in_file_and_reload(Prg, FileWithoutExtension, DocObj=None):
     DocDb = obj_from_file(Prg["FileDocumentsDb"])
-
-    if not DocObj:
-        if FileWithoutExtension in _DocsSampleInfo["docs"]:
-            DocObj = _DocsSampleInfo["docs"][FileWithoutExtension]
-
-    if DocObj:
-        DocDb["docs"][FileWithoutExtension] = DocObj
-        obj_to_file(Prg["FileDocumentsDb"], DocDb)
+    DocDb["docs"][FileWithoutExtension] = DocObj
+    obj_to_file(Prg["FileDocumentsDb"], DocDb)
+    Prg["DocumentsDb"] = obj_from_file(Prg["FileDocumentsDb"])["docs"]
 
 # Used in tests
 # read wanted key from config file

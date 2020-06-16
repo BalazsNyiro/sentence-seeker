@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
-import util, os, gzip
+import util, os
 import util_json_obj
 from os.path import isfile
 import array
+
+
+# TODO: refactor this func, LOAD document db in local config
+# and don't use document_samples in real environment
+
 # Tested
 def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
@@ -17,20 +22,22 @@ def document_objects_collect_from_working_dir(Prg,
         if Verbose: print(Txt)
 
     DocumentObjects = dict()
-    ExtensionsInFuture = {".epub": 0, ".mobi": 0}
+    ExtensionsInFuture = (".epub", ".mobi")
 
     DbDocumentUpdated = False
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
-    for FileOrig in Files:
+    DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+
+    for FileOrig in Files: # All files recursively collected from DirDocuments
 
         FileText = FileOrig
-        BaseNameOrig = BaseNameText = os.path.basename(FileOrig)
-        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
+        BaseNameText = BaseNameOrig = os.path.basename(FileOrig)
         if LoadOnlyTheseFileBaseNames:
             if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
                 continue
 
-        Extension = util.filename_extension(FileOrig)
+        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
+        Extension = util.filename_extension(BaseNameOrig)
 
         if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
             info(f"in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
@@ -67,9 +74,15 @@ def document_objects_collect_from_working_dir(Prg,
             if FunSentenceCreate and FunIndexCreate:
                 FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
                 IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
-                if IndexCreated:
-                    util_json_obj.doc_db_update(Prg, BaseNameOrigWithoutExtension) # and reload the updated db
-                    DbDocumentUpdated = True
+
+            if BaseNameOrigWithoutExtension not in Prg["DocumentsDb"]:
+                DocObj = {"url": "url_unknown",
+                          "source_name": "source_unknown",
+                          "license": "license_unknown"}
+                if BaseNameOrigWithoutExtension in DocsSampleInfo["docs"]:
+                    DocObj = DocsSampleInfo["docs"][BaseNameOrigWithoutExtension]
+
+                util_json_obj.doc_db_update_in_file_and_reload(Prg, BaseNameOrigWithoutExtension, DocObj) # and reload the updated db
 
             # Original: lists.
             #Arrays are more complex, less memory usage:
@@ -96,9 +109,6 @@ def document_objects_collect_from_working_dir(Prg,
         else:
             # print_dev(Prg, "in documents dir - not processed file type:", BaseNameText)
             pass
-
-    if DbDocumentUpdated: # then reload infos
-        Prg["DocumentsDb"] = util_json_obj.obj_from_file(Prg["FileDocumentsDb"])["docs"]
 
     return DocumentObjects
 

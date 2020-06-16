@@ -28,7 +28,7 @@ table {
     <meta charset="UTF-8">
     <title>sentence-seeker.net - Get sentence examples from docs</title>
 </head>
-<p id="body">
+<body id="body">
 <p><a href="https://www.facebook.com/groups/2449430305347843">Facebook group</a></p>
 <div class="seek">
     <label>Words: (development is in progress)</label><br>
@@ -57,12 +57,11 @@ table {
     var Words = document.getElementById("words").value;
 
     function source_display(BaseName){
-        var Basename__Displayed = {};
         DocInfo = PLACEHOLDER_DOCUMENT_JSON;
         for (var key in DocInfo.docs) {
             if (key == BaseName) {
                 Elem = DocInfo.docs[key];
-                return "<a href='"+Elem.url+"'>" + DocInfo["source_names"][Elem.source_name] + "</a>";
+                return "<a target='_blank' href='"+Elem.url+"'>" + DocInfo["source_names"][Elem.source_name] + "</a>";
             }
         }
         return BaseName;

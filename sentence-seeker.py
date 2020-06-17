@@ -49,7 +49,7 @@ document.docs_copy_samples_into_dir_if_necessary(Prg)
 seeker.be_ready_to_seeking(Prg)
 
 #sys.setprofile(util.TraceFunc)
-print(f"UI start: {Args.ui}")
+print(f"\nUI start: {Args.ui}")
 if Args.ui == "cli":
     ui_cli.user_interface_start(Prg, Args)
 

@@ -18,6 +18,7 @@ def doc_db_update_in_file_and_reload(Prg, FileWithoutExtension, DocObj=None):
     DocDb["docs"][FileWithoutExtension] = DocObj
     obj_to_file(Prg["FileDocumentsDb"], DocDb)
     Prg["DocumentsDb"] = obj_from_file(Prg["FileDocumentsDb"])["docs"]
+    Prg["FileDocumentsDbContent"] = json.dumps(DocDb, sort_keys=True, indent=4)
 
 # Used in tests
 # read wanted key from config file

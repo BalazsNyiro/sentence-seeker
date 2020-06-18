@@ -94,6 +94,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
                     "SentencesHeight": 30,
 
                     "FontTitle": ("Tempus Sans ITC", 12, "bold"),
+                    "FontSentenceResult": ("Tempus Sans ITC", 12, "bold"),
+                    "FontSentenceNormal": ("Tempus Sans ITC", 12, "normal"),
                     "FontUrl": ("Tempus Sans ITC", 12, "bold"),
                     "FontSource": ('Tempus Sans ITC', 9, 'normal'),
                     "BgWords": "#FFE2BC",
@@ -101,13 +103,15 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
                     "FgAreaSentences": "#101010",
                     "FgUrl": "#35D0BA", # "blue"
                     "FgSource": "#D92027",
-                    "FgSentence": "#7C3C21"   # https://colorhunt.co/palette/183389   browns
+                    "FgSentence": "#7C3C21",   # https://colorhunt.co/palette/183389   browns
+                    "FgSubSentenceResult": "#092532"
                 }
             },
             "WordSetsFounded": dict(),
             "ServerHost": "data.sentence-seeker.net" if socket.gethostname() == "vps" else "localhost",
             "ServerPort": 8000,
-            "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page."""
+            "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
+            "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"}
     }
 
     return Prg

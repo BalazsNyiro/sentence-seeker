@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import unittest, text, util_test, seeker, util, os, util_json_obj, copy
 
+import seeker_logic
+from document import document_obj
+
 class SeekTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
@@ -9,38 +12,119 @@ class SeekTests(util_test.SentenceSeekerTest):
     TxtBird = ("Birds are singing on the Tree but that bird is watching.\n"
                "One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n"
                "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"
-               "Have you ever seen a brown blackbird, like this one?\n")
+               "Have you ever seen a brown blackbird, like this one?\n"
+               "Nightingale is a special bird because it's song is\n"
+               "enjoyable and kind for every bird watcher.\n"
+               "Special nights visitors can hear the male birds' song.\n"
+               "These special events help to known the history of this special bird species for special audience.\n"
+               )
 
-    def test_group_maker(self):
-        self.maxDiff = None
-        if self._test_exec("test_group_maker"):
+    def test_token_split(self):
+        if self._test_exec("test_token_split"):
+            Query = "(apple   house,mouse)"
+            Wanted = ["(", "apple", "AND", "house", "AND", "mouse", ")"]
+            self.assertEqual(seeker_logic.token_split(Query), Wanted)
+
+    def test_token_split(self):
+        if self._test_exec("test_token_split"):
+            Query = "apple  house"
+            Wanted = ["apple", "AND", "house"]
+
+            TokensDetected = seeker_logic.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
+
+    def test_token_interpreter(self):
+        if self._test_exec("test_token_interpreter"):
             Prg = self.Prg
             FilePathBird = self.FilePathBird
 
-            ################# init ####################################
             PrgOrig = copy.deepcopy(Prg)
             util.file_del(FilePathBird)
             util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
 
             seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
-            #####################################################
+            ######################################################################
 
-            WordsWanted = ["looks", "like", "bird", "this"]
-            MatchNumsInSubsentences_ResultInfos, MatchNums__Descending, ResultsTotalNum = seeker.match_in_subsentence__results(Prg, WordsWanted)
+            def token_interpreter_wrapper(Prg, Query):
+                Tokens = seeker_logic.token_split(Query)
+                TokenGroups = seeker_logic.token_group_finder(Tokens)
+                DocObj = Prg["DocumentObjectsLoaded"]["test_document_bird"]["Index"]
 
-            GroupsSubsentenceBasedWanted = { # be careful: the linenum here means the linenum in sentence file, not in the orig!
-                # the first num:
-                # MatchNumMaxInSubsentences
-                2: [{'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('looks', 'like'), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
+                TokenProcessExplainOneDoc = []
+                return seeker_logic.token_interpreter(Prg, TokenGroups, DocObj, TokenProcessExplainOneDoc,  FirstRun=True)
 
-                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 3, 'WordsDetectedInSubsentence': ('like', 'this'), 'Sentence': 'Have you ever seen a brown blackbird, like this one?'}],
-                # FIXME: why we don't have \n at the end of this?
+            if True:
+                Query = "are"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0: True, 202: True}
+                self.assertEqual(Result, ResultWanted)
 
-                1: [{'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 0, 'WordsDetectedInSubsentence': ('bird',), 'Sentence': 'Birds are singing on the Tree but that bird is watching.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 1, 'WordsDetectedInSubsentence': ('this',), 'Sentence': 'One of these birds looks like a blackbird, the tree is brown and this one is stronger.\n'},
-                    {'FileSourceBaseName': 'test_group_maker_document', 'LineNumInSentenceFile': 2, 'WordsDetectedInSubsentence': ('this',), 'Sentence': "The other birds' feather is strong, brown colored, they are hidden in this foliage.\n"}
-                   ]
-            }
+                Query = "birds"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0:True, 100:True, 200:True, 500:True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "is"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0: True, 101: True, 200: True, 400: True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "strong"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {200: True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "birds is"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0:True, 200:True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "birds  is,strong"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {200:True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "(birds  is),strong"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {200:True}
+                self.assertEqual(Result, ResultWanted)
+
+                Query = "(birds  is,are),(strong)"
+                Result = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {}
+                self.assertEqual(Result, ResultWanted)
+
+            ##### OR ######
+            Query = "birds   OR  is"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {0: True, 100: True, 101: True, 200: True, 400: True, 500: True}
+            self.assertEqual(Result, ResultWanted)
+
+            Query = "(((strong OR are)))"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {0: True, 200: True, 202: True}
+            self.assertEqual(Result, ResultWanted)
+
+            Query = "(((strong OR are))) OR ()"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {0: True, 200: True, 202: True}
+            self.assertEqual(Result, ResultWanted)
+
+            Query = "(((strong OR are))) AND ()"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {}
+            self.assertEqual(Result, ResultWanted)
+
+            #########  COMPLEX QUERY ###########
+            Query = "(birds   OR  is) AND strong"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {200: True}
+            self.assertEqual(Result, ResultWanted)
+
+            Query = "(birds   OR  is) AND (strong OR are)"
+            Result = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {0: True, 200: True}
+            self.assertEqual(Result, ResultWanted)
 
             ################ restore original state #####################################
             util.file_del(FilePathBird)
@@ -48,37 +132,37 @@ class SeekTests(util_test.SentenceSeekerTest):
             util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileIndex"])
             util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileSentences"])
             self.Prg = PrgOrig
+
+    def test_match_in_subsentence_logic(self):
+        if self._test_exec("test_match_in_subsentence_logic"):
+            Prg = self.Prg
+            FilePathBird = self.FilePathBird
+
+            PrgOrig = copy.deepcopy(Prg)
+            util.file_del(FilePathBird)
+            util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
+
+            seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
+
+
+            Query = "(every OR special) AND (events OR (bird OR audience))"
+            TokensDetected = seeker_logic.token_split(Query)
+            TokensWanted = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
+            self.assertEqual(TokensDetected, TokensWanted)
+
+            TokenGroupsDetected = seeker_logic.token_group_finder(TokensDetected)
+            TokenGroupsWanted = [['every', 'OR', 'special'], 'AND', ['events', 'OR', ['bird', 'OR', 'audience']]]
+            self.assertEqual(TokenGroupsDetected, TokenGroupsWanted)
+
+            seeker_logic.seek(Prg, Query)
+
+
             ################ restore original state #####################################
-
-            # print("ResultsTotalNum:", ResultsTotalNum)
-
-            # print("Assert, Matchnums descending...")
-            # print("\nMatchNums__Descending", MatchNums__Descending)
-            self.assertEqual(MatchNums__Descending, [2, 1])
-
-            #print("Assert, MatchNumsInSubsentences_ResultInfos...")
-            #util.display_groups_matchnum_resultinfo(MatchNumsInSubsentences_ResultInfos)
-            # print("Group, wanted:")
-            # util.display_groups_matchnum_resultinfo(GroupsSubsentenceBasedWanted)
-            self.assertEqual(GroupsSubsentenceBasedWanted, MatchNumsInSubsentences_ResultInfos)
-
-
-    def test_words_wanted_clean(self):
-        self.maxDiff = None
-        if self._test_exec("test_words_wanted_clean"):
-            Prg = {"DocumentObjectsLoadedWordsCounterGlobal": {"apple":200, "tree": 100}}
-            WordsWanted = "apple, tree"
-            WordsWantedCleaned, WordsWantedSortedForDbSearch = text.words_wanted_clean(Prg, WordsWanted)
-            self.assertEqual(WordsWantedCleaned, ["apple", "tree"])
-
-            self.assertEqual(WordsWantedSortedForDbSearch, ["tree", "apple"])
-
-    def test_word_count_in_text(self):
-        self.maxDiff = None
-        if self._test_exec("test_word_count_in_text"):
-            Sentence = "There are appletrees in Apple's applegarden - the owner wanted to eat more apple"
-            WordCount = text.word_count_in_text("apple", Sentence)
-            self.assertEqual(WordCount, 2)
+            util.file_del(FilePathBird)
+            FileNameWithoutExtension = util.filename_without_extension(self.FileBaseNameBird)
+            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileIndex"])
+            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileSentences"])
+            self.Prg = PrgOrig
 
     def test_word_highlight(self):
         self.maxDiff = None
@@ -91,56 +175,9 @@ class SeekTests(util_test.SentenceSeekerTest):
             TextWanted = ">>Apple<< has a lot of >>apple<< in his >>Tree<< garden"
             self.assertEqual(Highlighted, TextWanted)
 
-    def test_seek_linenumbers_with_group_of_words(self):
+    def test_sentence_separator(self): # replace_abbreviations uses text_replace()
         self.maxDiff = None
-        if self._test_exec("test_seek_linenumbers_with_group_of_words"):
-            Prg = self.Prg
-            WordsWanted = "apple, tree"
-            Index = { "apple": [400, 300 ],
-                      "house": [100, 200 ],
-                      "mouse": [300, 400 ],
-                      "tree":  [  0, 400 ]
-                      }
-            WordsWanted, WordsWantedSortedForDbSearch = text.words_wanted_clean(Prg, WordsWanted)
-            ResultLineNumbers__WordsDetected = text.linenum__subsentnum__words__collect(Prg, WordsWanted, Index)
-
-            # print("\n>>>>>>",ResultLineNumbers__WordsDetected )
-
-            # 400 means: Line 4, subsentence 0
-            # 501 means: Line 5, subsentence 1
-            #   2 means: Line 0, Subsentence 2 - line 0 can't be represented, if value < 100, it means LineNum == 0
-            Correct = { 0:   ('tree',),
-                        300: ('apple',),
-                        400: ('apple', 'tree')
-                      }
-            self.assertEqual(ResultLineNumbers__WordsDetected, Correct)
-            self.assertEqual(WordsWanted, ['apple', 'tree'])
-
-            MatchNum__Source_Words = dict()
-            text.match_num_in_subsentence__result_obj(Prg, ResultLineNumbers__WordsDetected, "test_seek_linenumbers_with_group_of_words", MatchNum__Source_Words)
-            # print("\n>>>>>>", MatchNum__Source_Words)
-
-            # lengt with one result has two elem: in line0, result is 'tree' word, in line 3 'apple' word.
-            # length with 2 results has one elem: in line 2 both words is found
-            Wanted__MatchNum__SourceAndDetectedWords = {
-                 2: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 4,
-                      'WordsDetectedInSubsentence': ('apple', 'tree'),
-                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}],
-                 1: [{'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 3,
-                      'WordsDetectedInSubsentence': ('apple',),
-                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'},
-                     {'FileSourceBaseName': 'test_seek_linenumbers_with_group_of_words', 'LineNumInSentenceFile': 0,
-                      'WordsDetectedInSubsentence': ('tree',),
-                      'Sentence': 'DocumentsObjectsLoaded: test_seek_linenumbers_with_group_of_words is not loaded'}]
-            }
-            # util.display_groups_matchnum_resultinfo(MatchNum__Source_Words)
-            # util.display_groups_matchnum_resultinfo(Wanted__MatchNum__SourceAndDetectedWords)
-            self.assertEqual(MatchNum__Source_Words, Wanted__MatchNum__SourceAndDetectedWords)
-
-
-    def test_sentence_separator__a_naive_01(self): # replace_abbreviations uses text_replace()
-        self.maxDiff = None
-        if self._test_exec("test_sentence_separator__a_naive_01"):
+        if self._test_exec("test_sentence_separator"):
             Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
             Wanted = \
                 ["Mr and Mrs Jones visited their friends...",
@@ -183,7 +220,7 @@ def run_all_tests(Prg):
     SeekTests.Prg = Prg
 
     # I can't use self.Prg when I define class variable so I set FilePath from here
-    SeekTests.FilePathBird = os.path.join(Prg["DirDocuments"], "test_group_maker_document.txt")
-    SeekTests.FileBaseNameBird = "test_group_maker_document.txt"
+    SeekTests.FilePathBird = os.path.join(Prg["DirDocuments"], "test_document_bird.txt")
+    SeekTests.FileBaseNameBird = "test_document_bird.txt"
     unittest.main(module="test_seek", verbosity=2, exit=False)
 

@@ -8,7 +8,7 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config, util_test, document, argparse
 ##########################################################
 
-import seeker, ui_cli, ui_tkinter, ui_json, ui_html
+import seeker, ui_console, ui_tkinter, ui_json, ui_html
 from http.server import HTTPServer
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
@@ -16,7 +16,7 @@ Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')
 
-parser.add_argument("--ui", help="select user interface. (cli, tkinter, web)", action='store', default='tkinter')
+parser.add_argument("--ui", help="select user interface. (console, tkinter, web)", action='store', default='tkinter')
 Args = parser.parse_args()
 
 SysArgvOrig = sys.argv
@@ -36,6 +36,7 @@ if Args.test:
     test_text.run_all_tests(Prg)
     test_seek.run_all_tests(Prg)
     print("##################### TEST END #####################################")
+    sys.exit(0)
     print("\n"*22)
 
     # execute search from ui
@@ -50,8 +51,8 @@ seeker.be_ready_to_seeking(Prg)
 
 #sys.setprofile(util.TraceFunc)
 print(f"\nUI start: {Args.ui}")
-if Args.ui == "cli":
-    ui_cli.user_interface_start(Prg, Args)
+if Args.ui == "console":
+    ui_console.user_interface_start(Prg, Args)
 
 elif Args.ui == "tkinter":
     ui_tkinter.win_main(Prg, Args)

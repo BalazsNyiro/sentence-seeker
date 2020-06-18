@@ -18,9 +18,13 @@ body {
     margin-right:auto;
 }
 table {
+}
+
+#demo {
     width: 500px;
     margin-left:auto;
     margin-right:auto;
+    border: 3px;
 }
 
 </style>
@@ -32,7 +36,7 @@ table {
 <p><a href="https://www.facebook.com/groups/2449430305347843">Facebook group</a></p>
 <div class="seek">
     <label>Words: (development is in progress)</label><br>
-    <input type="text" id="words" name="words" value="looks, like, bird"><br>
+    <input type="text" id="words" name="words" value="PLACEHOLDER_QUERY_EXAMPLE" size="50"><br>
     <button id="button_seek" onclick="seek_func()">Get example sentences...</button>
     <p id="message"></p>
 
@@ -73,7 +77,7 @@ table {
     function seek_func(){
         message("<b>Seeking...</b>");
 
-        var obj, dbParam, xmlhttp, myObj, x, txt = "";
+        var obj, dbParam, xmlhttp, Results, x, txt = "";
         obj = { table: "sentences", limit: 20 };
         dbParam = JSON.stringify(obj);
         xmlhttp = new XMLHttpRequest();
@@ -82,10 +86,11 @@ table {
           wordHilitor = new Hilitor("body");
 
           if (this.readyState == 4 && this.status == 200) {
-            myObj = JSON.parse(this.responseText);
-            txt += "<table border='1'>";
-            for (x in myObj) {
-              txt += "<tr><td>" + myObj[x].Sentence + "<br /><div class='source_name'>" + source_display(myObj[x].FileSourceBaseName) + "</div>" + "</td></tr>";
+            Response = JSON.parse(this.responseText);
+            Results = Response.results;
+            txt += Response.token_process_explain + "<table border='1'>";
+            for (x in Results) {
+              txt += "<tr><td>" + Results[x].Sentence + "<br /><div class='source_name'>" + source_display(Results[x].FileSourceBaseName) + "</div>" + "</td></tr>";
             }
             txt += "</table>";
             document.getElementById("demo").innerHTML = txt;

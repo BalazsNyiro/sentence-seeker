@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import time, urllib.parse
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler
 import json
-import seeker
+import seeker_logic
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -18,7 +18,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         QueryParams = urllib.parse.parse_qs(o.query)
         print(QueryParams)
         if "words" in QueryParams:
-            _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(self.Prg, QueryParams["words"][0])
+            TokenProcessExplainSumma, _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(self.Prg, QueryParams["words"][0])
             Reply = MatchNums__ResultInfo[:self.Prg["LimitDisplayedSampleSentences"]]
 
         self.send_response(200)

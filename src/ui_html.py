@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import os, urllib.parse, util, seeker, json
+import os, urllib.parse, util, seeker_logic
 from http.server import BaseHTTPRequestHandler
+import util_ui
 
 DirHtml = os.path.join("ui", "html")
 
@@ -25,6 +26,7 @@ def file_local_read(File, EncodeUtf8=True, Mode="r"):
         Cache[Path] = Content
 
         return Content
+
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -54,9 +56,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         if Req.path.split("?")[0] == "/seek":
             if "words" in QueryParams:
-                _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(self.Prg, QueryParams["words"][0])
-                Reply = MatchNums__ResultInfo[:self.Prg["LimitDisplayedSampleSentences"]]
-                Reply = json.dumps(Reply).encode('UTF-8')
+                TokenProcessExplainSumma, _WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(self.Prg, QueryParams["words"][0], SentenceFillInResult=True)
+
+                Reply = util_ui.ui_json_answer(self.Prg, MatchNums__ResultInfo, TokenProcessExplainSumma, NewLine="<br />")
 
                 self.send_response(200)
                 self.content_type("text/plain")
@@ -73,7 +75,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     ("PLACEHOLDER_DOCUMENT_JSON", self.Prg["FileDocumentsDbContent"]),
                     ("PLACEHOLDER_HOST", self.Prg["ServerHost"]),
                     ("PLACEHOLDER_PORT", str(self.Prg["ServerPort"])),
-                    ("PLACEHOLDER_LICENSE", License)
+                    ("PLACEHOLDER_LICENSE", License),
+                    ("PLACEHOLDER_QUERY_EXAMPLE", self.Prg["QueryExamples"]["bird_or_cat"])
                 )
                 Reply = util.replace_pairs(Reply, Replaces)
 

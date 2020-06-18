@@ -125,102 +125,27 @@ def subsentences(Sentence):
         Sentence = Sentence.replace(SubSep, ";")
     return Sentence.split(";")
 
-# Tested
-_PatternWordsWithBoundary = dict()
-def word_count_in_text(Word, Text):
-    if Word not in _PatternWordsWithBoundary:
-        _PatternWordsWithBoundary[Word] = re.compile(fr'\b{Word}\b', re.IGNORECASE)
-    Pattern = _PatternWordsWithBoundary[Word]
-    return len(Pattern.findall(Text))
+def linenum_subsentencenum_get(LineNum_SubSentenceNum):
+    SubSentenceNum = LineNum_SubSentenceNum % 100
 
-# Tested in: test_seek_linenumbers_with_group_of_words
-def match_num_in_subsentence__result_obj(Prg, LineNum_SubSentenceNum__WordsDetected, FileSourceBaseName, MatchNumInSubsentences__Results):
-    for LineNum_SubSentenceNum, WordsDetectedInSubsentence in LineNum_SubSentenceNum__WordsDetected.items():
+    if LineNum_SubSentenceNum < 100:  # I store 2 numbers info in one number and LineNum can be zero, too
+        return 0, SubSentenceNum   # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
+    # and if the num is smaller than 100 it means LineNum = 0
 
-        if LineNum_SubSentenceNum < 100: # I store 2 numbers info in one number and LineNum can be zero, too
-            LineNum = 0                  # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
-        else:                            # and if the num is smaller than 100 it means LineNum = 0
-            SubsentenceNum = LineNum_SubSentenceNum % 100
-            LineNum = (LineNum_SubSentenceNum - SubsentenceNum)//100
+    return (LineNum_SubSentenceNum - SubSentenceNum) // 100, SubSentenceNum
 
-        NumOfDetected = len(WordsDetectedInSubsentence)
 
-        Source__LineNum__Words = {"FileSourceBaseName": FileSourceBaseName,
-                                  "LineNumInSentenceFile": LineNum,
-                                  "WordsDetectedInSubsentence": WordsDetectedInSubsentence,
-                                  "Sentence": text.sentence_loaded(Prg, FileSourceBaseName, LineNum)}
-
-        # TODO: skip poor results if we have enough good ones
-        if NumOfDetected not in MatchNumInSubsentences__Results:
-            MatchNumInSubsentences__Results[NumOfDetected] = [Source__LineNum__Words]
-        else:
-            MatchNumInSubsentences__Results[NumOfDetected].append(Source__LineNum__Words)
-
-# Tested - Words can be separated with comma or space chars
-# It's a separated step from result_object_building
-def linenum__subsentnum__words__collect(Prg, WordsWanted, Index):
-    LineNum_SubsentenceNum__WordsDetected = dict()
-    WordSetsFounded = Prg["WordSetsFounded"]
-
-    for WordWanted in WordsWanted:
-        for LineNum_SubSentenceNum in Index.get(WordWanted, []):
-
-            ####################################################################################
-            #  KEEP THIS PART IN WORKING STATE
-            ############ This is the pure logic - but here we always create new lists with words
-            # if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
-            #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = [WordWanted] # always create new lists
-            #     continue
-
-            # if WordWanted not in LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]:     # Save it only once if the words
-            #     LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum].append(WordWanted)    # is more than once in a sentence
-            ####################################################################################
-
-            ### Here I store the possible word set variations in a common global store,
-            ### and same sets are created only ONCE instead of a lot of lists with same elems
-            if LineNum_SubSentenceNum not in LineNum_SubsentenceNum__WordsDetected:
-                WordSet = (WordWanted,)
-            else:
-                WordSet = LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum]
-                if WordWanted not in WordSet:
-                    WordSet = WordSet + (WordWanted,)
-
-            LineNum_SubsentenceNum__WordsDetected[LineNum_SubSentenceNum] = wordset_save_and_get_saved(WordSetsFounded, WordSet)
-
-    return LineNum_SubsentenceNum__WordsDetected
-
-# TODO: TEST IT
-# two tuples with same values can have different id -
-# I want to use tuple from stored wordsets
-def wordset_save_and_get_saved(WordSetsFounded, WordSet):
-    if WordSet not in WordSetsFounded:
-        WordSetsFounded[WordSet] = WordSet # the key and the value are same. very rare but valid
-        return WordSet
+def result_obj(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
+    if SentenceFillInResult: # in html server the sentence is important in result
+        Sentence = sentence_loaded(Prg, FileSourceBaseName, LineNumInSentenceFile)
     else:
-        return WordSetsFounded[WordSet]
-
-# Tested
-def words_wanted_clean(Prg, WordsOneString):
-    WordsCleanedOriginalOrder = []
-    WordsWanted = WordsOneString.replace(",", " ").split()
-    for Word in WordsWanted:
-        Word = Word.strip().lower()
-        if Word and Word not in WordsCleanedOriginalOrder:
-            WordsCleanedOriginalOrder.append(Word)
-
-    WordsCounter = Prg["DocumentObjectsLoadedWordsCounterGlobal"]
-    Tmp = dict()
-    for Word in WordsCleanedOriginalOrder:
-        UsedInTexts = 100 # default value, based on experience
-        if Word in WordsCounter:   UsedInTexts = WordsCounter[Word]
-        if UsedInTexts not in Tmp: Tmp[UsedInTexts] = list()
-        Tmp[UsedInTexts].append(Word)
-
-    WordsCleanedSorted_RareToOftenForDbSearch = []
-    for Key in util.dict_key_sorted(Tmp, Reverse=False):
-        WordsCleanedSorted_RareToOftenForDbSearch.extend(Tmp[Key])
-
-    return WordsCleanedOriginalOrder, WordsCleanedSorted_RareToOftenForDbSearch
+        Sentence = "-"
+    Obj = {"FileSourceBaseName": FileSourceBaseName,
+           "LineNumInSentenceFile": LineNumInSentenceFile,
+           "SubSentenceNum": SubSentenceNum,
+           "Sentence": Sentence
+            }
+    return Obj
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import seeker, text, util_ui
+import seeker_logic, text, util_ui
 
 def seek_and_display(Prg, Wanted):
-    _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(Prg, Wanted)
-    sentence_result_all_display(Prg, MatchNums__ResultInfo)
+    TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+    print(util_ui.token_explain_summa_to_text(TokenProcessExplainSumma))
+    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
     print(f"Results Total: {ResultsTotalNum}")
 
 def user_interface_start(Prg, Args):
@@ -18,7 +19,7 @@ def user_interface_start(Prg, Args):
     #########################################
 
 def user_welcome_message(Prg, UserInterface):
-    if UserInterface == "cli":
+    if UserInterface == "console":
         print(Prg["Licenses"])
         print("interesting search: looks, like, bird")
         print("interesting search: elephant")
@@ -26,16 +27,17 @@ def user_welcome_message(Prg, UserInterface):
         print("Exit: press enter, with empty wanted word")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
-def sentence_result_one_display(Prg, Result):
-    WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
+def sentence_result_one_display(Prg, Result, WordsMaybeDetected ):
 
-    LineResultColored = text.word_highlight(WordsDetectedInSubsentence, Sentence, HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg))
-    print(f"{color(Prg, 'Bright Green')}[{WordsDetectedNum}]{color_reset(Prg)} {LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
+    Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
+
+    LineResultColored = Sentence["subsentences_before"] + text.word_highlight(WordsMaybeDetected, Sentence["subsentence_result"], HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg)) + Sentence["subsentences_after"]
+    print(f"{LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
     print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
-def sentence_result_all_display(Prg, SentenceObjects):
+def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):
-        sentence_result_one_display(Prg, SentenceObj)
+        sentence_result_one_display(Prg, SentenceObj, WordsMaybeDetected)
         if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
             break
 

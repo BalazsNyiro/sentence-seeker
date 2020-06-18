@@ -2,8 +2,6 @@
 import util, os
 import util_json_obj
 from os.path import isfile
-import array
-
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
@@ -90,16 +88,14 @@ def document_objects_collect_from_working_dir(Prg,
             Index = dict()
             if isfile(FileIndex):
                 for Word, IndexList  in util_json_obj.obj_from_file(FileIndex).items():
-                    Index[Word] = array.array("I", IndexList)
+                    Index[Word] = util.list_to_array(IndexList)
 
-            DocumentObj = { "FileOrigPathAbs": FileOrig,  # if you use pdf/html, the original
-                            "FileTextPathAbs": FileText,  # and text files are different
-
-                            "FileIndex": FileIndex,
-                            "FileSentences": FileSentences,
-                            "Index": Index,
-                            "Sentences": util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else []
-            }
+            DocumentObj = document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
+                                       FileTextPathAbs=FileText,  # and text files are different
+                                       FileIndex=FileIndex,
+                                       FileSentences=FileSentences,
+                                       Index=Index,
+                                       Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
 
             DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename
 
@@ -111,6 +107,16 @@ def document_objects_collect_from_working_dir(Prg,
             pass
 
     return DocumentObjects
+
+def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", Index="", Sentences=""):
+    return {"FileOrigPathAbs": FileOrigPathAbs,  # if you use pdf/html, the original
+            "FileTextPathAbs": FileTextPathAbs,  # and text files are different
+            "FileIndex": FileIndex,
+            "FileSentences": FileSentences,
+            "Index": Index,
+            "Sentences": Sentences
+           }
+
 
 # TODO: TEST it
 def docs_copy_samples_into_dir_if_necessary(Prg):

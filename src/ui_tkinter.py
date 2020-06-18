@@ -2,8 +2,7 @@
 import tkinter as tk
 import tkinter.messagebox
 import webbrowser
-import seeker, util_ui
-import re
+import seeker_logic, util_ui
 
 WordsEntry = None
 SentencesArea = None
@@ -13,9 +12,11 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker.seek(PrgGlob, Words)
+    TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words)
     # sentence_result_all_display(Prg, MatchNums__ResultInfo)
     # print(f"Results Total: {ResultsTotalNum}")
+    TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma)
+    SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
     SentencesArea.insert(tk.END, f"words: {Words}\n\n", "TextTitle")
     SentencesArea.insert(tk.END, "Sentences:\n", "TextTitle")
 
@@ -75,8 +76,13 @@ class CustomText(tk.Text):
             self.tag_add(tag, "matchStart", "matchEnd")
 
 def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
-    WordsDetectedInSubsentence, Url, Sentence, WordsDetectedNum, Source = util_ui.sentence_get_from_result(Prg, Result)
-    SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
+    Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
+
+    # SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
+    SentencesArea.insert(tk.END, Sentence["subsentences_before"], "SentenceDisplayed")
+    SentencesArea.insert(tk.END, Sentence["subsentence_result"], "SentenceDisplayedResult")
+    SentencesArea.insert(tk.END, Sentence["subsentences_after"] + "\n", "SentenceDisplayed")
+
     SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
 
     TagName = f"tag_{DisplayedCounter}"
@@ -113,10 +119,17 @@ def win_main(Prg, Args):
 
     global WordsEntry
     WordsEntry = tk.Entry(Root, background=Theme["BgWords"])
-    WordsEntry.focus()
+
+    WordsEntry.focus() # focus
+    WordsEntry.delete(0, tk.END)
+    WordsEntry.insert(0, Prg["QueryExamples"]["bird_or_cat"])
+
     WordsEntry.bind("<Return>", seek_and_display)
-    WordsEntry.bind("<FocusIn>", lambda _: WordsEntry.delete(0, 999)) # clear when clicked
-    WordsEntry.grid(row=0, column=1, sticky=tk.W)
+
+    # don't delete entry because user maybe wants to edit prev query
+    #WordsEntry.bind("<FocusIn>", lambda _: WordsEntry.delete(0, 999)) # clear when clicked
+
+    WordsEntry.grid(row=0, column=1, sticky=tk.W, ipadx=220, ipady=0)
 
     tk.Button(Root, text="Get example sentences", command=seek_and_display).grid(row=2, column=1, sticky=tk.W)
 
@@ -130,9 +143,12 @@ def win_main(Prg, Args):
     scroll.grid(row=3, column=2, sticky=tk.NS)
 
     SentencesArea.tag_configure("TextTitle", font=("Verdana", 20, "bold"))
+    SentencesArea.tag_configure("SentenceDisplayedResult",
+                                foreground=Theme["FgSubSentenceResult"],
+                                font=Theme["FontSentenceResult"])
     SentencesArea.tag_configure("SentenceDisplayed",
                                 foreground=Theme["FgSentence"],
-                                font=Theme["FontTitle"])
+                                font=Theme["FontSentenceNormal"])
     SentencesArea.tag_configure("UrlDisplayed",
                                 foreground=Theme["FgUrl"],
                                 font=Theme["FontUrl"])

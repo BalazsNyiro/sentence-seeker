@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
-import sys
+import sys, array, re
+
+ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ABC_Eng_Lower = ABC_Eng_Upper.lower()
 
 # Tested
 def shell(Cmd):
@@ -264,6 +267,10 @@ def print_dev(Prg, *args):
         if Prg["PrintForDeveloper"]:
             print(*args)
 
+def list_to_array(L):
+    return array.array("I",L)
+
+
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
     print_dev(Prg, "\nLog received:", Msg)
@@ -453,9 +460,11 @@ def dict_mem_usage(Dict, Level=0):
         else:
             print(Key, sys.getsizeof(Val), type(Val))
 
-
 def replace_pairs(Txt, Replaces):
     for Old, New in Replaces:
         Txt = Txt.replace(Old, New)
     return Txt
 
+def replace_regexp(pattern, new_text, txt):
+    p = re.compile(pattern)
+    return p.sub(new_text, txt)

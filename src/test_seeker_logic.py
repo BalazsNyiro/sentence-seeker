@@ -65,8 +65,12 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                 TokenGroups = seeker_logic.token_group_finder(Tokens)
                 DocObj = Prg["DocumentObjectsLoaded"]["test_document_bird"]["Index"]
 
-                TokenProcessExplainOneDoc = []
-                return seeker_logic.token_interpreter(Prg, TokenGroups, DocObj, TokenProcessExplainOneDoc,  FirstRun=True)
+                Result, Explain = seeker_logic.token_interpreter(TokenGroups, DocObj)
+
+                print("\n\n\n.......................")
+                print(Query)
+                print(Explain)
+                return Result
 
             if True:
                 Query = "are"

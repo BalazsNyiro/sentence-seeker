@@ -58,52 +58,74 @@ def token_group_finder(Tokens):
 #  NOT
 #  AND
 #  OR
-def token_interpreter(Prg, Tokens, DocIndex, TokenProcessExplain, FirstRun=False):
-    if FirstRun:
-        Tokens = copy.deepcopy(Tokens) # we work with Tokens, and separate it from original Token Groups
 
-    if isinstance(Tokens, list):
-        while "AND" in Tokens:
-            operator_exec_left_right("AND", Prg, Tokens, DocIndex, index_intersect, TokenProcessExplain)
+# TESTED   Tokens is a list with Token elems
+def token_interpreter(TokensOrig, DocIndex):
 
-        while "OR" in Tokens:
-            operator_exec_left_right("OR", Prg, Tokens, DocIndex, index_union, TokenProcessExplain)
+    Explain = []
 
-        # ['birds']   simple word or dict stays at the end in the list
-        if len(Tokens):
-            return token_interpreter(Prg, Tokens[0], DocIndex, TokenProcessExplain)
-        return {} # Tokens = ["(", ")"] without any elem, no token
+    Tokens = []
 
-    # at the end only one token can stay as result
-    if isinstance(Tokens, str):
-        LineNums = index_list_to_dict(Tokens, DocIndex)
-        explain_add(Tokens, LineNums, TokenProcessExplain)
-        return LineNums
+    for Token in TokensOrig:
 
-    elif isinstance(Tokens, dict):
-        return Tokens
+        if is_list(Token):
+            ResultInGroup, ExplainGroup = token_interpreter(Token, DocIndex)
+            Tokens.append(ResultInGroup)
+            Explain.append(ExplainGroup)
 
-def explain_add(WordOrToken, Result, TokenProcessExplain):
-    TokenProcessExplain.append((WordOrToken, len(Result.keys())))
+        elif operator(Token):
+            Tokens.append(Token)
+            Explain.append(Token)
 
-def operator_exec_left_right(Operator, Prg, Tokens, DocIndex, FunOperator, TokenProcessExplain):
+        elif is_str_but_not_operator(Token):
+            LineNums = index_list_to_dict(Token, DocIndex)
+            Tokens.append(LineNums)
+            Explain.append(Token)
+
+    while "AND" in Tokens:
+        Tokens = operator_exec_left_right("AND", Tokens, index_intersect)
+
+    while "OR" in Tokens:
+        Tokens = operator_exec_left_right("OR", Tokens, index_union)
+
+    RetVal = {} # len tokens == 0
+
+    if len(Tokens) == 1:
+        RetVal = Tokens[0]
+
+    return RetVal, tuple(Explain)  # empty group, example: "()"
+
+def is_str_but_not_operator(Token):
+    return (is_str(Token) and not operator(Token))
+
+def operator(Token):
+    if is_str(Token): # if we got a string, then check in the Operators, else False
+        return Token in Operators_Meaning
+    return False
+
+def is_list(Obj):
+    return isinstance(Obj, list)
+
+def is_str(Obj):
+    return isinstance(Obj, str)
+
+def is_dict(Obj):
+    return isinstance(Obj, dict)
+
+def is_tuple(Obj):
+    return isinstance(Obj, tuple)
+
+def operator_exec_left_right(Operator, TokensOrig, FunOperator):
+    Tokens = copy.deepcopy(TokensOrig)
     IdOperator = Tokens.index(Operator)
 
-    TokenRight = Tokens.pop(IdOperator + 1)
-    Tokens.pop(IdOperator)  # remove And
+    TokenRight = Tokens.pop(IdOperator + 1) # remove right param
+    Tokens.pop(IdOperator)  # remove the operator
     TokenLeft = Tokens[IdOperator - 1]
 
-    LineNumsLeft = token_interpreter(Prg, TokenLeft, DocIndex, TokenProcessExplain)
-    TokenNameLeft = TokenProcessExplain[-1][0]
-
-    LineNumsRight = token_interpreter(Prg, TokenRight, DocIndex, TokenProcessExplain)
-    TokenNameRight = TokenProcessExplain[-1][0]
-
-    LineNumsOp = FunOperator(LineNumsLeft, LineNumsRight)
-    OperatorInfo = f"{TokenNameLeft} {Operator} {TokenNameRight}"
-    explain_add(OperatorInfo, LineNumsOp, TokenProcessExplain)
-
+    LineNumsOp = FunOperator(TokenLeft, TokenRight)
     Tokens[IdOperator - 1] = LineNumsOp
+    return Tokens
 
 def index_list_to_dict(Word, DocIndex):
     Result = dict()
@@ -164,8 +186,7 @@ def seek(Prg, Query, SentenceFillInResult=False):
         #if FileSourceBaseName != "LFrankBaum__WonderfulWizardOz__gutenberg_org_pg55":
         #    continue
 
-        TokenProcessExplainOneDoc = []
-        Results = token_interpreter(Prg, TokenGroups, DocObj["Index"], TokenProcessExplainOneDoc, FirstRun=True)
+        Results, TokenProcessExplainOneDoc = token_interpreter(TokenGroups, DocObj["Index"])
         TokenProcessExplainPerDoc[FileSourceBaseName] = TokenProcessExplainOneDoc
 
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:

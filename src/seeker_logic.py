@@ -36,6 +36,7 @@ def token_split(Query):
             TokenPrev = Token
     return Tokens
 
+# TESTED
 def token_group_finder(Tokens):
     Group = []
     while Tokens:
@@ -60,10 +61,8 @@ def token_group_finder(Tokens):
 def token_interpreter(Prg, Tokens, DocIndex, TokenProcessExplain, FirstRun=False):
     if FirstRun:
         Tokens = copy.deepcopy(Tokens) # we work with Tokens, and separate it from original Token Groups
-    # print("\ninterpreter: ", Tokens)
 
     if isinstance(Tokens, list):
-        # while operator in Tokens
         while "AND" in Tokens:
             operator_exec_left_right("AND", Prg, Tokens, DocIndex, index_intersect, TokenProcessExplain)
 

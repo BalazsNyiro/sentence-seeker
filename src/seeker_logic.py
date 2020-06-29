@@ -62,25 +62,20 @@ def token_group_finder(Tokens):
 # TESTED   Tokens is a list with Token elems
 def token_interpreter(TokensOrig, DocIndex):
 
-    Explain = []
-
     Tokens = []
 
     for Token in TokensOrig:
 
         if is_list(Token):
-            ResultInGroup, ExplainGroup = token_interpreter(Token, DocIndex)
+            ResultInGroup = token_interpreter(Token, DocIndex)
             Tokens.append(ResultInGroup)
-            Explain.append(ExplainGroup)
 
         elif operator(Token):
             Tokens.append(Token)
-            Explain.append(Token)
 
         elif is_str_but_not_operator(Token):
             LineNums = index_list_to_dict(Token, DocIndex)
             Tokens.append(LineNums)
-            Explain.append(Token)
 
     while "AND" in Tokens:
         Tokens = operator_exec_left_right("AND", Tokens, index_intersect)
@@ -93,7 +88,7 @@ def token_interpreter(TokensOrig, DocIndex):
     if len(Tokens) == 1:
         RetVal = Tokens[0]
 
-    return RetVal, tuple(Explain)  # empty group, example: "()"
+    return RetVal  # empty group, example: "()"
 
 def is_str_but_not_operator(Token):
     return (is_str(Token) and not operator(Token))
@@ -186,8 +181,8 @@ def seek(Prg, Query, SentenceFillInResult=False):
         #if FileSourceBaseName != "LFrankBaum__WonderfulWizardOz__gutenberg_org_pg55":
         #    continue
 
-        Results, TokenProcessExplainOneDoc = token_interpreter(TokenGroups, DocObj["Index"])
-        TokenProcessExplainPerDoc[FileSourceBaseName] = TokenProcessExplainOneDoc
+        Results = token_interpreter(TokenGroups, DocObj["Index"])
+        # TokenProcessExplainPerDoc[FileSourceBaseName] = TokenProcessExplainOneDoc
 
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)

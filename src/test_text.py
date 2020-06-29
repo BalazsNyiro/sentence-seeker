@@ -33,6 +33,29 @@ class TextTests(util_test.SentenceSeekerTest):
             Text = "apple    \t\t\nmelon"
             self.assertEqual("apple melon", text.replace_whitespaces_to_one_space(Text))
 
+    def test_word_highlight(self):
+        self.maxDiff = None
+        if self._test_exec("test_word_highlight"):
+            # Prg = self.Prg
+            Text = "Apple has a lot of apple in his Tree garden"
+            Words = ["apple", "tree"]
+            Highlighted = text.word_highlight(Words, Text)
+
+            TextWanted = ">>Apple<< has a lot of >>apple<< in his >>Tree<< garden"
+            self.assertEqual(Highlighted, TextWanted)
+
+    def test_sentence_separator(self): # replace_abbreviations uses text_replace()
+        self.maxDiff = None
+        if self._test_exec("test_sentence_separator"):
+            Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
+            Wanted = \
+                ["Mr and Mrs Jones visited their friends...",
+                 '"Lisa and Pete lived in a big house, in Boston, did they?"',
+                 "Yes, they did"]
+            Sentences = text.sentence_separator(Txt)
+            self.assertEqual(Wanted, Sentences)
+
+
 def run_all_tests(Prg):
     TextTests.Prg = Prg
     unittest.main(module="test_text", verbosity=2, exit=False)

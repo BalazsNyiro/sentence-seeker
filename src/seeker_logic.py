@@ -10,6 +10,7 @@ Operators_Meaning = {"(": "set_create_new_begin",
 # ? MINUS,
 # ? NOT
 
+# TESTED
 def words_wanted_from_tokens(Tokens):
     Words = [] # select only lowercase words from tokens
     for Token in Tokens:
@@ -17,7 +18,7 @@ def words_wanted_from_tokens(Tokens):
             Words.append(Token)
     return Words
 
-
+# TESTED
 def token_split(Query):
     Query = Query.replace(",", " AND ")
     for Operator in Operators_Meaning.keys():

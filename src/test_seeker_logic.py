@@ -15,11 +15,23 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                "These special events help to known the history of this special bird species for special audience.\n"
                )
 
+    def test_words_wanted_from_tokens(self):
+        if self._test_exec("test_words_wanted_from_tokens"):
+            Tokens = ["(", "apple", "AND", "orange", ")"]
+            Words = seeker_logic.words_wanted_from_tokens(Tokens)
+            self.assertEqual(Words, ["apple", "orange"])
+
     def test_token_split(self):
         if self._test_exec("test_token_split"):
             Query = "(apple   house,mouse)"
             Wanted = ["(", "apple", "AND", "house", "AND", "mouse", ")"]
             self.assertEqual(seeker_logic.token_split(Query), Wanted)
+
+            Query = "(every OR special) AND (events OR (bird OR audience))"
+            TokensDetected = seeker_logic.token_split(Query)
+            TokensWanted = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
+            self.assertEqual(TokensDetected, TokensWanted)
+
 
     def test_token_split_and(self):
         if self._test_exec("test_token_split_and"):
@@ -28,6 +40,13 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
             TokensDetected = seeker_logic.token_split(Query)
             self.assertEqual(TokensDetected, Wanted)
+
+    def test_token_group_finder(self):
+        if self._test_exec("test_token_group_finder"):
+            Tokens = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
+            TokenGroupsDetected = seeker_logic.token_group_finder(Tokens)
+            TokenGroupsWanted = [['every', 'OR', 'special'], 'AND', ['events', 'OR', ['bird', 'OR', 'audience']]]
+            self.assertEqual(TokenGroupsDetected, TokenGroupsWanted)
 
     def test_token_interpreter(self):
         if self._test_exec("test_token_interpreter"):
@@ -121,37 +140,6 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Result = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0: True, 200: True}
             self.assertEqual(Result, ResultWanted)
-
-            ################ restore original state #####################################
-            util.file_del(FilePathBird)
-            FileNameWithoutExtension = util.filename_without_extension(self.FileBaseNameBird)
-            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileIndex"])
-            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileSentences"])
-            self.Prg = PrgOrig
-
-    def test_match_in_subsentence_logic(self):
-        if self._test_exec("test_match_in_subsentence_logic"):
-            Prg = self.Prg
-            FilePathBird = self.FilePathBird
-
-            PrgOrig = copy.deepcopy(Prg)
-            util.file_del(FilePathBird)
-            util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
-
-            seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
-
-
-            Query = "(every OR special) AND (events OR (bird OR audience))"
-            TokensDetected = seeker_logic.token_split(Query)
-            TokensWanted = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
-            self.assertEqual(TokensDetected, TokensWanted)
-
-            TokenGroupsDetected = seeker_logic.token_group_finder(TokensDetected)
-            TokenGroupsWanted = [['every', 'OR', 'special'], 'AND', ['events', 'OR', ['bird', 'OR', 'audience']]]
-            self.assertEqual(TokenGroupsDetected, TokenGroupsWanted)
-
-            seeker_logic.seek(Prg, Query)
-
 
             ################ restore original state #####################################
             util.file_del(FilePathBird)

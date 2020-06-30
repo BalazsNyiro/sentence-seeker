@@ -59,36 +59,35 @@ def token_group_finder(Tokens):
 #  AND
 #  OR
 
+
+
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(TokensOrig, DocIndex):
+def token_interpreter(Tokens, DocIndex):
 
-    Tokens = []
+    Results = []
 
-    for Token in TokensOrig:
+    for Token in Tokens:
 
         if is_list(Token):
-            ResultInGroup = token_interpreter(Token, DocIndex)
-            Tokens.append(ResultInGroup)
+            Result = token_interpreter(Token, DocIndex)
 
-        elif operator(Token):
-            Tokens.append(Token)
+        if operator(Token):
+            Result = Token
 
-        elif is_str_but_not_operator(Token):
-            LineNums = index_list_to_dict(Token, DocIndex)
-            Tokens.append(LineNums)
+        if is_str_but_not_operator(Token):
+            Result = index_list_to_dict(Token, DocIndex)
 
-    while "AND" in Tokens:
-        Tokens = operator_exec_left_right("AND", Tokens, index_intersect)
+        Results.append(Result)
 
-    while "OR" in Tokens:
-        Tokens = operator_exec_left_right("OR", Tokens, index_union)
+    for Operator, Fun in Operator_Functions:
+        while Operator in Results:
+            Results = operator_exec_left_right(Operator, Results, Fun)
 
-    RetVal = {} # len tokens == 0
+    if Results:
+        return Results[0]
+    return {}  # empty group, example: "()"
 
-    if len(Tokens) == 1:
-        RetVal = Tokens[0]
 
-    return RetVal  # empty group, example: "()"
 
 def is_str_but_not_operator(Token):
     return (is_str(Token) and not operator(Token))
@@ -144,6 +143,7 @@ def index_union(ResultLeft, ResultRight):
         Result[Key] = True
     return Result
 
+Operator_Functions = (("AND", index_intersect), ("OR", index_union))
 
 
 

@@ -59,34 +59,37 @@ def token_group_finder(Tokens):
 #  AND
 #  OR
 
-
-
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(Tokens, DocIndex):
-
+def token_interpreter(Tokens, DocIndex, Explains):
     Results = []
 
     for Token in Tokens:
 
         if is_list(Token):
-            Result = token_interpreter(Token, DocIndex)
+            Result = token_interpreter(Token, DocIndex, Explains)
 
         if operator(Token):
             Result = Token
 
         if is_str_but_not_operator(Token):
-            Result = index_list_to_dict(Token, DocIndex)
+            Result = (index_list_to_dict(Token, DocIndex), Token) # ResultDict, TokenName
+            Explains.append((Token, len(Result[0])))
 
         Results.append(Result)
 
     for Operator, Fun in Operator_Functions:
         while Operator in Results:
-            Results = operator_exec_left_right(Operator, Results, Fun)
+            Results = operator_exec_left_right(Operator, Results, Fun, Explains)
 
     if Results:
-        return Results[0]
-    return {}  # empty group, example: "()"
+        ResultDict = Results[0][0]
+        ResultName = f"{Results[0][1]}"
+    else:
+        ResultDict = {}
+        ResultName = "(empty_group)"  # empty group, example: "()"
 
+    #Explains.append((ResultName, len(ResultDict)))
+    return (ResultDict, ResultName)
 
 
 def is_str_but_not_operator(Token):
@@ -109,16 +112,19 @@ def is_dict(Obj):
 def is_tuple(Obj):
     return isinstance(Obj, tuple)
 
-def operator_exec_left_right(Operator, TokensOrig, FunOperator):
+def operator_exec_left_right(Operator, TokensOrig, FunOperator, Explains):
     Tokens = copy.deepcopy(TokensOrig)
     IdOperator = Tokens.index(Operator)
 
-    TokenRight = Tokens.pop(IdOperator + 1) # remove right param
+    TokenRight, NameRight = Tokens.pop(IdOperator + 1) # remove right param
     Tokens.pop(IdOperator)  # remove the operator
-    TokenLeft = Tokens[IdOperator - 1]
+    TokenLeft, NameLeft = Tokens[IdOperator - 1]
 
     LineNumsOp = FunOperator(TokenLeft, TokenRight)
-    Tokens[IdOperator - 1] = LineNumsOp
+    ResultName = f"({NameLeft} {Operator} {NameRight})"
+    Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
+
+    Explains.append((ResultName, len(LineNumsOp)))
     return Tokens
 
 def index_list_to_dict(Word, DocIndex):
@@ -181,8 +187,9 @@ def seek(Prg, Query, SentenceFillInResult=False):
         #if FileSourceBaseName != "LFrankBaum__WonderfulWizardOz__gutenberg_org_pg55":
         #    continue
 
-        Results = token_interpreter(TokenGroups, DocObj["Index"])
-        # TokenProcessExplainPerDoc[FileSourceBaseName] = TokenProcessExplainOneDoc
+        Explains = []
+        Results, _ResultName = token_interpreter(TokenGroups, DocObj["Index"], Explains)
+        TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)

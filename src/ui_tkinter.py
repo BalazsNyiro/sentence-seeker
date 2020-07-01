@@ -13,8 +13,7 @@ def seek_and_display(KeypressEvent=""):
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
     TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words)
-    # sentence_result_all_display(Prg, MatchNums__ResultInfo)
-    # print(f"Results Total: {ResultsTotalNum}")
+
     TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
     SentencesArea.insert(tk.END, f"words: {Words}\n\n", "TextTitle")

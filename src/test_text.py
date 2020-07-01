@@ -5,12 +5,12 @@ class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     def test_remove_not_abc_chars(self):
         if self._test_exec("test_remove_not_abc_chars"):
-            TextOrig = "[pine;a'pp_le\n!-cliché"
+            TextOrig = "[pine;a'pp_le\n!-cliché0123456789"
             TextNew = text.remove_non_alpha_chars(TextOrig, CharsKeepThem="-")
-            self.assertEqual(TextNew, "pineapple-cliché")
+            self.assertEqual(TextNew, "pineapple-cliché0123456789")
 
             TextNew = text.remove_non_alpha_chars(TextOrig, "_", CharsKeepThem="-")
-            self.assertEqual(TextNew, "_pine_a_pp_le__-cliché")
+            self.assertEqual(TextNew, "_pine_a_pp_le__-cliché0123456789")
 
     def test_text_replace(self): # replace_abbreviations uses text_replace()
         if self._test_exec("test_text_replace"):

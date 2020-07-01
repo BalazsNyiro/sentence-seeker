@@ -23,6 +23,10 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
     def test_token_split(self):
         if self._test_exec("test_token_split"):
+            Query = "like 1945"
+            Wanted = ["like", "AND", "1945"]
+            self.assertEqual(seeker_logic.token_split(Query), Wanted)
+
             Query = "(apple   house,mouse)"
             Wanted = ["(", "apple", "AND", "house", "AND", "mouse", ")"]
             self.assertEqual(seeker_logic.token_split(Query), Wanted)
@@ -67,81 +71,79 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
                 Explains = []
                 ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocObj, Explains)
-                print("\n\n.................")
-                print(Query)
-                print(Explains)
-                return ResultDict
+                return ResultDict, Explains
 
             if True:
                 Query = "are"
-                Result = token_interpreter_wrapper(Prg, Query)
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = {0: True, 202: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "birds"
-                Result = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0:True, 100:True, 200:True, 500:True}
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0: True, 100: True, 200: True, 500: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "is"
-                Result = token_interpreter_wrapper(Prg, Query)
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = {0: True, 101: True, 200: True, 400: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "strong"
-                Result = token_interpreter_wrapper(Prg, Query)
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = {200: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "birds is"
-                Result = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0:True, 200:True}
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {0: True, 200: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "birds  is,strong"
-                Result = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200:True}
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
+                ResultWanted = {200: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "(birds  is),strong"
-                Result = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200:True}
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
+                print(Explains)
+                ResultWanted = {200: True}
                 self.assertEqual(Result, ResultWanted)
 
                 Query = "(birds  is,are),(strong)"
-                Result = token_interpreter_wrapper(Prg, Query)
+                Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = {}
                 self.assertEqual(Result, ResultWanted)
 
             ##### OR ######
             Query = "birds   OR  is"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0: True, 100: True, 101: True, 200: True, 400: True, 500: True}
             self.assertEqual(Result, ResultWanted)
 
             Query = "(((strong OR are)))"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0: True, 200: True, 202: True}
             self.assertEqual(Result, ResultWanted)
 
             Query = "(((strong OR are))) OR ()"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0: True, 200: True, 202: True}
             self.assertEqual(Result, ResultWanted)
 
             Query = "(((strong OR are))) AND ()"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {}
             self.assertEqual(Result, ResultWanted)
 
             #########  COMPLEX QUERY ###########
             Query = "(birds   OR  is) AND strong"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {200: True}
             self.assertEqual(Result, ResultWanted)
 
             Query = "(birds   OR  is) AND (strong OR are)"
-            Result = token_interpreter_wrapper(Prg, Query)
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0: True, 200: True}
             self.assertEqual(Result, ResultWanted)
 

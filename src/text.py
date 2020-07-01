@@ -21,7 +21,7 @@ def remove_non_alpha_chars(Text, TextNew="", CharsKeepThem=""):
     Cleaned = []
     for Char in Text:
         # cliché - é is not in common Eng chars, but isalpha keep it
-        if Char.isalpha() or Char in CharsKeepThem:
+        if Char.isalpha() or Char.isdigit() or Char in CharsKeepThem:
             Cleaned.append(Char)
         else:
             Cleaned.append(TextNew)
@@ -153,3 +153,10 @@ def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
         TextNew = fr"{HighlightBefore}\1{HighlightAfter}"
         Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
     return Text
+
+def word_wanted(Txt):
+    for Char in Txt:
+        # accept low letter chars and numbers
+        if not (Char in util.ABC_Eng_Lower or Char.isdigit()):
+            return False
+    return True

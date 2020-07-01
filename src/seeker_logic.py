@@ -14,13 +14,15 @@ Operators_Meaning = {"(": "set_create_new_begin",
 def words_wanted_from_tokens(Tokens):
     Words = [] # select only lowercase words from tokens
     for Token in Tokens:
-        if Token[0] in util.ABC_Eng_Lower and Token[-1] in util.ABC_Eng_Lower:
+        if text.word_wanted(Token):
             Words.append(Token)
     return Words
 
 # TESTED
 def token_split(Query):
-    Query = Query.replace(",", " AND ")
+
+    Query = Query.replace(",", " ")
+
     for Operator in Operators_Meaning.keys():
         Query = Query.replace(Operator, f" {Operator} ")
 
@@ -30,8 +32,11 @@ def token_split(Query):
         if Token: # with multiple spaces a token can be "", too
             if TokenPrev:
                 # two low char with one space between them - missing operator, AND is default
-                if TokenPrev[-1] in util.ABC_Eng_Lower and Token[0] in util.ABC_Eng_Lower:
+                if text.word_wanted(TokenPrev) and text.word_wanted(Token):
                     Tokens.append("AND")
+                if TokenPrev == ")" and (text.word_wanted(Token) or Token == "("):
+                    Tokens.append("AND")
+
             Tokens.append(Token)
             TokenPrev = Token
     return Tokens

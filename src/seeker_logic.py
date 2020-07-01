@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
-import util, text, copy, time
+import text, copy, time
 
-# seek words are ALWAYS lowercase chars
-Operators_Meaning = {"(": "set_create_new_begin",
-                     ")": "set_create_new_end",
-                     "AND": "set_intersect",
-                     "OR": "set_union"
-                     }
 # ? MINUS,
 # ? NOT
 
@@ -23,7 +17,7 @@ def token_split(Query):
 
     Query = Query.replace(",", " ")
 
-    for Operator in Operators_Meaning.keys():
+    for Operator in Operator_Functions.keys():
         Query = Query.replace(Operator, f" {Operator} ")
 
     Tokens = []   # insert AND if necessary:
@@ -46,7 +40,7 @@ def token_group_finder(Tokens):
     Group = []
     while Tokens:
         Token = Tokens.pop(0)
-        if Token in Operators_Meaning:
+        if Token in Operator_Functions:
             if Token == "(":
                 SubGroup = token_group_finder(Tokens)
                 Group.append(SubGroup)
@@ -82,9 +76,10 @@ def token_interpreter(Tokens, DocIndex, Explains):
 
         Results.append(Result)
 
-    for Operator, Fun in Operator_Functions:
-        while Operator in Results:
-            Results = operator_exec_left_right(Operator, Results, Fun, Explains)
+    for Operator, Fun in Operator_Functions.items():
+        if Fun: # ( ) don't have fun
+            while Operator in Results:
+                Results = operator_exec_left_right(Operator, Results, Fun, Explains)
 
     if Results:
         ResultDict = Results[0][0]
@@ -102,7 +97,7 @@ def is_str_but_not_operator(Token):
 
 def operator(Token):
     if is_str(Token): # if we got a string, then check in the Operators, else False
-        return Token in Operators_Meaning
+        return Token in Operator_Functions
     return False
 
 def is_list(Obj):
@@ -154,9 +149,10 @@ def index_union(ResultLeft, ResultRight):
         Result[Key] = True
     return Result
 
-Operator_Functions = (("AND", index_intersect), ("OR", index_union))
-
-
+Operator_Functions = {"AND": index_intersect,
+                      "OR": index_union,
+                      "(": None,
+                      ")": None}
 
 # ResultsSelected = []
 # Selectors = [result_selectors.shorters_are_better,

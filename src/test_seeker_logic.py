@@ -106,7 +106,6 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
                 Query = "(birds  is),strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                print(Explains)
                 ResultWanted = {200: True}
                 self.assertEqual(Result, ResultWanted)
 

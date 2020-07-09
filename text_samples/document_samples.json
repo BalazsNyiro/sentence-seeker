@@ -1,5 +1,15 @@
 {
   "docs": {
+    "JonathanSwift__GulliversTravel__gutenberg_org_829-0": {
+      "url": "https://dev.gutenberg.org/files/829/829-0.txt",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+    "JamesMBarrie__PeterPan__gutenberg_org_16-0": {
+      "url": "https://dev.gutenberg.org/files/16/16-0.txt",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
     "FrederikPoulsen__EtruscanTombPaintings__gutenberg_org_62431-0": {
       "url": "https://www.gutenberg.org/files/62431/62431-0.txt",
       "source_name": "gutenberg",

@@ -7,18 +7,37 @@ Install on win10:
     Windows x86-64 executable installer
 
  - download sentence-seeker:
+   https://github.com/BalazsNyiro/sentence-seeker/archive/master.zip
  
  you can extract the zip where you want, 
- I use it from Documents/sentence-seeker folder
+ I use it from Documents/sentence-seeker folder:
  - Open the zip file in Downloads folder
-   and move sentence-seeker-master folder into Documents
+   and move sentence-seeker-master into Documents
 
- - enter into sentence-seeker-master folder
- - double click on sentence-seeker.py
-   if you want you can use pre-collected 
-   wikipedia articles as text sources
+ - enter Documents/sentence-seeker-master folder
 
+ - first start needs about  30-40 sec because the program
+   creates word indexes from default books/articles
 
+   If you want to see what happens in the background:
 
-Install on Ubuntu Linux:
+     - double click on sentence-seeker.py
+       if you want you can use pre-collected 
+       wikipedia articles as text sources,
+       say yes in the console
+  
+   If you want to start gui only (no python console window):
+    
+     - double click on sentence-seeker.pyw   
+       (program uses precollected wikipedia articles
+        from sentence-seeker site by default)
+
+Install on Linux:
+ - install Python3 on your Linux
+ - git clone or download the repo content
+   somewhere in your home dir
+
+Console start: sentence-seeker.py --ui console
+    Gui start: sentence-seeker.py --ui tkinter
+
 

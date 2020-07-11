@@ -315,11 +315,19 @@ def web_get(Url, Binary=False, Verbose=True):
             # Html = str(Response.read())
             return Response.read().decode('utf-8')
 
+def console_available():
+    return sys.stdout.isatty() # True if we run in console
+
 # TODO: test
 def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
-    if not WikiPagesUse:
-        WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
-    if WikiPagesUse.strip().lower() == "y":
+    if WikiPagesUse == None: # param not given
+        if console_available(): # we are in a real terminal
+            WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+        else:
+            #  piped or redirected or started without console
+            WikiPagesUse = "y"
+
+    if str(WikiPagesUse).strip().lower() == "y":
         Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
         try:
             BinaryFromWeb = web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)

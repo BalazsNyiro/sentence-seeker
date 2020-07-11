@@ -40,4 +40,11 @@ Install on Linux:
 Console start: sentence-seeker.py --ui console
     Gui start: sentence-seeker.py --ui tkinter
 
+The program creates .sentence-seeker directory in user's home dir
+and stores documents in HOME/.sentence-seeker/documents dir.
+
+If you insert a new text or html or pdf doc into 
+HOME/.sentence-seeker/documents dir, the program indexes it at first time and split it into sentences, once - later it uses the sentence
+and index files.
+
 

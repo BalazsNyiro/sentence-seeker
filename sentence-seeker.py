@@ -15,9 +15,14 @@ Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')
+parser.add_argument("--usage", help="display sort usage info", action='store_true')
 
 parser.add_argument("--ui", help="select user interface. (console, tkinter, web)", action='store', default='tkinter')
 Args = parser.parse_args()
+
+if Args.usage:
+    print(Prg["UsageInfo"])
+    input("press ENTER to start program")
 
 SysArgvOrig = sys.argv
 sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution

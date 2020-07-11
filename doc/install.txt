@@ -1,0 +1,24 @@
+Install on win10:
+
+ - install Python:
+    https://www.python.org/downloads/windows
+
+    latest Python 3 stable release:
+    Windows x86-64 executable installer
+
+ - download sentence-seeker:
+ 
+ you can extract the zip where you want, 
+ I use it from Documents/sentence-seeker folder
+ - Open the zip file in Downloads folder
+   and move sentence-seeker-master folder into Documents
+
+ - enter into sentence-seeker-master folder
+ - double click on sentence-seeker.py
+   if you want you can use pre-collected 
+   wikipedia articles as text sources
+
+
+
+Install on Ubuntu Linux:
+

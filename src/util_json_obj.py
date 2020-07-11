@@ -6,7 +6,11 @@ import os, util, json
 # Tested
 def obj_from_file(JsonFileName):
     with open(JsonFileName) as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except json.decoder.JSONDecodeError:
+            Msg = f"Json decoder error: {JsonFileName}"
+            print(Msg)
 
 # Tested
 def obj_to_file(JsonFileName, Data):

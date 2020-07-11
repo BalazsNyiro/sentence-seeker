@@ -111,8 +111,20 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "ServerHost": "data.sentence-seeker.net" if socket.gethostname() == "vps" else "localhost",
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
-            "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"}
-    }
+            "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"},
+            "UsageInfo": "The program can collect sentences with given words.\n"
+                         " - use lowercase words that you want\n"
+                         " - use uppercase logical keywords: AND  OR\n\n"
+                         " - you can use () to group words\n"
+                         " - if you want, you can separate words with space/comma, too\n"
+                         "   example:  eat AND (apple OR banana)\n"
+
+                         " - space and comma means AND logically\n"
+                         "   example:  egypt, russia, china\n\n"
+                         "   in this case the program will find \n"
+                         "   Russia, RUSSIA and russia too,\n"
+                         "   but in input please use lower-case words"
+            }
 
     return Prg
 

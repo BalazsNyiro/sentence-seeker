@@ -7,10 +7,11 @@ import os, util, json
 def obj_from_file(JsonFileName):
     with open(JsonFileName) as f:
         try:
-            return json.load(f)
+            return "ok", json.load(f)
         except json.decoder.JSONDecodeError:
             Msg = f"Json decoder error: {JsonFileName}"
             print(Msg)
+            return "error", Msg
 
 # Tested
 def obj_to_file(JsonFileName, Data):
@@ -18,10 +19,11 @@ def obj_to_file(JsonFileName, Data):
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
 def doc_db_update_in_file_and_reload(Prg, FileWithoutExtension, DocObj=None):
-    DocDb = obj_from_file(Prg["FileDocumentsDb"])
+    _Status, DocDb = obj_from_file(Prg["FileDocumentsDb"])
     DocDb["docs"][FileWithoutExtension] = DocObj
     obj_to_file(Prg["FileDocumentsDb"], DocDb)
-    Prg["DocumentsDb"] = obj_from_file(Prg["FileDocumentsDb"])["docs"]
+    _Status, JsonObjReply = obj_from_file(Prg["FileDocumentsDb"])
+    Prg["DocumentsDb"] = JsonObjReply["docs"]
     Prg["FileDocumentsDbContent"] = json.dumps(DocDb, sort_keys=True, indent=4)
 
 # Used in tests
@@ -41,7 +43,7 @@ def config_get(Key, DefaultVal, DirPrgRoot,
     else:
         print(f"config file exists: {FileConfigAbsPath}")
 
-    Json = obj_from_file(FileConfigAbsPath)
+    _Status, Json = obj_from_file(FileConfigAbsPath)
     if Key in Json:
         return Json[Key]
     return DefaultVal

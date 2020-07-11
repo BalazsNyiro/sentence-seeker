@@ -14,7 +14,7 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             ObjExample = {"keyword": "value", "number": 1}
             util_json_obj.obj_to_file(Fname, ObjExample)
 
-            ObjFromFile = util_json_obj.obj_from_file(Fname)
+            _Status, ObjFromFile = util_json_obj.obj_from_file(Fname)
             self.assertEqual(ObjFromFile, ObjExample)
 
             util.file_del(Fname)

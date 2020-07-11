@@ -24,7 +24,7 @@ def document_objects_collect_from_working_dir(Prg,
 
     DbDocumentUpdated = False
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
-    DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+    _Status, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
 
     for FileOrig in Files: # All files recursively collected from DirDocuments
 
@@ -84,11 +84,15 @@ def document_objects_collect_from_working_dir(Prg,
 
             # Original: lists.
             #Arrays are more complex, less memory usage:
-            #Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else dict()
+            # _Status, Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
             Index = dict()
             if isfile(FileIndex):
-                for Word, IndexList  in util_json_obj.obj_from_file(FileIndex).items():
-                    Index[Word] = util.list_to_array(IndexList)
+                Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
+                if Status == "ok":
+                    for Word, IndexList in JsonObjReply.items():
+                        Index[Word] = util.list_to_array(IndexList)
+                else:
+                    Prg["MessagesForUser"].append(JsonObjReply)
 
             DocumentObj = document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
                                        FileTextPathAbs=FileText,  # and text files are different

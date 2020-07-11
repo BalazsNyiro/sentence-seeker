@@ -26,7 +26,7 @@ class SeekerTests(util_test.SentenceSeekerTest):
             #seeker.file_index_create(Prg, "/tmp/index.txt", FileSentences)
             # print(util.file_read_all(Prg, FileIndex))
 
-            Index = util_json_obj.obj_from_file(FileIndex)
+            _Status, Index = util_json_obj.obj_from_file(FileIndex)
             self.assertEqual(Index["london"], [101, 102, 201])
 
             util.file_del(FileSentences)

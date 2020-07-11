@@ -20,6 +20,11 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
                 WordsCounter[Word] = 0
             WordsCounter[Word] += len(LineNums)
 
+    if Prg["MessagesForUser"]:
+        print("\n\n Messages for user:")
+        for Msg in Prg["MessagesForUser"]:
+            print(f" - {Msg}")
+        print("\n")
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
     Created = False

@@ -44,7 +44,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
 
     Default = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg", "wikipedia": "Wikipedia"}}'
     util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=Default, LogCreate=False)
-    DocumentsDb = util_json_obj.obj_from_file(FileDocumentsDb)["docs"]
+    _Status, JsonObjReply = util_json_obj.obj_from_file(FileDocumentsDb)
+    DocumentsDb = JsonObjReply["docs"]
 
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -123,7 +124,8 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
                          "   example:  egypt, russia, china\n\n"
                          "   in this case the program will find \n"
                          "   Russia, RUSSIA and russia too,\n"
-                         "   but in input please use lower-case words"
+                         "   but in input please use lower-case words",
+            "MessagesForUser": []
             }
 
     return Prg

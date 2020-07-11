@@ -1,4 +1,5 @@
 Install on win10:
+=================
 
  - install Python:
     https://www.python.org/downloads/windows
@@ -33,9 +34,14 @@ Install on win10:
         from sentence-seeker site by default)
 
 Install on Linux:
+=================
+
  - install Python3 on your Linux
  - git clone or download the repo content
    somewhere in your home dir
+
+General informations:
+=====================
 
 Console start: sentence-seeker.py --ui console
     Gui start: sentence-seeker.py --ui tkinter

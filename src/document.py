@@ -17,7 +17,7 @@ def document_objects_collect_from_working_dir(Prg,
                                               LoadOnlyTheseFileBaseNames=None # ['FileBaseName'] is the positive example
                                               ):
     def info(Txt):
-        if Verbose: print(Txt)
+        if Verbose: print(Txt, flush=True)
 
     DocumentObjects = dict()
     ExtensionsInFuture = (".epub", ".mobi")
@@ -42,7 +42,7 @@ def document_objects_collect_from_working_dir(Prg,
             FilePathWithoutExtension = util.filename_without_extension(FileOrig)
             FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathConvertedToText):
-                #print("not exists: ", FilePathConvertedToText )
+                #info(f"not exists: {FilePathConvertedToText}" )
                 if Extension == ".pdf":
                     ConversionExecuted = Prg["PdfToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
                 if Extension == ".htm" or Extension == ".html":
@@ -53,10 +53,10 @@ def document_objects_collect_from_working_dir(Prg,
                     FileText = util.filename_without_extension(FileOrig) + Extension
                     BaseNameText = os.path.basename(FileText)
                 else:
-                    print(f"Error, file conversion: {FileOrig}")
+                    info(f"Error, file conversion: {FileOrig}")
                     continue
             else:
-                # print("   exists: ", FilePathConvertedToText )
+                # info(f"   exists: {FilePathConvertedToText}" )
                 pass
 
         # errors can happen if we convert pdf/html/other to txt
@@ -107,7 +107,7 @@ def document_objects_collect_from_working_dir(Prg,
             info(f"in documents dir - this file type will be processed in the future: {BaseNameText}")
 
         else:
-            # print_dev(Prg, "in documents dir - not processed file type:", BaseNameText)
+            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameText)
             pass
 
     return DocumentObjects
@@ -128,6 +128,7 @@ def docs_copy_samples_into_dir_if_necessary(Prg):
     DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
 
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
+    print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
     util.dir_create_if_necessary(Prg, DirTarget)
 
     if not DocumentsAvailable:

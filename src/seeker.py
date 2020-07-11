@@ -24,7 +24,7 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
         print("\n\n Messages for user:")
         for Msg in Prg["MessagesForUser"]:
             print(f" - {Msg}")
-        print("\n")
+        print("\n", flush=True)
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
     Created = False
@@ -52,7 +52,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
             if LineNum % 1000 == 0:
                 Percent = int(LineNum / len(Lines)* 100)
-                print(f"index create: {Percent} %")#, end="", flush=True)
+                print(f"index create: {Percent} %", flush=True)
 
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars

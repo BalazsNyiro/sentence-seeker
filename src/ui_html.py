@@ -19,7 +19,7 @@ def file_local_read(File, EncodeUtf8=True, Mode="r"):
     if Path in Cache:
         return Cache[Path]
     else:
-        Content = util.file_read_all_simple(Path, Mode=Mode)
+        Content = util.file_read_all_simple_dont_use_if_read_all_available(Path, Mode=Mode)
         if EncodeUtf8:
             Content = Content.encode("UTF-8")
 

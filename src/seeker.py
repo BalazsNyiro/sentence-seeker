@@ -73,7 +73,9 @@ def file_index_create(Prg, FileIndex, FileSentences):
         for Word, LineNums in WordIndex.items():
             Out.append(f'"{Word}": [{",".join(LineNums)}]')
         Content="{\n"+"\n,".join(Out) + "\n}"
-        util.file_write(Prg, Fname=FileIndex, Content=Content)
+
+        #util.file_write(Prg, Fname=FileIndex, Content=Content)
+        util.file_write_with_check(Prg, Fname=FileIndex, Content=Content)
 
     return Created
 

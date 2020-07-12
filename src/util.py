@@ -125,8 +125,10 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
 
     return Lines
 
-# no PRG usage
-def file_read_all_simple(Fname="", Mode="r"): # if you want read binary, write "rb"
+# no PRG usage, DON'T USE IT in normal situations,
+# Because on Windows there can be character encoding problems.
+# use it only where you don't have Prg
+def file_read_all_simple_dont_use_if_read_all_available(Fname="", Mode="r"):
     with open(Fname, Mode) as f:
         return f.read()
 
@@ -159,15 +161,22 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
         else:
             # with bytes the utf-8 conversion can be tuned, errors ignored
             try:
-                with open(Fname, 'rb') as f:
-                    ContentBytes = f.read()
-                    Content = utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_all simple")
-                    log(Prg, f"file_read_all - text: {Fname}")
-                    return True, Content
+                Content = file_read_unicode(Prg, Fname)
+                log(Prg, f"file_read_all - text: {Fname}")
+                return True, Content
             except:
                 log(Prg, f"file_read_all - read error, in 'with' block: {Fname}")
                 return False, "read error"
 
+# I want to keep parameter order, but Prg is optional here.
+def file_read_unicode(Prg={}, Fname=""):
+    if Fname: # Prg can be empty, if it's necessary, then we read without logging
+        with open(Fname, 'rb') as f:
+            ContentBytes = f.read()
+            return utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_unicode")
+    else:
+        print("file_read_unicode, Fname can't be empty!")
+        sys.exit(1)
 
 # Tested
 def file_del(Path, Verbose=False):
@@ -229,6 +238,14 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
 
     return False
 
+def file_write_with_check(Prg, Fname="", Content=""):
+    file_write_utf8_error_avoid(Prg, Fname=Fname, Content=Content)
+    _, Written = file_read_all(Prg, Fname)
+    if not Written == Content:
+        Msg = f"file_write_with_check Write Problem: {Fname}\n{Content}"
+        print(Msg)
+        log(Prg, Msg)
+
 # not tested, simple wrapper func
 def file_copy(FilePathFrom, FilePathTo):
     shutil.copyfile(FilePathFrom, FilePathTo)
@@ -288,6 +305,7 @@ def display_groups_matchnum_resultinfo(GroupsObj):
         for ResultInfo in ResultInfos:
             print(MatchNum, ResultInfo)
 
+# YOU CAN USE IT with empty PRG, if it's necessary
 # of course somehow I have to test it, it's a magic :-)
 # TODO: test it with texts
 def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is unknown"):
@@ -295,7 +313,8 @@ def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is un
         Content = str(Bytes, 'utf-8')
     except:
         print(f"WARNING: one or more char not convertable to utf-8 in: {Source}")
-        log(Prg, f"utf8 conversion error: {Source}")
+        if Prg:
+            log(Prg, f"utf8 conversion error: {Source}")
         #Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored
         #Content = str(Bytes, 'utf-8', 'xmlcharrefreplace')
         Content = str(Bytes, 'utf-8', 'backslashreplace')  # errors can be ignored

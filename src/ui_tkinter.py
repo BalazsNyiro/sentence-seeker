@@ -100,7 +100,7 @@ def win_main(Prg, Args):
     PrgGlob = Prg
 
     Root = tk.Tk()
-    Root.title("sentence-seeker")
+    Root.title(f"sentence-seeker: {Prg['DirDocuments']}")
 
     MenuBar = tk.Menu(Root)
 
@@ -136,7 +136,13 @@ def win_main(Prg, Args):
     global SentencesArea
     SentencesArea = CustomText(Root, height=Theme["SentencesHeight"], width=Theme["SentencesWidth"],
                             background=Theme["BgAreaSentences"], foreground=Theme["FgAreaSentences"])
-    SentencesArea.grid(row=3, column=1, sticky=tk.E)
+    SentencesArea.grid(row=3, column=1, sticky="nsew") # tk.E
+    # https://effbot.org/tkinterbook/grid.htm
+    # https://stackoverflow.com/questions/24945467/python-tkinter-set-entry-grid-width-100
+    # https://stackoverflow.com/questions/27614037/python-3-tkinter-create-text-widget-covering-100-width-with-grid
+    Root.grid_columnconfigure(1, weight=1)
+    Root.grid_rowconfigure(3, weight=1)
+
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
     SentencesArea.configure(yscrollcommand=scroll.set)
     scroll.grid(row=3, column=2, sticky=tk.NS)

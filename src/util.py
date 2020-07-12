@@ -99,16 +99,6 @@ def filename_without_extension(Fname):
         return Fname
     return Fname.rsplit(Extension, 1)[0]
 
-# FIXME?
-# you can't use this version on windows because utf8 conversion error.
-# now I read the whole text and split it to lines in file_index_create func
-def file_read_lines_orig(_Prg, Fname, Strip=False):
-    with open(Fname, 'r') as F:
-        if Strip:
-            return [L.strip() for L in F.readlines()]
-        else:
-            return F.readlines()
-
 def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)
     Lines = []
@@ -125,15 +115,8 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
 
     return Lines
 
-# no PRG usage, DON'T USE IT in normal situations,
-# Because on Windows there can be character encoding problems.
-# use it only where you don't have Prg
-def file_read_all_simple_dont_use_if_read_all_available(Fname="", Mode="r"):
-    with open(Fname, Mode) as f:
-        return f.read()
-
 # Tested, Prg is important for log, or maybe we should skip logging?
-def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, write "rb"
+def file_read_all(Prg={}, Fname="", Gzipped=False):
     # print("Fname:", Fname, "isfile:", os.path.isfile(Fname))
     if not os.path.isfile(Fname):
         Msg = f"file_read_all - file doesn't exist: {Fname}"
@@ -161,7 +144,7 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
         else:
             # with bytes the utf-8 conversion can be tuned, errors ignored
             try:
-                Content = file_read_unicode(Prg, Fname)
+                Content = _file_read_unicode(Prg, Fname)
                 log(Prg, f"file_read_all - text: {Fname}")
                 return True, Content
             except:
@@ -169,7 +152,7 @@ def file_read_all(Prg, Fname="", Gzipped=False): # if you want read binary, writ
                 return False, "read error"
 
 # I want to keep parameter order, but Prg is optional here.
-def file_read_unicode(Prg={}, Fname=""):
+def _file_read_unicode(Prg={}, Fname=""):
     if Fname: # Prg can be empty, if it's necessary, then we read without logging
         with open(Fname, 'rb') as f:
             ContentBytes = f.read()
@@ -287,9 +270,10 @@ def print_dev(Prg, *args):
 def list_to_array(L):
     return array.array("I",L)
 
-
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
+    if not Prg:
+        return
     print_dev(Prg, "\nLog received:", Msg)
     # from func log calls don't use Logging again
     Msg = str(Msg)

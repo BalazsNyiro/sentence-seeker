@@ -58,7 +58,7 @@ def PrgConfigCreate(DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDevelo
             "DirLog": DirLog,
 
             "FileDocumentsDb": FileDocumentsDb,
-            "FileDocumentsDbContent": util.file_read_all_simple_dont_use_if_read_all_available(FileDocumentsDb),
+            "FileDocumentsDbContent": util.file_read_all({}, FileDocumentsDb),
             "DocumentsDb": DocumentsDb,
 
             "FileLog": os.path.join(DirLog, FileLog),

@@ -168,7 +168,7 @@ Operator_Functions = {"AND": index_intersect,
 #         ResultsGroup = Selector(ResultsGroup)
 #     ResultsSelected.extend(ResultsGroup)
 # TODO: result_selectors.py??
-def seek(Prg, Query, SentenceFillInResult=False):
+def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False):
     Query = Query.strip()
     print(Query)
     Tokens = token_split(Query)
@@ -190,6 +190,9 @@ def seek(Prg, Query, SentenceFillInResult=False):
         Explains = []
         Results, _ResultName = token_interpreter(TokenGroups, DocObj["Index"], Explains)
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
+
+        if ExplainOnly: # no Results, only explain
+            continue
 
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)

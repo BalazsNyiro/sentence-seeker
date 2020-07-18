@@ -138,19 +138,27 @@ class DocHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.data = []
         self.Level_P = 0
+        self.Level_Span = 0
 
     def handle_starttag(self, tag, attrs):
         # print("Start tag:", tag)
         if tag == "p":
             self.Level_P += 1
+        if tag == "span":
+            self.Level_Span += 1
 
     def handle_endtag(self, tag):
         if tag == "p":
             self.Level_P -= 1
+        if tag == "span":
+            self.Level_Span -= 1
 
     def handle_data(self, data):
         # self.data.append(data)
         if self.Level_P > 0:
+            self.data.append(data)
+
+        if self.Level_Span > 0:
             self.data.append(data)
 
     def handle_comment(self, data):
@@ -177,7 +185,6 @@ class DocHTMLParser(HTMLParser):
 def fun_html_to_text_converter(Prg, PathInput, PathOutput):
     parser = DocHTMLParser()
     RetStatus, Src = util.file_read_all(Prg, PathInput)
-
     if not RetStatus: # error with reading
         print("READING ERROR: ", PathInput)
         return False

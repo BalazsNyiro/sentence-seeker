@@ -146,6 +146,12 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             ResultWanted = {0: True, 200: True}
             self.assertEqual(Result, ResultWanted)
 
+            Query = "birds (are OR  singing) AND (is)"
+            Result, Explains = token_interpreter_wrapper(Prg, Query)
+            ResultWanted = {0: True, 200: True}
+            self.assertEqual(Result, ResultWanted)
+
+
             ################ restore original state #####################################
             util.file_del(FilePathBird)
             FileNameWithoutExtension = util.filename_without_extension(self.FileBaseNameBird)

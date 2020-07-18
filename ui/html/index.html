@@ -19,7 +19,9 @@ body {
 }
 table {
 }
-
+#contact {
+    text-align: center;
+}
 #demo {
     width: 500px;
     margin-left:auto;
@@ -33,9 +35,10 @@ table {
     <title>sentence-seeker.net - Get sentence examples from docs</title>
 </head>
 <body id="body">
-<p><a href="https://www.facebook.com/groups/2449430305347843">Facebook group</a></p>
+<!-- https://www.create.net/blog/free-social-media-icons#facebook -->
+<p id="contact"><a href="https://www.facebook.com/groups/2449430305347843" target="_blank"><img alt="sentence-reader.net facebook group" src="https://c866088.ssl.cf3.rackcdn.com/assets/facebook40x40.png" border=0  width="12" height="12"></a> <a href="mailto:diogeneszATpergamenDOThu">📧</a></p>
 <div class="seek">
-    <label>Words: (development is in progress)</label><br>
+    <label>Words:</label><br>
     <input type="text" id="words" name="words" value="PLACEHOLDER_QUERY_EXAMPLE" size="50"><br>
     <button id="button_seek" onclick="seek_func()">Get example sentences...</button>
     <p id="message"></p>
@@ -58,8 +61,6 @@ table {
     });
 
     var wordHilitor; // https://e-motiv.github.io/hilitor/example/#example
-    var Words = document.getElementById("words").value;
-
     function source_display(BaseName){
         DocInfo = PLACEHOLDER_DOCUMENT_JSON;
         for (var key in DocInfo.docs) {
@@ -76,6 +77,17 @@ table {
 
     function seek_func(){
         message("<b>Seeking...</b>");
+
+        let Words = document.getElementById("words").value;
+
+        let WordsWithoutOperators = Words;
+        let Remove = ["(", ")", "AND", "OR", ","];
+        Remove.forEach(clear);
+        function clear(Deleted) {
+          while (WordsWithoutOperators.includes(Deleted)) {
+            WordsWithoutOperators = WordsWithoutOperators.replace(Deleted, "");
+          }
+        }
 
         var obj, dbParam, xmlhttp, Results, x, txt = "";
         obj = { table: "sentences", limit: 20 };
@@ -94,14 +106,13 @@ table {
             }
             txt += "</table>";
             document.getElementById("demo").innerHTML = txt;
-            wordHilitor.apply(Words);
+
+            wordHilitor.apply(WordsWithoutOperators );
 
             message("<b></b>");
           }
         };
-        Words = document.getElementById("words").value;
 
-        //xmlhttp.open("GET", "data.sentence-seeker.net:8000?words=" + Words, true);
         xmlhttp.open("GET", "http://PLACEHOLDER_HOST:PLACEHOLDER_PORT/seek?words=" + Words, true);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send("x=" + dbParam);

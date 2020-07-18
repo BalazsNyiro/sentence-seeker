@@ -28,6 +28,19 @@ table {
     margin-right:auto;
     border: 3px;
 }
+#example_table{
+    width: 500px;
+    margin-left:auto;
+    margin-right:auto;
+    font-size: 10px;
+    border: 1px solid orange;
+}
+.example_button {
+    font-size: 10px;
+}
+.example_description{
+    text-align: right;
+}
 
 </style>
 <head>
@@ -46,9 +59,19 @@ table {
 </div>
 
 <script type="text/javascript" src="hilitor.js"></script>
+<table id="example_table">
+  <tr>
+    <td class="example_description">Word frequency - how they use it?</td>
+    <td><button class="example_button" type="button" onclick="example_run(this)" value="(take advantage ) OR ((gain OR gaining) advantage)">(take advantage ) OR ((gain OR gaining) advantage)</button></td>
+  </tr>
+</table>
 <p id="demo"></p>
 <p id="Licenses">PLACEHOLDER_LICENSE</p>
 <script>
+    function example_run(Button) {
+        document.getElementById("words").value = Button.value;
+        document.getElementById("button_seek").click();
+    }
 
     var input = document.getElementById("words");
     input.addEventListener("keyup", function(event) {

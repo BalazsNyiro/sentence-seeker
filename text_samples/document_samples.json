@@ -1,5 +1,15 @@
 {
   "docs": {
+    "JulesVerne__FromEarthMoon__gutenberg_org_pg83": {
+      "url": "https://www.gutenberg.org/cache/epub/83/pg83.txt",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+    "AlexandreDumas__ThreeMusketeers__gutenberg_org_1257-0": {
+      "url": "https://dev.gutenberg.org/files/1257/1257-0.txt",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
     "JonathanSwift__GulliversTravel__gutenberg_org_829-0": {
       "url": "https://dev.gutenberg.org/files/829/829-0.txt",
       "source_name": "gutenberg",

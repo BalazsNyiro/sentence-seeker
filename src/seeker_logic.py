@@ -26,9 +26,8 @@ def token_split(Query):
         if Token: # with multiple spaces a token can be "", too
             if TokenPrev:
                 # two low char with one space between them - missing operator, AND is default
-                if text.word_wanted(TokenPrev) and text.word_wanted(Token):
-                    Tokens.append("AND")
-                if TokenPrev == ")" and (text.word_wanted(Token) or Token == "("):
+                if   (TokenPrev == ")" or text.word_wanted(TokenPrev)) \
+                 and (text.word_wanted(Token) or Token == "("):
                     Tokens.append("AND")
 
             Tokens.append(Token)

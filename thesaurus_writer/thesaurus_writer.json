@@ -1,0 +1,32 @@
+{
+  "doc": "The thesaurus contains groups of words based on the wanted communication result or situation",
+
+
+  "situations": {
+   "give information": [
+     "murmur",
+     "mutter",
+     "roar",
+     "say",
+     "shout",
+     "tell",
+     "whisper"
+   ],
+   "ask information": ["ask", "examine", "question"],
+   "human_reactions": ["clap"]
+  },
+
+  "expression_info": {
+    "ask": "I asked the new student's name.",
+    "clap": "make noise with palms - applause, show that somethind is valuable",
+    "examine": "He examined the fine patterns on the book cover.",
+    "murmur": "whisper, mutter, say without any strength",
+    "mutter": "Say hardly audible, with low volume.",
+    "question": "I was questioned by my mother.",
+    "roar": "The fighter roared angrily before he attacked. Say with strong voice, sometime without articulation.",
+    "say": "Tell something.",
+    "shout": "Say it loudly, because the receiver is far, for example.",
+    "tell": "Say something.",
+    "whisper": "Say words with barely audible, low volume."
+  }
+}

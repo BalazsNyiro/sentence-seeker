@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import text, copy, time
+import text, copy, time, util
 
 # ? MINUS,
 # ? NOT
@@ -171,11 +171,12 @@ Operator_Functions = {"AND": index_intersect,
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False):
     Query = Query.strip()
     print(Query)
+    util.log(Prg, f"Query: {Query}")
+
     Tokens = token_split(Query)
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)
 
     TokenGroups = token_group_finder(Tokens)
-    # print("Grp", TokenGroups)
 
     ResultsSelected = []
     TimeLogicStart = time.time()
@@ -204,8 +205,6 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False):
                 )
             )
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
-    # for Explain in TokenProcessExplainSumma:
-    #     print("Summa exp:", Explain)
 
     TimeLogicUsed = time.time() - TimeLogicStart
     print("Time logic: ", TimeLogicUsed)

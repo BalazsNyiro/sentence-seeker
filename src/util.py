@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
-import sys, array, re
+import sys, array, re, datetime
 
 ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_Lower = ABC_Eng_Upper.lower()
@@ -21,6 +21,11 @@ def shell(Cmd):
     # if StdoutOnly:
     #     return str(Result.stdout, 'utf-8')
     # return Result
+
+# wrapper, not tested
+def date_now():
+    now = datetime.datetime.now()
+    return now.strftime("%Y-%m-%d_%H-%M-%S")
 
 # Tested
 def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
@@ -263,9 +268,8 @@ def files_abspath_collect_from_dir(DirRoot, Recursive=True):
 
 # tested manually
 def print_dev(Prg, *args):
-    if "PrintForDeveloper" in Prg:
-        if Prg["PrintForDeveloper"]:
-            print(*args)
+    if Prg.get("PrintForDeveloper", False):
+        print(*args)
 
 def list_to_array(L):
     return array.array("I",L)
@@ -277,9 +281,10 @@ def log(Prg, Msg, Caller="-"):
     print_dev(Prg, "\nLog received:", Msg)
     # from func log calls don't use Logging again
     Msg = str(Msg)
-    if "TestExecution" in Prg:
-        if Prg["TestExecution"]:
-            Msg = "Testing... " + Msg
+    if Prg.get("TestExecution", False):
+        Msg = f"Testing... {Msg}"
+
+    Msg = f"[{date_now()}] {Msg}"
     if "FileLog" in Prg:
         file_write(Prg, Fname=Prg["FileLog"], Content=Msg + "\n", Mode="a", LogCreate=False)
 

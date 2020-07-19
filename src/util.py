@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
-import sys, array, re, datetime
+import sys, array, re, datetime, io
 
 ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_Lower = ABC_Eng_Upper.lower()
@@ -316,12 +316,31 @@ def web_get(Url, Binary=False, Verbose=True):
         print(f"web html get: {Url}, Binary:{Binary}")
 
     with urllib.request.urlopen(Url) as Response:
+        Length = Response.getheader('content-length')
+        BlockSize = 1024*64  # default value
+
+        if Length:
+            Length = int(Length)
+
+        BufferAll = io.BytesIO()
+        Size = 0
+        while True:
+            BufferNow = Response.read(BlockSize)
+            if not BufferNow:
+                break
+            BufferAll.write(BufferNow)
+            Size += len(BufferNow)
+            if Length:
+                Percent = int((Size / Length)*100)
+                print(f"download: {Percent}% {Url}")
+
         if Binary:
             # https://stackoverflow.com/questions/9419162/download-returned-zip-file-from-url
-            return Response.read()
+            #return Response.read() # simple read all version
+            return BufferAll.getvalue()
         else:
-            # Html = str(Response.read())
-            return Response.read().decode('utf-8')
+            # return Response.read().decode('utf-8')
+            return BufferAll.getvalue().decode("utf-8")
 
 def console_available():
     return sys.stdout.isatty() # True if we run in console

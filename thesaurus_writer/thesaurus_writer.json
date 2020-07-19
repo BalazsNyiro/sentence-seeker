@@ -1,32 +1,771 @@
 {
-  "doc": "The thesaurus contains groups of words based on the wanted communication result or situation",
+    "doc": "The thesaurus contains groups of words based on the wanted communication result or situation",
+    "situations": {
+        "accept": [
+            "to accept",
+            "to believe",
+            "to trust"
+        ],
+        "always": [
+            "always",
+            "constantly",
+            "continuously",
+            "regularly"
+        ],
+        "angrily": [
+            "angrily",
+            "bitterly",
+            "coldly",
+            "furiously",
+            "frantically",
+            "glumly",
+            "grudgingly",
+            "irritably",
+            "madly",
+            "shrilly",
+            "wickedly"
+        ],
+        "anger": [
+            "anger",
+            "spite"
+        ],
+        "angry": [
+            "angry",
+            "enraged",
+            "furious",
+            "piercing",
+            "rage",
+            "stiffly",
+            "to turn nasty",
+            ".. with anger on her face",
+            ".. the girl left the room with her nose in the air",
+            ".. the dog gave a snarl when I approached the house",
+            ".. I am in bad temper"
+        ],
+        "anxious": [
+            "anxious",
+            "frightened (of)",
+            "nervously",
+            "terrified"
+        ],
+        "avoid conversation": [
+        "There is no point in beating about the bush (idiom: ... and chasing all sorts of rabbits)"
+        ],
+        "to argue": [
+            "to argue",
+            "to dispute",
+            "to provoke",
+            "to taunt",
+            "to thunder",
+            "to quarrel"
+        ],
+        "to arrive, appear": [
+            "to appear (she appeared out of the darkness)",
+            "to arrive",
+            "to come (into view, limped into view)",
+            "to enter",
+            "to land",
+            "to loom (appeared: her face loomed silently out of the darkness)",
+            "to speed",
+            "to stop",
+            "to turn up",
+            "to usher (The guard ushered the guests)"
+        ],
+        "beautiful": [
+            "beautiful",
+            "brilliant",
+            "elegant",
+            "fine",
+            "great",
+            "imposing",
+            "impressive",
+            "magnificent",
+            "noble",
+            "splendid",
+            "spectacular",
+            "skillful",
+            "wonderful"
+        ],
+        "big": [
+            "big",
+            "colossal",
+            "enormous",
+            "gigantic",
+            "grand",
+            "great",
+            "huge",
+            "large",
+            "massive",
+            "memorable",
+            "monstrous",
+            "monumental",
+            "significant",
+            "tremendous",
+            "vast"
+        ],
+        "to blow": [
+            "to blow",
+            "to waft"
+        ],
+        "call, invite, give a signal to come": [
+            "to beckon",
+            "to call",
+            "to invite",
+            "to summon"
+        ],
+        "catch, grab, take something": [
+            "to catch",
+            "to chase",
+            "to clutch",
+            "to grip",
+            "to grope (around in his pocket)",
+            "to pick (up)",
+            "to reach",
+            "to seize",
+            "to snatch",
+            "to stretch (out your hand to take the cookie)"
+        ],
+        "certainly": [
+            "certainly",
+            "surely",
+            "truly"
+        ],
+        "close": [
+            "to bar",
+            "to close",
+            "to slam",
+            "to shut"
+        ],
+        "consequence": [
+            "conclusion",
+            "consequence",
+            "effect",
+            "end",
+            "result",
+            "outcome",
+            "upshot (unlucky end)"
+        ],
+        "create": [
+            "to create",
+            "to produce"
+        ],
+        "dark, dangerous, full with unknown consequences": [
+            "baleful (the robber turned and gave us a baleful glance)",
+            "deadly",
+            "eerie (dark, the hairs on your neck are prickled)",
+            "hazardous",
+            "harmful",
+            "risky",
+            "sinister"
+            ],
+        "to demolish": [
+            "to demolish",
+            "to ruin",
+            "to destroy",
+            "to devastate",
+            "to smash",
+            "to spoil"
+        ],
+        "desire": [
+            "desire",
+            "longing (She paused, looking longingly out of the classroom window)"
+        ],
+        "difficult": [
+            "challenging",
+            "complex",
+            "difficult",
+            "hard"
+        ],
+        "to dread": [
+            "to be afraid of...",
+            "to be anxious",
+            "to be fearful",
+            "to be frightened",
+            "to be nervous",
+            "to be petrified",
+            "to be scared",
+            "to dread",
+            "to panic"
+            ],
+        "drive": [
+            "to drive",
+            "to steer"
+        ],
+        "envy": [
+            "envy",
+            "jealous"
+        ],
+        "escape": [
+            "to escape",
+            "to wriggle (She wriggled free from her parents' hug.)"
+        ],
+        "evil": [
+            "evil",
+            "vicious",
+            "wicked"
+            ],
+        "exactly, precisely": [
+            "correctly",
+            "definitely",
+            "distinctly",
+            "exactly",
+            "plainly",
+            "precisely",
+            "properly",
+            "sharply"
+        ],
+        "fall":[
+            "to fall (fall off the horse)",
+            "to topple (she topple off the balcony)"
+        ],
+        "fast": ["brisk", "fast", "quick"],
+        "nasty feeling": [
+            "nasty feeling"
+        ],
+        "fix": [
+            "to correct",
+            "to fix",
+            "to mend",
+            "to renovate",
+            "to repair"
+        ],
+        "fly": [
+            "to dart (forward)",
+            "to flit",
+            "to fly",
+            "to flutter (the birds fluttered out of the way, fluttered from the tree)",
+            "to hover",
+            "to soar (the birds soared down)",
+            "to swoop out"
+        ],
+        "forget": [
+            "the task was driven out of his mind by the girl",
+            "to forget"
+        ],
+        "form, shape": [
+            "form",
+            "outline",
+            "shape",
+            "silhouette"
+        ],
+        "frightened": [
+            "frightened",
+            "miserably (she replied miserably)",
+            "tearful (She looked tearful)"
+        ],
+        "gently": [
+            "delicately",
+            "finely",
+            "fondly",
+            "gently",
+            "kindly"
+        ],
+        "go, change position": [
+            "to bolt (the roe bolted when he heard the hunters)",
+            "to climb",
+            "to creep",
+            "to dash (run with force)",
+            "to escort",
+            "to flit",
+            "to follow",
+            "to gallop",
+            "to glide",
+            "to go (she went to have a look)",
+            "to hobble (painful, slow walk)",
+            "to hurry",
+            "to jog",
+            "to leap",
+            "to limp (your leg are hurt and you can't walk normally)",
+            "to march",
+            "to pace (back and forth)",
+            "to parade",
+            "to pass",
+            "to patroll",
+            "to race (racing up and down the school corridors)",
+            "to roll over",
+            "to round (He rounded on the newcomer)",
+            "to run",
+            "to rush",
+            "to scramble",
+            "to scurry (to hurry)",
+            "to shuffle (away)",
+            "to sidle (back)",
+            "to sneak",
+            "to sprint",
+            "to step",
+            "to stomp (he was stomping up the stairs from the hall)",
+            "to stream (into the hall)",
+            "to stride (walk with long steps: She strode out of sight. She strided towards them.)",
+            "to sweep (nearly run, hurry: she was sweeping along)",
+            "to throng (They joined the students thronging the hall)",
+            "to tiptoe (towards the fridge)",
+            "to travel",
+            "to trot",
+            "to trudge (the students trudged back to the school)",
+            "to turn (turn back, turn on her heel)",
+            "to visit",
+            "to waddle",
+            "to walk",
+            "to whisk off (the cat whisks off for her owner)"
+        ],
+        "gradually": [
+            "gradually",
+            "steadily"
+        ],
+        "happy": [
+            "cheerful",
+            "delighted (She is delighted because...)",
+            "glee",
+            "happy",
+            "merry",
+            "relieved (I am relieved)",
+            "her heart rose"
+        ],
+        "hardly": [
+            "almost",
+            "barely",
+            "hardly",
+            "just",
+            "narrowly",
+            "slightly (to the right)"
+        ],
+        "hide": [
+            "to camouflage",
+            "to conceal",
+            "to hide",
+            "to lurk"
+        ],
+        "human_reactions, nonverbal": [
+            "... look of awe on her face",
+            "... nasty smile",
+            "... stopped with a nasty grin on her face",
+            "... to answer with a slight sneer",
+            "to amuse",
+            "to blink",
+            "to blush (her face became red)",
+            "to blow his nose",
+            "to bow (her head)",
+            "to cackle",
+            "to choke (can't take a breath)",
+            "to chuckle (smile with giggling)",
+            "to clap",
+            "to cough (She gave a slight cough)",
+            "to crinkle (her eyes were crinkled in a smile)",
+            "to cry",
+            "to fidget",
+            "to flinch (She flinched)",
+            "to gawp (something interesting happened)",
+            "to gulp",
+            "to giggle",
+            "to grin at her amazement",
+            "to ignore",
+            "to narrow (her eyes narrowed)",
+            "to nod",
+            "to quaver",
+            "to quiver",
+            "to rattle",
+            "to shake",
+            "to shiver",
+            "to shudder",
+            "to smile (to smile at a girl)",
+            "to sneer",
+            "to sniff",
+            "to sniffle",
+            "to snivel",
+            "to swallow",
+            "to tremble",
+            "to twitch (the lion's tail twitched)",
+            "to whoop",
+            "to yawn"
+        ],
+        "hurt": [
+            "to insult",
+            "to hurt",
+            "to scratch (herself)"
+        ],
+        "immediately": [
+            "at once",
+            "directly",
+            "instantly",
+            "promptly",
+            "quickly",
+            "soon"
+        ],
+        "indeed": [
+            "actually",
+            "indeed",
+            "truly"
+        ],
+        "information ask": [
+            "to ask",
+            "to blurt",
+            "to examine",
+            "to question"
+        ],
+        "information give, react": [
+            "to add (... the witch  added nastily)",
+            "to admit",
+            "to agree",
+            "to announce",
+            "to answer",
+            "to apologise",
+            "to argue",
+            "to bark",
+            "to burst out (I am angry because of your school marks! - her mother burst out)",
+            "to bellow",
+            "to blame",
+            "to blurt",
+            "to chant",
+            "to chortle",
+            "to choruse (..., chorused the sisters)",
+            "to comment",
+            "to complain",
+            "to criticise",
+            "to curse in rage",
+            "to demand",
+            "to demonstrate",
+            "to explain",
+            "to falter",
+            "to gasp",
+            "to gibber",
+            "to give an excited squeak",
+            "to gossip",
+            "to grant",
+            "to groan",
+            "to growl",
+            "to grunt",
+            "to hiss",
+            "to howl",
+            "to humm",
+            "to illustrate",
+            "to indicate",
+            "to inform",
+            "to insist",
+            "to insult",
+            "to interrupt",
+            "to mention",
+            "to moan",
+            "to mouth (Let's go! She mouthed to the others)",
+            "to move",
+            "to mumble",
+            "to murmur (A murmur ran through the class)",
+            "to mutter",
+            "to pant",
+            "to point",
+            "to promise",
+            "to provoke",
+            "to react",
+            "to recite",
+            "to remind",
+            "to repeat",
+            "to reply",
+            "to respond",
+            "to reveal",
+            "to roar",
+            "to rumble",
+            "to say",
+            "to scream",
+            "to screech",
+            "to shout",
+            "to shriek",
+            "to sigh",
+            "to snap (he snapped through the closed windows",
+            "to snap",
+            "to snigger",
+            "to sob",
+            "to spat (Eat it! He spat at the child, say stricktly, without love)",
+            "to splutter (say with anger and rage)",
+            "to squeak (tell with tiny voice)",
+            "to stammer (tell with slow peace, with pauses and repetitions",
+            "to stutter (serious speech problems: she was stuttering worse than ever in front of the class because her classmates hated her)",
+            "to swear",
+            "to tell",
+            "to threaten",
+            "to wail (tell sadly)",
+            "to wheedle (say kindly to reach your goal)",
+            "to wheeze",
+            "to whimper",
+            "to whisper",
+            "to yell"
+        ],
+        "interest, received attention": [
+            "attention",
+            "care",
+            "curiosity",
+            "focus",
+            "interest"
+            ],
+        "jump": [
+            "she bolted awake when the alarm sounded from the firefighters",
+            "to jump",
+            "to leap"
+        ],
+        "leave": [
+            "to abandon",
+            "to escape",
+            "to leave",
+            "to quit",
+            "to slope (she sloped away)"
+        ],
+        "to lift": [
+            "to lift",
+            "to heave"
+            ],
+        "mute": [
+            "mute",
+            "speechless"
+            ],
+        "to manage": [
+            "to handle",
+            "to manage",
+            "to tackle"
+            ],
+        "nearly (I almost finished my plan)": [
+            "almost",
+            "nearly",
+            "practically",
+            "roughly"
+        ],
+        "noise": [
+            "crash",
+            "din",
+            "noise",
+            "racket"
+        ],
+        "opened": ["ajar", "opened"],
+        "part of something" : [
+            "part",
+            "branch (of languages)",
+            "section"
+        ],
+        "particularly": [
+            "awfully",
+            "especially",
+            "exceptionally",
+            "largely",
+            "mainly",
+            "mostly",
+            "particularly",
+            "really",
+            "surprisingly"
+        ],
+        "popular":[
+            "admired", 
+            "beloved",
+            "celebrated",
+            "famous",
+            "favoured",
+            "popular",
+            "prominent"
+            ],
+        "sad, sadly": [
+            "bitter",
+            "dejected",
+            "depressed",
+            "miserably",
+            "ruefully"
+        ],
+        "secret (hidden info)": [
+            "hidden",
+            "mystery",
+            "puzzle",
+            "question",
+            "riddle",
+            "secret"
+        ],
+        "shrill (voice)": [
+            "grating",
+            "sharp",
+            "shrill"
+        ],
 
-
-  "situations": {
-   "give information": [
-     "murmur",
-     "mutter",
-     "roar",
-     "say",
-     "shout",
-     "tell",
-     "whisper"
-   ],
-   "ask information": ["ask", "examine", "question"],
-   "human_reactions": ["clap"]
-  },
-
-  "expression_info": {
-    "ask": "I asked the new student's name.",
-    "clap": "make noise with palms - applause, show that somethind is valuable",
-    "examine": "He examined the fine patterns on the book cover.",
-    "murmur": "whisper, mutter, say without any strength",
-    "mutter": "Say hardly audible, with low volume.",
-    "question": "I was questioned by my mother.",
-    "roar": "The fighter roared angrily before he attacked. Say with strong voice, sometime without articulation.",
-    "say": "Tell something.",
-    "shout": "Say it loudly, because the receiver is far, for example.",
-    "tell": "Say something.",
-    "whisper": "Say words with barely audible, low volume."
-  }
+        "silently": [
+            "silently",
+            "with small voice"
+        ],
+        "sit down": [
+            "to collapse",
+            "to flop",
+            "to sit",
+            "to slump"
+        ],
+        "slightest": [
+            "slightest",
+            "smallest"
+        ],
+        "slow": [
+            "lazy",
+            "unhurried"
+        ],
+        "slowly": [
+            "calmly",
+            "gradually",
+            "lazily",
+            "leisurely",
+            "steadily"
+        ],
+        "soft, weak": [
+            "faint",
+            "feeble",
+            "soft",
+            "weak"
+        ],
+        "strange, not common": [
+            "absurd",
+            "astonishing",
+            "astounding",
+            "curious",
+            "eerie (dark, the hairs on your neck are prickled)",
+            "horrible",
+            "mysterious",
+            "nonsense",
+            "odd",
+            "out of place (not in proper environment: The old book seemed out of place in the rich library)",
+            "peculiar",
+            "silly",
+            "special",
+            "strange",
+            "stupid",
+            "unusual",
+            "weird"
+        ],
+        "strict": [
+            "stern",
+            "strict"
+        ],
+        "time pass": [
+            "The minutes crept by as I waited her phone call."
+            ],
+        "think, have an idea": [
+            "... after the party something was nagging at the back of her mind",
+            "to believe",
+            "to brood (thinking in long time: I have been brooding about my school marks)",
+            "to convince (His friend convinced him)",
+            "to doubt (not believe)",
+            "to expect",
+            "to guess",
+            "to hope",
+            "to imagine",
+            "to judge",
+            "to know",
+            "to mean",
+            "to reckon",
+            "to suppose",
+            "to suspect",
+            "to think",
+            "to work out a new idea"
+        ],
+        "to decide, make a decision": [
+            "to decide",
+            "to declare",
+            "to determine",
+            "to judge"
+        ],
+        "to draw": [
+            "to form",
+            "to illustrate",
+            "to sketch"
+        ],
+        "to lean - to overhear, to catch": [
+            "to lean (she leaned forward to catch the conversation)"
+        ],
+        "to look": [
+            "to analyse",
+            "to check",
+            "to detect",
+            "to examine",
+            "to face",
+            "to focus",
+            "to gape",
+            "to gaze",
+            "to glance",
+            "to glare",
+            "to look",
+            "to notice",
+            "to observe",
+            "to peer",
+            "to report",
+            "to scan",
+            "to see",
+            "to spot",
+            "to squint (through the fog)",
+            "to stare",
+            "to throw a glance",
+            "to watch",
+            "wheeling around they returned into the library",
+            "to wonder"
+        ],
+        "to pant": [
+            "to gasp",
+            "to heave",
+            "to pant",
+            "to wheeze"
+        ],
+        "to realise, to understand": [
+            "to catch",
+            "to check",
+            "to notice",
+            "to realise",
+            "to spot"
+        ],
+        "to return, to come back": [
+            "to come back",
+            "to start back", 
+            "to return"
+        ],
+        "to shake": ["to shake", "to quiver", "to tremble", "to shiver"],
+        "to take, to move something awyay": [
+            "to cram (She crammed the pen back into her pocket)",
+            "to put",
+            "to slip",
+            "to take"
+        ],
+        "to want": [
+            "to hope",
+            "to long (she longed to know what is in the building)",
+            "to suggest",
+            "to strain (desperate want: she strained to listen what her teachers were saying)"
+        ],
+        "typical": [
+            "average",
+            "common",
+            "normal",
+            "plain",
+            "regular",
+            "standard",
+            "typical",
+            "usual (the letters arrived as usual)"
+        ],
+        "under (beneath)": [
+            "below",
+            "beneath",
+            "under",
+            "underneath"
+        ],
+        "unexpectedly happened": [
+            "accidentally",
+            "incredibly",
+            "suddenly",
+            "surprisingly"
+        ],
+        "unpack": [
+            "to rummage (She rummaged around in her wardrobe)",
+            "to unpack"
+        ],
+        "urge":[
+            "to drive",
+            "to encourage",
+            "to hurry",
+            "to motivate",
+            "to nag",
+            "to press",
+            "to pressure",
+            "to prompt",
+            "to urge"
+        ],
+        "wake up": [
+            "excitement flooded through her as she listened the news"
+        ],
+        "weekly": ["weekly", "faintly", "timidly"]
+    }
 }

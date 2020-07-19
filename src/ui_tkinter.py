@@ -5,6 +5,7 @@ import webbrowser
 import seeker_logic, util_ui
 
 WordsEntry = None
+ExplainOnly = None
 SentencesArea = None
 PrgGlob = None
 
@@ -12,7 +13,7 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words)
+    TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
 
     TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
@@ -114,7 +115,9 @@ def win_main(Prg, Args):
 
     Theme = util_ui.theme_actual(Prg)
     ################################################
-    tk.Label(Root, text="Words").grid(row=0, sticky=tk.W)
+
+    # placeholder, small distance from left frame
+    tk.Label(Root, text=" ").grid(row=0, column=0, sticky=tk.W)
 
     global WordsEntry
     WordsEntry = tk.Entry(Root, background=Theme["BgWords"])
@@ -128,15 +131,19 @@ def win_main(Prg, Args):
     # don't delete entry because user maybe wants to edit prev query
     #WordsEntry.bind("<FocusIn>", lambda _: WordsEntry.delete(0, 999)) # clear when clicked
 
-    WordsEntry.grid(row=0, column=1, sticky=tk.W, ipadx=220, ipady=0)
+    WordsEntry.grid(row=0, column=1, sticky=tk.W, ipadx=220, ipady=0, columnspan=3)
 
     tk.Button(Root, text="Get example sentences", command=seek_and_display).grid(row=2, column=1, sticky=tk.W)
+
+    global ExplainOnly
+    ExplainOnly = tk.IntVar()
+    tk.Checkbutton(Root, text="explain only", variable=ExplainOnly).grid(row=2, column=2, sticky=tk.W)
 
     ################################################
     global SentencesArea
     SentencesArea = CustomText(Root, height=Theme["SentencesHeight"], width=Theme["SentencesWidth"],
                             background=Theme["BgAreaSentences"], foreground=Theme["FgAreaSentences"])
-    SentencesArea.grid(row=3, column=1, sticky="nsew") # tk.E
+    SentencesArea.grid(row=3, column=1, sticky="nsew", columnspan=3) # tk.E
     # https://effbot.org/tkinterbook/grid.htm
     # https://stackoverflow.com/questions/24945467/python-tkinter-set-entry-grid-width-100
     # https://stackoverflow.com/questions/27614037/python-3-tkinter-create-text-widget-covering-100-width-with-grid
@@ -145,7 +152,7 @@ def win_main(Prg, Args):
 
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
     SentencesArea.configure(yscrollcommand=scroll.set)
-    scroll.grid(row=3, column=2, sticky=tk.NS)
+    scroll.grid(row=3, column=3, sticky=tk.NS)
 
     SentencesArea.tag_configure("TextTitle", font=("Verdana", 20, "bold"))
     SentencesArea.tag_configure("SentenceDisplayedResult",

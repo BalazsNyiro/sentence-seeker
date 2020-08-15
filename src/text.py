@@ -137,24 +137,21 @@ def linenum_subsentencenum_get(LineNum_SubSentenceNum):
 
     return (LineNum_SubSentenceNum - SubSentenceNum) // 100, SubSentenceNum
 
+# tested/used in test_seeker_logic.test_result_selectors
+def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult):
+    return {"FileSourceBaseName": FileSourceBaseName,
+            "LineNumInSentenceFile": LineNumInSentenceFile,
+            "SubSentenceNum": SubSentenceNum,
+            "Sentence": Sentence if SentenceFillInResult else "-",
+            "SentenceLen": len(Sentence),
+            "SubSentenceLen": len(SubSentenceResult)
+           }
 
-def result_obj(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
+def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
     Sentence = sentence_load_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
     SubSentences = text.subsentences(Sentence)
     SubSentenceResult = SubSentences[SubSentenceNum]
-
-    Obj = {"FileSourceBaseName": FileSourceBaseName,
-           "LineNumInSentenceFile": LineNumInSentenceFile,
-           "SubSentenceNum": SubSentenceNum,
-           "Sentence": "-",
-           "SentenceLen": len(Sentence),
-           "SubSentenceLen": len(SubSentenceResult)
-           }
-
-    if SentenceFillInResult: # in html server the sentence is important in result
-        Obj["Sentence"] = Sentence
-
-    return Obj
+    return result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest, util_test, copy, util, seeker
-import seeker_logic
+import seeker_logic, text
 import os.path
 
 class SeekerLogicTests(util_test.SentenceSeekerTest):
@@ -14,6 +14,29 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                "Special nights visitors can hear the male birds' song.\n"
                "These special events help to known the history of this special bird species for special audience.\n"
                )
+
+    def test_result_selectors(self):
+        if self._test_exec("test_result_selectors"):
+            Obj1 = text.result_obj("FileSourceBaseName1", 11, 1,
+                                   "Sentence first part, and the other very long subsentence with interesting words because the main sentence has to be very long.",
+                                   "Sentence first part", True)
+            Obj2 = text.result_obj("FileSourceBaseName2", 11, 2,
+                                   "Sentence first section, second part.",
+                                   "second part.", True)
+
+            Obj3 = text.result_obj("FileSourceBaseName1", 11, 1,
+                                   "Sentence first part, when subsentence length is equal with Obj1 but the main sentence is shorter.",
+                                   "Sentence first part", True)
+
+        WordsMaybeDetected = ["part"]
+        ResultsSelectedOrig = [Obj1, Obj2]
+        ResultsSelected = seeker_logic.resultSelectors(ResultsSelectedOrig, WordsMaybeDetected)
+        self.assertEqual(ResultsSelected, [Obj2, Obj1])
+
+        ResultsSelectedOrig = [Obj1, Obj2, Obj3]
+        ResultsSelected = seeker_logic.resultSelectors(ResultsSelectedOrig, WordsMaybeDetected)
+
+        self.assertEqual(ResultsSelected, [Obj2, Obj3, Obj1])
 
     def test_words_wanted_from_tokens(self):
         if self._test_exec("test_words_wanted_from_tokens"):

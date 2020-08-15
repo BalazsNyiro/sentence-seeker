@@ -172,6 +172,7 @@ Operator_Functions = {"AND": index_intersect,
 # receive results, give back results
 # example Result Selector, Proof of concept
 # FIXME: distances of wanted words are CRUCIAL
+# tested in test_result_selectors
 def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "SentenceLen"]):
     if not SortBy:
         return ResultsOrig
@@ -220,11 +221,11 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)
             ResultsSelected.append(
-                text.result_obj(Prg, FileSourceBaseName,
-                                LineNum,
-                                SubSentenceNum,
-                                SentenceFillInResult=SentenceFillInResult
-                )
+                text.result_obj_from_memory(Prg, FileSourceBaseName,
+                                            LineNum,
+                                            SubSentenceNum,
+                                            SentenceFillInResult=SentenceFillInResult
+                                            )
             )
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
 

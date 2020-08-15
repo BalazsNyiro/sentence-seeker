@@ -5,9 +5,12 @@ SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
-def sentence_loaded(Prg, Source, LineNum):
+def sentence_load_from_memory(Prg, Source, LineNum, Strip=False):
     if Source in Prg["DocumentObjectsLoaded"]:
-        return Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+        Ret = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+        if Strip:
+            return Ret.strip()
+        return Ret
     return f"DocumentsObjectsLoaded: {Source} is not loaded"
 
 # Tested
@@ -136,15 +139,21 @@ def linenum_subsentencenum_get(LineNum_SubSentenceNum):
 
 
 def result_obj(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
-    if SentenceFillInResult: # in html server the sentence is important in result
-        Sentence = sentence_loaded(Prg, FileSourceBaseName, LineNumInSentenceFile)
-    else:
-        Sentence = "-"
+    Sentence = sentence_load_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
+    SubSentences = text.subsentences(Sentence)
+    SubSentenceResult = SubSentences[SubSentenceNum]
+
     Obj = {"FileSourceBaseName": FileSourceBaseName,
            "LineNumInSentenceFile": LineNumInSentenceFile,
            "SubSentenceNum": SubSentenceNum,
-           "Sentence": Sentence
-            }
+           "Sentence": "-",
+           "SentenceLen": len(Sentence),
+           "SubSentenceLen": len(SubSentenceResult)
+           }
+
+    if SentenceFillInResult: # in html server the sentence is important in result
+        Obj["Sentence"] = Sentence
+
     return Obj
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):

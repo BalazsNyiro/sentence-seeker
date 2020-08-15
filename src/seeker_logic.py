@@ -168,7 +168,24 @@ Operator_Functions = {"AND": index_intersect,
 #         ResultsGroup = Selector(ResultsGroup)
 #     ResultsSelected.extend(ResultsGroup)
 # TODO: result_selectors.py??
-def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False):
+
+# receive results, give back results
+# example Result Selector, Proof of concept
+# FIXME: distances of wanted words are CRUCIAL
+def resultSelector(ResultsOrig, WordsMaybeDetected):
+    ResultNew = []
+
+    Groups = {}
+    for Result in ResultsOrig:
+        Score = Result["SentenceLen"]
+        util.dict_value_insert_into_key_group(Groups, Score, Result)
+
+    for Score in sorted(Groups.keys()):
+        ResultNew.extend(Groups[Score])
+
+    return ResultNew
+
+def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelector]):
     Query = Query.strip()
     print(Query)
     util.log(Prg, f"Query: {Query}")
@@ -205,6 +222,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False):
                 )
             )
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
+
+    for ResultSelector in ResultSelectors:
+        ResultsSelected = ResultSelector(ResultsSelected, WordsMaybeDetected)
 
     TimeLogicUsed = time.time() - TimeLogicStart
     print("Time logic: ", TimeLogicUsed)

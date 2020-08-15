@@ -34,6 +34,10 @@ def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
         return True
     return False
 
+def dict_value_insert_into_key_group(Dict, Key, Val):
+    dict_key_insert_if_necessary(Dict, Key, [])
+    Dict[Key].append(Val)
+
 # Tested
 def dict_key_sorted(Dict: dict, Reverse=True):
     Keys = list(Dict.keys())

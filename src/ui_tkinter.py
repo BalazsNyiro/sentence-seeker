@@ -75,6 +75,15 @@ class CustomText(tk.Text):
             self.mark_set("matchEnd", "%s+%sc" % (index, count.get()))
             self.tag_add(tag, "matchStart", "matchEnd")
 
+# http://effbot.org/tkinterbook/text.htm
+# https://bytes.com/topic/python/answers/46109-programmatic-links-tkinter-textbox
+def show_hand_cursor(event):
+    #print("<Enter> show hand cursor")
+    event.widget.configure(cursor="hand1")
+def show_arrow_cursor(event):
+    #print("<Leave> show hand cursor")
+    event.widget.configure(cursor="")
+
 def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
 
@@ -93,7 +102,8 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.tag_bind(TagName, "<1>",
                            lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
                           )
-
+    SentencesArea.tag_bind(TagName, "<Enter>", show_hand_cursor)
+    SentencesArea.tag_bind(TagName, "<Leave>", show_arrow_cursor)
     SentencesArea.insert(tk.END, Url + "\n\n",  TagName)
 
 def win_main(Prg, Args):

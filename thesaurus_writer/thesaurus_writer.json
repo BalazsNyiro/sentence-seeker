@@ -177,6 +177,7 @@
             "hard"
         ],
         "to dread": [
+            "his knees were trembling",
             "to be afraid of...",
             "to be anxious",
             "to be fearful",
@@ -191,6 +192,7 @@
             "to drive",
             "to steer"
         ],
+        "to drink": ["to drink", "to draine the bottle"],
         "envy": [
             "envy",
             "jealous"
@@ -248,6 +250,14 @@
             "shape",
             "silhouette"
         ],
+        "to force": [
+            "to constrain",
+            "to coerce",
+            "to force",
+            "to drive",
+            "to oblige",
+            "to pressure"
+        ],
         "frightened": [
             "frightened",
             "miserably (she replied miserably)",
@@ -286,6 +296,7 @@
             "to round (He rounded on the newcomer)",
             "to run",
             "to rush",
+            "to scoot",
             "to scramble",
             "to scurry (to hurry)",
             "to shuffle (away)",
@@ -329,11 +340,12 @@
             "narrowly",
             "slightly (to the right)"
         ],
-        "hide": [
+        "to hide": [
             "to camouflage",
             "to conceal",
             "to hide",
-            "to lurk"
+            "to lurk",
+            "to skulk"
         ],
         "human_reactions, nonverbal": [
             "... look of awe on her face",
@@ -562,6 +574,7 @@
             "bitter",
             "dejected",
             "depressed",
+            "looking battered",
             "miserably",
             "ruefully"
         ],
@@ -610,6 +623,7 @@
             "soft",
             "weak"
         ],
+        "to stop, to finish": ["to stop", "to finish", "to cease"],
         "strange, not common": [
             "absurd",
             "astonishing",
@@ -631,7 +645,8 @@
         ],
         "strict": [
             "stern",
-            "strict"
+            "strict",
+            "grim"
         ],
         "time pass": [
             "The minutes crept by as I waited her phone call."

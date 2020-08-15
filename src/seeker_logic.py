@@ -172,20 +172,25 @@ Operator_Functions = {"AND": index_intersect,
 # receive results, give back results
 # example Result Selector, Proof of concept
 # FIXME: distances of wanted words are CRUCIAL
-def resultSelector(ResultsOrig, WordsMaybeDetected):
-    ResultNew = []
+def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "SentenceLen"]):
+    if not SortBy:
+        return ResultsOrig
 
+    ResultNew = []
     Groups = {}
+    SortKey = SortBy[0]
+
     for Result in ResultsOrig:
-        Score = Result["SentenceLen"]
+        Score = Result[SortKey]
         util.dict_value_insert_into_key_group(Groups, Score, Result)
 
     for Score in sorted(Groups.keys()):
-        ResultNew.extend(Groups[Score])
+        # print(f"\nScore {Score} {SortKey}")
+        ResultNew.extend(resultSelectors(Groups[Score], WordsMaybeDetected, SortBy[1:]))
 
     return ResultNew
 
-def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelector]):
+def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):
     Query = Query.strip()
     print(Query)
     util.log(Prg, f"Query: {Query}")

@@ -26,7 +26,8 @@ def document_objects_collect_from_working_dir(Prg,
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
     _Status, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
 
-    for FileOrig in Files: # All files recursively collected from DirDocuments
+    for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
+        Progress = f"{FileNum} / {len(Files)}"
 
         FileText = FileOrig
         BaseNameText = BaseNameOrig = os.path.basename(FileOrig)
@@ -38,7 +39,7 @@ def document_objects_collect_from_working_dir(Prg,
         Extension = util.filename_extension(BaseNameOrig)
 
         if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
-            info(f"in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
+            info(f"{Progress} in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
             FilePathWithoutExtension = util.filename_without_extension(FileOrig)
             FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
             if not os.path.isfile(FilePathConvertedToText):
@@ -62,7 +63,7 @@ def document_objects_collect_from_working_dir(Prg,
         # errors can happen if we convert pdf/html/other to txt
         # so if Extension is .txt, I check the existing of the file
         if Extension == ".txt" and os.path.isfile(FileText):
-            info(f"in documents dir - processed: {BaseNameText}")
+            info(f"{Progress} in documents dir - processed: {BaseNameText}")
 
             # this document object describe infos about the document
             # for example the version of index algorithm

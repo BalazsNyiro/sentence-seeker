@@ -10,6 +10,7 @@ import config, util_test, document, argparse
 
 import seeker, ui_console, ui_tkinter, ui_json, ui_html
 from http.server import HTTPServer
+import ui_tkinter_boot_progress_bar
 
 Prg = config.PrgConfigCreate(PrintForDeveloper=False)
 
@@ -53,20 +54,24 @@ if Args.test:
 document.docs_copy_samples_into_dir_if_necessary(Prg)
 
 #########################################
-seeker.be_ready_to_seeking(Prg)
 
 #sys.setprofile(util.TraceFunc)
 print(f"\nUI start: {Args.ui}")
 if Args.ui == "console":
+    seeker.be_ready_to_seeking(Prg)
     ui_console.user_interface_start(Prg, Args)
 
 elif Args.ui == "tkinter":
+    # seeker.be_ready_to_seeking(Prg)
+    ui_tkinter_boot_progress_bar.bar_display(Prg, seeker.be_ready_to_seeking)
     ui_tkinter.win_main(Prg, Args)
 elif Args.ui == "json":
+    seeker.be_ready_to_seeking(Prg)
     ui_json.SimpleHTTPRequestHandler.Prg = Prg
     httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_json.SimpleHTTPRequestHandler)
     httpd.serve_forever()
 elif Args.ui == "html":
+    seeker.be_ready_to_seeking(Prg)
     ui_html.SimpleHTTPRequestHandler.Prg = Prg
     httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)
     httpd.serve_forever()

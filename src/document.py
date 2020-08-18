@@ -28,6 +28,9 @@ def document_objects_collect_from_working_dir(Prg,
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         Progress = f"{FileNum} / {len(Files)}"
+        if "ProgressBar" in Prg:
+            Prg["ProgressBar"]["value"] = int((FileNum*100.0) / len(Files))
+            Prg["ProgressBarRoot"].update_idletasks()
 
         FileText = FileOrig
         BaseNameText = BaseNameOrig = os.path.basename(FileOrig)

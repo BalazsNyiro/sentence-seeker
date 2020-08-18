@@ -25,6 +25,14 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
         for Msg in Prg["MessagesForUser"]:
             print(f" - {Msg}")
         print("\n", flush=True)
+
+    if "ProgressBarRoot" in Prg:
+        Prg["ProgressBarRoot"].destroy()
+        Prg["ProgressBarRoot"].quit()
+        del Prg["ProgressBar"]
+        del Prg["ProgressBarRoot"]
+
+
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
     Created = False

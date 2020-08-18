@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
 from tkinter import *
 import tkinter.ttk
+# https://www.geeksforgeeks.org/progressbar-widget-in-tkinter-python/
 
-root = Tk()
-progress = tkinter.ttk.Progressbar(root, orient=HORIZONTAL,
-                       length=100, mode='determinate')
-def bar():
-    import time
-    progress['value'] = 20
-    root.update_idletasks()
-    time.sleep(1)
+def bar_display(Prg, FunBehindBar):
+    Root = Tk()
+    ProgressBar = tkinter.ttk.Progressbar(Root, orient=HORIZONTAL,
+                                          length=400, mode='determinate')
+    ProgressBar.pack(pady=10)
+    Prg["ProgressBar"] = ProgressBar
+    Prg["ProgressBarRoot"] = Root
 
-    progress['value'] = 80
-    root.update_idletasks()
-    time.sleep(1)
-    progress['value'] = 100
-    root.destroy()
+    # start a function after mainloop
+    # https://stackoverflow.com/questions/459083/how-do-you-run-your-own-code-alongside-tkinters-event-loop
+    Root.after(10, FunBehindBar, Prg)
 
-progress.pack(pady=10)
-Button(root, text='Start', command=bar).pack(pady=10)
-
-# infinite loop
-mainloop()
+    mainloop()

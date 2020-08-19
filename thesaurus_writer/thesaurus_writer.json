@@ -23,6 +23,7 @@
             "irritably",
             "madly",
             "shrilly",
+            "viciously",
             "wickedly"
         ],
         "anger": [
@@ -133,6 +134,7 @@
         "close": [
             "to bar",
             "to close",
+            "to padlock",
             "to slam",
             "to shut"
         ],
@@ -198,6 +200,7 @@
             "jealous"
         ],
         "escape": [
+            "to slip - she slipped through wolf's clutches for a third time",
             "to escape",
             "to wriggle (She wriggled free from her parents' hug.)"
         ],
@@ -268,6 +271,7 @@
             "finely",
             "fondly",
             "gently",
+            "heartily",
             "kindly"
         ],
         "go, change position": [
@@ -347,11 +351,14 @@
             "to lurk",
             "to skulk"
         ],
+        "to hit": ["to hit", "to pound"],
         "human_reactions, nonverbal": [
             "... look of awe on her face",
             "... nasty smile",
             "... stopped with a nasty grin on her face",
             "... to answer with a slight sneer",
+            "... she exchanged dark looks with his husband",
+            "... she gasped and fell off her armchair",
             "to amuse",
             "to blink",
             "to blush (her face became red)",
@@ -367,6 +374,7 @@
             "to fidget",
             "to flinch (She flinched)",
             "to gawp (something interesting happened)",
+            "to gasp",
             "to gulp",
             "to giggle",
             "to grin at her amazement",
@@ -393,7 +401,8 @@
         "hurt": [
             "to insult",
             "to hurt",
-            "to scratch (herself)"
+            "to scratch (herself)",
+            "to taunt"
         ],
         "immediately": [
             "at once",
@@ -415,6 +424,8 @@
             "to question"
         ],
         "information give, react": [
+            "... I don't care! thundered the king",
+            "... I will catch you! she snarled, spraying spit over the kitchen table",
             "to add (... the witch  added nastily)",
             "to admit",
             "to agree",
@@ -481,6 +492,7 @@
             "to shout",
             "to shriek",
             "to sigh",
+            "to snarl (to tell with hate and rage: I will fight with you! he snarled)",
             "to snap (he snapped through the closed windows",
             "to snap",
             "to snigger",
@@ -520,6 +532,7 @@
             "to slope (she sloped away)"
         ],
         "to lift": [
+            "to emerge",
             "to lift",
             "to heave"
             ],
@@ -594,6 +607,7 @@
 
         "silently": [
             "silently",
+            "tonelessly",
             "with small voice"
         ],
         "sit down": [
@@ -751,6 +765,7 @@
             "typical",
             "usual (the letters arrived as usual)"
         ],
+        "tricky": ["tricky", "cunning"],
         "under (beneath)": [
             "below",
             "beneath",

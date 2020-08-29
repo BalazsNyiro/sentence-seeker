@@ -5,8 +5,10 @@ import tkinter.ttk
 
 def bar_display(Prg, FunBehindBar):
     Root = Tk()
+    Root.title(f"sentence-seeker: {Prg['DirDocuments']}")
+    Root.resizable(False, False)
     ProgressBar = tkinter.ttk.Progressbar(Root, orient=HORIZONTAL,
-                                          length=400, mode='determinate')
+                                          length=600, mode='determinate')
     ProgressBar.pack(pady=10)
     Prg["ProgressBar"] = ProgressBar
     Prg["ProgressBarRoot"] = Root

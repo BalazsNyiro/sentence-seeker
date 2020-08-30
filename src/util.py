@@ -124,6 +124,10 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
 
     return Lines
 
+def file_read_all_simple(Fname="",mode="r"): # if you want read binary, write "rb"
+    with open(Fname, mode) as f:
+        return f.read()
+
 # Tested, Prg is important for log, or maybe we should skip logging?
 def file_read_all(Prg={}, Fname="", Gzipped=False):
     # print("Fname:", Fname, "isfile:", os.path.isfile(Fname))
@@ -220,8 +224,7 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
         Content = gzip.compress(OutputBytes, CompressLevel)
 
     try:
-        with open(Fname, Mode) as f:
-            f.write(Content)
+        file_write_simple(Fname, Content, Mode)
         if LogCreate:
             log(Prg, f"File written: {Fname}")
         return True
@@ -229,6 +232,11 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
         log(Prg, f"File write error: {Fname}")
 
     return False
+
+# tested in test_util_json.py with usage
+def file_write_simple(Fname, Content, Mode="w"):
+    with open(Fname, Mode) as f:
+        f.write(Content)
 
 def file_write_with_check(Prg, Fname="", Content=""):
     file_write_utf8_error_avoid(Prg, Fname=Fname, Content=Content)
@@ -394,7 +402,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                                   "source_name": SourceName,
                                   "license": License}
                         # print("DocObj", DocObj)
-                        util_json_obj.doc_db_update_in_file_and_reload(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
+                        util_json_obj.doc_db_update_in_file_and_Prg(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
 
                         Url = License = FileName = "-"
                         LinesDoc = []

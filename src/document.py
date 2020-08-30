@@ -66,7 +66,8 @@ def document_objects_collect_from_working_dir(Prg,
         # errors can happen if we convert pdf/html/other to txt
         # so if Extension is .txt, I check the existing of the file
         if Extension == ".txt" and os.path.isfile(FileText):
-            info(f"{Progress} in documents dir - processed: {BaseNameText}")
+            if not Prg.get("TestExecution", False): # during test exec hide progress
+                info(f"{Progress} in documents dir - processed: {BaseNameText}")
 
             # this document object describe infos about the document
             # for example the version of index algorithm
@@ -84,7 +85,7 @@ def document_objects_collect_from_working_dir(Prg,
                 if BaseNameOrigWithoutExtension in DocsSampleInfo["docs"]:
                     DocObj = DocsSampleInfo["docs"][BaseNameOrigWithoutExtension]
 
-                util_json_obj.doc_db_update_in_file_and_reload(Prg, BaseNameOrigWithoutExtension, DocObj) # and reload the updated db
+                util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameOrigWithoutExtension, DocObj) # and reload the updated db
 
             # Original: lists.
             #Arrays are more complex, less memory usage:

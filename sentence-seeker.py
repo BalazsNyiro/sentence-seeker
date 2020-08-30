@@ -12,14 +12,14 @@ import seeker, ui_console, ui_tkinter, ui_json, ui_html
 from http.server import HTTPServer
 import ui_tkinter_boot_progress_bar
 
-Prg = config.PrgConfigCreate(PrintForDeveloper=False)
-
 parser = argparse.ArgumentParser(prog="sentence-seeker", description="Collect example sentences from texts")
 parser.add_argument("--test", help="execute only tests", action='store_true')
 parser.add_argument("--usage", help="display sort usage info", action='store_true')
 
-parser.add_argument("--ui", help="select user interface. (console, tkinter, web)", action='store', default='tkinter')
+parser.add_argument("--ui", help="select user interface. (console, tkinter, html)", action='store', default='tkinter')
 Args = parser.parse_args()
+
+Prg = config.PrgConfigCreate(Args, PrintForDeveloper=False)
 
 if Args.usage:
     print(Prg["UsageInfo"])

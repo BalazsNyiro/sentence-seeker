@@ -17,11 +17,10 @@ class SentenceSeekerTest(unittest.TestCase):
             return False
 
     def setUp(self):
-        self.Prg["TestExecution"] = True
+        pass
 
     # https://stackoverflow.com/questions/4414234/getting-pythons-unittest-results-in-a-teardown-method/39606065#39606065
     def tearDown(self):
-        self.Prg["TestExecution"] = False
 
         def list2reason(exc_list):
             if exc_list and exc_list[-1][0] is self:

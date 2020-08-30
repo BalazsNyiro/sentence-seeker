@@ -19,13 +19,29 @@ def obj_to_file(JsonFileName, Data):
     with open(JsonFileName, 'w') as OutFile:
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
-def doc_db_update_in_file_and_reload(Prg, FileWithoutExtension, DocObj=None):
-    _Status, DocDb = obj_from_file(Prg["FileDocumentsDb"])
-    DocDb["docs"][FileWithoutExtension] = DocObj
-    obj_to_file(Prg["FileDocumentsDb"], DocDb)
-    _Status, JsonObjReply = obj_from_file(Prg["FileDocumentsDb"])
-    Prg["DocumentsDb"] = JsonObjReply["docs"]
-    Prg["FileDocumentsDbContent"] = json.dumps(DocDb, sort_keys=True, indent=4)
+def doc_db_update_in_file_and_Prg(Prg, FileWithoutExtension, DocObj):
+    FileDocumentsDb = Prg["FileDocumentsDb"]
+
+    StatusDocDb, DocDb = obj_from_file(FileDocumentsDb)
+    if StatusDocDb == "ok": # obj_from_file display error if something is wrong
+
+        if "docs" not in DocDb:
+            DocDb["docs"] = {}
+
+        # write back the Document object
+        DocDb["docs"][FileWithoutExtension] = DocObj
+
+        # the file is updated AND DocumentsDb is updated, too, and FileDocumentsDbContent, too
+        obj_to_file(FileDocumentsDb, DocDb)
+        Prg["DocumentsDb"] = DocDb["docs"]
+
+        # here we load it once and in ui_html
+        # we don't have to reload it at every request
+        Prg["FileDocumentsDbContent"] = json_to_str(DocDb)
+
+# tested in test_util_json
+def json_to_str(Obj):
+    return json.dumps(Obj, sort_keys=True, indent=4)
 
 # Used in tests
 # read wanted key from config file

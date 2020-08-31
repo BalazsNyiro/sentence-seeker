@@ -124,10 +124,6 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
 
     return Lines
 
-def file_read_all_simple(Fname="",mode="r"): # if you want read binary, write "rb"
-    with open(Fname, mode) as f:
-        return f.read()
-
 # Tested, Prg is important for log, or maybe we should skip logging?
 def file_read_all(Prg={}, Fname="", Gzipped=False):
     # print("Fname:", Fname, "isfile:", os.path.isfile(Fname))
@@ -190,7 +186,6 @@ def file_del(Path, Verbose=False):
 def file_append(Prg, Fname="", Content="", Mode="a"):  # you can append in binary mode, too
     return file_write(Prg, Fname=Fname, Content=Content, Mode=Mode)
 
-
 def file_write_utf8_error_avoid(Prg, Fname, Content):
     # convert text to bytes. On Linux without any error
     # we can write texts but on Windows I receive conversion error message:
@@ -235,8 +230,12 @@ def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel
 
 # tested in test_util_json.py with usage
 def file_write_simple(Fname, Content, Mode="w"):
-    with open(Fname, Mode) as f:
-        f.write(Content)
+    if "b" not in Mode: # fixed unix style end of line
+        with open(Fname, Mode, newline="\n") as f:
+            f.write(Content)
+    else:
+        with open(Fname, Mode) as f:
+            f.write(Content)
 
 def file_write_with_check(Prg, Fname="", Content=""):
     file_write_utf8_error_avoid(Prg, Fname=Fname, Content=Content)

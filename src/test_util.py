@@ -5,6 +5,13 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_dict_value_insert_into_key_group(self):
+        if self._test_exec("test_dict_value_insert_into_key_group"):
+            Dict = {}
+            util.dict_value_insert_into_key_group(Dict, "Group", 1)
+            util.dict_value_insert_into_key_group(Dict, "Group", 2)
+            self.assertEqual(Dict["Group"], [1, 2])
+
     def test_util_dict_key_sorted(self):
         if self._test_exec("test_util_dict_key_sorted"):
             Dict = {"Aphrodite": 0, "Zeus": 2, "Xena": 1,  "Athene": 3}

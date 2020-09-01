@@ -66,11 +66,21 @@ class UtilTests(util_test.SentenceSeekerTest):
             Prg = self.Prg
             Fname = os.path.join(Prg["DirWork"], "test_file_create_if_necessary.txt")
             util.file_del(Fname)
-            Created = util.file_create_if_necessary(Prg, Fname, ContentDefault="cloud")
+
+            Content = "Cloud\nRain\nSun\r\nSnow   "
+            Created = util.file_create_if_necessary(Prg, Fname, ContentDefault=Content)
             self.assertTrue(Created)
 
-            RetRead, ContentRead = util.file_read_all(Prg, Fname)
-            self.assertEqual(ContentRead, "cloud")
+            RetRead, ContentReadAll = util.file_read_all(Prg, Fname)
+            self.assertEqual(ContentReadAll, Content)
+
+            ContentReadLines = util.file_read_lines(Prg, Fname, Lower=True)
+            LinesWanted = ["cloud\n", "rain\n", "sun\r\n", "snow   "]
+            self.assertEqual(LinesWanted, ContentReadLines)
+
+            ContentReadLines = util.file_read_lines(Prg, Fname, Strip=True)
+            LinesWanted = ["Cloud", "Rain", "Sun", "Snow"]
+            self.assertEqual(LinesWanted, ContentReadLines)
 
             util.file_del(Fname)
 

@@ -34,6 +34,7 @@ def dict_key_insert_if_necessary(Dict: dict, Key: any, Default: any):
         return True
     return False
 
+# Tested
 def dict_value_insert_into_key_group(Dict, Key, Val):
     dict_key_insert_if_necessary(Dict, Key, [])
     Dict[Key].append(Val)
@@ -86,11 +87,10 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
     Created = False
 
     if os.path.isfile(Path):
-        Msg = f"file create if necessary - not created: it was a filename, {Path}"
+        Msg = f"\nfile create if necessary - not created: it was a filename, {Path}"
     else:
-        print("File creation:", Path)
         Created = file_write(Prg, Fname=Path, Content=ContentDefault, LogCreate=LogCreate)
-        Msg = f"file create if necessary - created: {Created}  {Path}"
+        Msg = f"\nfile create if necessary - created: {Created}  {Path}"
         print(Msg)
 
     if LogCreate:
@@ -107,6 +107,11 @@ def filename_without_extension(Fname):
     if not Extension:
         return Fname
     return Fname.rsplit(Extension, 1)[0]
+
+# Tested in file_read_lines's test / wrappe fun, test not necessary
+def file_read_all_simple(Fname="", mode="r"): # if you want read binary, write "rb"
+    with open(Fname, mode) as f:
+        return f.read()
 
 def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)
@@ -249,7 +254,6 @@ def file_write_with_check(Prg, Fname="", Content=""):
 def file_copy(FilePathFrom, FilePathTo):
     shutil.copyfile(FilePathFrom, FilePathTo)
 
-
 # Tested
 def file_is_gzipped(Prg, Path):
     if os.path.isfile(Path):
@@ -353,6 +357,7 @@ def web_get(Url, Binary=False, Verbose=True):
             # return Response.read().decode('utf-8')
             return BufferAll.getvalue().decode("utf-8")
 
+# not tested: wrapper fun
 def console_available():
     return sys.stdout.isatty() # True if we run in console
 

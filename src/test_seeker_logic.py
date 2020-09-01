@@ -190,7 +190,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 def run_all_tests(Prg):
     SeekerLogicTests.Prg = Prg
     # I can't use self.Prg when I define class variable so I set FilePath from here
-    SeekerLogicTests.FilePathBird = os.path.join(Prg["DirDocuments"], "test_document_bird.txt")
     SeekerLogicTests.FileBaseNameBird = "test_document_bird.txt"
+    SeekerLogicTests.FilePathBird = os.path.join(Prg["DirDocuments"], SeekerLogicTests.FileBaseNameBird)
     unittest.main(module="test_seeker_logic", verbosity=2, exit=False)
 

@@ -10,7 +10,8 @@ def obj_from_file(JsonFileName):
         JsonObj = json.loads(FileContent)
         return "ok", JsonObj
     except json.decoder.JSONDecodeError:
-        Msg = f"Json decoder error: {JsonFileName}"
+        FileContent = util.file_read_all_simple(JsonFileName)
+        Msg = f"Json decoder error: {JsonFileName}:>>" + FileContent + "<<"
         print(Msg)
         return "error", Msg
 

@@ -61,7 +61,7 @@ class UtilTests(util_test.SentenceSeekerTest):
             Files = util.files_abspath_collect_from_dir(Prg["DirPrgRoot"])
             self.assertIn(os.path.join(Prg["DirPrgRoot"], "src", "util.py"), Files)
 
-    def test_util_file_create_if_necessary(self):
+    def test_util_file_create_if_necessary__file_read(self):
         if self._test_exec("test_file_create_if_necessary"):
             Prg = self.Prg
             Fname = os.path.join(Prg["DirWork"], "test_file_create_if_necessary.txt")
@@ -125,6 +125,11 @@ class UtilTests(util_test.SentenceSeekerTest):
             FileState, FileGzipped = util.file_is_gzipped(Prg, Fname)
             self.assertEqual("file_exists", FileState)
             self.assertEqual("gzipped", FileGzipped)
+
+            util.file_write_utf8_error_avoid(Prg, Fname, Sample)
+            BinWanted = b'\xc3\xa1rv\xc3\xadzt\xc5\xb1r\xc5\x91 t\xc3\xbck\xc3\xb6rf\xc3\xbar\xc3\xb3g\xc3\xa9p'
+            BinFromFile = util.file_read_all_simple(Fname, "rb")
+            self.assertEqual(BinWanted, BinFromFile)
 
             RetDel1 = util.file_del(Fname)
             RetDel2 = util.file_del(Fname)

@@ -112,7 +112,7 @@ def filename_without_extension(Fname):
 def file_read_all_simple(Fname="", mode="r"): # if you want read binary, write "rb"
     with open(Fname, mode) as f:
         return f.read()
-
+# tested
 def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)
     Lines = []

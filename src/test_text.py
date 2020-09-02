@@ -18,6 +18,16 @@ class TextTests(util_test.SentenceSeekerTest):
             TextNew = text.replace_abbreviations(TextOrig)
             self.assertEqual(TextNew, "Mr and Mrs Jones")
 
+    def test_replaces(self):
+        if self._test_exec("test_replaces"):
+            Txt = "Small apples hide in the forest until animals eat them"
+
+            Replaces = (
+                ("Small", "Big"),
+                ("animals", "people")
+            )
+            Replaced = text.replace_pairs(Txt, Replaces)
+            self.assertEqual(Replaced, "Big apples hide in the forest until people eat them")
 
     # html_tags_remove() uses replace_regexp()
     def test_replace_regexp(self):

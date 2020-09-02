@@ -86,7 +86,8 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
             PrgOrig = copy.deepcopy(Prg)
             util.file_del(FilePathBird)
-            util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
+            ResultWrite = util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
+            # print("\n#### FILE WRITE:'", ResultWrite)
 
             seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
             ######################################################################

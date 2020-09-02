@@ -126,10 +126,24 @@ class UtilTests(util_test.SentenceSeekerTest):
             self.assertEqual("file_exists", FileState)
             self.assertEqual("gzipped", FileGzipped)
 
+            BinWanted = Sample.encode()
             util.file_write_utf8_error_avoid(Prg, Fname, Sample)
-            BinWanted = b'\xc3\xa1rv\xc3\xadzt\xc5\xb1r\xc5\x91 t\xc3\xbck\xc3\xb6rf\xc3\xbar\xc3\xb3g\xc3\xa9p'
             BinFromFile = util.file_read_all_simple(Fname, "rb")
+            # print("\n######### >>" + util.file_read_all(Prg, Fname)[1] + "<<")
+            # print("\n######### >>", Sample.encode(), "<<")
             self.assertEqual(BinWanted, BinFromFile)
+
+
+            FileWriteRet = util.file_write_with_check(Prg, Fname, Sample)
+            TxtFromFile = util.file_read_all_simple(Fname)
+            self.assertEqual(TxtFromFile, Sample)
+            self.assertTrue(FileWriteRet)
+
+            util.file_write_with_check(Prg, Fname, "") # clear the content of the file
+            # writing is unsuccessful because writer fun doesn't do anything
+            def empty_writer_fun(Prg, Fname, Sample): pass
+            FileWriteRet = util.file_write_with_check(Prg, Fname, Sample, WriterFun=empty_writer_fun)
+            self.assertFalse(FileWriteRet)
 
             RetDel1 = util.file_del(Fname)
             RetDel2 = util.file_del(Fname)

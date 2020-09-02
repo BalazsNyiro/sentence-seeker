@@ -203,7 +203,8 @@ def file_write_utf8_error_avoid(Prg, Fname, Content):
     # 't encode character '\ufeff
     # ' in position 0: character maps to <undefined>
 
-    file_write(Prg, Fname, Content.encode(), Mode="wb")
+    # Mode has to be wb because of .encode()
+    return file_write(Prg, Fname, Content.encode(), Mode="wb")
 
 # Tested
 def file_write(Prg, Fname="", Content="", Mode="w", Gzipped=False, CompressLevel=9, LogCreate=True):
@@ -242,13 +243,17 @@ def file_write_simple(Fname, Content, Mode="w"):
         with open(Fname, Mode) as f:
             f.write(Content)
 
-def file_write_with_check(Prg, Fname="", Content=""):
-    file_write_utf8_error_avoid(Prg, Fname=Fname, Content=Content)
+# Tested
+def file_write_with_check(Prg, Fname="", Content="", WriterFun=file_write_utf8_error_avoid):
+    WriterFun(Prg, Fname, Content)
+
     _, Written = file_read_all(Prg, Fname)
     if not Written == Content:
         Msg = f"file_write_with_check Write Problem: {Fname}\n{Content}"
         print(Msg)
         log(Prg, Msg)
+        return False
+    return True
 
 # not tested, simple wrapper func
 def file_copy(FilePathFrom, FilePathTo):
@@ -286,8 +291,9 @@ def print_dev(Prg, *args):
     if Prg.get("PrintForDeveloper", False):
         print(*args)
 
-def list_to_array(L):
-    return array.array("I",L)
+# wrapper, not tested
+def int_list_to_array(L):
+    return array.array("I", L)
 
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
@@ -361,7 +367,7 @@ def web_get(Url, Binary=False, Verbose=True):
 def console_available():
     return sys.stdout.isatty() # True if we run in console
 
-# TODO: test
+# manually tested
 def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
     if WikiPagesUse == None: # param not given
         if console_available(): # we are in a real terminal
@@ -420,6 +426,7 @@ def dir_user_home():
     return str(pathlib.Path.home())
 
 # https://stackoverflow.com/a/8315566/13281559
+# devel fun, not tested
 def TraceFunc(Frame, Event, Arg, Indent=[0]):
     Fun = Frame.f_code.co_name
 
@@ -501,6 +508,7 @@ def TraceFunc(Frame, Event, Arg, Indent=[0]):
 
     return TraceFunc
 
+# not tested, devel fun only
 def dict_mem_usage(Dict, Level=0):
     for Key, Val in Dict.items():
         IsDict = isinstance(Val, dict)
@@ -511,11 +519,3 @@ def dict_mem_usage(Dict, Level=0):
         else:
             print(Key, sys.getsizeof(Val), type(Val))
 
-def replace_pairs(Txt, Replaces):
-    for Old, New in Replaces:
-        Txt = Txt.replace(Old, New)
-    return Txt
-
-def replace_regexp(pattern, new_text, txt):
-    p = re.compile(pattern)
-    return p.sub(new_text, txt)

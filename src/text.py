@@ -43,6 +43,11 @@ _PatternWhitespaces = re.compile(r'\s+')
 def replace_whitespaces_to_one_space(Text):
     return replace_regexp(Text, _PatternWhitespaces, " ")
 
+def replace_pairs(Txt, Replaces):
+    for Old, New in Replaces:
+        Txt = Txt.replace(Old, New)
+    return Txt
+
 # Tested
 def replace_regexp(Text, Pattern, TextNew, IgnoreCase=False):
     if IgnoreCase:
@@ -128,7 +133,7 @@ def subsentences(Sentence):
         Sentence = Sentence.replace(SubSep, ";")
     return Sentence.split(";")
 
-def linenum_subsentencenum_get(LineNum_SubSentenceNum):
+def linenum_sureplace_regexpbsentencenum_get(LineNum_SubSentenceNum):
     SubSentenceNum = LineNum_SubSentenceNum % 100
 
     if LineNum_SubSentenceNum < 100:  # I store 2 numbers info in one number and LineNum can be zero, too

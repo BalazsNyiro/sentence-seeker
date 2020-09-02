@@ -95,7 +95,7 @@ def document_objects_collect_from_working_dir(Prg,
                 Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
                 if Status == "ok":
                     for Word, IndexList in JsonObjReply.items():
-                        Index[Word] = util.list_to_array(IndexList)
+                        Index[Word] = util.int_list_to_array(IndexList)
                 else:
                     Prg["MessagesForUser"].append(JsonObjReply)
 

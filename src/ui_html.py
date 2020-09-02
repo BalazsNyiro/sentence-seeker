@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, urllib.parse, util, seeker_logic
+import os, urllib.parse, util, seeker_logic, text
 from http.server import BaseHTTPRequestHandler
 import util_ui
 
@@ -82,7 +82,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                     ("PLACEHOLDER_LICENSE", License),
                     ("PLACEHOLDER_QUERY_EXAMPLE", self.Prg["QueryExamples"]["bird_or_cat"])
                 )
-                Reply = util.replace_pairs(Reply, Replaces)
+                Reply = text.replace_pairs(Reply, Replaces)
 
             Reply = Reply.encode("UTF-8")
             self.send_response(200)

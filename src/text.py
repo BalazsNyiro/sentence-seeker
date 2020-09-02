@@ -5,13 +5,30 @@ SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
-def sentence_load_from_memory(Prg, Source, LineNum, Strip=False):
-    if Source in Prg["DocumentObjectsLoaded"]:
-        Ret = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
-        if Strip:
-            return Ret.strip()
-        return Ret
-    return f"DocumentsObjectsLoaded: {Source} is not loaded"
+def sentence_from_memory(Prg, Source, LineNum, Strip=False):
+    Msg = ""
+    if Source not in Prg["DocumentObjectsLoaded"]:
+        Msg = f"DocumentsObjectsLoaded: {Source} is not loaded"
+
+    elif "Sentences" not in Prg["DocumentObjectsLoaded"][Source]:
+        Msg = f"DocumentsObjectsLoaded: {Source} no Sentences"
+
+    elif not util.is_list(Prg["DocumentObjectsLoaded"][Source]["Sentences"]):
+        Sentences = Prg["DocumentObjectsLoaded"][Source]["Sentences"]
+        Msg = f"DocumentsObjectsLoaded: incorrect type: Sentences = {str(Sentences)}"
+
+    elif len(Prg["DocumentObjectsLoaded"][Source]["Sentences"])-1 < LineNum:
+        Msg = f"DocumentsObjectsLoaded: {Source} unknown linenum: {LineNum}"
+
+    if Msg:
+        print(Msg)
+        util.log(Prg, Msg)
+        return False, Msg
+
+    Line = Prg["DocumentObjectsLoaded"][Source]["Sentences"][LineNum]
+    if Strip:
+        return True, Line.strip()
+    return True, Line
 
 # Tested
 _PatternNotAbc = re.compile(r'[^a-zA-Z]')
@@ -153,7 +170,7 @@ def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Senten
            }
 
 def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
-    Sentence = sentence_load_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
+    _Status, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
     SubSentences = text.subsentences(Sentence)
     SubSentenceResult = SubSentences[SubSentenceNum]
     return result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)

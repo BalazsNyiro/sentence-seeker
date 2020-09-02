@@ -104,6 +104,8 @@ def document_objects_collect_from_working_dir(Prg,
                                        FileIndex=FileIndex,
                                        FileSentences=FileSentences,
                                        Index=Index,
+
+                                       # list of sentences
                                        Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
 
             DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename

@@ -5,7 +5,7 @@ def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
     Source = Result["FileSourceBaseName"]
     LineNum = Result["LineNumInSentenceFile"]
 
-    Sentence = text.sentence_load_from_memory(Prg, Source, LineNum, Strip=True)
+    _Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
 
     Url = ""
     if Source in Prg["DocumentsDb"]:

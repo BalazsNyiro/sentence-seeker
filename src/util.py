@@ -117,14 +117,16 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)
     Lines = []
     for Line in TextAll.split("\n"):
+
         if Lower:
             Line = Line.lower()
+
         if Strip:
             Lines.append(Line.strip())
         else:
             Lines.append(Line+"\n") # give back ending newline
 
-    if  Lines:
+    if Lines:
         Lines[-1] = Lines[-1].replace("\n", '') # the last elem can't have \n at end
 
     return Lines
@@ -519,3 +521,14 @@ def dict_mem_usage(Dict, Level=0):
         else:
             print(Key, sys.getsizeof(Val), type(Val))
 
+def is_list(Obj):
+    return isinstance(Obj, list)
+
+def is_str(Obj):
+    return isinstance(Obj, str)
+
+def is_dict(Obj):
+    return isinstance(Obj, dict)
+
+def is_tuple(Obj):
+    return isinstance(Obj, tuple)

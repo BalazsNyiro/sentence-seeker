@@ -63,7 +63,7 @@ def token_interpreter(Tokens, DocIndex, Explains):
 
     for Token in Tokens:
 
-        if is_list(Token):
+        if util.is_list(Token):
             Result = token_interpreter(Token, DocIndex, Explains)
 
         if operator(Token):
@@ -92,24 +92,12 @@ def token_interpreter(Tokens, DocIndex, Explains):
 
 
 def is_str_but_not_operator(Token):
-    return (is_str(Token) and not operator(Token))
+    return (util.is_str(Token) and not operator(Token))
 
 def operator(Token):
-    if is_str(Token): # if we got a string, then check in the Operators, else False
+    if util.is_str(Token): # if we got a string, then check in the Operators, else False
         return Token in Operator_Functions
     return False
-
-def is_list(Obj):
-    return isinstance(Obj, list)
-
-def is_str(Obj):
-    return isinstance(Obj, str)
-
-def is_dict(Obj):
-    return isinstance(Obj, dict)
-
-def is_tuple(Obj):
-    return isinstance(Obj, tuple)
 
 def operator_exec_left_right(Operator, TokensOrig, FunOperator, Explains):
     Tokens = copy.deepcopy(TokensOrig)

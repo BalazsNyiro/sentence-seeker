@@ -3,6 +3,42 @@ import unittest, text, util_test
 
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
+
+
+    def test_sentence_from_memory(self):
+        if self._test_exec("test_sentence_from_memory"):
+            Prg = {"DocumentObjectsLoaded": dict()}
+            Source = "book"
+            LineNum = 1
+
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum)
+            self.assertFalse(Status)
+            self.assertTrue("is not loaded" in Sentence)
+
+            Prg = {"DocumentObjectsLoaded": {Source: dict()}}
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum)
+            self.assertFalse(Status)
+            self.assertTrue("no Sentences" in Sentence)
+
+            Prg = {"DocumentObjectsLoaded": {Source: {"Sentences": "wrong type"}}}
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum)
+            self.assertFalse(Status)
+            self.assertTrue("incorrect type" in Sentence)
+
+            Prg = {"DocumentObjectsLoaded": {Source: {"Sentences": []}}}
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum)
+            self.assertFalse(Status)
+            self.assertTrue("unknown linenum" in Sentence)
+
+            Prg = {"DocumentObjectsLoaded": {Source: {"Sentences": ["", "  Second line.  "]}}}
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum)
+            self.assertTrue(Status)
+            self.assertEqual("  Second line.  ", Sentence)
+
+            Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
+            self.assertTrue(Status)
+            self.assertEqual("Second line.", Sentence)
+
     def test_remove_not_abc_chars(self):
         if self._test_exec("test_remove_not_abc_chars"):
             TextOrig = "[pine;a'pp_le\n!-cliché0123456789"

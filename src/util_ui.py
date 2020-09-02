@@ -45,3 +45,6 @@ def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n"):
         TokenExplainText.append(f"{Token}: {ResultNum}")
 
     return NewLine.join(TokenExplainText)
+
+def title(Prg):
+    return f"sentence-seeker: {Prg['DirDocuments']}"

@@ -111,7 +111,7 @@ def win_main(Prg, Args):
     PrgGlob = Prg
 
     Root = tk.Tk()
-    Root.title(f"sentence-seeker: {Prg['DirDocuments']}")
+    Root.title(util_ui.title(Prg))
 
     MenuBar = tk.Menu(Root)
 

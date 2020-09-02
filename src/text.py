@@ -5,6 +5,7 @@ SentenceEnds = [".", "!", "?", "…"]
 SubsentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
+# Tested
 def sentence_from_memory(Prg, Source, LineNum, Strip=False):
     Msg = ""
     if Source not in Prg["DocumentObjectsLoaded"]:
@@ -47,19 +48,12 @@ def remove_non_alpha_chars(Text, TextNew="", CharsKeepThem=""):
             Cleaned.append(TextNew)
     return "".join(Cleaned)
 
-
-# Tested with abbreviations,
-# FromToPairsExample = [("Mr.", "Mr")]
-def replace(Txt, FromToPairs):
-    for Old, New in FromToPairs:
-        Txt = Txt.replace(Old, New)
-    return Txt
-
 _PatternWhitespaces = re.compile(r'\s+')
 # Tested
 def replace_whitespaces_to_one_space(Text):
     return replace_regexp(Text, _PatternWhitespaces, " ")
 
+# Tested
 def replace_pairs(Txt, Replaces):
     for Old, New in Replaces:
         Txt = Txt.replace(Old, New)
@@ -83,7 +77,7 @@ def replace_abbreviations(Txt):
     ReplaceAbbreviations = [("Mr.", "Mr"),
                             ("Mrs.", "Mrs"),
                             ("Ms.", "Ms")]
-    return replace(Txt, ReplaceAbbreviations)
+    return replace_pairs(Txt, ReplaceAbbreviations)
 
 # TODO: test it
 def sentence_separator(Text):

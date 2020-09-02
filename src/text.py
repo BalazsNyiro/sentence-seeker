@@ -133,7 +133,7 @@ def subsentences(Sentence):
         Sentence = Sentence.replace(SubSep, ";")
     return Sentence.split(";")
 
-def linenum_sureplace_regexpbsentencenum_get(LineNum_SubSentenceNum):
+def linenum_subsentencenum_get(LineNum_SubSentenceNum):
     SubSentenceNum = LineNum_SubSentenceNum % 100
 
     if LineNum_SubSentenceNum < 100:  # I store 2 numbers info in one number and LineNum can be zero, too

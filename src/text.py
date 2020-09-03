@@ -79,6 +79,12 @@ def replace_abbreviations(Txt):
                             ("Ms.", "Ms")]
     return replace_pairs(Txt, ReplaceAbbreviations)
 
+# simple print, not tested
+def _inform_user_if_necessary(TimeStart, LoopCounter):
+    if time.time() - TimeStart > 1:
+        if LoopCounter % 2000 == 0:
+            print("t", end="", flush=True)
+
 # TODO: test it
 def sentence_separator(Text):
     Text = replace_abbreviations(Text)
@@ -93,14 +99,12 @@ def sentence_separator(Text):
     TimeStart = time.time() # display info for user at long text
     for LoopCounter, Char in enumerate(Text):
 
-        if time.time() - TimeStart > 1:
-            if LoopCounter % 2000 == 0:
-                print("t", end="", flush=True)
+        _inform_user_if_necessary(TimeStart, LoopCounter)
 
         ########## BEGINNING ##########
         if Char in MarksQuotation:
             if not InQuotation:
-                InSentence = True
+                InSentence = True # the quotation mark can stand before a normal sentence
                 InQuotation = True
                 # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
             else:

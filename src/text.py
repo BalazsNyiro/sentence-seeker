@@ -90,11 +90,9 @@ def sentence_separator(Text):
     InSentence = False
     InQuotation = False
 
-    TimeStart = time.time()
-    LoopCounter = 0
-    for Char in Text:
+    TimeStart = time.time() # display info for user at long text
+    for LoopCounter, Char in enumerate(Text):
 
-        LoopCounter += 1
         if time.time() - TimeStart > 1:
             if LoopCounter % 2000 == 0:
                 print("t", end="", flush=True)
@@ -138,7 +136,7 @@ def sentence_separator(Text):
     # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
-#FIXME: TEST IT
+# Tested
 def subsentences(Sentence):
     for SubSep in SubsentenceEnds:
         Sentence = Sentence.replace(SubSep, ";")

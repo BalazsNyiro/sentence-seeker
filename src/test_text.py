@@ -101,6 +101,16 @@ class TextTests(util_test.SentenceSeekerTest):
             Sentences = text.sentence_separator(Txt)
             self.assertEqual(Wanted, Sentences)
 
+    def test_subsentences(self):
+        if self._test_exec("test_subsentences"):
+            Txt = 'I am angry; I have to know: Lisa and Pete lived in a big house, in Boston, did they?'
+            Wanted = ['I am angry',
+                      ' I have to know',
+                      ' Lisa and Pete lived in a big house',
+                      ' in Boston',
+                      ' did they?']
+            SubSentences = text.subsentences(Txt)
+            self.assertEqual(Wanted, SubSentences)
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg

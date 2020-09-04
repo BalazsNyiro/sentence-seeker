@@ -44,7 +44,7 @@
             "to twitch (the lion's tail twitched)",
             "to whoop",
             "to yawn"
-        ],
+        ]
 
     },
 
@@ -243,7 +243,7 @@
             "to drive",
             "to steer"
         ],
-        "to drink": ["to drink", "to draine the bottle"],
+        "to drink": ["to drink", "to drain the bottle"],
         "to eat": ["to eat", "to bolt - she bolted down her cold supper"],
         "envy": [
             "envy",
@@ -345,7 +345,7 @@
             "to pace (back and forth)",
             "to parade",
             "to pass",
-            "to patroll",
+            "to patrol",
             "to race (racing up and down the school corridors)",
             "to roll over",
             "to round (He rounded on the newcomer)",
@@ -361,7 +361,7 @@
             "to step",
             "to stomp (he was stomping up the stairs from the hall)",
             "to stream (into the hall)",
-            "to stride (walk with long steps: She strode out of sight. She strided towards them.)",
+            "to stride (walk with long steps: She strode out of sight. She strode towards them.)",
             "to stumble (walk slowly, without elegance)",
             "to sweep (nearly run, hurry: she was sweeping along)",
             "to throng (They joined the students thronging the hall)",
@@ -404,11 +404,6 @@
             "to skulk"
         ],
         "to hit": ["to bang", "to beat", "to hit", "to pound"],
-        "to shake": [
-            "to shake",
-            "to shiver",
-            "to shudder"
-        ],
         "hurt": [
             "to insult",
             "to hurt",
@@ -453,7 +448,7 @@
             "to blurt",
             "to chant",
             "to chortle",
-            "to choruse (..., chorused the sisters)",
+            "to chorus (... chorused the sisters)",
             "to comment",
             "to complain",
             "to criticise",
@@ -472,7 +467,7 @@
             "to grunt",
             "to hiss",
             "to howl",
-            "to humm",
+            "to hum",
             "to illustrate",
             "to indicate",
             "to inform",
@@ -511,7 +506,7 @@
             "to sneer (You are not lucky! her enemy sneered)",
             "to snigger",
             "to sob",
-            "to spat (Eat it! He spat at the child, say stricktly, without love)",
+            "to spat (Eat it! He spat at the child, say strictly, without love)",
             "to splutter (say with anger and rage)",
             "to squeak (tell with tiny voice)",
             "to stammer (tell with slow peace, with pauses and repetitions",
@@ -591,7 +586,7 @@
             "surprisingly"
         ],
         "popular":[
-            "admired", 
+            "admired",
             "beloved",
             "celebrated",
             "famous",
@@ -757,12 +752,18 @@
         ],
         "to return, to come back": [
             "to come back",
-            "to start back", 
+            "to start back",
             "to return",
             "to sneak back (the dragon could see Dwalin and the dwarves sneaking one by one back through the trapdoor)"
         ],
-        "to shake": ["to shake", "to quiver", "to tremble", "to shiver"],
-        "to take, to move something awyay": [
+        "to shake": [
+            "to quiver",
+            "to shake",
+            "to shiver",
+            "to shudder",
+            "to tremble"
+        ],
+        "to take, to move something away": [
             "to cram (She crammed the pen back into her pocket)",
             "to put",
             "to slip",

@@ -85,17 +85,23 @@ def _inform_user_if_necessary(TimeStart, LoopCounter):
         if LoopCounter % 2000 == 0:
             print("t", end="", flush=True)
 
-def inquotation_detect(Char, InSentence, InQuotation):
-    if Char in MarksQuotation:
+# TESTED
+def quotation_sentence_detect(Char, InSentence=False, InQuotation=False):
 
-        if not InQuotation:
-            InSentence = True  # the quotation mark can stand before a normal sentence
-            InQuotation = True
-            # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+    if Char in MarksQuotation:
 
         if InQuotation:           # we have just finished the quotation
             InSentence = True     # Quotation End can be in the middle of a sentence:
             InQuotation = False   # For some time past vessels had been met by "an enormous thing," a long
+
+        else: # if not InQuotation:
+            InSentence = True  # the quotation mark can stand before a normal sentence
+            InQuotation = True
+            # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+
+    if not InSentence:
+        if Char.isupper():  # it works with special national chars, too. Example: É
+            InSentence = True
 
     return InSentence, InQuotation
 
@@ -118,11 +124,7 @@ def sentence_separator(Text):
 
         ########## BEGINNING ##########
 
-        InSentence, InQuotation = inquotation_detect(Char, InSentence, InQuotation)
-
-        if not InSentence:
-            if Char.isupper(): # it works with special national chars, too. Example: É
-                InSentence = True
+        InSentence, InQuotation = quotation_sentence_detect(Char, InSentence, InQuotation)
 
         ########## --BEGINNING-- part finished ##########
 

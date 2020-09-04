@@ -4,6 +4,31 @@ import unittest, text, util_test
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
 
+    def test_inquotation_detect(self):
+        if self._test_exec("test_inquotation_detect"):
+            InSentence, InQuotation = text.quotation_sentence_detect("a", InSentence=False, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (False, False))
+
+            InSentence, InQuotation = text.quotation_sentence_detect("a", InSentence=True, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (True, False))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=False, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (True, True))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=True, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (True, True))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=True, InQuotation=True)
+            self.assertEqual((InSentence, InQuotation), (True, False))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=False, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (True, False))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=True, InQuotation=False)
+            self.assertEqual((InSentence, InQuotation), (True, False))
+
+            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=True, InQuotation=True)
+            self.assertEqual((InSentence, InQuotation), (True, True))
 
     def test_sentence_from_memory(self):
         if self._test_exec("test_sentence_from_memory"):

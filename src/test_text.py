@@ -6,28 +6,28 @@ class TextTests(util_test.SentenceSeekerTest):
 
     def test_inquotation_detect(self):
         if self._test_exec("test_inquotation_detect"):
-            InSentence, InQuotation = text.quotation_sentence_detect("a", InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts("a", InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (False, False))
 
-            InSentence, InQuotation = text.quotation_sentence_detect("a", InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts("a", InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('"', InSentence=True, InQuotation=True)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=True, InQuotation=True)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_detect('A', InSentence=True, InQuotation=True)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=True, InQuotation=True)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
     def test_sentence_from_memory(self):

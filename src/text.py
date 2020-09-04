@@ -86,15 +86,17 @@ def _inform_user_if_necessary(TimeStart, LoopCounter):
             print("t", end="", flush=True)
 
 # TESTED
-def quotation_sentence_detect(Char, InSentence=False, InQuotation=False):
+def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 
     if Char in MarksQuotation:
-
+        # if we are in quotation, it can be longer than one sentence -
+        # so I change only InQuotation state here. because I don't know anything
+        # about the sentences
         if InQuotation:           # we have just finished the quotation
-            InSentence = True     # Quotation End can be in the middle of a sentence:
-            InQuotation = False   # For some time past vessels had been met by "an enormous thing," a long
+            InQuotation = False   # Quotation End can be in the middle of a sentence:
+                                  # For some time past vessels had been met by "an enormous thing," a long
 
-        else: # if not InQuotation:
+        else: # not InQuotation:
             InSentence = True  # the quotation mark can stand before a normal sentence
             InQuotation = True
             # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
@@ -124,7 +126,7 @@ def sentence_separator(Text):
 
         ########## BEGINNING ##########
 
-        InSentence, InQuotation = quotation_sentence_detect(Char, InSentence, InQuotation)
+        InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
         ########## --BEGINNING-- part finished ##########
 

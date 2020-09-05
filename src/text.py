@@ -114,22 +114,24 @@ def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
     if InSentence:
         Sentence.append(Char)
-    else : # if not InSentence:
-        if not Sentences: # if it's the first Sentence, Sentences is empty
-            Sentence.append(Char)
-        else:
+    else: # if not InSentence:
+        if Sentences:
             Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
+        else: #if not Sentences: # if it's the first Sentence, Sentences is empty
+            Sentence.append(Char)
+            InSentence = True
 
-    if InSentence and Char in SentenceEnds:
-        InSentence = False
+    if InSentence and Char in SentenceEnds: # I don't want to handle if in a sentence somebody has a
+        InSentence = False                  # quotation with another full sentence
+        Sentences.append(Sentence)          # because this solution doesn't depend on the correctly
+        Sentence = []                       # closed quotation pairs
+
+    if CharLast and Sentence:        # if something stayed in collected chars
+        InSentence = False           # and the sentence wasn't finished, saved it, too
         Sentences.append(Sentence)
         Sentence = []
 
-    if CharLast and Sentence:          # if something stayed in collected chars
-        Sentences.append(Sentence)     # and the sentence wasn't finished, saved it, too
-
     return Sentences, Sentence, InSentence
-
 
 # TODO: test it
 def sentence_separator(Text):

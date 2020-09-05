@@ -111,6 +111,7 @@ def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 
     return InSentence, InQuotation
 
+# Tested
 def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
     if InSentence:
         Sentence.append(Char)
@@ -133,7 +134,7 @@ def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
 
     return Sentences, Sentence, InSentence
 
-# TODO: test it
+# Tested
 def sentence_separator(Text):
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
@@ -150,7 +151,6 @@ def sentence_separator(Text):
         Sentences, Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    # print("\n\nSentences: ", RetSentences)
     return RetSentences
 
 # Tested
@@ -159,6 +159,7 @@ def subsentences(Sentence):
         Sentence = Sentence.replace(SubSep, ";")
     return Sentence.split(";")
 
+# Tested
 def linenum_subsentencenum_get(LineNum_SubSentenceNum):
     SubSentenceNum = LineNum_SubSentenceNum % 100
 

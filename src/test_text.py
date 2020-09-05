@@ -3,6 +3,17 @@ import unittest, text, util_test
 
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
+
+    def test_linenum_subsentencenum_get(self):
+        if self._test_exec("test_linenum_subsentencenum_get"):
+            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(95)
+            self.assertEqual(LineNum, 0)
+            self.assertEqual(SubSentenceNum, 95)
+
+            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(23456)
+            self.assertEqual(LineNum, 234)
+            self.assertEqual(SubSentenceNum, 56)
+
     def test_char_add_into_sentence(self): #
         if self._test_exec("test_char_add_into_sentence"):
 

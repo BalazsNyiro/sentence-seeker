@@ -80,8 +80,12 @@ def replace_abbreviations(Txt):
     return replace_pairs(Txt, ReplaceAbbreviations)
 
 # simple print, not tested
-def _inform_user_if_necessary(TimeStart, LoopCounter):
-    if time.time() - TimeStart > 1:
+_TimeStart = time.time()
+def _inform_user_if_necessary(LoopCounter):
+    global _TimeStart
+    if LoopCounter == 0:
+        _TimeStart = time.time()
+    if time.time() - _TimeStart > 1:
         if LoopCounter % 2000 == 0:
             print("t", end="", flush=True)
 
@@ -107,46 +111,41 @@ def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 
     return InSentence, InQuotation
 
+def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
+    if InSentence:
+        Sentence.append(Char)
+    else : # if not InSentence:
+        if not Sentences: # if it's the first Sentence, Sentences is empty
+            Sentence.append(Char)
+        else:
+            Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
+
+    if InSentence and Char in SentenceEnds:
+        InSentence = False
+        Sentences.append(Sentence)
+        Sentence = []
+
+    if CharLast and Sentence:          # if something stayed in collected chars
+        Sentences.append(Sentence)     # and the sentence wasn't finished, saved it, too
+
+    return Sentences, Sentence, InSentence
+
 
 # TODO: test it
 def sentence_separator(Text):
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
 
-    Sentences = []
-    Sentence = []
+    Sentences = [];   InSentence  = False
+    Sentence  = [];   InQuotation = False
 
-    InSentence = False
-    InQuotation = False
-
-    TimeStart = time.time() # display info for user at long text
     for LoopCounter, Char in enumerate(Text):
 
-        _inform_user_if_necessary(TimeStart, LoopCounter)
-
-        ########## BEGINNING ##########
-
+        _inform_user_if_necessary(LoopCounter)
         InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
-        ########## --BEGINNING-- part finished ##########
-
-        if InSentence: # DECISION:
-            Sentence.append(Char)
-        else: # not InSentence
-            if not Sentences: # if it's the first Sentence, Sentences is empty
-                Sentence.append(Char)
-            else:
-                Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
-
-        ########## CLOSER ##########
-        if InSentence and Char in SentenceEnds:
-            InSentence = False
-            Sentences.append(Sentence)
-            Sentence = []
-        ########## CLOSER ##########
-
-    if Sentence: # if something stayed in collected chars and the sentence wasn't finished, saved it, too
-        Sentences.append(Sentence)
+        CharLast = LoopCounter == len(Text) - 1
+        Sentences, Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     # print("\n\nSentences: ", RetSentences)

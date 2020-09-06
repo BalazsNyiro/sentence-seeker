@@ -196,6 +196,7 @@ def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSe
     StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
     return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
+# Tested
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:
         Pattern = fr"\b({Word})\b"
@@ -203,6 +204,7 @@ def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
         Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
     return Text
 
+# Tested
 def word_wanted(Txt):
     for Char in Txt:
         # accept low letter chars and numbers

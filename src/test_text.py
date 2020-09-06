@@ -4,6 +4,15 @@ import unittest, text, util_test
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
 
+    def test_word_wanted(self):
+        if self._test_exec("test_word_wanted"):
+            self.assertFalse(text.word_wanted("apple(carrot"))
+            self.assertFalse(text.word_wanted("Apple"))
+            self.assertFalse(text.word_wanted("apPle"))
+            self.assertFalse(text.word_wanted("APPLE"))
+            self.assertFalse(text.word_wanted("apple!"))
+            self.assertTrue(text.word_wanted("small0eng1chars2and3numbers4only"))
+
     # return with a Status and an Object.
     # The Object haas a fix structure, Status can be True/False
     def test_result_obj_from_memory(self):
@@ -241,7 +250,9 @@ class TextTests(util_test.SentenceSeekerTest):
             Status, SubSentences = text.subsentences(Sentence=Txt)
             self.assertEqual((True, Wanted), (Status, SubSentences))
 
+            # 0 is special id, because 'if 0' == False, we have to use 'if id is not none' in code
             self.assertEqual((True, 'I am angry'), text.subsentences(None, Txt, 0))
+
             self.assertEqual((True, ' in Boston'), text.subsentences(None, Txt, 3))
             self.assertEqual((False, ["subsentence 33 id is missing"]), text.subsentences(None, Txt, 33))
 

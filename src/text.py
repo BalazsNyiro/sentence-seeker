@@ -2,13 +2,16 @@
 import re, util, text, time
 
 SentenceEnds = [".", "!", "?", "…"]
-SubsentenceEnds = [",", ";", ":"]
+SubSentenceEnds = [",", ";", ":"]
 MarksQuotation = '"“”'
 
 # Tested
 def sentence_from_memory(Prg, Source, LineNum, Strip=False):
     Msg = ""
-    if Source not in Prg["DocumentObjectsLoaded"]:
+    if "DocumentObjectsLoaded" not in Prg:
+        Msg = f"DocumentsObjectsLoaded not in Prg"
+
+    elif Source not in Prg["DocumentObjectsLoaded"]:
         Msg = f"DocumentsObjectsLoaded: {Source} is not loaded"
 
     elif "Sentences" not in Prg["DocumentObjectsLoaded"][Source]:
@@ -154,18 +157,19 @@ def sentence_separator(Text):
     return RetSentences
 
 # Tested
-def subsentences(Prg=None, Sentence="", SubsentenceIdWanted=None):
-    for SubSep in SubsentenceEnds:
+def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None):
+    for SubSep in SubSentenceEnds:
         Sentence = Sentence.replace(SubSep, ";")
     Subsentences = Sentence.split(";")
-    if SubsentenceIdWanted:
-        if SubsentenceIdWanted < len(Subsentences):
-            return Subsentences[SubsentenceIdWanted]
+    if SubSentenceIdWanted:
+        if SubSentenceIdWanted < len(Subsentences):
+            # return with one subsentence
+            return True, Subsentences[SubSentenceIdWanted]
         else:
-            Msg = f"subsentence {SubsentenceIdWanted} id is missing"
+            Msg = f"subsentence {SubSentenceIdWanted} id is missing"
             util.log(Prg, Msg)
-            return Msg
-    return Subsentences
+            return False, [Msg]
+    return True, Subsentences # return with a list, with more than one subsentence
 
 # Tested
 def linenum_subsentencenum_get(LineNum_SubSentenceNum):
@@ -186,11 +190,11 @@ def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Senten
             "SentenceLen": len(Sentence),
             "SubSentenceLen": len(SubSentenceResult)
            }
-
+# Tested
 def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
-    _Status, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
-    SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
-    return result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
+    StatusFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
+    StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
+    return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
     for Word in Words:

@@ -4,6 +4,54 @@ import unittest, text, util_test
 class TextTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
 
+    # return with a Status and an Object.
+    # The Object haas a fix structure, Status can be True/False
+    def test_result_obj_from_memory(self):
+        if self._test_exec("test_result_obj_from_memory"):
+            Prg = {}
+            FileSourceBaseName = "Filename"
+            LineNumInSentenceFile = 1
+            SubSentenceNum = 2
+
+            Status, Obj = text.result_obj_from_memory(
+                            Prg,
+                            FileSourceBaseName,
+                            LineNumInSentenceFile, SubSentenceNum,
+                            SentenceFillInResult=False)
+            ObjWanted = {'FileSourceBaseName': 'Filename',
+                         'LineNumInSentenceFile': 1,
+                         'Sentence': '-',
+                         'SentenceLen': 33,
+                         'SubSentenceLen': 1,
+                         'SubSentenceNum': 2}
+
+            self.assertEqual((False, ObjWanted), (Status, Obj))
+
+
+            Prg = {"DocumentObjectsLoaded":
+                    {"Filename":
+                      {"Sentences": ["Sentence0",
+                                     "This is the second, best subsentence, in test files"]
+                      }
+                    }
+                  }
+            FileSourceBaseName = "Filename"
+            LineNumInSentenceFile = 1
+            SubSentenceNum = 2
+
+            Status, Obj = text.result_obj_from_memory(
+                Prg,
+                FileSourceBaseName,
+                LineNumInSentenceFile, SubSentenceNum,
+                SentenceFillInResult=False)
+            ObjWanted = {'FileSourceBaseName': 'Filename',
+                         'LineNumInSentenceFile': 1,
+                         'Sentence': '-',
+                         'SentenceLen': 51,
+                         'SubSentenceLen': 14,
+                         'SubSentenceNum': 2}
+            self.assertEqual((True, ObjWanted), (Status, Obj))
+
     def test_linenum_subsentencenum_get(self):
         if self._test_exec("test_linenum_subsentencenum_get"):
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(95)
@@ -190,11 +238,11 @@ class TextTests(util_test.SentenceSeekerTest):
                       ' Lisa and Pete lived in a big house',
                       ' in Boston',
                       ' did they?']
-            SubSentences = text.subsentences(Sentence=Txt)
-            self.assertEqual(Wanted, SubSentences)
+            Status, SubSentences = text.subsentences(Sentence=Txt)
+            self.assertEqual((True, Wanted), (Status, SubSentences))
 
-            self.assertEqual(' in Boston', text.subsentences(None, Txt, 3))
-            self.assertEqual("subsentence 33 id is missing", text.subsentences(None, Txt, 33))
+            self.assertEqual((True, ' in Boston'), text.subsentences(None, Txt, 3))
+            self.assertEqual((False, ["subsentence 33 id is missing"]), text.subsentences(None, Txt, 33))
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg

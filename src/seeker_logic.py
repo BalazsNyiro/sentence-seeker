@@ -208,13 +208,12 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
 
         for LineNum__SubSentenceNum in Results: # if we have any result from Index:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)
-            ResultsSelected.append(
-                text.result_obj_from_memory(Prg, FileSourceBaseName,
-                                            LineNum,
-                                            SubSentenceNum,
-                                            SentenceFillInResult=SentenceFillInResult
-                                            )
-            )
+            _Status, Obj = text.result_obj_from_memory(Prg, FileSourceBaseName,
+                                                                LineNum,
+                                                                SubSentenceNum,
+                                                                SentenceFillInResult=SentenceFillInResult
+                                                               )
+            ResultsSelected.append(Obj)
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
 
     for ResultSelector in ResultSelectors:

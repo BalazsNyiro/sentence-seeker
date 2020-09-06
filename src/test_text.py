@@ -190,8 +190,11 @@ class TextTests(util_test.SentenceSeekerTest):
                       ' Lisa and Pete lived in a big house',
                       ' in Boston',
                       ' did they?']
-            SubSentences = text.subsentences(Txt)
+            SubSentences = text.subsentences(Sentence=Txt)
             self.assertEqual(Wanted, SubSentences)
+
+            self.assertEqual(' in Boston', text.subsentences(None, Txt, 3))
+            self.assertEqual("subsentence 33 id is missing", text.subsentences(None, Txt, 33))
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg

@@ -74,7 +74,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
 
             Line = text.replace_regexp(Line, "[-][-]+", " ")
 
-            for SubSentenceNum, SubSentence in enumerate(text.subsentences(Line)):
+            for SubSentenceNum, SubSentence in enumerate(text.subsentences(Prg, Line)):
                 indexing(WordIndex, WordIndexOnlyLineNums, LineNum, SubSentence, SubSentenceNum)
 
         Out = []

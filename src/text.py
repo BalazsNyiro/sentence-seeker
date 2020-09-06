@@ -154,10 +154,18 @@ def sentence_separator(Text):
     return RetSentences
 
 # Tested
-def subsentences(Sentence):
+def subsentences(Prg=None, Sentence="", SubsentenceIdWanted=None):
     for SubSep in SubsentenceEnds:
         Sentence = Sentence.replace(SubSep, ";")
-    return Sentence.split(";")
+    Subsentences = Sentence.split(";")
+    if SubsentenceIdWanted:
+        if SubsentenceIdWanted < len(Subsentences):
+            return Subsentences[SubsentenceIdWanted]
+        else:
+            Msg = f"subsentence {SubsentenceIdWanted} id is missing"
+            util.log(Prg, Msg)
+            return Msg
+    return Subsentences
 
 # Tested
 def linenum_subsentencenum_get(LineNum_SubSentenceNum):
@@ -181,8 +189,7 @@ def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Senten
 
 def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
     _Status, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
-    SubSentences = text.subsentences(Sentence)
-    SubSentenceResult = SubSentences[SubSentenceNum]
+    SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
     return result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
 def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):

@@ -241,6 +241,7 @@ class TextTests(util_test.SentenceSeekerTest):
             Status, SubSentences = text.subsentences(Sentence=Txt)
             self.assertEqual((True, Wanted), (Status, SubSentences))
 
+            self.assertEqual((True, 'I am angry'), text.subsentences(None, Txt, 0))
             self.assertEqual((True, ' in Boston'), text.subsentences(None, Txt, 3))
             self.assertEqual((False, ["subsentence 33 id is missing"]), text.subsentences(None, Txt, 33))
 

@@ -161,7 +161,7 @@ def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None):
     for SubSep in SubSentenceEnds:
         Sentence = Sentence.replace(SubSep, ";")
     Subsentences = Sentence.split(";")
-    if SubSentenceIdWanted:
+    if SubSentenceIdWanted is not None: # it can be 0, too. and if 0 == False!
         if SubSentenceIdWanted < len(Subsentences):
             # return with one subsentence
             return True, Subsentences[SubSentenceIdWanted]

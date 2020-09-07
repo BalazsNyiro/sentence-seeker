@@ -66,7 +66,7 @@ def token_interpreter(Tokens, DocIndex, Explains):
         if util.is_list(Token):
             Result = token_interpreter(Token, DocIndex, Explains)
 
-        if operator(Token):
+        if is_operator(Token):
             Result = Token
 
         if is_str_but_not_operator(Token):
@@ -90,11 +90,11 @@ def token_interpreter(Tokens, DocIndex, Explains):
     #Explains.append((ResultName, len(ResultDict)))
     return (ResultDict, ResultName)
 
+# Tested
+def is_str_but_not_operator(Token): # Token can be List or Operator
+    return (util.is_str(Token) and not is_operator(Token))
 
-def is_str_but_not_operator(Token):
-    return (util.is_str(Token) and not operator(Token))
-
-def operator(Token):
+def is_operator(Token):
     if util.is_str(Token): # if we got a string, then check in the Operators, else False
         return Token in Operator_Functions
     return False

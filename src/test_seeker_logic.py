@@ -15,6 +15,19 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                "These special events help to known the history of this special bird species for special audience.\n"
                )
 
+    def test_is_str_but_not_operator(self):
+        if self._test_exec("test_is_str_but_not_operator"):
+
+            self.assertTrue(seeker_logic.is_str_but_not_operator("Mother"))
+            self.assertTrue(seeker_logic.is_str_but_not_operator("and"))
+            self.assertTrue(seeker_logic.is_str_but_not_operator("Or"))
+
+            self.assertFalse(seeker_logic.is_str_but_not_operator("("))
+            self.assertFalse(seeker_logic.is_str_but_not_operator(")"))
+            self.assertFalse(seeker_logic.is_str_but_not_operator("AND"))
+            self.assertFalse(seeker_logic.is_str_but_not_operator("OR"))
+            self.assertFalse(seeker_logic.is_str_but_not_operator(["big", "AND", "car"]))
+
     def test_result_selectors(self):
         if self._test_exec("test_result_selectors"):
             Obj1 = text.result_obj("FileSourceBaseName1", 11, 1,

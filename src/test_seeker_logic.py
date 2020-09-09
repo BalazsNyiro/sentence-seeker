@@ -15,6 +15,21 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                "These special events help to known the history of this special bird species for special audience.\n"
                )
 
+    def test_is_operator(self):
+        if self._test_exec("test_is_operator"):
+
+            self.assertFalse(seeker_logic.is_operator("Mother"))
+            self.assertFalse(seeker_logic.is_operator("and"))
+            self.assertFalse(seeker_logic.is_operator("Or"))
+
+            # not operator, not string
+            self.assertFalse(seeker_logic.is_operator(["big", "AND", "car"]))
+
+            self.assertTrue(seeker_logic.is_operator("("))
+            self.assertTrue(seeker_logic.is_operator(")"))
+            self.assertTrue(seeker_logic.is_operator("AND"))
+            self.assertTrue(seeker_logic.is_operator("OR"))
+
     def test_is_str_but_not_operator(self):
         if self._test_exec("test_is_str_but_not_operator"):
 
@@ -22,11 +37,14 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             self.assertTrue(seeker_logic.is_str_but_not_operator("and"))
             self.assertTrue(seeker_logic.is_str_but_not_operator("Or"))
 
+            # not operator, not string
+            self.assertFalse(seeker_logic.is_str_but_not_operator(["big", "AND", "car"]))
+
             self.assertFalse(seeker_logic.is_str_but_not_operator("("))
             self.assertFalse(seeker_logic.is_str_but_not_operator(")"))
             self.assertFalse(seeker_logic.is_str_but_not_operator("AND"))
             self.assertFalse(seeker_logic.is_str_but_not_operator("OR"))
-            self.assertFalse(seeker_logic.is_str_but_not_operator(["big", "AND", "car"]))
+
 
     def test_result_selectors(self):
         if self._test_exec("test_result_selectors"):

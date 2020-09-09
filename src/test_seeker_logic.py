@@ -15,6 +15,123 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                "These special events help to known the history of this special bird species for special audience.\n"
                )
 
+    def test_operator_exec(self):
+        if self._test_exec("test_operator_exec"):
+
+            def _operator_exec(Results, Explains):
+                print(" Results: ", Results)
+                print("Explains: ", Explains)
+                for Operator, Fun in seeker_logic.Operator_Functions.items():
+                    if Fun:  # ( ) don't have fun
+                        while Operator in Results:
+                            Results, Explains = seeker_logic.operator_exec_left_right(Operator, Results, Fun, Explains)
+                            print(" Results: ", Results)
+                            print("Explains: ", Explains)
+
+            print("\n\n== Operator start ==")
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('is', 4)]
+            _operator_exec(Results, Explains)
+            print("== Operator end ==")
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({200: True}, 'strong')]
+            Explains = [('birds', 4), ('is', 4), ('strong', 1)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('is', 4)]
+
+            Results = [({0: True, 200: True}, '(birds AND is)'), 'AND', ({200: True}, 'strong')]
+            Explains = [('birds', 4), ('is', 4), ('strong', 1)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({0: True, 202: True}, 'are')]
+            Explains = [('birds', 4), ('is', 4), ('are', 2)]
+
+            Results = [({200: True}, 'strong')]
+            Explains = [('birds', 4), ('is', 4), ('are', 2), ('strong', 1)]
+
+            Results = [({0: True}, '((birds AND is) AND are)'), 'AND', ({200: True}, 'strong')]
+            Explains = [('birds', 4), ('is', 4), ('are', 2), ('strong', 1)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('is', 4)]
+
+            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = []
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'OR', ({}, '(empty_group)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = []
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'AND', ({}, '(empty_group)')]
+            Explains = [('strong', 1), ('are', 2)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('is', 4)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True, 101: True, 400: True}, '(birds OR is)'), 'AND',
+                       ({200: True}, 'strong')]
+            Explains = [('birds', 4), ('is', 4), ('strong', 1)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
+                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('is', 4)]
+
+            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
+            Explains = [('birds', 4), ('is', 4), ('strong', 1), ('are', 2)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True, 101: True, 400: True}, '(birds OR is)'), 'AND',
+                       ({200: True, 0: True, 202: True}, '(strong OR are)')]
+            Explains = [('birds', 4), ('is', 4), ('strong', 1), ('are', 2)]
+
+            Results = [({0: True, 202: True}, 'are'), 'OR', ({0: True}, 'singing')]
+            Explains = [('birds', 4), ('are', 2), ('singing', 1)]
+
+            Results = [({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
+
+            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND', ({0: True, 202: True}, '(are OR singing)'),
+                       'AND', ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
+
     def test_is_operator(self):
         if self._test_exec("test_is_operator"):
 
@@ -126,10 +243,10 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             def token_interpreter_wrapper(Prg, Query):
                 Tokens = seeker_logic.token_split(Query)
                 TokenGroups = seeker_logic.token_group_finder(Tokens)
-                DocObj = Prg["DocumentObjectsLoaded"]["test_document_bird"]["Index"]
+                DocIndex = Prg["DocumentObjectsLoaded"]["test_document_bird"]["Index"]
 
                 Explains = []
-                ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocObj, Explains)
+                ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocIndex, Explains)
                 return ResultDict, Explains
 
             if True:

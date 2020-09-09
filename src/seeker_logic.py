@@ -75,10 +75,15 @@ def token_interpreter(Tokens, DocIndex, Explains):
 
         Results.append(Result)
 
+
+
+    # Cmd = "Results, Explains = seeker_logic.operator_exec_left_right(Operator, Results, Fun, Explains)"
+    # util.file_write_simple("operator_results.txt", f"Results = {Results}\nExplains = {Explains}\n{Cmd}\n\n", Mode="a")
+
     for Operator, Fun in Operator_Functions.items():
         if Fun: # ( ) don't have fun
             while Operator in Results:
-                Results = operator_exec_left_right(Operator, Results, Fun, Explains)
+                Results, Explains = operator_exec_left_right(Operator, Results, Fun, Explains)
 
     if Results:
         ResultDict = Results[0][0]
@@ -100,7 +105,9 @@ def is_operator(Token):
         return Token in Operator_Functions
     return False
 
-def operator_exec_left_right(Operator, TokensOrig, FunOperator, Explains):
+# INPROGRESS: test, operator_exec
+def operator_exec_left_right(Operator, TokensOrig, FunOperator, ExplainsOrig):
+    Explains = copy.deepcopy(ExplainsOrig)
     Tokens = copy.deepcopy(TokensOrig)
     IdOperator = Tokens.index(Operator)
 
@@ -113,7 +120,7 @@ def operator_exec_left_right(Operator, TokensOrig, FunOperator, Explains):
     Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
 
     Explains.append((ResultName, len(LineNumsOp)))
-    return Tokens
+    return Tokens, Explains
 
 def index_list_to_dict(Word, DocIndex):
     Result = dict()

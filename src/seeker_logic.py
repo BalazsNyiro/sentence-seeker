@@ -70,8 +70,9 @@ def token_interpreter(Tokens, DocIndex, Explains):
             Result = Token
 
         if is_str_but_not_operator(Token):
-            Result = (index_list_to_dict(Token, DocIndex), Token) # ResultDict, TokenName
-            Explains.append((Token, len(Result[0])))
+            IndexElems = index_list_to_dict(Token, DocIndex)
+            Result = (IndexElems, Token) # ResultDict, TokenName
+            Explains.append((Token, len(IndexElems)))
 
         Results.append(Result)
 
@@ -83,7 +84,12 @@ def token_interpreter(Tokens, DocIndex, Explains):
     for Operator, Fun in Operator_Functions.items():
         if Fun: # ( ) don't have fun
             while Operator in Results:
-                Results, Explains = operator_exec_left_right(Operator, Results, Fun, Explains)
+                Results, ExplainsNew = operator_exec_left_right(Operator, Results, Fun, Explains)
+
+                # keep original Explains pointer but insert the new result into it
+                Explains.clear()
+                Explains.extend(ExplainsNew)
+
 
     if Results:
         ResultDict = Results[0][0]
@@ -105,7 +111,7 @@ def is_operator(Token):
         return Token in Operator_Functions
     return False
 
-# INPROGRESS: test, operator_exec
+# FIXME: INPROGRESS: test, operator_exec
 def operator_exec_left_right(Operator, TokensOrig, FunOperator, ExplainsOrig):
     Explains = copy.deepcopy(ExplainsOrig)
     Tokens = copy.deepcopy(TokensOrig)

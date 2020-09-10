@@ -57,6 +57,23 @@ def token_group_finder(Tokens):
 #  AND
 #  OR
 
+def operators_exec(Results, Explains):
+    print(" Results: ", Results)
+    print("Explains: ", Explains)
+
+    for Operator, Fun in Operator_Functions.items():
+        if Fun:  # ( ) don't have fun but you never can find ( ) operators becasue they turn to groups
+            while Operator in Results:
+                Results, ExplainsNew = operator_exec_left_right(Operator, Results, Fun, Explains)
+
+                # keep original Explains pointer but insert the new result into it
+                Explains.clear()
+                Explains.extend(ExplainsNew)
+                print(" Results: ", Results)
+                print("Explains: ", ExplainsNew)
+
+    return Results, Explains
+
 # TESTED   Tokens is a list with Token elems
 def token_interpreter(Tokens, DocIndex, Explains):
     Results = []
@@ -76,20 +93,10 @@ def token_interpreter(Tokens, DocIndex, Explains):
 
         Results.append(Result)
 
-
-
     # Cmd = "Results, Explains = seeker_logic.operator_exec_left_right(Operator, Results, Fun, Explains)"
     # util.file_write_simple("operator_results.txt", f"Results = {Results}\nExplains = {Explains}\n{Cmd}\n\n", Mode="a")
 
-    for Operator, Fun in Operator_Functions.items():
-        if Fun: # ( ) don't have fun
-            while Operator in Results:
-                Results, ExplainsNew = operator_exec_left_right(Operator, Results, Fun, Explains)
-
-                # keep original Explains pointer but insert the new result into it
-                Explains.clear()
-                Explains.extend(ExplainsNew)
-
+    Results, Explains = operators_exec(Results, Explains)
 
     if Results:
         ResultDict = Results[0][0]
@@ -113,6 +120,9 @@ def is_operator(Token):
 
 # FIXME: INPROGRESS: test, operator_exec
 def operator_exec_left_right(Operator, TokensOrig, FunOperator, ExplainsOrig):
+    if Operator not in TokensOrig: # if wanted operator isn't in Tokens
+        return TokensOrig, ExplainsOrig
+
     Explains = copy.deepcopy(ExplainsOrig)
     Tokens = copy.deepcopy(TokensOrig)
     IdOperator = Tokens.index(Operator)

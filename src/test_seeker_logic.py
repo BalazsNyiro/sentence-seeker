@@ -18,22 +18,15 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
     def test_operator_exec(self):
         if self._test_exec("test_operator_exec"):
 
-            def _operator_exec(Results, Explains):
-                print(" Results: ", Results)
-                print("Explains: ", Explains)
-                for Operator, Fun in seeker_logic.Operator_Functions.items():
-                    if Fun:  # ( ) don't have fun
-                        while Operator in Results:
-                            Results, Explains = seeker_logic.operator_exec_left_right(Operator, Results, Fun, Explains)
-                            print(" Results: ", Results)
-                            print("Explains: ", Explains)
-
             print("\n\n== Operator start ==")
 
+            # These are subsentence coordinates BUT NOT WITH ORIGINAL LINENUMBERS
+            # the first coordinate is the sentence number, the last two digits represent
+            # the subsentence coord.
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-            _operator_exec(Results, Explains)
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
             print("== Operator end ==")
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',

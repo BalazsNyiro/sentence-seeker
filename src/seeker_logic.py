@@ -58,8 +58,8 @@ def token_group_finder(Tokens):
 #  OR
 
 def operators_exec(Results, Explains):
-    print(" Results: ", Results)
-    print("Explains: ", Explains)
+    # print(" Results: ", Results)
+    # print("Explains: ", Explains)
 
     for Operator, Fun in Operator_Functions.items():
         if Fun:  # ( ) don't have fun but you never can find ( ) operators becasue they turn to groups
@@ -69,8 +69,8 @@ def operators_exec(Results, Explains):
                 # keep original Explains pointer but insert the new result into it
                 Explains.clear()
                 Explains.extend(ExplainsNew)
-                print(" Results: ", Results)
-                print("Explains: ", ExplainsNew)
+                # print(" Results: ", Results)
+                # print("Explains: ", ExplainsNew)
 
     return Results, Explains
 

@@ -157,3 +157,14 @@ def docs_copy_samples_into_dir(Prg, DirTarget):
             # if a previous file exists with same name, it overwrites
             util.file_write_utf8_error_avoid(Prg, FileNameSaved, TextContent)
 
+# Fixme: test it
+def doc_objects_delete(Prg, FileAbsPathWithExt):
+    BaseName = os.path.basename(FileAbsPathWithExt)
+    BaseNameWithoutExt = util.filename_without_extension(BaseName)
+    if DocObj := Prg["DocumentObjectsLoaded"].pop(BaseNameWithoutExt, None):
+        util.file_del(DocObj["FileOrigPathAbs"])
+        util.file_del(DocObj["FileTextPathAbs"])
+        util.file_del(DocObj["FileIndex"])
+        util.file_del(DocObj["FileSentences"])
+    util.file_del(FileAbsPathWithExt) # del orig file in every case, if DocObj doesn't exis
+

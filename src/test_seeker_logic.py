@@ -2,6 +2,7 @@
 import unittest, util_test, copy, util, seeker
 import seeker_logic, text
 import os.path
+import document
 
 class SeekerLogicTests(util_test.SentenceSeekerTest):
     # for higher text collector functions I will build up a test text
@@ -27,11 +28,22 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
             Results, Explains = seeker_logic.operators_exec(Results, Explains)
-            print("== Operator end ==")
+            self.assertEqual(Results, [({0: True, 200: True}, '(birds AND is)')])
+            self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
                        ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({200: True}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Results, [({200: True}, '((birds AND is) AND strong)')])
+            self.assertEqual(Explains, [('birds', 4),
+                                        ('is', 4),
+                                        ('strong', 1),
+                                        ('(birds AND is)', 2),
+                                        ('((birds AND is) AND strong)', 1)]
+                             )
+
+            print("== Operator end ==")
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
@@ -226,7 +238,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             FilePathBird = self.FilePathBird
 
             PrgOrig = copy.deepcopy(Prg)
-            util.file_del(FilePathBird)
+            document.doc_objects_delete(Prg, FilePathBird)
             ResultWrite = util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
             # print("\n#### FILE WRITE:'", ResultWrite)
 
@@ -240,9 +252,6 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
                 Explains = []
                 ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocIndex, Explains)
-                print("\n\nFIXME: check Explains, too....")
-                print(Query)
-                print(Explains)
                 return ResultDict, Explains
 
             if True:
@@ -338,13 +347,8 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             self.assertEqual(Result, ResultWanted)
             self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2), ('is', 4), ('(birds AND (are OR singing))', 1), ('((birds AND (are OR singing)) AND is)', 1)])
 
-
-
             ################ restore original state #####################################
-            util.file_del(FilePathBird)
-            FileNameWithoutExtension = util.filename_without_extension(self.FileBaseNameBird)
-            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileIndex"])
-            util.file_del(Prg["DocumentObjectsLoaded"][FileNameWithoutExtension]["FileSentences"])
+            document.doc_objects_delete(Prg, FilePathBird)
             self.Prg = PrgOrig
 
 

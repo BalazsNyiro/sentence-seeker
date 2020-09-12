@@ -19,8 +19,6 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
     def test_operator_exec(self):
         if self._test_exec("test_operator_exec"):
 
-            print("\n\n== Operator start ==")
-
             # These are subsentence coordinates BUT NOT WITH ORIGINAL LINENUMBERS
             # the first coordinate is the sentence number, the last two digits represent
             # the subsentence coord.
@@ -43,99 +41,69 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                                         ('((birds AND is) AND strong)', 1)]
                              )
 
-            print("== Operator end ==")
-
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
             Results = [({0: True, 200: True}, '(birds AND is)'), 'AND', ({200: True}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('((birds AND is) AND strong)', 1)])
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
                        ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({0: True, 202: True}, 'are')]
             Explains = [('birds', 4), ('is', 4), ('are', 2)]
-
-            Results = [({200: True}, 'strong')]
-            Explains = [('birds', 4), ('is', 4), ('are', 2), ('strong', 1)]
-
-            Results = [({0: True}, '((birds AND is) AND are)'), 'AND', ({200: True}, 'strong')]
-            Explains = [('birds', 4), ('is', 4), ('are', 2), ('strong', 1)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4),
+                                        ('is', 4),
+                                        ('are', 2),
+                                        ('(birds AND is)', 2),
+                                        ('((birds AND is) AND are)', 1)])
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
             Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
             Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = []
-            Explains = [('strong', 1), ('are', 2)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3)])
 
             Results = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'OR', ({}, '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = [({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('strong', 1), ('are', 2)]
-
-            Results = []
-            Explains = [('strong', 1), ('are', 2)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) OR (empty_group))', 3)])
 
             Results = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'AND', ({}, '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) AND (empty_group))', 0)])
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
                        ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-
-            Results = [({0: True, 100: True, 200: True, 500: True, 101: True, 400: True}, '(birds OR is)'), 'AND',
-                       ({200: True}, 'strong')]
-            Explains = [('birds', 4), ('is', 4), ('strong', 1)]
-
-            Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
-            Explains = [('birds', 4), ('is', 4)]
-
-            Results = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
-            Explains = [('birds', 4), ('is', 4), ('strong', 1), ('are', 2)]
-
-            Results = [({0: True, 100: True, 200: True, 500: True, 101: True, 400: True}, '(birds OR is)'), 'AND',
-                       ({200: True, 0: True, 202: True}, '(strong OR are)')]
-            Explains = [('birds', 4), ('is', 4), ('strong', 1), ('are', 2)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
             Results = [({0: True, 202: True}, 'are'), 'OR', ({0: True}, 'singing')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1)]
-
-            Results = [({0: True, 101: True, 200: True, 400: True}, 'is')]
-            Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2)])
 
             Results = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND', ({0: True, 202: True}, '(are OR singing)'),
                        'AND', ({0: True, 101: True, 200: True, 400: True}, 'is')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
+            Results, Explains = seeker_logic.operators_exec(Results, Explains)
+            self.assertEqual(Explains, [('birds', 4),
+                                        ('are', 2),
+                                        ('singing', 1),
+                                        ('is', 4),
+                                        ('(birds AND (are OR singing))', 1),
+                                        ('((birds AND (are OR singing)) AND is)', 1)])
 
     def test_is_operator(self):
         if self._test_exec("test_is_operator"):

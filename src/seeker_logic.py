@@ -57,14 +57,14 @@ def token_group_finder(Tokens):
 #  AND
 #  OR
 
-def operators_exec(Results, Explains):
+def operators_exec(Tokens, Explains):
     # print(" Results: ", Results)
     # print("Explains: ", Explains)
 
     for Operator, Fun in Operator_Functions.items():
         if Fun:  # ( ) don't have fun but you never can find ( ) operators becasue they turn to groups
-            while Operator in Results:
-                Results, ExplainsNew = operator_exec_left_right(Operator, Results, Fun, Explains)
+            while Operator in Tokens:
+                Tokens, ExplainsNew = operator_exec_left_right(Operator, Tokens, Fun, Explains)
 
                 # keep original Explains pointer but insert the new result into it
                 Explains.clear()
@@ -72,7 +72,7 @@ def operators_exec(Results, Explains):
                 # print(" Results: ", Results)
                 # print("Explains: ", ExplainsNew)
 
-    return Results, Explains
+    return Tokens, Explains
 
 # TESTED   Tokens is a list with Token elems
 def token_interpreter(Tokens, DocIndex, Explains):

@@ -58,13 +58,11 @@ def token_group_finder(Tokens):
 #  OR
 
 def operators_exec(Tokens, Explains):
-    # print(" Results: ", Results)
-    # print("Explains: ", Explains)
 
     for Operator, Fun in Operator_Functions.items():
         if Fun:  # ( ) don't have fun but you never can find ( ) operators becasue they turn to groups
             while Operator in Tokens:
-                Tokens, ExplainsNew = operator_exec_left_right(Operator, Tokens, Fun, Explains)
+                Tokens, ExplainsNew = operator_exec_left_right(Operator, Fun, Tokens, Explains)
 
                 # keep original Explains pointer but insert the new result into it
                 Explains.clear()
@@ -75,10 +73,10 @@ def operators_exec(Tokens, Explains):
     return Tokens, Explains
 
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(Tokens, DocIndex, Explains):
-    Results = []
+def token_interpreter(TokensOrig, DocIndex, Explains):
+    TokensResults = []
 
-    for Token in Tokens:
+    for Token in TokensOrig:
 
         if util.is_list(Token):
             Result = token_interpreter(Token, DocIndex, Explains)
@@ -91,16 +89,13 @@ def token_interpreter(Tokens, DocIndex, Explains):
             Result = (IndexElems, Token) # ResultDict, TokenName
             Explains.append((Token, len(IndexElems)))
 
-        Results.append(Result)
+        TokensResults.append(Result)
 
-    # Cmd = "Results, Explains = seeker_logic.operator_exec_left_right(Operator, Results, Fun, Explains)"
-    # util.file_write_simple("operator_results.txt", f"Results = {Results}\nExplains = {Explains}\n{Cmd}\n\n", Mode="a")
+    TokensResults, Explains = operators_exec(TokensResults, Explains)
 
-    Results, Explains = operators_exec(Results, Explains)
-
-    if Results:
-        ResultDict = Results[0][0]
-        ResultName = f"{Results[0][1]}"
+    if TokensResults:
+        ResultDict = TokensResults[0][0]
+        ResultName = f"{TokensResults[0][1]}"
     else:
         ResultDict = {}
         ResultName = "(empty_group)"  # empty group, example: "()"
@@ -119,7 +114,7 @@ def is_operator(Token):
     return False
 
 # FIXME: INPROGRESS: test, operator_exec
-def operator_exec_left_right(Operator, TokensOrig, FunOperator, ExplainsOrig):
+def operator_exec_left_right(Operator, FunOperator, TokensOrig, ExplainsOrig):
     if Operator not in TokensOrig: # if wanted operator isn't in Tokens
         return TokensOrig, ExplainsOrig
 

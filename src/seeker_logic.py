@@ -86,7 +86,7 @@ def token_interpreter(TokensOrig, DocIndex, Explains):
 
         if is_str_but_not_operator(Token):
             IndexElems = index_list_to_dict(Token, DocIndex)
-            Result = (IndexElems, Token) # ResultDict, TokenName
+            Result = (IndexElems, Token) # ResultLineNums, TokenName
             Explains.append((Token, len(IndexElems)))
 
         TokensResults.append(Result)
@@ -94,14 +94,14 @@ def token_interpreter(TokensOrig, DocIndex, Explains):
     TokensResults, Explains = operators_exec(TokensResults, Explains)
 
     if TokensResults:
-        ResultDict = TokensResults[0][0]
-        ResultName = f"{TokensResults[0][1]}"
+        TokenFirst = TokensResults[0]
+        ResultLineNums = TokenFirst[0]
+        ResultExplains = TokenFirst[1]
     else:
-        ResultDict = {}
-        ResultName = "(empty_group)"  # empty group, example: "()"
+        ResultLineNums = {}
+        ResultExplains = "(empty_group)"  # empty group, example: "()"
 
-    #Explains.append((ResultName, len(ResultDict)))
-    return (ResultDict, ResultName)
+    return (ResultLineNums, ResultExplains)
 
 # Tested
 def is_str_but_not_operator(Token): # Token can be List or Operator

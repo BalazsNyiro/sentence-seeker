@@ -211,3 +211,13 @@ def word_wanted(Txt):
         if not (Char in util.ABC_Eng_Lower or Char.isdigit()):
             return False
     return True
+
+# FIXME: TEST IT
+def words_count_in_all_document(Prg):
+    WordsCounter = dict()
+    for Doc in Prg["DocumentObjectsLoaded"].values():
+        for Word, LineNums in Doc["Index"].items():
+            if Word not in WordsCounter:
+                WordsCounter[Word] = 0
+            WordsCounter[Word] += len(LineNums)
+    return WordsCounter

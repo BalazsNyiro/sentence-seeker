@@ -1,0 +1,35 @@
+[
+  "parser.parse_args()",
+  "Prg = config.PrgConfigCreate(Args)",
+  { "case Args.test": {
+       "true":  [
+         "tests_execution()",
+         "seeker.be_ready_to_seeking(Prg)",
+         "example_ui_usage()"
+       ],
+       "false": [
+         "document.docs_copy_samples_into_dir_if_necessary(Prg)",
+         { "case Args.ui": {
+             "console": [
+               {"seeker.be_ready_to_seeking(Prg)": [
+
+                 {"Prg['DocumentObjectsLoaded'] = document.document_objects_collect_from_working_dir()": [
+                   "Prg[...] = text.words_count_in_all_document(Prg)",
+                   "if necessary: print MessagesForUser",
+                   "if gui ui ProgressBarRoot: finish progress bar"
+                 ]}
+
+               ]},
+               {"ui_console.user_interface_start(Prg, Args)": [
+
+               ]}
+             ],
+             "tkinter": [],
+             "json": [],
+             "html": []
+           }
+         }
+       ]
+    }
+  }
+]

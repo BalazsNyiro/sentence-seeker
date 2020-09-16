@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import document, util, stats, time, os, text
-import result_selectors, seeker_logic
+import document, util, os, text
 
 Version = "v03_index_in_subsentence"
 
@@ -13,12 +12,7 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
             Verbose=Verbose,
             LoadOnlyTheseFileBaseNames=LoadOnlyTheseFileBaseNames
         )
-    WordsCounter = Prg["DocumentObjectsLoadedWordsCounterGlobal"] = dict()
-    for Doc in Prg["DocumentObjectsLoaded"].values():
-        for Word, LineNums in Doc["Index"].items():
-            if Word not in WordsCounter:
-                WordsCounter[Word] = 0
-            WordsCounter[Word] += len(LineNums)
+    Prg["DocumentObjectsLoadedWordsCounterGlobal"] = text.words_count_in_all_document(Prg)
 
     if Prg.get("MessagesForUser", []):
         print("\n\n Messages for user:")

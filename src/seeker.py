@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import document, util, os, text
+import document, util, os, text, ui_tkinter_boot_progress_bar
 
 Version = "v03_index_in_subsentence"
 
@@ -20,12 +20,7 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
             print(f" - {Msg}")
         print("\n", flush=True)
 
-    if "ProgressBarRoot" in Prg:
-        Prg["ProgressBarRoot"].destroy()
-        Prg["ProgressBarRoot"].quit()
-        del Prg["ProgressBar"]
-        del Prg["ProgressBarRoot"]
-
+    ui_tkinter_boot_progress_bar.progressbar_close(Prg)
 
 # Tested
 def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):

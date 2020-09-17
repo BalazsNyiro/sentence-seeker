@@ -14,11 +14,13 @@
                {"seeker.be_ready_to_seeking(Prg)": [
 
                  {"Prg['DocumentObjectsLoaded'] = document.document_objects_collect_from_working_dir()": [
-                   "Prg[...] = text.words_count_in_all_document(Prg)",
-                   "if necessary: print MessagesForUser",
-                   "if gui ui ProgressBarRoot: finish progress bar"
-                 ]}
-
+                   "DocumentObjects = dict()",
+                   "Files = util.files_abspath_collect_from_dir(Prg['DirDocuments'])",
+                   "_Status, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg['DirTextSamples'], 'document_samples.json'))"
+                 ]},
+                 "Prg[...] = text.words_count_in_all_document(Prg)",
+                 "if necessary: print MessagesForUser",
+                 "if gui ui ProgressBarRoot: finish progress bar"
                ]},
                {"ui_console.user_interface_start(Prg, Args)": [
 

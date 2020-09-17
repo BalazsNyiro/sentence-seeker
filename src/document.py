@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import util, os
-import util_json_obj
+import util, os, util_ui
+import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 
 # TODO: refactor this func, LOAD document db in local config
@@ -17,20 +17,17 @@ def document_objects_collect_from_working_dir(Prg,
                                               LoadOnlyTheseFileBaseNames=None # ['FileBaseName'] is the positive example
                                               ):
     def info(Txt):
-        if Verbose: print(Txt, flush=True)
+        print(Txt, flush=True) if Verbose else 0
 
     DocumentObjects = dict()
     ExtensionsInFuture = (".epub", ".mobi")
 
-    DbDocumentUpdated = False
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
     _Status, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         Progress = f"{FileNum} / {len(Files)}"
-        if "ProgressBar" in Prg:
-            Prg["ProgressBar"]["value"] = int((FileNum*100.0) / len(Files))
-            Prg["ProgressBarRoot"].update_idletasks()
+        ui_tkinter_boot_progress_bar.progressbar_refresh(Prg, Files, FileNum)
 
         FileText = FileOrig
         BaseNameText = BaseNameOrig = os.path.basename(FileOrig)

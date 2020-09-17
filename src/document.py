@@ -30,28 +30,29 @@ def document_objects_collect_from_working_dir(Prg,
         ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
 
         FileText = FileOrig
+
+        # /home/user/file.txt ->  file.txt (basename)
         BaseNameText = BaseNameOrig = os.path.basename(FileOrig)
+        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
+        ExtensionLower = util.filename_extension(FileOrig).lower()
+
         if LoadOnlyTheseFileBaseNames: # used in development, not for end users
             if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
                 continue
 
-        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
-        Extension = util.filename_extension(BaseNameOrig)
-
-        if Extension == ".pdf" or Extension == ".htm" or Extension == ".html":
+        if ExtensionLower in ".pdf.htm.html":
             info(f"{Progress} in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
-            FilePathWithoutExtension = util.filename_without_extension(FileOrig)
-            FilePathConvertedToText = f"{FilePathWithoutExtension}.txt"
+            FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
             if not os.path.isfile(FilePathConvertedToText):
                 #info(f"not exists: {FilePathConvertedToText}" )
-                if Extension == ".pdf":
+                if ExtensionLower == ".pdf":
                     ConversionExecuted = Prg["PdfToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
-                if Extension == ".htm" or Extension == ".html":
+                if ExtensionLower == ".htm" or ExtensionLower == ".html":
                     ConversionExecuted = Prg["HtmlToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
 
                 if ConversionExecuted:
-                    Extension = ".txt"
-                    FileText = util.filename_without_extension(FileOrig) + Extension
+                    ExtensionLower = ".txt"
+                    FileText = util.filename_without_extension(FileOrig) + ExtensionLower
                     BaseNameText = os.path.basename(FileText)
                 else:
                     info(f"Error, file conversion: {FileOrig}")
@@ -61,8 +62,8 @@ def document_objects_collect_from_working_dir(Prg,
                 pass
 
         # errors can happen if we convert pdf/html/other to txt
-        # so if Extension is .txt, I check the existing of the file
-        if Extension == ".txt" and os.path.isfile(FileText):
+        # so if ExtensionLower is .txt, I check the existing of the file
+        if ExtensionLower == ".txt" and os.path.isfile(FileText):
             if not Prg.get("TestExecution", False): # during test exec hide progress
                 info(f"{Progress} in documents dir - processed: {BaseNameText}")
 
@@ -107,7 +108,7 @@ def document_objects_collect_from_working_dir(Prg,
 
             DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename
 
-        elif Extension in ExtensionsInFuture:
+        elif ExtensionLower in ExtensionsInFuture:
             info(f"in documents dir - this file type will be processed in the future: {BaseNameText}")
 
         else:

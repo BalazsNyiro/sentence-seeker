@@ -7,6 +7,7 @@ def bar_display(Prg, FunBehindBar):
     # Don't import these on module level because in some environment
     # tkinter is not available and progressbar_close/refresh is
     # linked/used from seeker.py which is used from console UI, too
+    # if I want to keep close/refresh here, it's necessary to hide imports in this fun
     from tkinter import HORIZONTAL, Tk, mainloop
     import tkinter.ttk
     ################################################################
@@ -26,7 +27,7 @@ def bar_display(Prg, FunBehindBar):
 
     mainloop()
 
-def progressbar_refresh(Prg, Files, FileNumActual):
+def progressbar_refresh_if_displayed(Prg, Files, FileNumActual):
     if "ProgressBar" in Prg:
         Prg["ProgressBar"]["value"] = int((FileNumActual * 100.0) / len(Files))
         Prg["ProgressBarRoot"].update_idletasks()

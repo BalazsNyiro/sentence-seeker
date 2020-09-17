@@ -27,11 +27,11 @@ def document_objects_collect_from_working_dir(Prg,
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         Progress = f"{FileNum} / {len(Files)}"
-        ui_tkinter_boot_progress_bar.progressbar_refresh(Prg, Files, FileNum)
+        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
 
         FileText = FileOrig
         BaseNameText = BaseNameOrig = os.path.basename(FileOrig)
-        if LoadOnlyTheseFileBaseNames:
+        if LoadOnlyTheseFileBaseNames: # used in development, not for end users
             if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
                 continue
 

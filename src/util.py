@@ -111,6 +111,14 @@ def filename_without_extension(Fname):
         return Fname
     return Fname.rsplit(Extension, 1)[0]
 
+# /home/user/file.txt ->  file.txt (basename) -> file, .txt
+def basename_without_extension__ext(Fname, ExtensionLower=True):
+    BaseName = os.path.basename(Fname)
+    Ext = filename_extension(Fname)
+    if ExtensionLower:
+        Ext = Ext.lower()
+    return filename_without_extension(BaseName), Ext
+
 # Tested in file_read_lines's test / wrappe fun, test not necessary
 def file_read_all_simple(Fname="", mode="r"): # if you want read binary, write "rb"
     with open(Fname, mode) as f:

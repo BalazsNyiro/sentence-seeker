@@ -217,10 +217,10 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
             PrgOrig = copy.deepcopy(Prg)
             document.doc_objects_delete(Prg, FilePathBird)
-            ResultWrite = util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
+            util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
             # print("\n#### FILE WRITE:'", ResultWrite)
 
-            seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyTheseFileBaseNames = [self.FileBaseNameBird])
+            seeker.be_ready_to_seeking(Prg, Verbose=False,  LoadOnlyThese=[self.FileBaseNameBirdWithoutExt])
             ######################################################################
 
             def token_interpreter_wrapper(Prg, Query):
@@ -334,6 +334,7 @@ def run_all_tests(Prg):
     SeekerLogicTests.Prg = Prg
     # I can't use self.Prg when I define class variable so I set FilePath from here
     SeekerLogicTests.FileBaseNameBird = "test_document_bird.txt"
+    SeekerLogicTests.FileBaseNameBirdWithoutExt = "test_document_bird"
     SeekerLogicTests.FilePathBird = os.path.join(Prg["DirDocuments"], SeekerLogicTests.FileBaseNameBird)
     unittest.main(module="test_seeker_logic", verbosity=2, exit=False)
 

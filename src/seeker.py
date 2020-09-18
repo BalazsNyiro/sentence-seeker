@@ -3,14 +3,14 @@ import document, util, os, text, ui_tkinter_boot_progress_bar
 
 Version = "v03_index_in_subsentence"
 
-def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyTheseFileBaseNames=None):
+def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
     Prg["DocumentObjectsLoaded"] = \
         document.document_objects_collect_from_working_dir(
             Prg, Version,
             FunSentenceCreate=file_sentence_create,
             FunIndexCreate=file_index_create,
             Verbose=Verbose,
-            LoadOnlyTheseFileBaseNames=LoadOnlyTheseFileBaseNames
+            LoadOnlyThese=LoadOnlyThese
         )
     Prg["DocumentObjectsLoadedWordsCounterGlobal"] = text.words_count_in_all_document(Prg)
 

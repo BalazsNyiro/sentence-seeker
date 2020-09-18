@@ -20,9 +20,8 @@
                    {"for Files -> File": [
                      "progressbar_refresh_if_displayed()",
                      "FileText =",
-                     "BaseNameOrig =",
-                     "BaseNameOrigWithoutExtension =",
-                     "ExtensionLower = ",
+                     "BaseNameNoExt =",
+                     "ExtensionLow = ",
                      { "case ExtensionLower in '.pdf.htm.html'": {
                           "true": [
                             "FilePathConvertedToText = FileNameWithoutExt + txt"

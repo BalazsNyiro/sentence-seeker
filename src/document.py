@@ -14,7 +14,7 @@ def document_objects_collect_from_working_dir(Prg,
                                               Verbose=True,
 
                                               # in testcases we want to load only selected files, not all
-                                              LoadOnlyTheseFileBaseNames=None # ['FileBaseName'] is the positive example
+                                              LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
                                               ):
     def info(Txt):
         print(Txt, flush=True) if Verbose else 0
@@ -31,40 +31,35 @@ def document_objects_collect_from_working_dir(Prg,
 
         FileText = FileOrig
 
-        # /home/user/file.txt ->  file.txt (basename)
-        BaseNameOrig = os.path.basename(FileOrig)
-        BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
-        ExtensionLower = util.filename_extension(FileOrig).lower()
+        # /home/user/file.txt ->  file.txt (basename) -> file
+        BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
 
-        if LoadOnlyTheseFileBaseNames: # used in development, not for end users
-            if BaseNameOrig not in LoadOnlyTheseFileBaseNames:
-                continue
+        if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
+            continue # used in development, not for end users
 
-        if ExtensionLower in ".pdf.htm.html":
-            info(f"{Progress} in documents dir - pdf/html -> txt conversion: {BaseNameOrig}\n{FileOrig}\n\n")
+        if ExtensionLow in ".pdf.htm.html": # convert to txt
             FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
-            if not os.path.isfile(FilePathConvertedToText):
-                #info(f"not exists: {FilePathConvertedToText}" )
-                if ExtensionLower == ".pdf":
-                    ConversionExecuted = Prg["PdfToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
-                if ExtensionLower == ".htm" or ExtensionLower == ".html":
-                    ConversionExecuted = Prg["HtmlToTextConvert"](Prg, FileOrig, FilePathConvertedToText)
+            if not os.path.isfile(FilePathConvertedToText): # convert if necessary
 
-                if ConversionExecuted:
-                    ExtensionLower = ".txt"
-                    FileText = util.filename_without_extension(FileOrig) + ExtensionLower
+                if ExtensionLow == ".pdf":
+                    Converter = Prg["PdfToTextConvert"]
+                if ExtensionLow == ".htm" or ExtensionLow == ".html":
+                    Converter = Prg["HtmlToTextConvert"]
+
+                if Converter(Prg, FileOrig, FilePathConvertedToText):
+                    ExtensionLow = ".txt"
+                    FileText = FilePathConvertedToText
                 else:
-                    info(f"Error, file conversion: {FileOrig}")
+                    Msg =f"Error, file conversion: {FileOrig}"
+                    info(Msg)
+                    util.log(Prg, Msg)
                     continue
-            else:
-                # info(f"   exists: {FilePathConvertedToText}" )
-                pass
 
         # errors can happen if we convert pdf/html/other to txt
-        # so if ExtensionLower is .txt, I check the existing of the file
-        if ExtensionLower == ".txt" and os.path.isfile(FileText):
+        # so if ExtensionLow is .txt, I check the existing of the file
+        if ExtensionLow == ".txt" and os.path.isfile(FileText):
             if not Prg.get("TestExecution", False): # during test exec hide progress
-                info(f"{Progress} in documents dir - processed: {BaseNameOrig}")
+                info(f"{Progress} in documents dir - processed: {BaseNameNoExt}")
 
             # this document object describe infos about the document
             # for example the version of index algorithm
@@ -75,14 +70,14 @@ def document_objects_collect_from_working_dir(Prg,
                 FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
                 IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
 
-            if BaseNameOrigWithoutExtension not in Prg["DocumentsDb"]:
+            if BaseNameNoExt not in Prg["DocumentsDb"]:
                 DocObj = {"url": "url_unknown",
                           "source_name": "source_unknown",
                           "license": "license_unknown"}
-                if BaseNameOrigWithoutExtension in DocsSampleInfo["docs"]:
-                    DocObj = DocsSampleInfo["docs"][BaseNameOrigWithoutExtension]
+                if BaseNameNoExt in DocsSampleInfo["docs"]:
+                    DocObj = DocsSampleInfo["docs"][BaseNameNoExt]
 
-                util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameOrigWithoutExtension, DocObj) # and reload the updated db
+                util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj) # and reload the updated db
 
             # Original: lists.
             #Arrays are more complex, less memory usage:
@@ -105,13 +100,13 @@ def document_objects_collect_from_working_dir(Prg,
                                        # list of sentences
                                        Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
 
-            DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename
+            DocumentObjects[BaseNameNoExt] = DocumentObj  # we store the documents based on their basename
 
-        elif ExtensionLower in ExtensionsInFuture:
-            info(f"in documents dir - this file type will be processed in the future: {BaseNameOrig}")
+        elif ExtensionLow in ExtensionsInFuture:
+            info(f"in documents dir - this file type will be processed in the future: {BaseNameNoExt}")
 
         else:
-            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameOrig)
+            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameNoExt)
             pass
 
     return DocumentObjects

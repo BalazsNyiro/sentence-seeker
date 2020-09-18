@@ -216,8 +216,8 @@ def fun_pdf_to_text_converter(Os):
 
             print(f"pdf converter detected: {Interpreter}, {PathPdfMinerSix}")
             # python2 Path/pdf2txt.py   test.pdf --outfile test.txt
-            def PdfToTextFun(_Prg, PathInput, PathOutput):
-                util.shell(f"{Interpreter} {PathPdfMinerSix} {shlex.quote(PathInput)} --outfile {shlex.quote(PathOutput)}")
+            def PdfToTextFun(_Prg, PathInput, PathOutput): # shlex.quote
+                util.shell(f"{Interpreter} {PathPdfMinerSix} {quote(PathInput)} --outfile {quote(PathOutput)}")
                 return True
 
             ConverterDetected = True

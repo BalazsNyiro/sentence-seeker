@@ -22,12 +22,7 @@
                      "FileText =",
                      "BaseNameNoExt =",
                      "ExtensionLow = ",
-                     { "case ExtensionLower in '.pdf.htm.html'": {
-                          "true": [
-                            "FilePathConvertedToText = FileNameWithoutExt + txt"
-                          ]
-                       }
-                     }
+                     "convert_to_txt_if_necessary()"
                    ]}
                  ]},
                  "Prg[...] = text.words_count_in_all_document(Prg)",

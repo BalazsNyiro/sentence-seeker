@@ -6,6 +6,29 @@ from os.path import isfile
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
 
+# fixme: TEST IT
+def convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
+    FileText = FileOrig
+    ConversionErrorMsg = ""
+
+    if ExtensionLow in ".pdf.htm.html":
+        FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
+        if not os.path.isfile(FilePathConvertedToText):  # convert if necessary
+
+            if ExtensionLow == ".pdf":
+                Converter = Prg["PdfToTextConvert"]
+            if ExtensionLow == ".htm" or ExtensionLow == ".html":
+                Converter = Prg["HtmlToTextConvert"]
+
+            if Converter(Prg, FileOrig, FilePathConvertedToText):
+                ExtensionLow = ".txt"
+                FileText = FilePathConvertedToText
+            else:
+                ConversionErrorMsg = f"Error, file conversion: {FileOrig}"
+                util.log(Prg, ConversionErrorMsg)
+
+    return FileText, ExtensionLow, ConversionErrorMsg
+
 # Tested
 def document_objects_collect_from_working_dir(Prg,
                                               VersionSeeking="version_not_set",
@@ -29,31 +52,16 @@ def document_objects_collect_from_working_dir(Prg,
         Progress = f"{FileNum} / {len(Files)}"
         ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
 
-        FileText = FileOrig
-
         # /home/user/file.txt ->  file.txt (basename) -> file
         BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
 
         if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
             continue # used in development, not for end users
 
-        if ExtensionLow in ".pdf.htm.html": # convert to txt
-            FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
-            if not os.path.isfile(FilePathConvertedToText): # convert if necessary
-
-                if ExtensionLow == ".pdf":
-                    Converter = Prg["PdfToTextConvert"]
-                if ExtensionLow == ".htm" or ExtensionLow == ".html":
-                    Converter = Prg["HtmlToTextConvert"]
-
-                if Converter(Prg, FileOrig, FilePathConvertedToText):
-                    ExtensionLow = ".txt"
-                    FileText = FilePathConvertedToText
-                else:
-                    Msg =f"Error, file conversion: {FileOrig}"
-                    info(Msg)
-                    util.log(Prg, Msg)
-                    continue
+        FileText, ExtensionLow, ConversionErrorMsg = convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow)
+        if ConversionErrorMsg:
+            info(ConversionErrorMsg)
+            continue
 
         # errors can happen if we convert pdf/html/other to txt
         # so if ExtensionLow is .txt, I check the existing of the file

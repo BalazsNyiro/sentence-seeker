@@ -32,7 +32,7 @@ def document_objects_collect_from_working_dir(Prg,
         FileText = FileOrig
 
         # /home/user/file.txt ->  file.txt (basename)
-        BaseNameText = BaseNameOrig = os.path.basename(FileOrig)
+        BaseNameOrig = os.path.basename(FileOrig)
         BaseNameOrigWithoutExtension = util.filename_without_extension(BaseNameOrig)
         ExtensionLower = util.filename_extension(FileOrig).lower()
 
@@ -41,7 +41,7 @@ def document_objects_collect_from_working_dir(Prg,
                 continue
 
         if ExtensionLower in ".pdf.htm.html":
-            info(f"{Progress} in documents dir - pdf/html -> txt conversion: {BaseNameText}\n{FileOrig}\n\n")
+            info(f"{Progress} in documents dir - pdf/html -> txt conversion: {BaseNameOrig}\n{FileOrig}\n\n")
             FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
             if not os.path.isfile(FilePathConvertedToText):
                 #info(f"not exists: {FilePathConvertedToText}" )
@@ -53,7 +53,6 @@ def document_objects_collect_from_working_dir(Prg,
                 if ConversionExecuted:
                     ExtensionLower = ".txt"
                     FileText = util.filename_without_extension(FileOrig) + ExtensionLower
-                    BaseNameText = os.path.basename(FileText)
                 else:
                     info(f"Error, file conversion: {FileOrig}")
                     continue
@@ -65,7 +64,7 @@ def document_objects_collect_from_working_dir(Prg,
         # so if ExtensionLower is .txt, I check the existing of the file
         if ExtensionLower == ".txt" and os.path.isfile(FileText):
             if not Prg.get("TestExecution", False): # during test exec hide progress
-                info(f"{Progress} in documents dir - processed: {BaseNameText}")
+                info(f"{Progress} in documents dir - processed: {BaseNameOrig}")
 
             # this document object describe infos about the document
             # for example the version of index algorithm
@@ -109,10 +108,10 @@ def document_objects_collect_from_working_dir(Prg,
             DocumentObjects[BaseNameOrigWithoutExtension] = DocumentObj  # we store the documents based on their basename
 
         elif ExtensionLower in ExtensionsInFuture:
-            info(f"in documents dir - this file type will be processed in the future: {BaseNameText}")
+            info(f"in documents dir - this file type will be processed in the future: {BaseNameOrig}")
 
         else:
-            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameText)
+            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameOrig)
             pass
 
     return DocumentObjects

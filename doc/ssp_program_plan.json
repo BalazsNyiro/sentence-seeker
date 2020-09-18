@@ -21,7 +21,6 @@
                      "progressbar_refresh_if_displayed()",
                      "FileText =",
                      "BaseNameOrig =",
-                     "BaseNameText =",
                      "BaseNameOrigWithoutExtension =",
                      "ExtensionLower = ",
                      { "case ExtensionLower in '.pdf.htm.html'": {

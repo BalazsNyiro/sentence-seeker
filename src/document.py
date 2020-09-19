@@ -5,13 +5,15 @@ from os.path import isfile
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
+ExtensionsConvertable = ".pdf.htm.html"
+ExtensionsInFuture = ".epub.mobi"
 
 # fixme: TEST IT
-def convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
+def file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
     FileText = FileOrig
     ConversionErrorMsg = ""
 
-    if ExtensionLow in ".pdf.htm.html":
+    if ExtensionLow in ExtensionsConvertable:
         FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
         if not os.path.isfile(FilePathConvertedToText):  # convert if necessary
 
@@ -29,9 +31,62 @@ def convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
 
     return FileText, ExtensionLow, ConversionErrorMsg
 
+def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate):
+    if not os.path.isfile(FileText):
+        return None
+
+    if not Prg.get("TestExecution", False):  # during test exec hide progress
+        info(f"{Progress} in documents dir - processed: {BaseNameNoExt}")
+
+    _, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+
+    # this document object describe infos about the document
+    # for example the version of index algorithm
+    FileIndex = f"{FileText}_wordindex_{VersionSeeker}"
+    FileSentences = f"{FileText}_sentence_separator_{VersionSeeker}"
+
+    if FunSentenceCreate and FunIndexCreate:
+        FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
+        FunIndexCreate(Prg, FileIndex, FileSentences)
+
+    if BaseNameNoExt not in Prg["DocumentsDb"]:
+        if BaseNameNoExt in DocsSampleInfo["docs"]:
+            DocObj = DocsSampleInfo["docs"][BaseNameNoExt]
+        else:
+            DocObj = {"url": "url_unknown",
+                      "source_name": "source_unknown",
+                      "license": "license_unknown"}
+
+        util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
+
+    # Original: lists.
+    # Arrays are more complex, less memory usage:
+    # _Status, Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
+    Index = dict()
+    if isfile(FileIndex):
+        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
+        if Status == "ok":
+            for Word, IndexList in JsonObjReply.items():
+                Index[Word] = util.int_list_to_array(IndexList)
+        else:
+            Prg["MessagesForUser"].append(JsonObjReply)
+
+    return document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
+                               FileTextPathAbs=FileText,  # and text files are different
+                               FileIndex=FileIndex,
+                               FileSentences=FileSentences,
+                               Index=Index,
+
+                               # list of sentences
+                               Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
+
+
+def info(Txt, Verbose=True):
+    print(Txt, flush=True) if Verbose else 0
+
 # Tested
 def document_objects_collect_from_working_dir(Prg,
-                                              VersionSeeking="version_not_set",
+                                              VersionSeeker="version_not_set",
                                               FunSentenceCreate=None,
                                               FunIndexCreate=None,
                                               Verbose=True,
@@ -39,14 +94,9 @@ def document_objects_collect_from_working_dir(Prg,
                                               # in testcases we want to load only selected files, not all
                                               LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
                                               ):
-    def info(Txt):
-        print(Txt, flush=True) if Verbose else 0
-
     DocumentObjects = dict()
-    ExtensionsInFuture = (".epub", ".mobi")
 
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
-    _Status, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         Progress = f"{FileNum} / {len(Files)}"
@@ -58,64 +108,19 @@ def document_objects_collect_from_working_dir(Prg,
         if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
             continue # used in development, not for end users
 
-        FileText, ExtensionLow, ConversionErrorMsg = convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow)
+        FileText, ExtensionLow, ConversionErrorMsg = file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow)
         if ConversionErrorMsg:
             info(ConversionErrorMsg)
             continue
 
-        # errors can happen if we convert pdf/html/other to txt
-        # so if ExtensionLow is .txt, I check the existing of the file
-        if ExtensionLow == ".txt" and os.path.isfile(FileText):
-            if not Prg.get("TestExecution", False): # during test exec hide progress
-                info(f"{Progress} in documents dir - processed: {BaseNameNoExt}")
-
-            # this document object describe infos about the document
-            # for example the version of index algorithm
-            FileIndex = f"{FileText}_wordindex_{VersionSeeking}"
-            FileSentences = f"{FileText}_sentence_separator_{VersionSeeking}"
-
-            if FunSentenceCreate and FunIndexCreate:
-                FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
-                IndexCreated = FunIndexCreate(Prg, FileIndex, FileSentences)
-
-            if BaseNameNoExt not in Prg["DocumentsDb"]:
-                DocObj = {"url": "url_unknown",
-                          "source_name": "source_unknown",
-                          "license": "license_unknown"}
-                if BaseNameNoExt in DocsSampleInfo["docs"]:
-                    DocObj = DocsSampleInfo["docs"][BaseNameNoExt]
-
-                util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj) # and reload the updated db
-
-            # Original: lists.
-            #Arrays are more complex, less memory usage:
-            # _Status, Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
-            Index = dict()
-            if isfile(FileIndex):
-                Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
-                if Status == "ok":
-                    for Word, IndexList in JsonObjReply.items():
-                        Index[Word] = util.int_list_to_array(IndexList)
-                else:
-                    Prg["MessagesForUser"].append(JsonObjReply)
-
-            DocumentObj = document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
-                                       FileTextPathAbs=FileText,  # and text files are different
-                                       FileIndex=FileIndex,
-                                       FileSentences=FileSentences,
-                                       Index=Index,
-
-                                       # list of sentences
-                                       Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
-
-            DocumentObjects[BaseNameNoExt] = DocumentObj  # we store the documents based on their basename
+        if ExtensionLow == ".txt":
+            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate):
+                DocumentObjects[BaseNameNoExt] = DocObj
 
         elif ExtensionLow in ExtensionsInFuture:
             info(f"in documents dir - this file type will be processed in the future: {BaseNameNoExt}")
-
         else:
-            #util.print_dev(Prg, "in documents dir - not processed file type:", BaseNameNoExt)
-            pass
+            info(f"in documents dir - not processed file type: {BaseNameNoExt}")
 
     return DocumentObjects
 

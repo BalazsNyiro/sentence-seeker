@@ -31,27 +31,35 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
 
     return FileText, ExtensionLow, ConversionErrorMsg
 
-def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate):
+
+_DocsSampleInfo = None
+def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
     if not os.path.isfile(FileText):
         return None
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
-        info(f"{Progress} in documents dir - processed: {BaseNameNoExt}")
-
-    _, DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+        info(f"{Progress} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
+    global _DocsSampleInfo
+    if not _DocsSampleInfo:
+        _, _DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
 
     # this document object describe infos about the document
     # for example the version of index algorithm
     FileIndex = f"{FileText}_wordindex_{VersionSeeker}"
     FileSentences = f"{FileText}_sentence_separator_{VersionSeeker}"
 
+    Index = dict()
     if FunSentenceCreate and FunIndexCreate:
         FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
         FunIndexCreate(Prg, FileIndex, FileSentences)
 
-    if BaseNameNoExt not in Prg["DocumentsDb"]:
-        if BaseNameNoExt in DocsSampleInfo["docs"]:
-            DocObj = DocsSampleInfo["docs"][BaseNameNoExt]
+    if BaseNameNoExt in Prg["DocumentsDb"]:
+        Msg = f"Maybe you have more than one files with same Basename: {BaseNameNoExt}"
+        print(Msg)
+        util.log(Prg, Msg)
+    else:
+        if BaseNameNoExt in _DocsSampleInfo["docs"]:
+            DocObj = _DocsSampleInfo["docs"][BaseNameNoExt]
         else:
             DocObj = {"url": "url_unknown",
                       "source_name": "source_unknown",
@@ -62,7 +70,6 @@ def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, Versio
     # Original: lists.
     # Arrays are more complex, less memory usage:
     # _Status, Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
-    Index = dict()
     if isfile(FileIndex):
         Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
         if Status == "ok":
@@ -99,11 +106,15 @@ def document_objects_collect_from_working_dir(Prg,
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
-        Progress = f"{FileNum} / {len(Files)}"
-        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
-
         # /home/user/file.txt ->  file.txt (basename) -> file
         BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
+
+        if ExtensionLow not in ".txt" + ExtensionsConvertable + ExtensionsInFuture:
+            info(f"in documents dir - not processed file type: {FileOrig}")
+            continue
+
+        Progress = f"{FileNum} / {len(Files)}"
+        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
 
         if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
             continue # used in development, not for end users
@@ -114,13 +125,11 @@ def document_objects_collect_from_working_dir(Prg,
             continue
 
         if ExtensionLow == ".txt":
-            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate):
+            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
                 DocumentObjects[BaseNameNoExt] = DocObj
 
         elif ExtensionLow in ExtensionsInFuture:
             info(f"in documents dir - this file type will be processed in the future: {BaseNameNoExt}")
-        else:
-            info(f"in documents dir - not processed file type: {BaseNameNoExt}")
 
     return DocumentObjects
 

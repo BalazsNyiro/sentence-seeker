@@ -8,10 +8,6 @@ from html.parser import HTMLParser
 
 def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
-    # print("__file__", __file__, sys.argv)
-    if not Os: # "Linux", "Windows" "Darwin"
-        Os = platform.system()
-
     if not DirPrgRoot:
         PathConfigModule = os.path.realpath(__file__)
         DirSrc = os.path.dirname(PathConfigModule)
@@ -19,6 +15,9 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
 
     if not DirWorkFromUserHome:
         DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
+
+    if not Os: # "Linux", "Windows" "Darwin"
+        Os = platform.system()
 
     DirWorkAbsPath = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
     Path(DirWorkAbsPath).mkdir(parents=True, exist_ok=True)
@@ -42,8 +41,8 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
 
     FileDocumentsDb = os.path.join(DirDocuments, "documents.json")
 
-    Default = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg", "wikipedia": "Wikipedia"}}'
-    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=Default, LogCreate=False)
+    DefaultDocDb = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg", "wikipedia": "Wikipedia"}}'
+    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=DefaultDocDb, LogCreate=False)
     _Status, JsonObjReply = util_json_obj.obj_from_file(FileDocumentsDb)
     DocumentsDb = JsonObjReply["docs"]
 
@@ -65,8 +64,8 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
             "TestResults": [],
             "TestExecution": Args.test,
             "PrintForDeveloper": PrintForDeveloper,
-            "PdfToTextConvert": fun_pdf_to_text_converter(Os),
-            "HtmlToTextConvert": fun_html_to_text_converter,
+            "PdfToTextConvert": text_from_pdf(Os),
+            "HtmlToTextConvert": text_from_html,
             "DocumentObjectsLoaded": dict(),
             "DocumentObjectsLoadedWordsCounterGlobal": dict(),
             "Statistics": [],
@@ -182,7 +181,7 @@ class DocHTMLParser(HTMLParser):
         # print("Decl     :", data)
         pass
 
-def fun_html_to_text_converter(Prg, PathInput, PathOutput):
+def text_from_html(Prg, PathInput, PathOutput):
     parser = DocHTMLParser()
     RetStatus, Src = util.file_read_all(Prg, PathInput)
     if not RetStatus: # error with reading
@@ -194,7 +193,7 @@ def fun_html_to_text_converter(Prg, PathInput, PathOutput):
     return util.file_write(Prg, Fname=PathOutput, Content=parser.data)
 
 # Tested
-def fun_pdf_to_text_converter(Os):
+def text_from_pdf(Os):
     ConverterDetected = False
 
     def PdfToTextFun(_Prg, _PathInput, _PathOutput):

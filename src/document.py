@@ -48,7 +48,7 @@ def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, Versio
     FileIndex = f"{FileText}_wordindex_{VersionSeeker}"
     FileSentences = f"{FileText}_sentence_separator_{VersionSeeker}"
 
-    Index = dict()
+    WordPositionInLines = dict()
     if FunSentenceCreate and FunIndexCreate:
         FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
         FunIndexCreate(Prg, FileIndex, FileSentences)
@@ -69,23 +69,23 @@ def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, Versio
 
     # Original: lists.
     # Arrays are more complex, less memory usage:
-    # _Status, Index = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
+    # _Status, WordPositionInLines = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
     if isfile(FileIndex):
         Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
-                Index[Word] = util.int_list_to_array(IndexList)
+                WordPositionInLines[Word] = util.int_list_to_array(IndexList)
         else:
             Prg["MessagesForUser"].append(JsonObjReply)
 
     return document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
-                               FileTextPathAbs=FileText,  # and text files are different
-                               FileIndex=FileIndex,
-                               FileSentences=FileSentences,
-                               Index=Index,
+                        FileTextPathAbs=FileText,  # and text files are different
+                        FileIndex=FileIndex,
+                        FileSentences=FileSentences,
+                        WordPositionInLines=WordPositionInLines,
 
-                               # list of sentences
-                               Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
+                        # list of sentences
+                        Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
 
 
 def info(Txt, Verbose=True):
@@ -133,12 +133,12 @@ def document_objects_collect_from_working_dir(Prg,
 
     return DocumentObjects
 
-def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", Index="", Sentences=""):
+def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", WordPositionInLines="", Sentences=""):
     return {"FileOrigPathAbs": FileOrigPathAbs,  # if you use pdf/html, the original
             "FileTextPathAbs": FileTextPathAbs,  # and text files are different
             "FileIndex": FileIndex,
             "FileSentences": FileSentences,
-            "Index": Index,
+            "WordPosition": WordPositionInLines,
             "Sentences": Sentences
            }
 

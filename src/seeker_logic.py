@@ -219,13 +219,13 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
         #    continue
 
         Explains = []
-        Results, _ResultName = token_interpreter(TokenGroups, DocObj["Index"], Explains)
+        Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains)
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 
         if ExplainOnly: # no Results, only explain
             continue
 
-        for LineNum__SubSentenceNum in Results: # if we have any result from Index:
+        for LineNum__SubSentenceNum in Results: # if we have any result from WordPosition:
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)
             _Status, Obj = text.result_obj_from_memory(Prg, FileSourceBaseName,
                                                                 LineNum,

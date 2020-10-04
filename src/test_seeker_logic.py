@@ -226,7 +226,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             def token_interpreter_wrapper(Prg, Query):
                 Tokens = seeker_logic.token_split(Query)
                 TokenGroups = seeker_logic.token_group_finder(Tokens)
-                DocIndex = Prg["DocumentObjectsLoaded"]["test_document_bird"]["Index"]
+                DocIndex = Prg["DocumentObjectsLoaded"]["test_document_bird"]["WordPosition"]
 
                 Explains = []
                 ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocIndex, Explains)

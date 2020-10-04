@@ -216,7 +216,7 @@ def word_wanted(Txt):
 def words_count_in_all_document(Prg):
     WordsCounter = dict()
     for Doc in Prg["DocumentObjectsLoaded"].values():
-        for Word, LineNums in Doc["Index"].items():
+        for Word, LineNums in Doc["WordPosition"].items():
             if Word not in WordsCounter:
                 WordsCounter[Word] = 0
             WordsCounter[Word] += len(LineNums)

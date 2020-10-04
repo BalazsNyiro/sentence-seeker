@@ -52,8 +52,6 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
             "DirDocuments": DirDocuments,
             "DirTextSamples": os.path.join(DirPrgRoot, "text_samples"),
             "DirTestFiles": os.path.join(DirPrgRoot, "test_files"),
-            "DirsDeleteAfterRun": list(),
-            "FilesDeleteAfterRun": list(),
             "DirLog": DirLog,
 
             "FileDocumentsDb": FileDocumentsDb,
@@ -107,7 +105,6 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
                     "FgSubSentenceResult": "#092532"
                 }
             },
-            "WordSetsFounded": dict(),
             "ServerHost": "data.sentence-seeker.net" if socket.gethostname() == "vps" else "localhost",
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",

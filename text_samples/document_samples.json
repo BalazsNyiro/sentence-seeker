@@ -1,5 +1,15 @@
 {
   "docs": {
+    "JohnHBechtel__SlipsOfSpeech__gutenberg_org__pg4983": {
+      "url": "http://www.gutenberg.org/ebooks/4983.txt.utf-8",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+    "Anonymous__EnglishAsSheIsWrote__gutenberg_org__pg25933": {
+      "url": "http://www.gutenberg.org/ebooks/25933.txt.utf-8",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
     "ClarenceHawkes__WhiteCzarPolarBear__gutenberg_org_63342-0": {
       "url": "http://www.gutenberg.org/files/63342/63342-0.txt",
       "source_name": "gutenberg",
@@ -61,7 +71,7 @@
       "license": "public_domain"
     },
     "various__StoriesSeaSky__gutenberg_org__pg62888": {
-      "url": "http://www.gutenberg.org/cache/epub/62888/pg62888.txt",
+      "url": "http://www.gutenberg.org/ebooks/62888.txt.utf-8",
       "source_name": "gutenberg",
       "license": "public_domain"
     },
@@ -96,7 +106,7 @@
       "license": "public_domain"
     },
     "JulesVerne__FromEarthMoon__gutenberg_org_pg83": {
-      "url": "https://www.gutenberg.org/cache/epub/83/pg83.txt",
+      "url": "http://www.gutenberg.org/files/83/83-0.txt",
       "source_name": "gutenberg",
       "license": "public_domain"
     },
@@ -141,12 +151,12 @@
       "license": "public_domain"
     },
     "CliffordDSmiak__MessageFromMars__gutenberg_org_pg62357": {
-      "url": "https://www.gutenberg.org/cache/epub/62357/pg62357.txt",
+      "url": "http://www.gutenberg.org/ebooks/62357.txt.utf-8",
       "source_name": "gutenberg",
       "license": "public_domain"
     },
     "FredricBrown__StarMouse__gutenberg_org_pg62109": {
-      "url": "https://www.gutenberg.org/cache/epub/62109/pg62109.txt",
+      "url": "http://www.gutenberg.org/ebooks/62109.txt.utf-8",
       "source_name": "gutenberg",
       "license": "public_domain"
     },
@@ -166,7 +176,7 @@
       "license": "public_domain"
     },
     "HenryHasse__ThiefOfMars__gutenberg_org_pg62042": {
-      "url": "https://www.gutenberg.org/cache/epub/62042/pg62042.txt",
+      "url": "http://www.gutenberg.org/ebooks/62042.txt.utf-8",
       "source_name": "gutenberg",
       "license": "public_domain"
     },
@@ -181,7 +191,7 @@
       "license": "public_domain"
     },
     "LeighBrackett__ChildOfTheSun__gutenberg_org_pg62037": {
-      "url": "https://www.gutenberg.org/cache/epub/62037/pg62037.txt",
+      "url": "http://www.gutenberg.org/ebooks/62037.txt.utf-8",
       "source_name": "gutenberg",
       "license": "public_domain"
     },

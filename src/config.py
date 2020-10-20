@@ -6,7 +6,7 @@ import socket
 
 from html.parser import HTMLParser
 
-def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
+def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
     if not DirPrgRoot:
         PathConfigModule = os.path.realpath(__file__)
@@ -60,7 +60,7 @@ def PrgConfigCreate(Args, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintFor
 
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
-            "TestExecution": Args.test,
+            "TestExecution": TestExecution,
             "PrintForDeveloper": PrintForDeveloper,
             "PdfToTextConvert": text_from_pdf(Os),
             "HtmlToTextConvert": text_from_html,

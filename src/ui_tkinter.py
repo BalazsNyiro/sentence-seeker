@@ -106,7 +106,7 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.tag_bind(TagName, "<Leave>", show_arrow_cursor)
     SentencesArea.insert(tk.END, Url + "\n\n",  TagName)
 
-def win_main(Prg, Args):
+def win_main(Prg):
     global PrgGlob
     PrgGlob = Prg
 

@@ -7,8 +7,8 @@ def seek_and_display(Prg, Wanted):
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
     print(f"Results Total: {ResultsTotalNum}")
 
-def user_interface_start(Prg, Args):
-    user_welcome_message(Prg, Args.ui)
+def user_interface_start(Prg, Ui):
+    user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
         Wanted = input("wanted: ").strip()

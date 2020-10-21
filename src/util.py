@@ -436,7 +436,10 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
 
 # No test - because wrapper
 def dir_user_home():
-    return str(pathlib.Path.home())
+    return os.path.expanduser("~")
+
+    # it doesn't work with ssp/debugger:
+    #return str(pathlib.Path.home())
 
 # https://stackoverflow.com/a/8315566/13281559
 # devel fun, not tested

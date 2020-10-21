@@ -3,6 +3,7 @@ import os, platform, util, time, util_json_obj
 from shlex import quote
 from pathlib import Path
 import socket
+from sys import platform
 
 from html.parser import HTMLParser
 
@@ -17,19 +18,35 @@ def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="",
         DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
 
     if not Os: # "Linux", "Windows" "Darwin"
-        Os = platform.system()
+
+        # debugger dies at this call
+        #Os = platform.system()
+        if "linux" in platform:
+            Os = "Linux"
+        elif platform == "darwin":
+            Os = "Darwin"
+        elif platform == "win32":
+            Os = "Windows"
 
     DirWorkAbsPath = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
-    Path(DirWorkAbsPath).mkdir(parents=True, exist_ok=True)
+
+    if not os.path.isdir(DirWorkAbsPath):
+        # debugger dies at Path(...) lines so I guard it with if
+        Path(DirWorkAbsPath).mkdir(parents=True, exist_ok=True)
 
     DirLog = os.path.join(DirWorkAbsPath, "log")
-    Path(DirLog).mkdir(parents=True, exist_ok=True)
+    if not os.path.isdir(DirLog):
+        # debugger dies at Path(...) lines so I guard it with if
+        Path(DirLog).mkdir(parents=True, exist_ok=True)
     print(f"== sentente seeker work path: {DirWorkAbsPath}")
 
     Time = int(time.time())
     FileLog = f"log_{Time}"
     DirDocuments = os.path.join(DirWorkAbsPath, "documents")
-    Path(DirDocuments).mkdir(parents=True, exist_ok=True)
+
+    if not os.path.isdir(DirDocuments):
+        # debugger dies at Path(...) lines so I guard it with if
+        Path(DirDocuments).mkdir(parents=True, exist_ok=True)
 
     # we can use Prg as class, too - but the new code doesn't acceptable for me
     # Prg.Os would be the result but it's ugly in IDEA

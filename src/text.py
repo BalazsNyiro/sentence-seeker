@@ -62,13 +62,23 @@ def replace_pairs(Txt, Replaces):
         Txt = Txt.replace(Old, New)
     return Txt
 
+
+# compile pattern only once
+_PatternsCompiledIgnoreCase = {}
+_PatternsCompiled = {}
 # Tested
 def replace_regexp(Text, Pattern, TextNew, IgnoreCase=False):
+    global _PatternsCompiled, _PatternsCompiledIgnoreCase
     if IgnoreCase:
-        P = re.compile(Pattern, re.IGNORECASE)
+        if Pattern not in _PatternsCompiledIgnoreCase:
+            _PatternsCompiledIgnoreCase[Pattern] = re.compile(Pattern, re.IGNORECASE)
+        P = _PatternsCompiledIgnoreCase[Pattern]
     else:
-        P = re.compile(Pattern)
+        if Pattern not in _PatternsCompiled:
+            _PatternsCompiled[Pattern] = re.compile(Pattern)
+        P = _PatternsCompiled[Pattern]
     return P.sub(TextNew, Text)
+
 
 # Tested
 def html_tags_remove(Src, TextNew=""):

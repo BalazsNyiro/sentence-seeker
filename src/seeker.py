@@ -45,7 +45,13 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
         _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath)
         TextAll = TextAll.lower()
+
+
+
         TextAll = text.subsentences_use_only_one_separator(TextAll)
+
+        # more than one minus: -- or --- signs: replace them
+        TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
         Lines = TextAll.split("\n")
         for LineNum, Line in enumerate(Lines):
@@ -54,6 +60,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %", flush=True)
 
+            # FIXME: these comments?
             # THIS word can be spoiled:
             # word;  for example, I need clean words so remove the not-abc chars
 
@@ -62,17 +69,14 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
             # We’re looking for a dog-friendly hotel.
             # ’ -   signs has to be replaced with word separator char
 
-            # more than one minus: -- or --- signs: replace them
-
-            Line = text.replace_regexp(Line, "[-][-]+", " ")
-
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
                 indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSentenceNum)
 
         Out = []
-        for Word, LineNums in WordPositions.items():
+        for Word, LineNumsInts in WordPositions.items():
+            LineNums = [str(Num) for Num in LineNumsInts]
             Out.append(f'"{Word}": [{",".join(LineNums)}]')
         Content="{\n"+"\n,".join(Out) + "\n}"
 
@@ -98,7 +102,7 @@ def indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSent
 
         if SubSentenceNum > 99:
             SubSentenceNum = 99
-        WordPosition = f"{LineNum*100+SubSentenceNum}"
+        WordPosition = LineNum*100+SubSentenceNum
 
         # one word can be more than once in a subsentence. If we
         # detect it once, don't save it again

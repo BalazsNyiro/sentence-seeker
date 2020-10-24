@@ -9,12 +9,12 @@ ExtensionsConvertable = [".pdf", ".htm", ".html"]
 ExtensionsInFuture = [".epub", ".mobi"]
 
 # fixme: TEST IT
-def file_convert_to_txt_if_necessary(Prg, FileOrig, FileOrigNames):
+def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
     BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
     if ExtensionLow in ExtensionsConvertable:
 
         FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
-        FileOrigNames[BaseNameNoExt] = FileOrig
+        FileBaseNames__OrigNames[BaseNameNoExt] = FileOrig
 
         if not os.path.isfile(FilePathConvertedToText):  # convert if it's necessary
 
@@ -111,9 +111,9 @@ def document_objects_collect_from_working_dir(Prg,
 
     FilesConvertable = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=ExtensionsConvertable)
 
-    FileOrigNames = {}
+    FileBaseNames__OrigNames = {}
     for FileToTxt in FilesConvertable:
-        file_convert_to_txt_if_necessary(Prg, FileToTxt, FileOrigNames)
+        file_convert_to_txt_if_necessary(Prg, FileToTxt, FileBaseNames__OrigNames)
 
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
@@ -121,7 +121,7 @@ def document_objects_collect_from_working_dir(Prg,
     for FileNum, FileText in enumerate(FilesTxt): # All files recursively collected from DirDocuments
         ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
 
-        if DocObj := document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
+        if DocObj := document_obj_create(Prg, FileBaseNames__OrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
             BaseNameNoExt, _ = util.basename_without_extension__ext(FileText)
             DocumentObjects[BaseNameNoExt] = DocObj
 

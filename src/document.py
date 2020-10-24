@@ -32,15 +32,15 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
                 info(ConversionErrorMsg)
 
 _DocsSampleInfo = None
-def document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
-    if not os.path.isfile(FileText):
+def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
+    if not os.path.isfile(FileTextAbsPath):
         return None
 
-    BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileText, ExtensionLower=True)
+    BaseNameNoExt, Extension = util.basename_without_extension__ext(FileTextAbsPath)
     if BaseNameNoExt in FileOrigNames: # I can do it with .get() but it's more descriptive
         FileOrig = FileOrigNames[BaseNameNoExt]
     else:
-        FileOrig = FileText
+        FileOrig = BaseNameNoExt + Extension
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
         info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
@@ -50,13 +50,13 @@ def document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSe
 
     # this document object describe infos about the document
     # for example the version of index algorithm
-    FileIndex = f"{FileText}_wordindex_{VersionSeeker}"
-    FileSentences = f"{FileText}_sentence_separator_{VersionSeeker}"
+    FileIndexAbsPath = f"{FileTextAbsPath}_wordindex_{VersionSeeker}"
+    FileSentencesAbsPath = f"{FileTextAbsPath}_sentence_separator_{VersionSeeker}"
 
     WordPositionInLines = dict()
     if FunSentenceCreate and FunIndexCreate:
-        FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
-        FunIndexCreate(Prg, FileIndex, FileSentences)
+        FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+        FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
 
     if BaseNameNoExt not in Prg["DocumentsDb"]:
         if BaseNameNoExt in _DocsSampleInfo["docs"]:
@@ -70,9 +70,9 @@ def document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSe
 
     # Original: lists.
     # Arrays are more complex, less memory usage:
-    # _Status, WordPositionInLines = util_json_obj.obj_from_file(FileIndex) if isfile(FileIndex) else (ok, dict())
-    if isfile(FileIndex):
-        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndex)
+    # _Status, WordPositionInLines = util_json_obj.obj_from_file(FileIndexAbsPath) if isfile(FileIndexAbsPath) else (ok, dict())
+    if isfile(FileIndexAbsPath):
+        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
                 WordPositionInLines[Word] = util.int_list_to_array(IndexList)
@@ -80,13 +80,13 @@ def document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSe
             Prg["MessagesForUser"].append(JsonObjReply)
 
     return document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
-                        FileTextPathAbs=FileText,  # and text files are different
-                        FileIndex=FileIndex,
-                        FileSentences=FileSentences,
+                        FileTextPathAbs=FileTextAbsPath,  # and text files are different
+                        FileIndex=FileIndexAbsPath,
+                        FileSentences=FileSentencesAbsPath,
                         WordPositionInLines=WordPositionInLines,
 
                         # list of sentences
-                        Sentences=util.file_read_lines(Prg, FileSentences) if isfile(FileSentences) else [])
+                        Sentences=util.file_read_lines(Prg, FileSentencesAbsPath) if isfile(FileSentencesAbsPath) else [])
 
 
 def info(Txt, Verbose=True):
@@ -118,11 +118,11 @@ def document_objects_collect_from_working_dir(Prg,
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
 
-    for FileNum, FileText in enumerate(FilesTxt): # All files recursively collected from DirDocuments
+    for FileNum, FileTextAbsPath in enumerate(FilesTxt): # All files recursively collected from DirDocuments
         ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
 
-        if DocObj := document_obj_create(Prg, FileBaseNames__OrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
-            BaseNameNoExt, _ = util.basename_without_extension__ext(FileText)
+        if DocObj := document_obj_create(Prg, FileBaseNames__OrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
+            BaseNameNoExt, _ = util.basename_without_extension__ext(FileTextAbsPath)
             DocumentObjects[BaseNameNoExt] = DocObj
 
 

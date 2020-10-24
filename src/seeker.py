@@ -23,27 +23,27 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
     ui_tkinter_boot_progress_bar.progressbar_close(Prg)
 
 # Tested
-def file_sentence_create(Prg, FileSentences, Text="", FilePathText=""):
+def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath=""):
     Created = False
-    if not os.path.isfile(FileSentences):
-        if FilePathText: # for testing it's easier to get Text from param - and not create/del tmpfile
-            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FilePathText)
+    if not os.path.isfile(FileSentencesAbsPath):
+        if FileTextAbsPath: # for testing it's easier to get Text from param - and not create/del tmpfile
+            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath)
 
         Sentences = text.sentence_separator(Text)
-        util.file_write_utf8_error_avoid(Prg, FileSentences, "\n".join(Sentences))
+        util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(Sentences))
         Created = True
 
     return Created
 
 # Tested
-def file_index_create(Prg, FileIndex, FileSentences):
+def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
     Created = False
-    if not os.path.isfile(FileIndex):
+    if not os.path.isfile(FileIndexAbsPath):
         Created = True
         WordPositions = dict()
         WordIndexOnlyLineNums = dict()
 
-        Lines = util.file_read_lines(Prg, FileSentences, Strip=False, Lower=True)
+        Lines = util.file_read_lines(Prg, FileSentencesAbsPath, Strip=False, Lower=True)
 
         for LineNum, Line in enumerate(Lines):
 
@@ -72,7 +72,7 @@ def file_index_create(Prg, FileIndex, FileSentences):
             Out.append(f'"{Word}": [{",".join(LineNums)}]')
         Content="{\n"+"\n,".join(Out) + "\n}"
 
-        util.file_write_with_check(Prg, Fname=FileIndex, Content=Content)
+        util.file_write_with_check(Prg, Fname=FileIndexAbsPath, Content=Content)
 
     return Created
 

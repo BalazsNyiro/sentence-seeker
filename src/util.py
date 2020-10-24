@@ -101,7 +101,7 @@ def file_create_if_necessary(Prg, Path, ContentDefault="", LogCreate=True):
 def has_uppercase(Txt):
     return True if Txt.lower() != Txt else False
 
-# Tested
+# Tested, file.txt -> .txt
 def filename_extension(Fname): # works with fullpath, too: /home/user/file.txt
     return pathlib.Path(Fname).suffix
 # Tested

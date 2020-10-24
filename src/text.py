@@ -166,10 +166,16 @@ def sentence_separator(Text):
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     return RetSentences
 
-# Tested
-def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None):
+def subsentences_use_only_one_separator(Txt):
     for SubSep in SubSentenceEnds:
-        Sentence = Sentence.replace(SubSep, ";")
+        Txt = Txt.replace(SubSep, ";")
+    return Txt
+
+# Tested
+def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None, ReplaceSubsentenceEndsToOneSeparator=True):
+    if ReplaceSubsentenceEndsToOneSeparator:
+        Sentence = subsentences_use_only_one_separator(Sentence)
+
     Subsentences = Sentence.split(";")
     if SubSentenceIdWanted is not None: # it can be 0, too. and if 0 == False!
         if SubSentenceIdWanted < len(Subsentences):

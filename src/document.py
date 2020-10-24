@@ -5,8 +5,8 @@ from os.path import isfile
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
-ExtensionsConvertable = ".pdf.htm.html"
-ExtensionsInFuture = ".epub.mobi"
+ExtensionsConvertable = [".pdf", ".htm", ".html"]
+ExtensionsInFuture = [".epub", ".mobi"]
 
 # fixme: TEST IT
 def file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
@@ -102,16 +102,15 @@ def document_objects_collect_from_working_dir(Prg,
                                               LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
                                               ):
     DocumentObjects = dict()
-
-    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"])
+    WantedExtensions = [".txt"] + ExtensionsConvertable + ExtensionsInFuture
+    Warning = "in documents dir - not processed file type: FILE"
+    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"],
+                                                WantedExtensions=WantedExtensions,
+                                                Warning=Warning)
 
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         # /home/user/file.txt ->  file.txt (basename) -> file
         BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
-
-        if ExtensionLow not in ".txt" + ExtensionsConvertable + ExtensionsInFuture:
-            info(f"in documents dir - not processed file type: {FileOrig}")
-            continue
 
         Progress = f"{FileNum} / {len(Files)}"
         ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)

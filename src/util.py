@@ -288,7 +288,7 @@ def file_is_gzipped(Prg, Path):
         return "file_not_found", ""
 
 # Tested
-def files_abspath_collect_from_dir(DirRoot, Recursive=True, WantedExtensions=("txt"), Warning=""):
+def files_abspath_collect_from_dir(DirRoot, Recursive=True, WantedExtensions=[], Warning=""):
     FilesAbsPath = []
     for DirPath, DirNames, FileNames in os.walk(DirRoot):
         for File in FileNames:
@@ -305,8 +305,6 @@ def files_abspath_collect_from_dir(DirRoot, Recursive=True, WantedExtensions=("t
         # https://stackoverflow.com/questions/4117588/non-recursive-os-walk
         if not Recursive:
             break
-    for F in FilesAbsPath:
-        print(">>", F)
 
     return FilesAbsPath
 

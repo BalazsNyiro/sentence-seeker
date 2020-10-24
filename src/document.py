@@ -103,7 +103,8 @@ def document_objects_collect_from_working_dir(Prg,
                                               ):
     DocumentObjects = dict()
     WantedExtensions = [".txt"] + ExtensionsConvertable + ExtensionsInFuture
-    Warning = "in documents dir - not processed file type: FILE"
+    # Warning = "in documents dir - not processed file type: FILE"
+    Warning = ""
     Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"],
                                                 WantedExtensions=WantedExtensions,
                                                 Warning=Warning)
@@ -124,6 +125,7 @@ def document_objects_collect_from_working_dir(Prg,
             continue
 
         if ExtensionLow == ".txt":
+            print("try CREATE:", FileOrig, FileText)
             if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
                 DocumentObjects[BaseNameNoExt] = DocObj
 

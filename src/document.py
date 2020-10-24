@@ -9,33 +9,38 @@ ExtensionsConvertable = [".pdf", ".htm", ".html"]
 ExtensionsInFuture = [".epub", ".mobi"]
 
 # fixme: TEST IT
-def file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
-    FileText = FileOrig
-    ConversionErrorMsg = ""
-
+def file_convert_to_txt_if_necessary(Prg, FileOrig, FileOrigNames):
+    BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
     if ExtensionLow in ExtensionsConvertable:
+
         FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
-        if not os.path.isfile(FilePathConvertedToText):  # convert if necessary
+        FileOrigNames[BaseNameNoExt] = FileOrig
+
+        if not os.path.isfile(FilePathConvertedToText):  # convert if it's necessary
 
             if ExtensionLow == ".pdf":
                 Converter = Prg["PdfToTextConvert"]
+
             if ExtensionLow == ".htm" or ExtensionLow == ".html":
                 Converter = Prg["HtmlToTextConvert"]
 
             if Converter(Prg, FileOrig, FilePathConvertedToText):
-                ExtensionLow = ".txt"
-                FileText = FilePathConvertedToText
+                info("Successful conversion to txt: " + FileOrig)
             else:
                 ConversionErrorMsg = f"Error, file conversion: {FileOrig}"
                 util.log(Prg, ConversionErrorMsg)
-
-    return FileText, ExtensionLow, ConversionErrorMsg
-
+                info(ConversionErrorMsg)
 
 _DocsSampleInfo = None
-def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
+def document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
     if not os.path.isfile(FileText):
         return None
+
+    BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileText, ExtensionLower=True)
+    if BaseNameNoExt in FileOrigNames: # I can do it with .get() but it's more descriptive
+        FileOrig = FileOrigNames[BaseNameNoExt]
+    else:
+        FileOrig = FileText
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
         info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
@@ -53,11 +58,7 @@ def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, ProgressPercent,
         FunSentenceCreate(Prg, FileSentences, FilePathText=FileText)
         FunIndexCreate(Prg, FileIndex, FileSentences)
 
-    if BaseNameNoExt in Prg["DocumentsDb"]:
-        Msg = f"Maybe you have more than one files with same Basename: {BaseNameNoExt}"
-        print(Msg)
-        util.log(Prg, Msg)
-    else:
+    if BaseNameNoExt not in Prg["DocumentsDb"]:
         if BaseNameNoExt in _DocsSampleInfo["docs"]:
             DocObj = _DocsSampleInfo["docs"][BaseNameNoExt]
         else:
@@ -104,32 +105,26 @@ def document_objects_collect_from_working_dir(Prg,
     DocumentObjects = dict() # ssp-
 
 
-    WantedExtensions = [".txt"] + ExtensionsConvertable + ExtensionsInFuture
+    DirDoc = Prg["DirDocuments"]
+    for FileConvertableLater in util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=ExtensionsInFuture):
+        info(f"in documents dir - this file type will be processed in the future: {FileConvertableLater}")
 
-    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"], WantedExtensions=WantedExtensions)
+    FilesConvertable = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=ExtensionsConvertable)
 
-    LenFiles = len(Files) # ssp-
-    for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
-        # /home/user/file.txt ->  file.txt (basename) -> file
-        BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
+    FileOrigNames = {}
+    for FileToTxt in FilesConvertable:
+        file_convert_to_txt_if_necessary(Prg, FileToTxt, FileOrigNames)
 
+    FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
+    LenFiles = len(FilesTxt)
+
+    for FileNum, FileText in enumerate(FilesTxt): # All files recursively collected from DirDocuments
         ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
 
-        if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
-            continue # used in development, not for end users
+        if DocObj := document_obj_create(Prg, FileOrigNames, FileText, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
+            BaseNameNoExt, _ = util.basename_without_extension__ext(FileText)
+            DocumentObjects[BaseNameNoExt] = DocObj
 
-        FileText, ExtensionLow, ConversionErrorMsg = file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow)
-        if ConversionErrorMsg:
-            info(ConversionErrorMsg)
-            continue
-
-        if ExtensionLow == ".txt":
-            print("try CREATE:", FileOrig, FileText)
-            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
-                DocumentObjects[BaseNameNoExt] = DocObj
-
-        elif ExtensionLow in ExtensionsInFuture:
-            info(f"in documents dir - this file type will be processed in the future: {BaseNameNoExt}")
 
     return DocumentObjects
 

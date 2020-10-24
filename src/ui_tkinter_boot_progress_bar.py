@@ -27,10 +27,12 @@ def bar_display(Prg, FunBehindBar):
 
     mainloop()
 
-def progressbar_refresh_if_displayed(Prg, Files, FileNumActual):
+def progressbar_refresh_if_displayed(Prg, LenFiles, FileNumActual):
+    ProgressPercent = int((FileNumActual * 100.0) / LenFiles)
     if "ProgressBar" in Prg:
-        Prg["ProgressBar"]["value"] = int((FileNumActual * 100.0) / len(Files))
+        Prg["ProgressBar"]["value"] = ProgressPercent
         Prg["ProgressBarRoot"].update_idletasks()
+    return ProgressPercent
 
 def progressbar_close(Prg):
     if "ProgressBarRoot" in Prg:

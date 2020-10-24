@@ -33,12 +33,12 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, ExtensionLow):
 
 
 _DocsSampleInfo = None
-def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
+def document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
     if not os.path.isfile(FileText):
         return None
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
-        info(f"{Progress} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
+        info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
     global _DocsSampleInfo
     if not _DocsSampleInfo:
         _, _DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
@@ -101,20 +101,19 @@ def document_objects_collect_from_working_dir(Prg,
                                               # in testcases we want to load only selected files, not all
                                               LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
                                               ):
-    DocumentObjects = dict()
-    WantedExtensions = [".txt"] + ExtensionsConvertable + ExtensionsInFuture
-    # Warning = "in documents dir - not processed file type: FILE"
-    Warning = ""
-    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"],
-                                                WantedExtensions=WantedExtensions,
-                                                Warning=Warning)
+    DocumentObjects = dict() # ssp-
 
+
+    WantedExtensions = [".txt"] + ExtensionsConvertable + ExtensionsInFuture
+
+    Files = util.files_abspath_collect_from_dir(Prg["DirDocuments"], WantedExtensions=WantedExtensions)
+
+    LenFiles = len(Files) # ssp-
     for FileNum, FileOrig in enumerate(Files): # All files recursively collected from DirDocuments
         # /home/user/file.txt ->  file.txt (basename) -> file
         BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
 
-        Progress = f"{FileNum} / {len(Files)}"
-        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, Files, FileNum)
+        ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
 
         if LoadOnlyThese and BaseNameNoExt not in LoadOnlyThese:
             continue # used in development, not for end users
@@ -126,7 +125,7 @@ def document_objects_collect_from_working_dir(Prg,
 
         if ExtensionLow == ".txt":
             print("try CREATE:", FileOrig, FileText)
-            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, Progress, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
+            if DocObj := document_obj_create(Prg, FileOrig, FileText, BaseNameNoExt, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
                 DocumentObjects[BaseNameNoExt] = DocObj
 
         elif ExtensionLow in ExtensionsInFuture:

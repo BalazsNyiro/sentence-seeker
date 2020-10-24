@@ -289,6 +289,7 @@ def file_is_gzipped(Prg, Path):
 
 # Tested
 def files_abspath_collect_from_dir(DirRoot, Recursive=True, WantedExtensions=[], Warning=""):
+    # Warning = "in documents dir - not processed file type: FILE"  if you pass warning, the fun display it
     FilesAbsPath = []
     for DirPath, DirNames, FileNames in os.walk(DirRoot):
         for File in FileNames:

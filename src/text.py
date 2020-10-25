@@ -119,37 +119,49 @@ def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 
     return InSentence, InQuotation
 
+#####################################################################################
+# for test functions I have to return with _Sentence
+def char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast):
+    global _Sentence
+    _Sentence = Sentence
+    InSentence = char_add_into_sentence(Sentences, Char, InSentence, CharLast)
+    return _Sentence, InSentence
+
 # Tested
-def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
+_Sentence = [] # with global var I avoid passing it in return params and in input params
+def char_add_into_sentence(Sentences, Char, InSentence, CharLast):
+    global _Sentence
+
     if InSentence:
-        Sentence.append(Char)
+        _Sentence.append(Char)
     else: # if not InSentence:
         if Sentences:
             Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
         else: #if not Sentences: # if it's the first Sentence, Sentences is empty
-            Sentence.append(Char)
+            _Sentence.append(Char)
             InSentence = True
 
     if Char in SentenceEnds:   # this is rare condition
         if InSentence:                      # I don't want to handle if in a sentence somebody has a
             InSentence = False              # quotation with another full sentence
-            Sentences.append(Sentence)      # because this solution doesn't depend on the correctly
-            Sentence = []                   # closed quotation pairs
+            Sentences.append(_Sentence)      # because this solution doesn't depend on the correctly
+            _Sentence = []                   # closed quotation pairs
 
-    if CharLast and Sentence:        # if something stayed in collected chars
+    if CharLast and _Sentence:        # if something stayed in collected chars
         InSentence = False           # and the sentence wasn't finished, saved it, too
-        Sentences.append(Sentence)
-        Sentence = []
+        Sentences.append(_Sentence)
+        _Sentence = []
 
-    return Sentence, InSentence
+    return InSentence
 
 # Tested
 def sentence_separator(Text):
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
 
-    Sentences = [];   InSentence  = False
-    Sentence  = [];   InQuotation = False
+    Sentences = [];
+    InSentence  = False
+    InQuotation = False
 
     IdCharLast = len(Text) - 1
     for IdCharNow, Char in enumerate(Text):
@@ -158,7 +170,7 @@ def sentence_separator(Text):
         InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
         #  because of performance reasons I don't create a separated variable for IsLastChar:   means: the current char is the last one?
-        Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence,   IdCharNow == IdCharLast )
+        InSentence = char_add_into_sentence(Sentences, Char, InSentence,   IdCharNow == IdCharLast )
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     return RetSentences

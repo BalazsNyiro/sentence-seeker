@@ -41,7 +41,6 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
     if not os.path.isfile(FileIndexAbsPath):
         Created = True
         WordPositions = dict()
-        WordIndexOnlyLineNums = dict()
 
         _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath)
         TextAll = TextAll.lower()
@@ -60,7 +59,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
-                indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSentenceNum)
+                indexing(WordPositions, LineNum, SubSentence, SubSentenceNum)
 
         Out = []
         for Word, LineNumsInts in WordPositions.items():
@@ -72,7 +71,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
     return Created
 
-def indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSentenceNum):
+def indexing(WordPositions, LineNum, SubSentence, SubSentenceNum):
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
     for Word in SubSentence.split(): # split at space, tab, newline
@@ -84,9 +83,7 @@ def indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSent
         # util.dict_key_insert_if_necessary(WordPositions, Word, list())
         # util.dict_key_insert_if_necessary(WordIndexOnlyLineNums, Word, dict())
         if Word not in WordPositions:
-            WordPositions[Word] = list()
-        if Word not in WordIndexOnlyLineNums:
-            WordIndexOnlyLineNums[Word] = dict()
+            WordPositions[Word] = set()
 
         if SubSentenceNum > 99:
             SubSentenceNum = 99
@@ -94,6 +91,5 @@ def indexing(WordPositions, WordIndexOnlyLineNums, LineNum, SubSentence, SubSent
 
         # one word can be more than once in a subsentence. If we
         # detect it once, don't save it again
-        if WordPosition not in WordIndexOnlyLineNums[Word]: # save the word only once
-            WordPositions[Word].append(WordPosition)
-            WordIndexOnlyLineNums[Word][WordPosition] = True
+        if WordPosition not in WordPositions[Word]: # save the word only once
+            WordPositions[Word].add(WordPosition)

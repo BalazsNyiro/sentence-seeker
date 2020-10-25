@@ -92,8 +92,15 @@ def replace_abbreviations(Txt):
                             ("Ms.", "Ms")]
     return replace_pairs(Txt, ReplaceAbbreviations)
 
+
+
+
+
+
+
+
 # TESTED
-def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
+def quotation_sentence_starts_wrapper(Char, InSentence=False, InQuotation=False):
 
     if Char in MarksQuotation:
         # if we are in quotation, it can be longer than one sentence -
@@ -122,52 +129,69 @@ def char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLa
     InSentence = char_add_into_sentence(Sentences, Char, InSentence, CharLast)
     return _Sentence, InSentence
 
-# Tested
-_Sentence = [] # with global var I avoid passing it in return params and in input params
-def char_add_into_sentence(Sentences, Char, InSentence, CharLast):
-    global _Sentence
 
-    if InSentence:
-        _Sentence.append(Char)
-    else: # if not InSentence:
-        if Sentences:
-            Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
-        else: #if not Sentences: # if it's the first Sentence, Sentences is empty
-            _Sentence.append(Char)
-            InSentence = True
+class SentenceSeparator:
 
-    if Char in SentenceEnds:   # this is rare condition
-        if InSentence:                      # I don't want to handle if in a sentence somebody has a
-            InSentence = False              # quotation with another full sentence
-            Sentences.append(_Sentence)      # because this solution doesn't depend on the correctly
-            _Sentence = []                   # closed quotation pairs
-
-    if CharLast and _Sentence:        # if something stayed in collected chars
-        InSentence = False           # and the sentence wasn't finished, saved it, too
-        Sentences.append(_Sentence)
-        _Sentence = []
-
-    return InSentence
-
-# Tested
-def sentence_separator(Text):
-    Text = replace_abbreviations(Text)
-    Text = replace_whitespaces_to_one_space(Text)
-
-    Sentences = [];
-    InSentence  = False
+    Sentences = []
+    Sentence = []
+    InSentence = False
     InQuotation = False
 
-    IdCharLast = len(Text) - 1
-    for IdCharNow, Char in enumerate(Text):
+    # Tested
+    def separate(self, Text):
+        Text = replace_abbreviations(Text)
+        Text = replace_whitespaces_to_one_space(Text)
 
-        InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
+        SentenceSeparator.Sentences = []
+        SentenceSeparator.Sentence = []
+        SentenceSeparator.InSentence = False
+        SentenceSeparator.InQuotation = False
 
-        #  because of performance reasons I don't create a separated variable for IsLastChar:   means: the current char is the last one?
-        InSentence = char_add_into_sentence(Sentences, Char, InSentence,   IdCharNow == IdCharLast )
+        IdCharLast = len(Text) - 1
+        for IdCharNow, Char in enumerate(Text):
 
-    RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    return RetSentences
+            if Char in MarksQuotation:
+                # if we are in quotation, it can be longer than one sentence -
+                # so I change only InQuotation state here. because I don't know anything
+                # about the sentences
+                if self.InQuotation:  # we have just finished the quotation
+                    self.InQuotation = False  # Quotation End can be in the middle of a sentence:
+                    # For some time past vessels had been met by "an enormous thing," a long
+
+                else:  # not InQuotation:
+                    self.InSentence = True  # the quotation mark can stand before a normal sentence
+                    self.InQuotation = True
+                    # "Adam wrote the letter"  in this situation the first " char belongs to the next sentence, not the previous one
+
+            if not self.InSentence:
+                if Char.isupper():  # it works with special national chars, too. Example: É
+                    self.InSentence = True
+
+            ###################################################################################################
+            if self.InSentence:
+                self.Sentence.append(Char)
+            else: # if not InSentence:
+                if self.Sentences:
+                    self.Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
+                else: #if not Sentences: # if it's the first Sentence, Sentences is empty
+                    self.Sentence.append(Char)
+                    self.InSentence = True
+
+            if Char in SentenceEnds:   # this is rare condition
+                if self.InSentence:                      # I don't want to handle if in a sentence somebody has a
+                    self.InSentence = False              # quotation with another full sentence
+                    self.Sentences.append(self.Sentence)      # because this solution doesn't depend on the correctly
+                    self.Sentence = []                   # closed quotation pairs
+
+            # is it the last char?
+            if IdCharLast == IdCharNow and self.Sentence:        # if something stayed in collected chars
+                self.InSentence = False           # and the sentence wasn't finished, saved it, too
+                self.Sentences.append(self.Sentence)
+                self.Sentence = []
+            ##########################################################################################################
+
+        RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in self.Sentences]
+        return RetSentences
 
 def subsentences_use_only_one_separator(Txt):
     for SubSep in SubSentenceEnds:

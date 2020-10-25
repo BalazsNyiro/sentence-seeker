@@ -53,7 +53,6 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
     FileIndexAbsPath = f"{FileTextAbsPath}_wordindex_{VersionSeeker}"
     FileSentencesAbsPath = f"{FileTextAbsPath}_sentence_separator_{VersionSeeker}"
 
-    WordPositionInLines = dict()
     if FunSentenceCreate and FunIndexCreate:
         #TimeSentenceStart = time.time()
         FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
@@ -76,6 +75,7 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
     # Original: lists.
     # Arrays are more complex, less memory usage:
     # _Status, WordPositionInLines = util_json_obj.obj_from_file(FileIndexAbsPath) if isfile(FileIndexAbsPath) else (ok, dict())
+    WordPositionInLines = dict()
     if isfile(FileIndexAbsPath):
         Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
         if Status == "ok":

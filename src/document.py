@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import util, os, util_ui
+import util, os, time
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 
@@ -55,8 +55,13 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
 
     WordPositionInLines = dict()
     if FunSentenceCreate and FunIndexCreate:
+        #TimeSentenceStart = time.time()
         FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+
+        #TimeIndexStart = time.time()
         FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
+        #util.time_spent("\n>>> Time Sentence creation: ", TimeSentenceStart)
+        #util.time_spent( "          Index    creation: ", TimeIndexStart)
 
     if BaseNameNoExt not in Prg["DocumentsDb"]:
         if BaseNameNoExt in _DocsSampleInfo["docs"]:

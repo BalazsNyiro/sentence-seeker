@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import document, util, os, text, ui_tkinter_boot_progress_bar
+import document, util, os, text, ui_tkinter_boot_progress_bar, time
 
 Version = "v03_index_in_subsentence"
 
 def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
+    print("\n######### Be ready to seeking... #########")
+    TimeStart = time.time()
     Prg["DocumentObjectsLoaded"] = \
         document.document_objects_collect_from_working_dir(
             Prg, VersionSeeker=Version,
@@ -14,6 +16,7 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
         )
     Prg["DocumentObjectsLoadedWordsCounterGlobal"] = text.words_count_in_all_document(Prg)
 
+    util.time_spent("Time Be ready to seeking:", TimeStart)
     if Prg.get("MessagesForUser", []):
         print("\n\n Messages for user:")
         for Msg in Prg["MessagesForUser"]:
@@ -88,8 +91,7 @@ def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNu
         # detect it once, don't save it again
         if Word not in WordPositions:
             WordPositions[Word] = set()
-            WordPositions[Word].add(WordPosition)
 
-        elif WordPosition not in WordPositions[Word]: # save the word only once
+        if WordPosition not in WordPositions[Word]: # save the word only once
             WordPositions[Word].add(WordPosition)
 

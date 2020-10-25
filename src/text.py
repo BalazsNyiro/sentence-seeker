@@ -93,14 +93,9 @@ def replace_abbreviations(Txt):
     return replace_pairs(Txt, ReplaceAbbreviations)
 
 # simple print, not tested
-_TimeStart = time.time()
 def _inform_user_if_necessary(LoopCounter):
-    global _TimeStart
-    if LoopCounter == 0:
-        _TimeStart = time.time()
-    if time.time() - _TimeStart > 1:
-        if LoopCounter % 2000 == 0:
-            print("t", end="", flush=True)
+    if LoopCounter % 9000 == 0:
+        print("t", end="", flush=True)
 
 # TESTED
 def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
@@ -155,13 +150,14 @@ def sentence_separator(Text):
     Sentences = [];   InSentence  = False
     Sentence  = [];   InQuotation = False
 
-    for LoopCounter, Char in enumerate(Text):
+    IdCharLast = len(Text) - 1
+    for IdCharNow, Char in enumerate(Text):
 
-        _inform_user_if_necessary(LoopCounter)
+        _inform_user_if_necessary(IdCharNow)
         InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
-        CharLast = LoopCounter == len(Text) - 1
-        Sentences, Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+        #  because of performance reasons I don't create a separated variable for IsLastChar:   means: the current char is the last one?
+        Sentences, Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence,   IdCharNow == IdCharLast )
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     return RetSentences

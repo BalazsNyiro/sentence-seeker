@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
-import sys, array, re, datetime, io
+import sys, array, time, datetime, io
 
 ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_Lower = ABC_Eng_Upper.lower()
@@ -556,3 +556,6 @@ def is_dict(Obj):
 
 def is_tuple(Obj):
     return isinstance(Obj, tuple)
+
+def time_spent(Msg, TimeStart):
+    print(f"{Msg} {time.time()-TimeStart} sec")

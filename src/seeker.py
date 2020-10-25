@@ -45,9 +45,6 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
         _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath)
         TextAll = TextAll.lower()
-
-
-
         TextAll = text.subsentences_use_only_one_separator(TextAll)
 
         # more than one minus: -- or --- signs: replace them
@@ -59,15 +56,6 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
             if LineNum % 1000 == 0:
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %", flush=True)
-
-            # FIXME: these comments?
-            # THIS word can be spoiled:
-            # word;  for example, I need clean words so remove the not-abc chars
-
-            # I replace with space because:
-            # This rock-hard cake is absolutely impossible to eat.
-            # We’re looking for a dog-friendly hotel.
-            # ’ -   signs has to be replaced with word separator char
 
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)

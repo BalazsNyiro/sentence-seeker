@@ -76,42 +76,42 @@ class TextTests(util_test.SentenceSeekerTest):
 
             Sentences, Sentence, InSentence = [], [], True
             Char, CharLast = "A", False
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [])
             self.assertEqual(Sentence, ["A"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], [], False
             Char, CharLast = "t", False
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sent")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)
 
             Sentences, Sentence, InSentence = [], [], False
             Char, CharLast = "A", False
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [])
             self.assertEqual(Sentence, ["A"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h","y"], True
             Char, CharLast = "?", False
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen"), list("Why?")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h"], True
             Char, CharLast = "y", False
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen")])
             self.assertEqual(Sentence, ["W","h","y"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h"], True
             Char, CharLast = "y", True
-            Sentence, InSentence = text.char_add_into_sentence_wrapper(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen"), list("Why")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)
@@ -119,28 +119,28 @@ class TextTests(util_test.SentenceSeekerTest):
 
     def test_inquotation_detect(self):
         if self._test_exec("test_inquotation_detect"):
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper("a", InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts("a", InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (False, False))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper("a", InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts("a", InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('"', InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('"', InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('"', InSentence=True, InQuotation=True)
+            InSentence, InQuotation = text.quotation_sentence_starts('"', InSentence=True, InQuotation=True)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('A', InSentence=False, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=False, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('A', InSentence=True, InQuotation=False)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=True, InQuotation=False)
             self.assertEqual((InSentence, InQuotation), (True, False))
 
-            InSentence, InQuotation = text.quotation_sentence_starts_wrapper('A', InSentence=True, InQuotation=True)
+            InSentence, InQuotation = text.quotation_sentence_starts('A', InSentence=True, InQuotation=True)
             self.assertEqual((InSentence, InQuotation), (True, True))
 
     def test_sentence_from_memory(self):

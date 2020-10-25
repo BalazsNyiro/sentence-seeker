@@ -32,7 +32,7 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
         if FileTextAbsPath: # for testing it's easier to get Text from param - and not create/del tmpfile
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath)
 
-        Sentences = text.SentenceSeparator.separate(text.SentenceSeparator, Text)
+        Sentences = text.sentence_separator(Text)
         util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(Sentences))
         Created = True
 

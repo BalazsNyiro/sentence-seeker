@@ -92,11 +92,6 @@ def replace_abbreviations(Txt):
                             ("Ms.", "Ms")]
     return replace_pairs(Txt, ReplaceAbbreviations)
 
-# simple print, not tested
-def _inform_user_if_necessary(LoopCounter):
-    if LoopCounter % 9000 == 0:
-        print("t", end="", flush=True)
-
 # TESTED
 def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
 
@@ -166,7 +161,6 @@ def sentence_separator(Text):
     IdCharLast = len(Text) - 1
     for IdCharNow, Char in enumerate(Text):
 
-        _inform_user_if_necessary(IdCharNow)
         InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
         #  because of performance reasons I don't create a separated variable for IsLastChar:   means: the current char is the last one?

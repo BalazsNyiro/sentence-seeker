@@ -56,10 +56,11 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %", flush=True)
 
+            LineNumHundredMultiplied = LineNum * 100
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
-                indexing(WordPositions, LineNum, SubSentence, SubSentenceNum)
+                indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum)
 
         Out = []
         for Word, LineNumsInts in WordPositions.items():
@@ -71,25 +72,24 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
     return Created
 
-def indexing(WordPositions, LineNum, SubSentence, SubSentenceNum):
+def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum):
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
+
+    if SubSentenceNum > 99:
+        SubSentenceNum = 99
+    WordPosition = LineNumHundredMultiplied + SubSentenceNum
 
     for Word in SubSentence.split(): # split at space, tab, newline
         # TODO: words short form expand:
         # I've -> "I", "have" are two separated words,
         # wouldn't -> would is the real word
 
-        # the list/dict creation here is not a big performance problem
-        # util.dict_key_insert_if_necessary(WordPositions, Word, list())
-        # util.dict_key_insert_if_necessary(WordIndexOnlyLineNums, Word, dict())
-        if Word not in WordPositions:
-            WordPositions[Word] = set()
-
-        if SubSentenceNum > 99:
-            SubSentenceNum = 99
-        WordPosition = LineNum*100+SubSentenceNum
-
         # one word can be more than once in a subsentence. If we
         # detect it once, don't save it again
-        if WordPosition not in WordPositions[Word]: # save the word only once
+        if Word not in WordPositions:
+            WordPositions[Word] = set()
             WordPositions[Word].add(WordPosition)
+
+        elif WordPosition not in WordPositions[Word]: # save the word only once
+            WordPositions[Word].add(WordPosition)
+

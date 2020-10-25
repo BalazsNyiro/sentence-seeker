@@ -27,7 +27,7 @@ class SeekerTests(util_test.SentenceSeekerTest):
             # print(util.file_read_all(Prg, FileIndex))
 
             _Status, WordPosition = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(WordPosition["london"], [101, 102, 201])
+            self.assertEqual(set(WordPosition["london"]), set([101, 102, 201]))
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

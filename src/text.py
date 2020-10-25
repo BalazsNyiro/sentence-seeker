@@ -130,17 +130,18 @@ def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
             Sentence.append(Char)
             InSentence = True
 
-    if InSentence and Char in SentenceEnds: # I don't want to handle if in a sentence somebody has a
-        InSentence = False                  # quotation with another full sentence
-        Sentences.append(Sentence)          # because this solution doesn't depend on the correctly
-        Sentence = []                       # closed quotation pairs
+    if Char in SentenceEnds:   # this is rare condition
+        if InSentence:                      # I don't want to handle if in a sentence somebody has a
+            InSentence = False              # quotation with another full sentence
+            Sentences.append(Sentence)      # because this solution doesn't depend on the correctly
+            Sentence = []                   # closed quotation pairs
 
     if CharLast and Sentence:        # if something stayed in collected chars
         InSentence = False           # and the sentence wasn't finished, saved it, too
         Sentences.append(Sentence)
         Sentence = []
 
-    return Sentences, Sentence, InSentence
+    return Sentence, InSentence
 
 # Tested
 def sentence_separator(Text):
@@ -157,7 +158,7 @@ def sentence_separator(Text):
         InSentence, InQuotation = quotation_sentence_starts(Char, InSentence, InQuotation)
 
         #  because of performance reasons I don't create a separated variable for IsLastChar:   means: the current char is the last one?
-        Sentences, Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence,   IdCharNow == IdCharLast )
+        Sentence, InSentence = char_add_into_sentence(Sentences, Sentence, Char, InSentence,   IdCharNow == IdCharLast )
 
     RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
     return RetSentences

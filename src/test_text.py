@@ -76,42 +76,42 @@ class TextTests(util_test.SentenceSeekerTest):
 
             Sentences, Sentence, InSentence = [], [], True
             Char, CharLast = "A", False
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [])
             self.assertEqual(Sentence, ["A"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], [], False
             Char, CharLast = "t", False
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sent")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)
 
             Sentences, Sentence, InSentence = [], [], False
             Char, CharLast = "A", False
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [])
             self.assertEqual(Sentence, ["A"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h","y"], True
             Char, CharLast = "?", False
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen"), list("Why?")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h"], True
             Char, CharLast = "y", False
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen")])
             self.assertEqual(Sentence, ["W","h","y"])
             self.assertEqual(InSentence, True)
 
             Sentences, Sentence, InSentence = [list("prev sen")], ["W","h"], True
             Char, CharLast = "y", True
-            Sentences, Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
+            Sentence, InSentence = text.char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast)
             self.assertEqual(Sentences, [list("prev sen"), list("Why")])
             self.assertEqual(Sentence, [])
             self.assertEqual(InSentence, False)

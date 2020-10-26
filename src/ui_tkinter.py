@@ -137,6 +137,7 @@ def win_main(Prg):
     WordsEntry.insert(0, Prg["QueryExamples"]["bird_or_cat"])
 
     WordsEntry.bind("<Return>", seek_and_display)
+    WordsEntry.bind("<Control-KeyRelease-a>", select_all_words_entry)
 
     # don't delete entry because user maybe wants to edit prev query
     #WordsEntry.bind("<FocusIn>", lambda _: WordsEntry.delete(0, 999)) # clear when clicked
@@ -199,3 +200,10 @@ def msg_box(Msg="no msg", Title="Info"):
 
 def msg_contact():
     msg_box("Author: Balazs Nyiro\ndiogenesz@pergamen.hu")
+
+# Select all the text in textbox
+def select_all_words_entry(event):
+    # select text
+    WordsEntry.select_range(0, 'end')
+    # move cursor to the end
+    WordsEntry.icursor('end')

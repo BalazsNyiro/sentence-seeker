@@ -14,7 +14,9 @@ def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
     if ReturnType == "separated_subsentences":
         SubSentenceNum = Result["SubSentenceNum"]
         _Status, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
-        SubSentencesBefore, SubSentencesAfter = Sentence.split(SubSentenceResult)
+
+        # split at first match, more than one can be in subsentence
+        SubSentencesBefore, SubSentencesAfter = Sentence.split(SubSentenceResult, 1)
 
         Sentence = {"subsentences_before": SubSentencesBefore,
                     "subsentence_result": SubSentenceResult,

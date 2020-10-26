@@ -7,7 +7,7 @@ from http.server import HTTPServer
 # prg start is important because I import/start sentence-seeker
 # from ssp program planner and this is a simple executable interface
 def run(Ui="ssp_program_planner", Usage=False, TestExecution=False):
-    Prg = config.PrgConfigCreate(TestExecution, PrintForDeveloper=False)
+    Prg = config.prg_config_create(TestExecution, PrintForDeveloper=False)
 
     if Usage:
         print(Prg["UsageInfo"])

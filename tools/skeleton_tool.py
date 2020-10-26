@@ -10,7 +10,7 @@ sys.path.append(os.path.join(DirPrgParent, "src"))
 import config
 ##########################################################
 
-Prg = config.PrgConfigCreate()
+Prg = config.prg_config_create()
 
 # use argparse to detect options
 

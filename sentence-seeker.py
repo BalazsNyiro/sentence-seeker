@@ -30,7 +30,7 @@ def main():
         prg_start.run(Usage=Usage, Ui=Ui, TestExecution=False)
 
 def test_exec(Args):
-    Prg = config.PrgConfigCreate(Args, PrintForDeveloper=False)
+    Prg = config.prg_config_create(Args, PrintForDeveloper=False)
 
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")

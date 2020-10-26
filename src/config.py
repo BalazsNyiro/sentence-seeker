@@ -7,7 +7,7 @@ from sys import platform
 
 from html.parser import HTMLParser
 
-def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
+def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
 
     if not DirPrgRoot:
         PathConfigModule = os.path.realpath(__file__)

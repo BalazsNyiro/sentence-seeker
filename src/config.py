@@ -75,14 +75,16 @@ def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="",
             "FileDocumentsDbContent": util.file_read_all({}, FileDocumentsDb)[1],
             "DocumentsDb": DocumentsDb,
 
+            "DocumentObjectsLoaded": dict(),
+            "DocumentObjectsLoadedWordsCounterGlobal": dict(),
+
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
             "TestExecution": TestExecution,
             "PrintForDeveloper": PrintForDeveloper,
             "PdfToTextConvert": text_from_pdf(Os),
             "HtmlToTextConvert": text_from_html,
-            "DocumentObjectsLoaded": dict(),
-            "DocumentObjectsLoadedWordsCounterGlobal": dict(),
+
             "Statistics": [],
             "LimitDisplayedSampleSentences": 20,
 

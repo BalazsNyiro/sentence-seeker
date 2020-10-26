@@ -56,12 +56,12 @@ def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="",
 
     # Prg = Dict({"Key":1}) works, too
 
-    FileDocumentsDb = os.path.join(DirDocuments, "documents.json")
+    DocumentsSourceWebpagesFileName = os.path.join(DirDocuments, "documents_source_webpages.json")
 
     DefaultDocDb = '{"docs":{}, "source_names":{"gutenberg": "Project Gutenberg", "wikipedia": "Wikipedia"}}'
-    util.file_create_if_necessary({}, FileDocumentsDb, ContentDefault=DefaultDocDb, LogCreate=False)
-    _Status, JsonObjReply = util_json_obj.obj_from_file(FileDocumentsDb)
-    DocumentsDb = JsonObjReply["docs"]
+    util.file_create_if_necessary({}, DocumentsSourceWebpagesFileName, ContentDefault=DefaultDocDb, LogCreate=False)
+    _Status, JsonObjReply = util_json_obj.obj_from_file(DocumentsSourceWebpagesFileName)
+    DocumentsSourceWebpages = JsonObjReply["docs"]
 
     Prg = { "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
@@ -71,9 +71,9 @@ def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="",
             "DirTestFiles": os.path.join(DirPrgRoot, "test_files"),
             "DirLog": DirLog,
 
-            "FileDocumentsDb": FileDocumentsDb,
-            "FileDocumentsDbContent": util.file_read_all({}, FileDocumentsDb)[1],
-            "DocumentsDb": DocumentsDb,
+            "DocumentsSourceWebpagesFileName": DocumentsSourceWebpagesFileName,
+            "DocumentsSourceWebpagesFileContent": util.file_read_all({}, DocumentsSourceWebpagesFileName)[1], # for html_ui
+            "DocumentsSourceWebpages": DocumentsSourceWebpages,
 
             "DocumentObjectsLoaded": dict(),
             "DocumentObjectsLoadedWordsCounterGlobal": dict(),

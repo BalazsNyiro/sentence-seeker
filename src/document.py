@@ -32,7 +32,7 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
                 util.log(Prg, ConversionErrorMsg)
                 info(ConversionErrorMsg)
 
-_DocsSampleInfo = None
+_DocsSampleSourceWebpages = None
 def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
     if not os.path.isfile(FileTextAbsPath):
         return None
@@ -45,9 +45,9 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
         info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
-    global _DocsSampleInfo
-    if not _DocsSampleInfo:
-        _, _DocsSampleInfo = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples.json"))
+    global _DocsSampleSourceWebpages
+    if not _DocsSampleSourceWebpages:
+        _, _DocsSampleSourceWebpages = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples_source_webpages.json"))
 
     # this document object describe infos about the document
     # for example the version of index algorithm
@@ -63,9 +63,9 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
         #util.time_spent("\n>>> Time Sentence creation: ", TimeSentenceStart)
         #util.time_spent( "          Index    creation: ", TimeIndexStart)
 
-    if BaseNameNoExt not in Prg["DocumentsDb"]:
-        if BaseNameNoExt in _DocsSampleInfo["docs"]:
-            DocObj = _DocsSampleInfo["docs"][BaseNameNoExt]
+    if BaseNameNoExt not in Prg["DocumentsSourceWebpages"]:
+        if BaseNameNoExt in _DocsSampleSourceWebpages["docs"]:
+            DocObj = _DocsSampleSourceWebpages["docs"][BaseNameNoExt]
         else:
             DocObj = {"url": "url_unknown",
                       "source_name": "source_unknown",

@@ -10,25 +10,25 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             Prg = self.Prg
 
             PrgFake = {}
-            PrgFake["FileDocumentsDb"] = os.path.join(Prg["DirWork"], "test_doc_update.json")
-            PrgFake["FileDocumentsDbContent"] = ""
+            PrgFake["DocumentsSourceWebpagesFileName"] = os.path.join(Prg["DirWork"], "test_doc_update.json")
+            PrgFake["DocumentsSourceWebpagesFileContent"] = ""
 
-            util.file_write_simple(PrgFake["FileDocumentsDb"], '{"key":"val"}')
+            util.file_write_simple(PrgFake["DocumentsSourceWebpagesFileName"], '{"key":"val"}')
 
             DocObj = {"name": "doc_update_test"}
             util_json_obj.doc_db_update_in_file_and_Prg(PrgFake, "sample_filename_without_extension", DocObj)
 
-            _Status, DocObjUpdatedFromFile = util_json_obj.obj_from_file(PrgFake["FileDocumentsDb"])
+            _Status, DocObjUpdatedFromFile = util_json_obj.obj_from_file(PrgFake["DocumentsSourceWebpagesFileName"])
             self.assertTrue("docs" in DocObjUpdatedFromFile)
             self.assertTrue("sample_filename_without_extension" in DocObjUpdatedFromFile["docs"])
             self.assertEqual(DocObjUpdatedFromFile["docs"]["sample_filename_without_extension"]["name"], "doc_update_test")
 
-            self.assertEqual(PrgFake["DocumentsDb"], DocObjUpdatedFromFile["docs"])
-            self.assertEqual(PrgFake["FileDocumentsDbContent"],
+            self.assertEqual(PrgFake["DocumentsSourceWebpages"], DocObjUpdatedFromFile["docs"])
+            self.assertEqual(PrgFake["DocumentsSourceWebpagesFileContent"],
                              util_json_obj.json_to_str(DocObjUpdatedFromFile)
             )
 
-            util.file_del(PrgFake["FileDocumentsDb"])
+            util.file_del(PrgFake["DocumentsSourceWebpagesFileName"])
 
     def test_json_read_write_from_file(self):
         if self._test_exec("test_json_read_write_from_file"):

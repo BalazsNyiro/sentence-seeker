@@ -22,9 +22,9 @@ def obj_to_file(JsonFileName, Data):
 
 # Tested
 def doc_db_update_in_file_and_Prg(Prg, FileWithoutExtension, DocObj):
-    FileDocumentsDb = Prg["FileDocumentsDb"]
+    DocumentsSourceWebpagesFileName = Prg["DocumentsSourceWebpagesFileName"]
 
-    StatusDocDb, DocDb = obj_from_file(FileDocumentsDb)
+    StatusDocDb, DocDb = obj_from_file(DocumentsSourceWebpagesFileName)
     if StatusDocDb == "ok": # obj_from_file display error if something is wrong
 
         if "docs" not in DocDb:
@@ -33,13 +33,13 @@ def doc_db_update_in_file_and_Prg(Prg, FileWithoutExtension, DocObj):
         # write back the Document object
         DocDb["docs"][FileWithoutExtension] = DocObj
 
-        # the file is updated AND DocumentsDb is updated, too, and FileDocumentsDbContent, too
-        obj_to_file(FileDocumentsDb, DocDb)
-        Prg["DocumentsDb"] = DocDb["docs"]
+        # the file is updated AND DocumentsSourceWebpages is updated, too, and DocumentsSourceWebpagesFileContent, too
+        obj_to_file(DocumentsSourceWebpagesFileName, DocDb)
+        Prg["DocumentsSourceWebpages"] = DocDb["docs"]
 
         # here we load it once and in ui_html
         # we don't have to reload it at every request
-        Prg["FileDocumentsDbContent"] = json_to_str(DocDb)
+        Prg["DocumentsSourceWebpagesFileContent"] = json_to_str(DocDb)
 
 # tested in test_util_json
 def json_to_str(Obj):

@@ -8,8 +8,8 @@ def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
     _Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
 
     Url = ""
-    if Source in Prg["DocumentsDb"]:
-        Url = Prg["DocumentsDb"][Source]["url"]
+    if Source in Prg["DocumentsSourceWebpages"]:
+        Url = Prg["DocumentsSourceWebpages"][Source]["url"]
 
     if ReturnType == "separated_subsentences":
         SubSentenceNum = Result["SubSentenceNum"]

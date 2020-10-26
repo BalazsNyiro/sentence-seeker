@@ -76,7 +76,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 License = self.Prg["Licenses"].replace("\n", "<br />")
 
                 Replaces = (
-                    ("PLACEHOLDER_DOCUMENT_JSON", self.Prg["FileDocumentsDbContent"]),
+                    ("PLACEHOLDER_DOCUMENT_JSON", self.Prg["DocumentsSourceWebpagesFileContent"]),
                     ("PLACEHOLDER_HOST", self.Prg["ServerHost"]),
                     ("PLACEHOLDER_PORT", str(self.Prg["ServerPort"])),
                     ("PLACEHOLDER_LICENSE", License),

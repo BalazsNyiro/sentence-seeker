@@ -20,10 +20,10 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
         if not os.path.isfile(FilePathConvertedToText):  # convert if it's necessary
 
             if ExtensionLow == ".pdf":
-                Converter = Prg["PdfToTextConvert"]
+                Converter = Prg["ConverterPdfToText"]
 
             if ExtensionLow == ".htm" or ExtensionLow == ".html":
-                Converter = Prg["HtmlToTextConvert"]
+                Converter = Prg["ConverterHtmlToText"]
 
             if Converter(Prg, FileOrig, FilePathConvertedToText):
                 info("Successful conversion to txt: " + FileOrig)

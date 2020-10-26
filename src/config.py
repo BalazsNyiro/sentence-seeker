@@ -82,8 +82,8 @@ def PrgConfigCreate(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="",
             "TestResults": [],
             "TestExecution": TestExecution,
             "PrintForDeveloper": PrintForDeveloper,
-            "PdfToTextConvert": text_from_pdf(Os),
-            "HtmlToTextConvert": text_from_html,
+            "ConverterPdfToText": converter_pdf_to_text(Os),
+            "ConverterHtmlToText": converter_html_to_txt,
 
             "Statistics": [],
             "LimitDisplayedSampleSentences": 20,
@@ -197,7 +197,7 @@ class DocHTMLParser(HTMLParser):
         # print("Decl     :", data)
         pass
 
-def text_from_html(Prg, PathInput, PathOutput):
+def converter_html_to_txt(Prg, PathInput, PathOutput):
     parser = DocHTMLParser()
     RetStatus, Src = util.file_read_all(Prg, PathInput)
     if not RetStatus: # error with reading
@@ -209,10 +209,10 @@ def text_from_html(Prg, PathInput, PathOutput):
     return util.file_write(Prg, Fname=PathOutput, Content=parser.data)
 
 # Tested
-def text_from_pdf(Os):
+def converter_pdf_to_text(Os):
     ConverterDetected = False
 
-    def PdfToTextFun(_Prg, _PathInput, _PathOutput):
+    def pdf_to_text_fun(_Prg, _PathInput, _PathOutput):
         return False
 
     # pdfminer.six inserts unwanted (cid:XXX) and binary chars
@@ -258,4 +258,4 @@ def text_from_pdf(Os):
                 "    apt install poppler-utils    (on Ubuntu Linux)"
               )
 
-    return PdfToTextFun
+    return pdf_to_text_fun

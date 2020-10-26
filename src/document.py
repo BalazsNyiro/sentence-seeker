@@ -101,15 +101,15 @@ def info(Txt, Verbose=True):
     print(Txt, flush=True) if Verbose else 0
 
 # Tested
-def document_objects_collect_from_working_dir(Prg,
-                                              VersionSeeker="version_not_set",
-                                              FunSentenceCreate=None,
-                                              FunIndexCreate=None,
-                                              Verbose=True,
+def document_objects_collect_from_dir_documents(Prg,
+                                                VersionSeeker="version_not_set",
+                                                FunSentenceCreate=None,
+                                                FunIndexCreate=None,
+                                                Verbose=True,
 
-                                              # in testcases we want to load only selected files, not all
-                                              LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
-                                              ):
+                                                # in testcases we want to load only selected files, not all
+                                                LoadOnlyThese=None  # ['BaseNameWithoutExt'] the positive examples
+                                                ):
     DocumentObjects = dict() # ssp-
 
 
@@ -148,16 +148,16 @@ def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSente
 
 # TODO: TEST it
 def docs_copy_samples_into_dir_if_necessary(Prg):
-    DocumentsAvailable = document_objects_collect_from_working_dir(Prg)
-    DirTarget = os.path.join(Prg["DirDocuments"], "text_samples")
-
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
     print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
-    util.dir_create_if_necessary(Prg, DirTarget)
+
+    DocumentsAvailable = document_objects_collect_from_dir_documents(Prg)
 
     if not DocumentsAvailable:
-        util.web_get_pack_wikipedia(Prg, DirTarget)
-        docs_copy_samples_into_dir(Prg, DirTarget)
+        DirTextSamples = os.path.join(Prg["DirDocuments"], "text_samples")
+        util.dir_create_if_necessary(Prg, DirTextSamples)
+        util.web_get_pack_wikipedia(Prg, DirTextSamples)
+        docs_copy_samples_into_dir(Prg, DirTextSamples)
 
 # Tested
 def docs_copy_samples_into_dir(Prg, DirTarget):

@@ -52,7 +52,8 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
         # more than one minus: -- or --- signs: replace them
         TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
-        Lines = TextAll.split("\n")
+        Lines = TextAll.split("\n") # one sentence is in one line, it's guaranted
+
         for LineNum, Line in enumerate(Lines):
 
             if LineNum % 1000 == 0:

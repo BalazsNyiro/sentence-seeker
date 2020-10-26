@@ -2,6 +2,7 @@
 import util, os, time
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
+import array
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
@@ -80,7 +81,9 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
         Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
-                WordPositionInLines[Word] = util.int_list_to_array(IndexList)
+                WordPositionInLines[Word] = array.array("I", IndexList)
+                                            # fastest to call array directly
+                                            # util.int_list_to_array(IndexList)
         else:
             Prg["MessagesForUser"].append(JsonObjReply)
 
@@ -91,7 +94,7 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
                         WordPositionInLines=WordPositionInLines,
 
                         # list of sentences
-                        Sentences=util.file_read_lines(Prg, FileSentencesAbsPath) if isfile(FileSentencesAbsPath) else [])
+                        Sentences=util.file_read_lines_simple(FileSentencesAbsPath) if isfile(FileSentencesAbsPath) else [])
 
 
 def info(Txt, Verbose=True):

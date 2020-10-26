@@ -120,9 +120,14 @@ def basename_without_extension__ext(Fname, ExtensionLower=True):
     return filename_without_extension(BaseName), Ext
 
 # Tested in file_read_lines's test / wrappe fun, test not necessary
-def file_read_all_simple(Fname="", mode="r"): # if you want read binary, write "rb"
-    with open(Fname, mode) as f:
+def file_read_all_simple(Fname="", Mode="r"): # if you want read binary, write "rb"
+    with open(Fname, Mode) as f:
         return f.read()
+
+def file_read_lines_simple(Fname="", Mode="r"):
+    with open(Fname, Mode) as f:
+        return f.readlines()
+
 # tested
 def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     _Success, TextAll = file_read_all(Prg, Fname)

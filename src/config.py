@@ -242,7 +242,7 @@ def converter_pdf_to_text(Os):
         if "linux" in Os.lower() and "/pdftotext" in PathPdfToText:
             print(f"pdf converter detected: {PathPdfToText}")
 
-            def PdfToTextFun(_Prg, PathInput, PathOutput):
+            def pdf_to_text_fun(_Prg, PathInput, PathOutput):
                 util.shell(f"{PathPdfToText} -nopgbrk {quote(PathInput)} {quote(PathOutput)}")
                 return True
 

@@ -216,7 +216,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             FilePathBird = self.FilePathBird
 
             PrgOrig = copy.deepcopy(Prg)
-            document.doc_objects_delete(Prg, FilePathBird)
+            document.doc_objects_delete__file_abspath(Prg, FilePathBird)
             util.file_write(Prg, Fname=FilePathBird, Content=self.TxtBird)
             # print("\n#### FILE WRITE:'", ResultWrite)
 
@@ -326,15 +326,15 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2), ('is', 4), ('(birds AND (are OR singing))', 1), ('((birds AND (are OR singing)) AND is)', 1)])
 
             ################ restore original state #####################################
-            document.doc_objects_delete(Prg, FilePathBird)
+            document.doc_objects_delete__file_abspath(Prg, FilePathBird)
             self.Prg = PrgOrig
 
 
 def run_all_tests(Prg):
     SeekerLogicTests.Prg = Prg
     # I can't use self.Prg when I define class variable so I set FilePath from here
-    SeekerLogicTests.FileBaseNameBird = "test_document_bird.txt"
+    SeekerLogicTests.FileNameBird = "test_document_bird.txt"
     SeekerLogicTests.FileBaseNameBirdWithoutExt = "test_document_bird"
-    SeekerLogicTests.FilePathBird = os.path.join(Prg["DirDocuments"], SeekerLogicTests.FileBaseNameBird)
+    SeekerLogicTests.FilePathBird = os.path.join(Prg["DirDocuments"], SeekerLogicTests.FileNameBird)
     unittest.main(module="test_seeker_logic", verbosity=2, exit=False)
 

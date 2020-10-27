@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import util, os, time
+import util, os
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
@@ -71,7 +71,7 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
                       "source_name": "source_unknown",
                       "license": "license_unknown"}
 
-        util_json_obj.doc_db_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
+        util_json_obj.doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
 
     # Original: lists.
     # Arrays are more complex, less memory usage:
@@ -174,14 +174,17 @@ def docs_copy_samples_into_dir(Prg, DirTarget):
             # if a previous file exists with same name, it overwrites
             util.file_write_utf8_error_avoid(Prg, FileNameSaved, TextContent)
 
-# Fixme: test it
-def doc_objects_delete(Prg, FileAbsPathWithExt):
+# used in tests
+def doc_objects_delete__file_abspath(Prg, FileAbsPathWithExt):
     BaseName = os.path.basename(FileAbsPathWithExt)
-    BaseNameWithoutExt = util.filename_without_extension(BaseName)
-    if DocObj := Prg["DocumentObjectsLoaded"].pop(BaseNameWithoutExt, None):
+    BaseNameNoExt = util.filename_without_extension(BaseName)
+    doc_objects_delete__basename(Prg, BaseNameNoExt)
+    util.file_del(FileAbsPathWithExt) # del orig file in every case, if DocObj doesn't exis
+
+def doc_objects_delete__basename(Prg, BaseNameNoExt):
+    if DocObj := Prg["DocumentObjectsLoaded"].pop(BaseNameNoExt, None):
         util.file_del(DocObj["FileOrigPathAbs"])
         util.file_del(DocObj["FileTextPathAbs"])
         util.file_del(DocObj["FileIndex"])
         util.file_del(DocObj["FileSentences"])
-    util.file_del(FileAbsPathWithExt) # del orig file in every case, if DocObj doesn't exis
-
+        util_json_obj.doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExtRemove=BaseNameNoExt)

@@ -16,7 +16,7 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             util.file_write_simple(PrgFake["DocumentsSourceWebpagesFileName"], '{"key":"val"}')
 
             DocObj = {"name": "doc_update_test"}
-            util_json_obj.doc_db_update_in_file_and_Prg(PrgFake, "sample_filename_without_extension", DocObj)
+            util_json_obj.doc_source_webpages_update_in_file_and_Prg(PrgFake, "sample_filename_without_extension", DocObj)
 
             _Status, DocObjUpdatedFromFile = util_json_obj.obj_from_file(PrgFake["DocumentsSourceWebpagesFileName"])
             self.assertTrue("docs" in DocObjUpdatedFromFile)
@@ -27,6 +27,11 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             self.assertEqual(PrgFake["DocumentsSourceWebpagesFileContent"],
                              util_json_obj.json_to_str(DocObjUpdatedFromFile)
             )
+
+            util_json_obj.doc_source_webpages_update_in_file_and_Prg(PrgFake, BaseNameNoExtRemove="sample_filename_without_extension")
+            _Status, DocObjUpdatedFromFile = util_json_obj.obj_from_file(PrgFake["DocumentsSourceWebpagesFileName"])
+            self.assertFalse("sample_filename_without_extension" in DocObjUpdatedFromFile["docs"])
+
 
             util.file_del(PrgFake["DocumentsSourceWebpagesFileName"])
 

@@ -21,25 +21,32 @@ def obj_to_file(JsonFileName, Data):
         json.dump(Data, OutFile, sort_keys=True, indent=4)
 
 # Tested
-def doc_db_update_in_file_and_Prg(Prg, FileWithoutExtension, DocObj):
+def doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExtAdd=None, DocObjAdd=None, BaseNameNoExtRemove=None):
     DocumentsSourceWebpagesFileName = Prg["DocumentsSourceWebpagesFileName"]
 
-    StatusDocDb, DocDb = obj_from_file(DocumentsSourceWebpagesFileName)
-    if StatusDocDb == "ok": # obj_from_file display error if something is wrong
+    Status, DocSources = obj_from_file(DocumentsSourceWebpagesFileName)
+    if Status == "ok": # obj_from_file display error if something is wrong
 
-        if "docs" not in DocDb:
-            DocDb["docs"] = {}
+        if "docs" not in DocSources:
+            DocSources["docs"] = {}
 
-        # write back the Document object
-        DocDb["docs"][FileWithoutExtension] = DocObj
+        UpdatedInMemory = False
+        if BaseNameNoExtAdd and DocObjAdd: # if we receive new elem, insert it
+            DocSources["docs"][BaseNameNoExtAdd] = DocObjAdd
+            UpdatedInMemory = True
 
-        # the file is updated AND DocumentsSourceWebpages is updated, too, and DocumentsSourceWebpagesFileContent, too
-        obj_to_file(DocumentsSourceWebpagesFileName, DocDb)
-        Prg["DocumentsSourceWebpages"] = DocDb["docs"]
+        if BaseNameNoExtRemove and BaseNameNoExtRemove in DocSources["docs"]:
+            del DocSources["docs"][BaseNameNoExtRemove]
+            UpdatedInMemory = True
 
-        # here we load it once and in ui_html
-        # we don't have to reload it at every request
-        Prg["DocumentsSourceWebpagesFileContent"] = json_to_str(DocDb)
+        if UpdatedInMemory: # then save it back to file
+            # the file is updated AND DocumentsSourceWebpages is updated, too, and DocumentsSourceWebpagesFileContent, too
+            obj_to_file(DocumentsSourceWebpagesFileName, DocSources)
+            Prg["DocumentsSourceWebpages"] = DocSources["docs"]
+
+            # here we load it once and in ui_html
+            # we don't have to reload it at every request
+            Prg["DocumentsSourceWebpagesFileContent"] = json_to_str(DocSources)
 
 # tested in test_util_json
 def json_to_str(Obj):

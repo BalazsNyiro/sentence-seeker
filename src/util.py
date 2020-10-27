@@ -440,7 +440,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                                   "source_name": SourceName,
                                   "license": License}
                         # print("DocObj", DocObj)
-                        util_json_obj.doc_db_update_in_file_and_Prg(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
+                        util_json_obj.doc_source_webpages_update_in_file_and_Prg(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
 
                         Url = License = FileName = "-"
                         LinesDoc = []

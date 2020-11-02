@@ -11,7 +11,7 @@ def user_interface_start(Prg, Ui):
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
-        Wanted = input("wanted: ").strip()
+        Wanted = input("\nwanted: ").strip()
         if not Wanted:
             print(color_reset(Prg))
             break

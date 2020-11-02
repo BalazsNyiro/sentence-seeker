@@ -239,7 +239,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
         ResultsSelected = ResultSelector(ResultsSelected, WordsMaybeDetected)
 
     TimeLogicUsed = time.time() - TimeLogicStart
-    print("Time logic: ", TimeLogicUsed)
+    # print("Time logic: ", TimeLogicUsed)
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
 
 def token_explain_summa(TokenProcessExplainPerDoc):

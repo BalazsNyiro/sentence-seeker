@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import re, util, text, time
+import re, util, text
 
 SentenceEnds = [".", "!", "?", "…"]
 SubSentenceEnds = [",", ";", ":"]
@@ -199,8 +199,7 @@ def sentence_separator(Text):
             Sentence = []
         ##########################################################################################################
 
-    RetSentences = [("".join(SentenceChars)).strip() for SentenceChars in Sentences]
-    return RetSentences
+    return ["".join(SentenceChars) for SentenceChars in Sentences]
 
 def subsentences_use_only_one_separator(Txt):
     for SubSep in SubSentenceEnds:

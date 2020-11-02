@@ -126,7 +126,8 @@ def document_objects_collect_from_dir_documents(Prg,
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
 
-    for FileNum, FileTextAbsPath in enumerate(FilesTxt): # All files recursively collected from DirDocuments
+    # start = 1:  if we have 10 elems, last FileNum has to reach 10
+    for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
         ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
 
         if DocObj := document_obj_create(Prg, FileBaseNames__OrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):

@@ -154,8 +154,7 @@ def sentence_separator(Text):
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
 
-    IdCharLast = len(Text) - 1
-    for IdCharNow, Char in enumerate(Text):
+    for Char in Text+".":  # add one sentence closer char to the end of the text
 
         #########################################################################################################
         # inline to fasten the process: def quotation_sentence_starts(Char, InSentence=False, InQuotation=False):
@@ -193,12 +192,12 @@ def sentence_separator(Text):
                 Sentence = []                   # closed quotation pairs
 
         # is it the last char?
-        if IdCharLast == IdCharNow and Sentence:        # if something stayed in collected chars
-            InSentence = False           # and the sentence wasn't finished, saved it, too
-            Sentences.append(Sentence)
-            Sentence = []
+        # if IdCharLast == IdCharNow and Sentence:        # if something stayed in collected chars
+        #     Sentences.append(Sentence)
         ##########################################################################################################
-
+    if Sentences:
+        if Sentences[-1]:
+            Sentences[-1] = Sentences[-1][:-1] # remove last, fixed built . from the end of last sentence
     return ["".join(SentenceChars) for SentenceChars in Sentences]
 
 def subsentences_use_only_one_separator(Txt):

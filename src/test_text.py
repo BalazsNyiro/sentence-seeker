@@ -233,8 +233,8 @@ class TextTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_sentence_separator"):
             Txt = 'Mr. and Mrs. Jones visited their friends... "Lisa and Pete lived in a big house, in Boston, did they?"  Yes, they did'
             Wanted = \
-                ["Mr and Mrs Jones visited their friends...",
-                 '"Lisa and Pete lived in a big house, in Boston, did they?"',
+                ["Mr and Mrs Jones visited their friends... ",
+                 '"Lisa and Pete lived in a big house, in Boston, did they?" ',
                  "Yes, they did"]
             Sentences = text.sentence_separator(Txt)
             self.assertEqual(Wanted, Sentences)

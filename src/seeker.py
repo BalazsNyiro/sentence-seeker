@@ -81,8 +81,12 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
 def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum):
 
-    # FIXME: if I don't filter special chars, crazy lines appears on the screen :-)
-    # DEBUG it, it's interesting... if you have time
+
+    # IMPORTANT: I tried to refactor/reorganise this function,
+    # with avoiding join() in remove_non_alpha_chars and local usage of it
+    # instead of fun calling but this is the fastest implementation after
+    # measuring
+
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
     if SubSentenceNum > 99:

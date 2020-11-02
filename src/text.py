@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re, util, text
 
-SentenceEnds = [".", "!", "?", "…"]
-SubSentenceEnds = [",", ";", ":"]
-MarksQuotation = '"“”'
+SentenceEnds = {".", "!", "?", "…"} # searching in sets is faster than simple lists
+SubSentenceEnds = {",", ";", ":"}
+MarksQuotation = set(list('"“”'))
 
 # Tested
 def sentence_from_memory(Prg, Source, LineNum, Strip=False):

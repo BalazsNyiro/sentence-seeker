@@ -146,13 +146,21 @@ def char_add_into_sentence(Sentences, Sentence, Char, InSentence, CharLast):
 
 def sentence_separator(Text):
 
-    Sentences = []
+    Sentences = [[]] # one empty first sentence to store the not sentence starter texts
     Sentence = []
     InSentence = False
     InQuotation = False
 
     Text = replace_abbreviations(Text)
     Text = replace_whitespaces_to_one_space(Text)
+
+    ############################ the most naive implementation faster with circa 4 seconds (27->22 sec) ##############
+    # for Char in Text + ".":  # add one sentence closer char to the end of the text
+    #     Sentence.append(Char)
+    #     if Char in SentenceEnds:            # this is rare condition
+    #         Sentences.append(Sentence)      # because this solution doesn't depend on the correctly
+    #         Sentence = []                   # closed quotation pairs
+    # ############################ the most naive implementation faster with 4 seconds ##############
 
     for Char in Text+".":  # add one sentence closer char to the end of the text
 
@@ -179,11 +187,7 @@ def sentence_separator(Text):
         if InSentence:
             Sentence.append(Char)
         else: # if not InSentence:
-            if Sentences:
-                Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
-            else: #if not Sentences: # if it's the first Sentence, Sentences is empty
-                Sentence.append(Char)
-                InSentence = True
+            Sentences[-1].append(Char)  # if we are over a sentence but the next didn't started then attach it into previous sentence
 
         if Char in SentenceEnds:   # this is rare condition
             if InSentence:                      # I don't want to handle if in a sentence somebody has a
@@ -191,14 +195,10 @@ def sentence_separator(Text):
                 Sentences.append(Sentence)      # because this solution doesn't depend on the correctly
                 Sentence = []                   # closed quotation pairs
 
-        # is it the last char?
-        # if IdCharLast == IdCharNow and Sentence:        # if something stayed in collected chars
-        #     Sentences.append(Sentence)
-        ##########################################################################################################
-    if Sentences:
-        if Sentences[-1]:
-            Sentences[-1] = Sentences[-1][:-1] # remove last, fixed built . from the end of last sentence
-    return ["".join(SentenceChars) for SentenceChars in Sentences]
+    # first elem of Sentences can be empty at the case of normal Capital sentence starters
+    SentenceStrings = ["".join(SentenceChars) for SentenceChars in Sentences if SentenceChars]
+    SentenceStrings[-1] = SentenceStrings[-1][:-1] # remove last, fixed built . from the end of last sentence
+    return SentenceStrings
 
 def subsentences_use_only_one_separator(Txt):
     for SubSep in SubSentenceEnds:

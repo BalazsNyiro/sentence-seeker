@@ -10,12 +10,12 @@ ExtensionsConvertable = [".pdf", ".htm", ".html"]
 ExtensionsInFuture = [".epub", ".mobi"]
 
 # fixme: TEST IT
-def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
-    BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrig, ExtensionLower=True)
+def file_convert_to_txt_if_necessary(Prg, FileOrigAbsPath, Converted__FileBaseNames__OrigNames):
+    BaseNameNoExt, ExtensionLow = util.basename_without_extension__ext(FileOrigAbsPath, ExtensionLower=True)
     if ExtensionLow in ExtensionsConvertable:
 
-        FilePathConvertedToText = util.filename_without_extension(FileOrig) + ".txt"
-        FileBaseNames__OrigNames[BaseNameNoExt] = FileOrig
+        FilePathConvertedToText = util.filename_without_extension(FileOrigAbsPath) + ".txt"
+        Converted__FileBaseNames__OrigNames[BaseNameNoExt] = FileOrigAbsPath
 
         if not os.path.isfile(FilePathConvertedToText):  # convert if it's necessary
 
@@ -25,21 +25,22 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
             if ExtensionLow == ".htm" or ExtensionLow == ".html":
                 Converter = Prg["ConverterHtmlToText"]
 
-            if Converter(Prg, FileOrig, FilePathConvertedToText):
-                info("Successful conversion to txt: " + FileOrig)
+            if Converter(Prg, FileOrigAbsPath, FilePathConvertedToText):
+                info("Successful conversion to txt: " + FileOrigAbsPath)
             else:
-                ConversionErrorMsg = f"Error, file conversion: {FileOrig}"
+                ConversionErrorMsg = f"Error, file conversion: {FileOrigAbsPath}"
                 util.log(Prg, ConversionErrorMsg)
                 info(ConversionErrorMsg)
 
 _DocsSampleSourceWebpages = None
-def document_obj_create_in_document_objects(Prg, DocumentObjects, FileOrigNames, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True):
+def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileOrigNames_AbsPath, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True):
 
-    BaseNameNoExt, Extension = util.basename_without_extension__ext(FileTextAbsPath)
-    if BaseNameNoExt in FileOrigNames: # I can do it with .get() but it's more descriptive
-        FileOrig = FileOrigNames[BaseNameNoExt]
+    BaseNameNoExt, DotExtension = util.basename_without_extension__ext(FileTextAbsPath)
+    if BaseNameNoExt in ConvertedFileOrigNames_AbsPath: # I can do it with .get() but it's more descriptive
+        BaseNameNoExtOrig, DotExtensionOrig = util.basename_without_extension__ext(FileTextAbsPath)
+        FileOrig = BaseNameNoExtOrig + DotExtensionOrig
     else:
-        FileOrig = BaseNameNoExt + Extension
+        FileOrig = BaseNameNoExt + DotExtension
 
     if not Prg.get("TestExecution", False):  # during test exec hide progress
         info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
@@ -55,7 +56,7 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, FileOrigNames,
                       "source_name": "source_unknown",
                       "license": "license_unknown"}
 
-        util_json_obj.doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
+        util_json_obj.doc_source_webpages_update_in_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
 
     # Original: lists.
     # Arrays are more complex, less memory usage:
@@ -103,9 +104,9 @@ def document_objects_collect_from_dir_documents(Prg,
 
     FilesConvertable = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=ExtensionsConvertable)
 
-    FileBaseNames__OrigNames = {}
+    ConvertedFileBaseNames__OrigNames = {}
     for FileToTxt in FilesConvertable:
-        file_convert_to_txt_if_necessary(Prg, FileToTxt, FileBaseNames__OrigNames)
+        file_convert_to_txt_if_necessary(Prg, FileToTxt, ConvertedFileBaseNames__OrigNames)
 
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
@@ -134,10 +135,13 @@ def document_objects_collect_from_dir_documents(Prg,
         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
         FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
 
-        document_obj_create_in_document_objects(Prg, DocumentObjects, FileBaseNames__OrigNames,
+        document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileBaseNames__OrigNames,
                                                 FileTextAbsPath, ProgressPercent,
                                                 FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose)
+
+    util_json_obj.doc_source_webpages_save_from_memory_to_file(Prg)
     return DocumentObjects
+
 
 def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", WordPositionInLines="", Sentences=""):
     return {"FileOrigPathAbs": FileOrigPathAbs,  # if you use pdf/html, the original

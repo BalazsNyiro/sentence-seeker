@@ -13,6 +13,7 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
             PrgFake["DocumentsSourceWebpagesFileName"] = os.path.join(Prg["DirWork"], "test_doc_update.json")
             PrgFake["DocumentsSourceWebpagesFileContent"] = ""
 
+            util.dir_create_if_necessary(Path = PrgFake["DocumentsSourceWebpagesFileName"])
             util.file_write_simple(PrgFake["DocumentsSourceWebpagesFileName"], '{"key":"val"}')
 
             DocObj = {"name": "doc_update_test"}

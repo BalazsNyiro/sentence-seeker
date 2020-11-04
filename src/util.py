@@ -62,9 +62,9 @@ def dir_delete_if_exist(Prg, Path, Print=False):
     return Ret
 
 # Tested
-def dir_create_if_necessary(Prg, Path, LogCreate=True):
+def dir_create_if_necessary(Prg=dict(), Path="", LogCreate=True):
     Created = False
-
+    Msg = "-"
     if os.path.isdir(Path):
         Msg = f"not created: dir exists, {Path}"
 
@@ -72,14 +72,16 @@ def dir_create_if_necessary(Prg, Path, LogCreate=True):
         Msg = f"not created: it was a filename, {Path}"
 
     else:
-        os.mkdir(Path)
-        Msg = f"dir created, it was necessary: {Path}"
-        Created = True
+        if Path:
+            os.mkdir(Path)
+            Msg = f"dir created, it was necessary: {Path}"
+            Created = True
 
-    if LogCreate:
-        log(Prg, Msg)
+    if Prg:
+        if LogCreate:
+            log(Prg, Msg)
 
-    print_dev(Prg, "\ndir create if necessary Ret:", Msg)
+        print_dev(Prg, "\ndir create if necessary Ret:", Msg)
     return Created
 
 # Tested

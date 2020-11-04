@@ -22,31 +22,30 @@ def obj_to_file(JsonFileName, Data):
 
 # Tested
 def doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExtAdd=None, DocObjAdd=None, BaseNameNoExtRemove=None):
-    DocumentsSourceWebpagesFileName = Prg["DocumentsSourceWebpagesFileName"]
+    doc_source_webpages_update_in_Prg(Prg, BaseNameNoExtAdd=BaseNameNoExtAdd, DocObjAdd=DocObjAdd, BaseNameNoExtRemove=BaseNameNoExtRemove)
+    doc_source_webpages_save_from_memory_to_file(Prg)
 
+def doc_source_webpages_update_in_Prg(Prg, BaseNameNoExtAdd=None, DocObjAdd=None, BaseNameNoExtRemove=None):
+    if BaseNameNoExtAdd and DocObjAdd: # if we receive new elem, insert it
+        if "DocumentsSourceWebpages" not in Prg: # from tests fake Prg can arrive
+            Prg["DocumentsSourceWebpages"] = dict()
+        Prg["DocumentsSourceWebpages"][BaseNameNoExtAdd] = DocObjAdd
+
+    if BaseNameNoExtRemove and BaseNameNoExtRemove in Prg["DocumentsSourceWebpages"]:
+        del Prg["DocumentsSourceWebpages"][BaseNameNoExtRemove]
+
+def doc_source_webpages_save_from_memory_to_file(Prg):
+    DocumentsSourceWebpagesFileName = Prg["DocumentsSourceWebpagesFileName"]
     Status, DocSources = obj_from_file(DocumentsSourceWebpagesFileName)
     if Status == "ok": # obj_from_file display error if something is wrong
 
         if "docs" not in DocSources:
             DocSources["docs"] = {}
 
-        UpdatedInMemory = False
-        if BaseNameNoExtAdd and DocObjAdd: # if we receive new elem, insert it
-            DocSources["docs"][BaseNameNoExtAdd] = DocObjAdd
-            UpdatedInMemory = True
+        DocSources["docs"] = Prg["DocumentsSourceWebpages"]
+        obj_to_file(DocumentsSourceWebpagesFileName, DocSources)
 
-        if BaseNameNoExtRemove and BaseNameNoExtRemove in DocSources["docs"]:
-            del DocSources["docs"][BaseNameNoExtRemove]
-            UpdatedInMemory = True
-
-        if UpdatedInMemory: # then save it back to file
-            # the file is updated AND DocumentsSourceWebpages is updated, too, and DocumentsSourceWebpagesFileContent, too
-            obj_to_file(DocumentsSourceWebpagesFileName, DocSources)
-            Prg["DocumentsSourceWebpages"] = DocSources["docs"]
-
-            # here we load it once and in ui_html
-            # we don't have to reload it at every request
-            Prg["DocumentsSourceWebpagesFileContent"] = json_to_str(DocSources)
+        Prg["DocumentsSourceWebpagesFileContent"] = json_to_str(DocSources)
 
 # tested in test_util_json
 def json_to_str(Obj):

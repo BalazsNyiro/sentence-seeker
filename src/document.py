@@ -3,7 +3,7 @@ import util, os
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
-
+import text, json
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
 ExtensionsConvertable = [".pdf", ".htm", ".html"]
@@ -64,6 +64,7 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
     WordPositionInLines = dict()
     if isfile(FileIndexAbsPath):
         Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
+
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
                 WordPositionInLines[Word] = array.array("I", IndexList)
@@ -74,7 +75,7 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
 
     DocumentObjects[BaseNameNoExt] = \
            document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
-                        FileTextPathAbs=FileTextAbsPath,  # and text files are different
+                        FileTextAbsPath=FileTextAbsPath,  # and text files are different
                         FileIndex=FileIndexAbsPath,
                         FileSentences=FileSentencesAbsPath,
                         WordPositionInLines=WordPositionInLines,
@@ -111,7 +112,7 @@ def document_objects_collect_from_dir_documents(Prg,
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
 
-    FileEndIndex = "_wordindex_{VersionSeeker}"
+    FileEndIndex = f"_wordindex_{VersionSeeker}"
     FileEndSentence = f"_sentence_separator_{VersionSeeker}"
 
     ################# sentence / index creation #############################
@@ -143,14 +144,14 @@ def document_objects_collect_from_dir_documents(Prg,
     return DocumentObjects
 
 
-def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", WordPositionInLines="", Sentences=""):
+def document_obj(FileOrigPathAbs="", FileTextAbsPath="", FileIndex="", FileSentences="", WordPositionInLines="", Sentences=""):
     return {"FileOrigPathAbs": FileOrigPathAbs,  # if you use pdf/html, the original
-            "FileTextPathAbs": FileTextPathAbs,  # and text files are different
+            "FileTextPathAbs": FileTextAbsPath,  # and text files are different
             "FileIndex": FileIndex,
             "FileSentences": FileSentences,
             "WordPosition": WordPositionInLines,
             "Sentences": Sentences
-           }
+            }
 
 
 # TODO: TEST it
@@ -158,11 +159,10 @@ def docs_copy_samples_into_dir_if_necessary(Prg):
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
     print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
 
-    DocumentsAvailable = document_objects_collect_from_dir_documents(Prg)
-
-    if not DocumentsAvailable:
-        DirTextSamples = os.path.join(Prg["DirDocuments"], "text_samples")
-        util.dir_create_if_necessary(Prg, DirTextSamples)
+    DirTextSamples = os.path.join(Prg["DirDocuments"], "text_samples")
+    util.dir_create_if_necessary(Prg, DirTextSamples)
+    FilesTxt = util.files_abspath_collect_from_dir(DirTextSamples, WantedExtensions=ExtensionsConvertable + [".txt"])
+    if not FilesTxt:
         util.web_get_pack_wikipedia(Prg, DirTextSamples)
         docs_copy_samples_into_dir(Prg, DirTextSamples)
 

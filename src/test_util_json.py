@@ -9,11 +9,11 @@ class UtilJsonTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_doc_db_update_in_file_and_Prg"):
             Prg = self.Prg
 
-            PrgFake = {}
-            PrgFake["DocumentsSourceWebpagesFileName"] = os.path.join(Prg["DirWork"], "test_doc_update.json")
+            PrgFake = dict(DirWork=Prg["DirWork"])
+            PrgFake["DocumentsSourceWebpagesFileName"] = os.path.join(PrgFake["DirWork"], "test_doc_update.json")
             PrgFake["DocumentsSourceWebpagesFileContent"] = ""
 
-            util.dir_create_if_necessary(Path = PrgFake["DocumentsSourceWebpagesFileName"])
+            util.dir_create_if_necessary(Path = PrgFake["DirWork"])
             util.file_write_simple(PrgFake["DocumentsSourceWebpagesFileName"], '{"key":"val"}')
 
             DocObj = {"name": "doc_update_test"}

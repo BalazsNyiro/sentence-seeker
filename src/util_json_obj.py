@@ -7,8 +7,8 @@ import os, util, json
 def obj_from_file(JsonFileName):
     try:
         _ReadStatus, FileContent = util.file_read_all(Prg={}, Fname=JsonFileName)
-        JsonObj = json.loads(FileContent)
-        return "ok", JsonObj
+        return "ok", json.loads(FileContent)
+
     except json.decoder.JSONDecodeError:
         FileContent = util.file_read_all_simple(JsonFileName)
         Msg = f"Json decoder error: {JsonFileName}:>>" + FileContent + "<<"
@@ -25,6 +25,7 @@ def doc_source_webpages_update_in_file_and_Prg(Prg, BaseNameNoExtAdd=None, DocOb
     doc_source_webpages_update_in_Prg(Prg, BaseNameNoExtAdd=BaseNameNoExtAdd, DocObjAdd=DocObjAdd, BaseNameNoExtRemove=BaseNameNoExtRemove)
     doc_source_webpages_save_from_memory_to_file(Prg)
 
+# Tested with in_file_and_Prg
 def doc_source_webpages_update_in_Prg(Prg, BaseNameNoExtAdd=None, DocObjAdd=None, BaseNameNoExtRemove=None):
     if BaseNameNoExtAdd and DocObjAdd: # if we receive new elem, insert it
         if "DocumentsSourceWebpages" not in Prg: # from tests fake Prg can arrive
@@ -34,6 +35,7 @@ def doc_source_webpages_update_in_Prg(Prg, BaseNameNoExtAdd=None, DocObjAdd=None
     if BaseNameNoExtRemove and BaseNameNoExtRemove in Prg["DocumentsSourceWebpages"]:
         del Prg["DocumentsSourceWebpages"][BaseNameNoExtRemove]
 
+# Tested with in_file_and_Prg
 def doc_source_webpages_save_from_memory_to_file(Prg):
     DocumentsSourceWebpagesFileName = Prg["DocumentsSourceWebpagesFileName"]
     Status, DocSources = obj_from_file(DocumentsSourceWebpagesFileName)

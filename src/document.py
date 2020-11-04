@@ -33,9 +33,7 @@ def file_convert_to_txt_if_necessary(Prg, FileOrig, FileBaseNames__OrigNames):
                 info(ConversionErrorMsg)
 
 _DocsSampleSourceWebpages = None
-def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=True):
-    if not os.path.isfile(FileTextAbsPath):
-        return None
+def document_obj_create_in_document_objects(Prg, DocumentObjects, FileOrigNames, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True):
 
     BaseNameNoExt, Extension = util.basename_without_extension__ext(FileTextAbsPath)
     if BaseNameNoExt in FileOrigNames: # I can do it with .get() but it's more descriptive
@@ -48,20 +46,6 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
     global _DocsSampleSourceWebpages
     if not _DocsSampleSourceWebpages:
         _, _DocsSampleSourceWebpages = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples_source_webpages.json"))
-
-    # this document object describe infos about the document
-    # for example the version of index algorithm
-    FileIndexAbsPath = f"{FileTextAbsPath}_wordindex_{VersionSeeker}"
-    FileSentencesAbsPath = f"{FileTextAbsPath}_sentence_separator_{VersionSeeker}"
-
-    if FunSentenceCreate and FunIndexCreate:
-        #TimeSentenceStart = time.time()
-        FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
-
-        #TimeIndexStart = time.time()
-        FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
-        #util.time_spent("\n>>> Time Sentence creation: ", TimeSentenceStart)
-        #util.time_spent( "          Index    creation: ", TimeIndexStart)
 
     if BaseNameNoExt not in Prg["DocumentsSourceWebpages"]:
         if BaseNameNoExt in _DocsSampleSourceWebpages["docs"]:
@@ -87,7 +71,8 @@ def document_obj_create(Prg, FileOrigNames, FileTextAbsPath, ProgressPercent, Ve
         else:
             Prg["MessagesForUser"].append(JsonObjReply)
 
-    return document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
+    DocumentObjects[BaseNameNoExt] = \
+           document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
                         FileTextPathAbs=FileTextAbsPath,  # and text files are different
                         FileIndex=FileIndexAbsPath,
                         FileSentences=FileSentencesAbsPath,
@@ -112,7 +97,6 @@ def document_objects_collect_from_dir_documents(Prg,
                                                 ):
     DocumentObjects = dict() # ssp-
 
-
     DirDoc = Prg["DirDocuments"]
     for FileConvertableLater in util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=ExtensionsInFuture):
         info(f"in documents dir - this file type will be processed in the future: {FileConvertableLater}")
@@ -126,15 +110,33 @@ def document_objects_collect_from_dir_documents(Prg,
     FilesTxt = util.files_abspath_collect_from_dir(DirDoc, WantedExtensions=[".txt"])
     LenFiles = len(FilesTxt)
 
+    FileEndIndex = "_wordindex_{VersionSeeker}"
+    FileEndSentence = f"_sentence_separator_{VersionSeeker}"
+
+    ################# sentence / index creation #############################
+    if FunSentenceCreate and FunIndexCreate:
+        for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
+            ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum)
+
+            # this document object describe infos about the document
+            # for example the version of index algorithm
+            FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+            FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
+
+            FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+            FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
+
+    ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10
     for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
-        ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles, FileNum)
+        ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum+LenFiles)
 
-        if DocObj := document_obj_create(Prg, FileBaseNames__OrigNames, FileTextAbsPath, ProgressPercent, VersionSeeker, FunSentenceCreate, FunIndexCreate, Verbose=Verbose):
-            BaseNameNoExt, _ = util.basename_without_extension__ext(FileTextAbsPath)
-            DocumentObjects[BaseNameNoExt] = DocObj
+        FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+        FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
 
-
+        document_obj_create_in_document_objects(Prg, DocumentObjects, FileBaseNames__OrigNames,
+                                                FileTextAbsPath, ProgressPercent,
+                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose)
     return DocumentObjects
 
 def document_obj(FileOrigPathAbs="", FileTextPathAbs="", FileIndex="", FileSentences="", WordPositionInLines="", Sentences=""):

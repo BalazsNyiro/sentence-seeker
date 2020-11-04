@@ -148,40 +148,41 @@ def file_read_lines(Prg, Fname, Strip=False, Lower=False):
     return Lines
 
 # Tested, Prg is important for log, or maybe we should skip logging?
-def file_read_all(Prg={}, Fname="", Gzipped=False):
+def file_read_all(Prg={}, Fname="", Gzipped=False, CheckIsFile=True):
     # print("Fname:", Fname, "isfile:", os.path.isfile(Fname))
-    if not os.path.isfile(Fname):
-        Msg = f"file_read_all - file doesn't exist: {Fname}"
-        log(Prg, Msg)
-        print(Msg)
-        return False, Msg
-    else:
-        if Gzipped:
-            with gzip.open(Fname, 'rb') as f:
-                try:
-                    log(Prg, f"file_read_all - gzip read start: {Fname}")
-                    ContentBytes = f.read()
-                    log(Prg, f"file_read_all - gzip utf-8 conv BEGIN {Fname}")
+    if CheckIsFile:
+        if not os.path.isfile(Fname):
+            Msg = f"file_read_all - file doesn't exist: {Fname}"
+            log(Prg, Msg)
+            print(Msg)
+            return False, Msg
 
-                    Content = utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_all gzipped")
-                    # Content = str(ContentBytes, 'utf-8', 'ignore')  # errors can be ignored
-                    # Content = str(ContentBytes, 'utf-8')  # return with "" in this case
-
-                    log(Prg, f"file_read_all - gzip utf-8 conv END {Fname}")
-                    log(Prg, f"file_read_all - gzip utf-8 ok    {Fname}")
-                    return True, Content
-                except:
-                    log(Prg, f"file_read_all - gzip read error or convert to unicode error: {Fname}")
-                    return False, "gzip read error"
-        else:
-            # with bytes the utf-8 conversion can be tuned, errors ignored
+    if Gzipped:
+        with gzip.open(Fname, 'rb') as f:
             try:
-                Content = _file_read_unicode(Prg, Fname)
-                log(Prg, f"file_read_all - text: {Fname}")
+                log(Prg, f"file_read_all - gzip read start: {Fname}")
+                ContentBytes = f.read()
+                log(Prg, f"file_read_all - gzip utf-8 conv BEGIN {Fname}")
+
+                Content = utf8_conversion_with_warning(Prg, ContentBytes, Fname, FunCaller="file_read_all gzipped")
+                # Content = str(ContentBytes, 'utf-8', 'ignore')  # errors can be ignored
+                # Content = str(ContentBytes, 'utf-8')  # return with "" in this case
+
+                log(Prg, f"file_read_all - gzip utf-8 conv END {Fname}")
+                log(Prg, f"file_read_all - gzip utf-8 ok    {Fname}")
                 return True, Content
             except:
-                log(Prg, f"file_read_all - read error, in 'with' block: {Fname}")
-                return False, "read error"
+                log(Prg, f"file_read_all - gzip read error or convert to unicode error: {Fname}")
+                return False, "gzip read error"
+    else:
+        # with bytes the utf-8 conversion can be tuned, errors ignored
+        try:
+            Content = _file_read_unicode(Prg, Fname)
+            log(Prg, f"file_read_all - text: {Fname}")
+            return True, Content
+        except:
+            log(Prg, f"file_read_all - read error, in 'with' block: {Fname}")
+            return False, "read error"
 
 # I want to keep parameter order, but Prg is optional here.
 def _file_read_unicode(Prg={}, Fname=""):

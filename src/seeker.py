@@ -30,25 +30,19 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
 
 # Tested
 def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath=""):
-    Created = False
     if not os.path.isfile(FileSentencesAbsPath):
         if FileTextAbsPath: # for testing it's easier to get Text from param - and not create/del tmpfile
-            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath)
+            _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath, CheckIsFile=False)
 
         Sentences = text.sentence_separator(Text)
         util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(Sentences))
-        Created = True
-
-    return Created
 
 # Tested
 def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
-    Created = False
     if not os.path.isfile(FileIndexAbsPath):
-        Created = True
         WordPositions = dict()
 
-        _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath)
+        _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath, CheckIsFile=False)
         TextAll = TextAll.lower()
         TextAll = text.subsentences_use_only_one_separator(TextAll)
 
@@ -76,8 +70,6 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
         Content="{\n"+"\n,".join(Out) + "\n}"
 
         util.file_write_with_check(Prg, Fname=FileIndexAbsPath, Content=Content)
-
-    return Created
 
 def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum):
 

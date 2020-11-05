@@ -33,7 +33,6 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
     if not os.path.isfile(FileSentencesAbsPath):
         if FileTextAbsPath: # for testing it's easier to get Text from param - and not create/del tmpfile
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath, CheckIsFile=False)
-
         Sentences = text.sentence_separator(Text)
         util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(Sentences))
 
@@ -50,7 +49,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
         TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
         Lines = TextAll.split("\n") # one sentence is in one line, it's guaranted
-        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplyer"] - 1
+        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplayer"] - 1
 
         for LineNum, Line in enumerate(Lines):
 
@@ -58,7 +57,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %", flush=True)
 
-            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplyer"]
+            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplayer"]
 
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)

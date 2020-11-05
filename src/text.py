@@ -222,15 +222,15 @@ def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None, ReplaceSubsent
     return True, Subsentences # return with a list, with more than one subsentence
 
 # Tested
-def linenum_subsentencenum_get(LineNum_SubSentenceNum, SubSentenceMultiplyer=100):
-    SubSentenceNum = LineNum_SubSentenceNum % SubSentenceMultiplyer
+def linenum_subsentencenum_get(LineNum_SubSentenceNum, SubSentenceMultiplayer=100):
+    SubSentenceNum = LineNum_SubSentenceNum % SubSentenceMultiplayer
 
     # the default multiplier was 100
-    if LineNum_SubSentenceNum < SubSentenceMultiplyer:  # I store 2 numbers info in one number and LineNum can be zero, too
+    if LineNum_SubSentenceNum < SubSentenceMultiplayer:  # I store 2 numbers info in one number and LineNum can be zero, too
         return 0, SubSentenceNum   # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
     # and if the num is smaller than 100 it means LineNum = 0
 
-    return (LineNum_SubSentenceNum - SubSentenceNum) // SubSentenceMultiplyer, SubSentenceNum
+    return (LineNum_SubSentenceNum - SubSentenceNum) // SubSentenceMultiplayer, SubSentenceNum
 
 # tested/used in test_seeker_logic.test_result_selectors
 def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult):

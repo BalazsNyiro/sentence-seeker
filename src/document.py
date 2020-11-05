@@ -3,7 +3,8 @@ import util, os
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
-import text, json
+import concurrent.futures
+
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
 ExtensionsConvertable = [".pdf", ".htm", ".html"]
@@ -42,8 +43,8 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
     else:
         FileOrig = BaseNameNoExt + DotExtension
 
-    if not Prg.get("TestExecution", False):  # during test exec hide progress
-        info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
+    # if not Prg.get("TestExecution", False):  # during test exec hide progress
+    #     info(f"{ProgressPercent} in documents dir - processed: {BaseNameNoExt}", Verbose=Verbose)
     global _DocsSampleSourceWebpages
     if not _DocsSampleSourceWebpages:
         _, _DocsSampleSourceWebpages = util_json_obj.obj_from_file(os.path.join(Prg["DirTextSamples"], "document_samples_source_webpages.json"))
@@ -87,6 +88,12 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
 def info(Txt, Verbose=True):
     print(Txt, flush=True) if Verbose else 0
 
+# can't be embedded function in another func!
+# Can't pass Prg through multiple function parameter pass, you have to create a thin Prg before fun call
+def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplayer, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
+    FunSentenceCreate({}, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+    FunIndexCreate({"SubSentenceMultiplayer": SubSentenceMultiplayer}, FileIndexAbsPath, FileSentencesAbsPath)
+
 # Tested
 def document_objects_collect_from_dir_documents(Prg,
                                                 VersionSeeker="version_not_set",
@@ -117,16 +124,20 @@ def document_objects_collect_from_dir_documents(Prg,
 
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
-        for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
-            ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum)
+        with concurrent.futures.ProcessPoolExecutor() as Executor:
+            for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
+                #ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum)
 
-            # this document object describe infos about the document
-            # for example the version of index algorithm
-            FileIndexAbsPath = FileTextAbsPath + FileEndIndex
-            FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
+                # this document object describe infos about the document
+                # for example the version of index algorithm
+                FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+                FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
+                Executor.submit(sentence_and_index_create,
+                                FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
+                                FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath)
 
-            FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
-            FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
+            # FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+            # FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
 
     ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10

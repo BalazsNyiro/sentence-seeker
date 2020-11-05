@@ -78,6 +78,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "DocumentObjectsLoaded": dict(),
             "DocumentObjectsLoadedWordsCounterGlobal": dict(),
 
+            "SubSentenceMultiplyer": 100,  # 10001  the last 2 digits shows the num of subsentence
+
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],
             "TestExecution": TestExecution,

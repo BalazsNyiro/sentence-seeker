@@ -50,6 +50,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
         TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
         Lines = TextAll.split("\n") # one sentence is in one line, it's guaranted
+        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplyer"] - 1
 
         for LineNum, Line in enumerate(Lines):
 
@@ -57,11 +58,16 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
                 Percent = int(LineNum / len(Lines)* 100)
                 print(f"index create: {Percent} %", flush=True)
 
-            LineNumHundredMultiplied = LineNum * 100
+            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplyer"]
+
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
-                indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum)
+
+                if SubSentenceNum > SubSentenceMultiplyerMinusOne:
+                    SubSentenceNum = SubSentenceMultiplyerMinusOne
+                WordPosition = LineNumMultiplied + SubSentenceNum
+                indexing(WordPositions, SubSentence, WordPosition)
 
         Out = []
         for Word, LineNumsInts in WordPositions.items():
@@ -71,8 +77,7 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
         util.file_write_with_check(Prg, Fname=FileIndexAbsPath, Content=Content)
 
-def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNum):
-
+def indexing(WordPositions, SubSentence, WordPosition):
 
     # IMPORTANT: I tried to refactor/reorganise this function,
     # with avoiding join() in remove_non_alpha_chars and local usage of it
@@ -80,10 +85,6 @@ def indexing(WordPositions, LineNumHundredMultiplied, SubSentence, SubSentenceNu
     # measuring
 
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
-
-    if SubSentenceNum > 99:
-        SubSentenceNum = 99
-    WordPosition = LineNumHundredMultiplied + SubSentenceNum
 
     for Word in SubSentence.split(): # split at space, tab, newline
         # TODO: words short form expand:

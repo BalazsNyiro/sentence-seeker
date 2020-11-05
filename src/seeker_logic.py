@@ -226,7 +226,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
             continue
 
         for LineNum__SubSentenceNum in Results: # if we have any result from WordPosition:
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum)
+            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum, Prg["SubSentenceMultiplyer"])
             _Status, Obj = text.result_obj_from_memory(Prg, FileSourceBaseName,
                                                                 LineNum,
                                                                 SubSentenceNum,

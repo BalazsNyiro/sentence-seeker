@@ -63,9 +63,8 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
             # we replaced all subsentence separators in ONE FUN CALL at the beginning
             _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
-
                 if SubSentenceNum > SubSentenceMultiplyerMinusOne:
-                    SubSentenceNum = SubSentenceMultiplyerMinusOne
+                    SubSentenceNum = SubSentenceMultiplyerMinusOne # the last num that we can represent
                 WordPosition = LineNumMultiplied + SubSentenceNum
                 indexing(WordPositions, SubSentence, WordPosition)
 
@@ -98,4 +97,3 @@ def indexing(WordPositions, SubSentence, WordPosition):
 
         if WordPosition not in WordPositions[Word]: # save the word only once
             WordPositions[Word].add(WordPosition)
-

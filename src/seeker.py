@@ -53,9 +53,9 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
 
         for LineNum, Line in enumerate(Lines):
 
-            if LineNum % 1000 == 0:
-                Percent = int(LineNum / len(Lines)* 100)
-                print(f"index create: {Percent} %", flush=True)
+            # if LineNum % 1000 == 0:
+            #     Percent = int(LineNum / len(Lines)* 100)
+            #     print(f"index create: {Percent} %", flush=True)
 
             LineNumMultiplied = LineNum * Prg["SubSentenceMultiplayer"]
 

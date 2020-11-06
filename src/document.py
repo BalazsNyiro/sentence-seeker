@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import util, os
+import util, os, time, sys
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
 import concurrent.futures
+from concurrent.futures import FIRST_COMPLETED
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
@@ -93,6 +94,7 @@ def info(Txt, Verbose=True):
 def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplayer, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
     FunSentenceCreate({}, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
     FunIndexCreate({"SubSentenceMultiplayer": SubSentenceMultiplayer}, FileIndexAbsPath, FileSentencesAbsPath)
+    return FileTextAbsPath
 
 # Tested
 def document_objects_collect_from_dir_documents(Prg,
@@ -124,20 +126,27 @@ def document_objects_collect_from_dir_documents(Prg,
 
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
+
+        Futures = []
         with concurrent.futures.ProcessPoolExecutor() as Executor:
             for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
-                #ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum)
 
                 # this document object describe infos about the document
                 # for example the version of index algorithm
                 FileIndexAbsPath = FileTextAbsPath + FileEndIndex
                 FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
-                Executor.submit(sentence_and_index_create,
+                Futures.append(Executor.submit(sentence_and_index_create,
                                 FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
-                                FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath)
+                                FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
-            # FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
-            # FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
+            while True:
+                Done, NotDone = concurrent.futures.wait(Futures, timeout=1, return_when=FIRST_COMPLETED)
+                print("indexed:", len(Done), "  waiting:", len(NotDone))
+                ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(Done))
+                time.sleep(0.5)
+                if not NotDone:
+                    break
+
 
     ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10

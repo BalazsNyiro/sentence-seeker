@@ -139,11 +139,13 @@ def document_objects_collect_from_dir_documents(Prg,
                                 FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
                                 FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
+            DonePrevLen = -1
             while True:
-                Done, NotDone = concurrent.futures.wait(Futures, timeout=1, return_when=FIRST_COMPLETED)
-                print("indexed:", len(Done), "  waiting:", len(NotDone))
+                Done, NotDone = concurrent.futures.wait(Futures , return_when=FIRST_COMPLETED)
+                if len(Done) != DonePrevLen:
+                    DonePrevLen = len(Done)
+                    print("indexed:", len(Done), "  waiting:", len(NotDone))
                 ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(Done))
-                time.sleep(0.5)
                 if not NotDone:
                     break
 

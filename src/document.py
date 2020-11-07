@@ -4,7 +4,7 @@ import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
 import concurrent.futures
-from concurrent.futures import FIRST_COMPLETED
+from concurrent.futures import FIRST_COMPLETED, ALL_COMPLETED
 
 # TODO: refactor this func, LOAD document db in local config
 # and don't use document_samples in real environment
@@ -96,7 +96,9 @@ def word_pos_in_line_load(FileIndexAbsPath):
                 # util.int_list_to_array(IndexList)
         else:
             MessageForUser = JsonObjReply
-    return WordPositionInLines, MessageForUser
+
+    # FileIndexAbsPath in return is important because it's processed parallel and I don't know the processed file name from caller side
+    return FileIndexAbsPath, WordPositionInLines, MessageForUser
     #################################################################
 
 
@@ -145,7 +147,7 @@ def document_objects_collect_from_dir_documents(Prg,
 
             DonePrevLen = -1
             while True:
-                Done, NotDone = concurrent.futures.wait(Futures , return_when=FIRST_COMPLETED)
+                Done, NotDone = concurrent.futures.wait(Futures, return_when=FIRST_COMPLETED)
                 if len(Done) != DonePrevLen:
                     DonePrevLen = len(Done)
                     print("indexed:", len(Done), "  waiting:", len(NotDone))
@@ -154,14 +156,23 @@ def document_objects_collect_from_dir_documents(Prg,
                     break
 
     ################### parallel index loading ###############
-    WordPositionAll = dict()
-    for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1):
-        FileIndexAbsPath = FileTextAbsPath + FileEndIndex
-        WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
-        if MessageForUser:
-            Prg["MessagesForUser"].append(MessageForUser)
-        else:
-            WordPositionAll[FileIndexAbsPath] = WordPositionInLines
+    ######  the parallel solution is slower
+    # WordPositionAll = dict()
+    # Futures = []
+    # with concurrent.futures.ProcessPoolExecutor() as Executor:
+    #     for FileTextAbsPath in FilesTxt:
+    #         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+    #         Futures.append(Executor.submit(word_pos_in_line_load, FileIndexAbsPath))
+    #         # WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
+
+    #     concurrent.futures.wait(Futures, return_when=ALL_COMPLETED)
+    #     for Future in Futures:
+    #         # because of parallel execution I have to give back the processed FileIndexAbsPath
+    #         FileIndexAbsPath, WordPositionInLines, MessageForUser = Future.result()
+    #         if MessageForUser:
+    #             Prg["MessagesForUser"].append(MessageForUser)
+    #         else:
+    #             WordPositionAll[FileIndexAbsPath] = WordPositionInLines
 
     ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10
@@ -171,9 +182,11 @@ def document_objects_collect_from_dir_documents(Prg,
         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
         FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
 
+        _, WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
+
         document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileBaseNames__OrigNames,
                                                 FileTextAbsPath, ProgressPercent,
-                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionAll[FileIndexAbsPath])
+                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionInLines)
 
     util_json_obj.doc_source_webpages_save_from_memory_to_file(Prg)
     return DocumentObjects

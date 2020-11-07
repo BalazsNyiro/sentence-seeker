@@ -9,6 +9,9 @@ ExplainOnly = None
 SentencesArea = None
 PrgGlob = None
 
+LeftMarginFirstLine = 6
+LeftMarginOtherLines = 2
+
 def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
@@ -98,7 +101,8 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.tag_configure(TagName,
                                 foreground="blue",
                                 underline=1,
-                                font=('Tempus Sans ITC', 9, 'normal'))
+                                font=('Tempus Sans ITC', 9, 'normal'),
+                                lmargin1=LeftMarginOtherLines)
     SentencesArea.tag_bind(TagName, "<1>",
                            lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
                           )
@@ -163,21 +167,23 @@ def win_main(Prg):
 
     scroll = tk.Scrollbar(Root, command=SentencesArea.yview)
     SentencesArea.configure(yscrollcommand=scroll.set)
-    scroll.grid(row=3, column=3, sticky=tk.NS)
+    scroll.grid(row=3, column=4, sticky=tk.NS)
 
     SentencesArea.tag_configure("TextTitle", font=("Verdana", 20, "bold"))
     SentencesArea.tag_configure("SentenceDisplayedResult",
                                 foreground=Theme["FgSubSentenceResult"],
-                                font=Theme["FontSentenceResult"])
+                                font=Theme["FontSentenceResult"],
+                                lmargin1=LeftMarginFirstLine,
+                                lmargin2=LeftMarginOtherLines)
     SentencesArea.tag_configure("SentenceDisplayed",
                                 foreground=Theme["FgSentence"],
-                                font=Theme["FontSentenceNormal"])
-    SentencesArea.tag_configure("UrlDisplayed",
-                                foreground=Theme["FgUrl"],
-                                font=Theme["FontUrl"])
+                                font=Theme["FontSentenceNormal"],
+                                lmargin1=LeftMarginFirstLine,
+                                lmargin2=LeftMarginOtherLines)
     SentencesArea.tag_configure("SourceDisplayed",
                                 foreground=Theme["FgSource"],
-                                font=Theme["FontSource"])
+                                font=Theme["FontSource"],
+                                lmargin1=LeftMarginOtherLines)
     SentencesArea.tag_bind("follow", "<1>",
                            lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 

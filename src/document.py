@@ -153,6 +153,15 @@ def document_objects_collect_from_dir_documents(Prg,
                 if not NotDone:
                     break
 
+    ################### parallel index loading ###############
+    WordPositionAll = dict()
+    for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1):
+        FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+        WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
+        if MessageForUser:
+            Prg["MessagesForUser"].append(MessageForUser)
+        else:
+            WordPositionAll[FileIndexAbsPath] = WordPositionInLines
 
     ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10
@@ -162,14 +171,9 @@ def document_objects_collect_from_dir_documents(Prg,
         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
         FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
 
-        ################ TODO: parallell index loading in the future ################################
-        WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
-        if MessageForUser:
-            Prg["MessagesForUser"].append(MessageForUser)
-
         document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileBaseNames__OrigNames,
                                                 FileTextAbsPath, ProgressPercent,
-                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionInLines)
+                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionAll[FileIndexAbsPath])
 
     util_json_obj.doc_source_webpages_save_from_memory_to_file(Prg)
     return DocumentObjects

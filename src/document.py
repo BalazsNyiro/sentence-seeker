@@ -35,7 +35,9 @@ def file_convert_to_txt_if_necessary(Prg, FileOrigAbsPath, Converted__FileBaseNa
                 info(ConversionErrorMsg)
 
 _DocsSampleSourceWebpages = None
-def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileOrigNames_AbsPath, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True):
+def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileOrigNames_AbsPath, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True, WordPositionInLines=None):
+    if WordPositionInLines == None:
+        WordPositionInLines = dict()
 
     BaseNameNoExt, DotExtension = util.basename_without_extension__ext(FileTextAbsPath)
     if BaseNameNoExt in ConvertedFileOrigNames_AbsPath: # I can do it with .get() but it's more descriptive
@@ -60,21 +62,6 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
 
         util_json_obj.doc_source_webpages_update_in_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
 
-    # Original: lists.
-    # Arrays are more complex, less memory usage:
-    # _Status, WordPositionInLines = util_json_obj.obj_from_file(FileIndexAbsPath) if isfile(FileIndexAbsPath) else (ok, dict())
-    WordPositionInLines = dict()
-    if isfile(FileIndexAbsPath):
-        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
-
-        if Status == "ok":
-            for Word, IndexList in JsonObjReply.items():
-                WordPositionInLines[Word] = array.array("I", IndexList)
-                                            # fastest to call array directly
-                                            # util.int_list_to_array(IndexList)
-        else:
-            Prg["MessagesForUser"].append(JsonObjReply)
-
     DocumentObjects[BaseNameNoExt] = \
            document_obj(FileOrigPathAbs=FileOrig,  # if you use pdf/html, the original
                         FileTextAbsPath=FileTextAbsPath,  # and text files are different
@@ -95,6 +82,23 @@ def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMult
     FunSentenceCreate({}, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
     FunIndexCreate({"SubSentenceMultiplayer": SubSentenceMultiplayer}, FileIndexAbsPath, FileSentencesAbsPath)
     return FileTextAbsPath
+
+def word_pos_in_line_load(FileIndexAbsPath):
+    WordPositionInLines = dict()
+    MessageForUser = None
+    if isfile(FileIndexAbsPath):
+        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
+
+        if Status == "ok":
+            for Word, IndexList in JsonObjReply.items():
+                WordPositionInLines[Word] = array.array("I", IndexList)
+                # fastest to call array directly than
+                # util.int_list_to_array(IndexList)
+        else:
+            MessageForUser = JsonObjReply
+    return WordPositionInLines, MessageForUser
+    #################################################################
+
 
 # Tested
 def document_objects_collect_from_dir_documents(Prg,
@@ -158,9 +162,14 @@ def document_objects_collect_from_dir_documents(Prg,
         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
         FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
 
+        ################ TODO: parallell index loading in the future ################################
+        WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
+        if MessageForUser:
+            Prg["MessagesForUser"].append(MessageForUser)
+
         document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileBaseNames__OrigNames,
                                                 FileTextAbsPath, ProgressPercent,
-                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose)
+                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionInLines)
 
     util_json_obj.doc_source_webpages_save_from_memory_to_file(Prg)
     return DocumentObjects

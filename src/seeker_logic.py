@@ -158,6 +158,7 @@ def operator_exec_left_right(Operator, FunOperator, TokensOrig, ExplainsOrig):
     return Tokens, Explains
 
 def index_list_to_set(Word, DocIndex):
+    # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums
     Result = set()
     if Word in DocIndex:
         for Position in DocIndex[Word]:
@@ -165,19 +166,10 @@ def index_list_to_set(Word, DocIndex):
     return Result
 
 def index_intersect(ResultLeft, ResultRight):
-    Result = set()
-    for Key in ResultLeft:
-        if Key in ResultRight:
-            Result.add(Key)
-    return Result
+    return ResultLeft.intersection(ResultRight)
 
 def index_union(ResultLeft, ResultRight):
-    Result = set()
-    for Key in ResultLeft:
-        Result.add(Key)
-    for Key in ResultRight:
-        Result.add(Key)
-    return Result
+    return ResultLeft.union(ResultRight)
 
 Operator_Functions = {"AND": index_intersect,
                       "OR": index_union,

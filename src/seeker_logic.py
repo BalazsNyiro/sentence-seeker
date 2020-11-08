@@ -151,12 +151,10 @@ def is_operator(Token):
 #                                  TokensOrig: list()  ExplainsOrig: list
 def operator_exec_left_right(Operator, TokensOrig, Explains):
 
-    Tokens = copy.deepcopy(TokensOrig)
-    IdOperator = Tokens.index(Operator)
+    IdOperator = TokensOrig.index(Operator)
 
-    TokenRight, NameRight = Tokens.pop(IdOperator + 1) # remove right param
-    Tokens.pop(IdOperator)  # remove the operator
-    TokenLeft, NameLeft = Tokens[IdOperator - 1]
+    TokenRight, NameRight = TokensOrig[IdOperator + 1]
+    TokenLeft, NameLeft = TokensOrig[IdOperator - 1]
 
     if Operator == "OR":
         LineNumsOp = TokenLeft.union(TokenRight)
@@ -164,7 +162,10 @@ def operator_exec_left_right(Operator, TokensOrig, Explains):
         LineNumsOp = TokenLeft.intersection(TokenRight)
 
     ResultName = f"({NameLeft} {Operator} {NameRight})"
-    Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
+
+    Tokens = TokensOrig[:IdOperator - 1]
+    Tokens.append( (LineNumsOp, ResultName) )
+    Tokens.extend( TokensOrig[IdOperator + 2:] )  # Right Token was IdOperator+1, attach from the next one
 
     Explains.append((ResultName, len(LineNumsOp)))
     return Tokens
@@ -218,9 +219,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     Tokens = token_split(Query)
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)
 
-    print("group finder 1")
     TokenGroups = token_group_finder(Tokens)
-    print("group finder 2")
 
     ResultsSelected = []
     TokenProcessExplainPerDoc = dict()
@@ -234,12 +233,12 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
         #    continue
 
         Explains = []
-        print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
-        TimeInterpreterStart = time.time()
+        # print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
+        # TimeInterpreterStart = time.time()
         Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains)
-        TimeInterpreter = time.time() - TimeInterpreterStart
-        TimeInterpreterSumma += TimeInterpreter
-        print("TOKEN INTERPRETER <<<<", TimeInterpreter)
+        # TimeInterpreter = time.time() - TimeInterpreterStart
+        # TimeInterpreterSumma += TimeInterpreter
+        # print("TOKEN INTERPRETER <<<<", TimeInterpreter)
 
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 

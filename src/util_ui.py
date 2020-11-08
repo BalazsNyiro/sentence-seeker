@@ -37,8 +37,11 @@ def ui_json_answer(Prg, MatchNums__ResultInfo, TokenProcessExplainSumma, NewLine
     Reply = json.dumps(Reply).encode('UTF-8')
     return Reply
 
-def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n"):
+def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainLimit=64):
     TokenExplainText = []
+
+    if len(TokenProcessExplainSumma) > ExplainLimit:
+        return "Too complex Token explaining"
 
     for Exp in TokenProcessExplainSumma:
         Token, ResultNum = Exp

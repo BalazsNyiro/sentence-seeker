@@ -288,7 +288,7 @@ IrregularVerbsForm1 = set()
 IrregularVerbsPresentSimple = set()
 IrregularVerbsPastParticiple = set()
 
-for Elem in verbs_irregular_DEV: #
+for Elem in verbs_irregular: #
     Form1, Form2, Form3 = Elem
     if Form1:
         IrregularVerbsForm1.add(Form1)

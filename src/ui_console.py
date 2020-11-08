@@ -3,17 +3,13 @@ import seeker_logic, text, util_ui
 import time, sys
 
 def seek_and_display(Prg, Wanted):
-    print("Debug: seeke_logic.seek 1")
     TimeLogicStart = time.time()
     TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
     TimeLogicUsed = time.time() - TimeLogicStart
 
-    print("Debug: seeke_logic.seek 2")
-    #print(util_ui.token_explain_summa_to_text(TokenProcessExplainSumma))
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
-    print(f"Results Total: {ResultsTotalNum}")
-    print("Time logic: ", TimeLogicUsed)
-    sys.exit(1)
+    # print(f"Results Total: {ResultsTotalNum}")
+    # print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui):
     user_welcome_message(Prg, Ui)

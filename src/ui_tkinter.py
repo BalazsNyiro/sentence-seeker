@@ -12,13 +12,16 @@ PrgGlob = None
 LeftMarginFirstLine = 6
 LeftMarginOtherLines = 2
 
+# can't display too complex explanation
+ExplainLimit = 24
+
 def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
     TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
 
-    TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma)
+    TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
     SentencesArea.insert(tk.END, f"words: {Words}\n\n", "TextTitle")
     SentencesArea.insert(tk.END, "Sentences:\n", "TextTitle")
@@ -35,6 +38,7 @@ def seek_and_display(KeypressEvent=""):
         TagName = f"Highlighted_{WordId}"
 
         # here we have problems at irregular verbs
+        print("DEBUG:", WordId, WordId in Theme["Highlights"])
         #if WordId in Theme["Highlights"]:
         SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
         SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)

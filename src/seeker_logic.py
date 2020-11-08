@@ -18,7 +18,7 @@ def token_split(Query):
 
     Query = Query.replace(",", " ")
 
-    for Operator in Operator_Functions.keys():
+    for Operator in Operators:
         Query = Query.replace(Operator, f" {Operator} ")
 
     ########################################################################
@@ -63,7 +63,7 @@ def token_group_finder(Tokens):
     Group = []
     while Tokens:
         Token = Tokens.pop(0)
-        if Token in Operator_Functions:
+        if Token in Operators:
             if Token == "(":
                 SubGroup = token_group_finder(Tokens)
                 Group.append(SubGroup)
@@ -84,15 +84,14 @@ def token_group_finder(Tokens):
 def operators_exec(Tokens, Explains):
 
     for Operator, Fun in Operator_Functions.items():
-        if Fun:  # ( ) don't have fun but you never can find ( ) operators becasue they turn to groups
-            while Operator in Tokens:
-                Tokens, ExplainsNew = operator_exec_left_right(Operator, Fun, Tokens, Explains)
+        while Operator in Tokens:
+            Tokens, ExplainsNew = operator_exec_left_right(Operator, Fun, Tokens, Explains)
 
-                # keep original Explains pointer but insert the new result into it
-                Explains.clear()
-                Explains.extend(ExplainsNew)
-                # print(" Results: ", Results)
-                # print("Explains: ", ExplainsNew)
+            # keep original Explains pointer but insert the new result into it
+            Explains.clear()
+            Explains.extend(ExplainsNew)
+            # print(" Results: ", Results)
+            # print("Explains: ", ExplainsNew)
 
     return Tokens, Explains
 
@@ -133,8 +132,9 @@ def is_str_but_not_operator(Token): # Token can be List or Operator
 
 # Tested
 def is_operator(Token):
-    if util.is_str(Token): # if we got a string, then check in the Operators, else False
-        return Token in Operator_Functions
+    if isinstance(Token, str): # don't call, maybe it's faster
+    #if util.is_str(Token): # if we got a string, then check in the Operators, else False
+        return Token in Operators
     return False
 
 # FIXME: INPROGRESS: test, operator_exec
@@ -171,10 +171,11 @@ def index_intersect(ResultLeft, ResultRight):
 def index_union(ResultLeft, ResultRight):
     return ResultLeft.union(ResultRight)
 
+
+Operators = {"AND", "OR", "(", ")"}
+
 Operator_Functions = {"AND": index_intersect,
-                      "OR": index_union,
-                      "(": None,
-                      ")": None}
+                      "OR": index_union}
 
 # ResultsSelected = []
 # Selectors = [result_selectors.shorters_are_better,

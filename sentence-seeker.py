@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os, sys
+from tkinter import *
 
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
@@ -52,5 +53,32 @@ def test_exec(Args):
     # execute search from ui
     seeker.be_ready_to_seeking(Prg)
     ui_console.seek_and_display(Prg, Prg["QueryExamples"]["bird_or_cat"])
+
+    color_paletta_tester(Prg["UiThemes"]["SunSet"]["Highlights"])
+
+
+
+####################################################################################
+# color paletta original source - thank you
+# http://www.science.smith.edu/dftwiki/index.php/Color_Charts_for_TKinter
+def color_paletta_tester(Colors):
+
+    FONT_SIZE = 16  # (pixels)
+
+    root = Tk()
+    root.title("Named colour chart")
+    row = 0
+    col = 0
+    for color in Colors:
+        e = Label(root, text=color, background=color,
+                  font=(None, -FONT_SIZE))
+        e.grid(row=row, column=col, sticky=E + W)
+        row += 1
+        if (row > 36):
+            row = 0
+            col += 1
+
+    root.mainloop()
+####################################################################################
 
 main()

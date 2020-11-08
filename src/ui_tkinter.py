@@ -34,9 +34,10 @@ def seek_and_display(KeypressEvent=""):
     for WordId, WordWanted in enumerate(WordsWanted):
         TagName = f"Highlighted_{WordId}"
 
-        if WordId in Theme["Highlights"]:
-            SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
-            SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
+        # here we have problems at irregular verbs
+        #if WordId in Theme["Highlights"]:
+        SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
+        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
 
 
 # This class came from here

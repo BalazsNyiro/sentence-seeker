@@ -83,9 +83,9 @@ def token_group_finder(Tokens):
 
 def operators_exec(Tokens, Explains):
 
-    for Operator, Fun in Operator_Functions.items():
+    for Operator in Operators:
         while Operator in Tokens:
-            Tokens, ExplainsNew = operator_exec_left_right(Operator, Fun, Tokens, Explains)
+            Tokens, ExplainsNew = operator_exec_left_right(Operator, Tokens, Explains)
 
             # keep original Explains pointer but insert the new result into it
             Explains.clear()
@@ -138,9 +138,7 @@ def is_operator(Token):
     return False
 
 # FIXME: INPROGRESS: test, operator_exec
-def operator_exec_left_right(Operator, FunOperator, TokensOrig, ExplainsOrig):
-    if Operator not in TokensOrig: # if wanted operator isn't in Tokens
-        return TokensOrig, ExplainsOrig
+def operator_exec_left_right(Operator, TokensOrig, ExplainsOrig):
 
     Explains = copy.deepcopy(ExplainsOrig)
     Tokens = copy.deepcopy(TokensOrig)
@@ -150,7 +148,11 @@ def operator_exec_left_right(Operator, FunOperator, TokensOrig, ExplainsOrig):
     Tokens.pop(IdOperator)  # remove the operator
     TokenLeft, NameLeft = Tokens[IdOperator - 1]
 
-    LineNumsOp = FunOperator(TokenLeft, TokenRight)
+    if Operator == "OR":
+        LineNumsOp = index_union(TokenLeft, TokenRight)
+    else:
+        LineNumsOp = index_intersect(TokenLeft, TokenRight)
+
     ResultName = f"({NameLeft} {Operator} {NameRight})"
     Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
 
@@ -174,8 +176,6 @@ def index_union(ResultLeft, ResultRight):
 
 Operators = {"AND", "OR", "(", ")"}
 
-Operator_Functions = {"AND": index_intersect,
-                      "OR": index_union}
 
 # ResultsSelected = []
 # Selectors = [result_selectors.shorters_are_better,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import text, copy, time, util
-import eng
+import eng, sys
 
 # ? MINUS,
 # ? NOT
@@ -81,15 +81,18 @@ def token_group_finder(Tokens):
 #  AND
 #  OR
 
+#                  Tokens: list()
 def operators_exec(Tokens, Explains):
 
     for Operator in Operators:
         while Operator in Tokens:
-            Tokens, ExplainsNew = operator_exec_left_right(Operator, Tokens, Explains)
+            Tokens = operator_exec_left_right(Operator, Tokens, Explains)
 
             # keep original Explains pointer but insert the new result into it
-            Explains.clear()
-            Explains.extend(ExplainsNew)
+
+            # Explains.clear()
+            # Explains.extend(ExplainsNew)
+
             # print(" Results: ", Results)
             # print("Explains: ", ExplainsNew)
 
@@ -98,7 +101,7 @@ def operators_exec(Tokens, Explains):
 
 _EmptySet = set()
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(TokensOrig, DocIndex, Explains):
+def token_interpreter(TokensOrig, DocIndex, Explains): # Explains type: list()
     TokensResults = []
 
     for Token in TokensOrig:
@@ -106,12 +109,13 @@ def token_interpreter(TokensOrig, DocIndex, Explains):
         if util.is_list(Token):
             Result = token_interpreter(Token, DocIndex, Explains)
 
-        if is_operator(Token):
+        elif is_operator(Token):
             Result = Token
 
-        if is_str_but_not_operator(Token):
+        elif is_str_but_not_operator(Token):
 
             if Token in DocIndex:
+                # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums
                 IndexElems = set(DocIndex[Token])
             else:
                 IndexElems = _EmptySet
@@ -139,15 +143,14 @@ def is_str_but_not_operator(Token): # Token can be List or Operator
 
 # Tested
 def is_operator(Token):
-    if isinstance(Token, str): # don't call, maybe it's faster
-    #if util.is_str(Token): # if we got a string, then check in the Operators, else False
+    if util.is_str(Token): # if we got a string, then check in the Operators, else False
         return Token in Operators
     return False
 
 # FIXME: INPROGRESS: test, operator_exec
-def operator_exec_left_right(Operator, TokensOrig, ExplainsOrig):
+#                                  TokensOrig: list()  ExplainsOrig: list
+def operator_exec_left_right(Operator, TokensOrig, Explains):
 
-    Explains = copy.deepcopy(ExplainsOrig)
     Tokens = copy.deepcopy(TokensOrig)
     IdOperator = Tokens.index(Operator)
 
@@ -164,7 +167,7 @@ def operator_exec_left_right(Operator, TokensOrig, ExplainsOrig):
     Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
 
     Explains.append((ResultName, len(LineNumsOp)))
-    return Tokens, Explains
+    return Tokens
 
 Operators = {"AND", "OR", "(", ")"}
 
@@ -220,8 +223,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     print("group finder 2")
 
     ResultsSelected = []
-    TimeLogicStart = time.time()
     TokenProcessExplainPerDoc = dict()
+
+    TimeInterpreterSumma = 0
 
     for FileSourceBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
 
@@ -231,8 +235,12 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
 
         Explains = []
         print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
+        TimeInterpreterStart = time.time()
         Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains)
-        print("TOKEN INTERPRETER <<<<")
+        TimeInterpreter = time.time() - TimeInterpreterStart
+        TimeInterpreterSumma += TimeInterpreter
+        print("TOKEN INTERPRETER <<<<", TimeInterpreter)
+
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 
         if ExplainOnly: # no Results, only explain
@@ -246,13 +254,13 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
                                                                 SentenceFillInResult=SentenceFillInResult
                                                                )
             ResultsSelected.append(Obj)
+
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
 
     for ResultSelector in ResultSelectors:
         ResultsSelected = ResultSelector(ResultsSelected, WordsMaybeDetected)
 
-    TimeLogicUsed = time.time() - TimeLogicStart
-    # print("Time logic: ", TimeLogicUsed)
+    print("Time interpreter summa", TimeInterpreterSumma)
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
 
 def token_explain_summa(TokenProcessExplainPerDoc):

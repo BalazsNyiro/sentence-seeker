@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import text, copy, time, util
+import eng
 
 # ? MINUS,
 # ? NOT
@@ -20,9 +21,32 @@ def token_split(Query):
     for Operator in Operator_Functions.keys():
         Query = Query.replace(Operator, f" {Operator} ")
 
+    ########################################################################
+    # every special word has : sign as a separator.
+    # RULES:   From:what
+    # example, long:  Englishlanguage:irregular_verbs_form_2  but I need to use small format:
+    # example, applied   eng:iverb2, iverb3
+    # but in real life we often  use From==eng so if : is starter, it means eng
+
+    TokensWithSpecials = []
+    for Token in Query.split(" "):
+        if ":" in Token: # : means: special token
+            if Token == ":iverb_ps": # past simple
+                TokensWithSpecials.append("(")
+                for FormPresentSimple in eng.IrregularVerbsPresentSimple:
+                    TokensWithSpecials.append(FormPresentSimple)
+                    TokensWithSpecials.append("OR")
+                TokensWithSpecials.pop() # remove last OR,
+                TokensWithSpecials.append(")")
+
+        else:
+            TokensWithSpecials.append(Token)
+    ########################################################################
+
     Tokens = []   # insert AND if necessary:
     TokenPrev = ""
-    for Token in Query.split(" "):
+    for Token in TokensWithSpecials:
+    #for Token in Query.split(" "):
         if Token: # with multiple spaces a token can be "", too
             if TokenPrev:
                 # two low char with one space between them - missing operator, AND is default

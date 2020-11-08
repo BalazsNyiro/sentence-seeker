@@ -1,4 +1,5 @@
 verbs_irregular = {
+    # Base Form	Past Simple	Past Participle
     ("arise",	"arose",	"arisen"),
     ("awake",	"awoke",	"awoken"),
     ("beat",	"beat",	    "beaten"),
@@ -78,7 +79,7 @@ verbs_irregular = {
     ("dig",	"dug",	"dug"),
     ("dwell",	"dwelt",	"dwelt"),
     ("feel",	"felt",	"felt"),
-    ("forecast",	"forecast"),
+    ("forecast",	"forecast", "forecast"),
     ("get",	"got",	"got"),
     ("have",	"had",	"had"),
     ("hear",	"heard",	"heard"),
@@ -140,32 +141,38 @@ verbs_irregular = {
     ("pay",	"paid",	"paid"),
     ("read",	"read",	"read"),
     ("say",	"said",	"said"),
-    ("shed",	"shed",	"shed"),
-    ("speed",	"sped",	"sped"),
+    ("shed",	"shed",	    "shed"),
+    ("speed",	"sped",	    "sped"),
     ("spread",	"spread",	"spread"),
-    ("wed",	"wed",	"wed"),
+    ("wed",	    "wed",	    "wed"),
 
-    ("sell",	"sold",	"sold"),
-    ("stand",	"stood",	"stood"),
-    ("tell",	"told",	"told"),
-    ("tread",	"trod",	"trod"),
-    ("understand",	"understood",	"understood"),
     ("abide",	"abode",	"abode"),
-    ("heave",	"hove",	"hove"),
+    ("heave",	"hove",	    "hove"),
+    ("sell",	"sold",	    "sold"),
+    ("stand",	"stood",	"stood"),
+    ("tell",	"told",	    "told"),
+    ("tread",	"trod",	    "trod"),
+    ("understand",	"understood",	"understood"),
 
     ("become",	"became",	"become"),
     ("come",	"came",	"come"),
     ("do",	"did",	"done"),
     ("go",	"went",	"gone"),
 
-    ("be",	"was/were",	"been"),
+    # be has 2 variations in past simple
+    ("be",	"was",	"been"),
+    (None,  "were", None)
 }
 
 IrregularVerbsForm1 = set()
-IrregularVerbsForm2 = set()
-IrregularVerbsForm3 = set()
+IrregularVerbsPresentSimple = set()
+IrregularVerbsPastParticiple = set()
 
-for Form1, Form2, Form3 in verbs_irregular:
-    IrregularVerbsForm1.add(Form1)
-    IrregularVerbsForm2.add(Form2)
-    IrregularVerbsForm3.add(Form3)
+for Elem in verbs_irregular:
+    Form1, Form2, Form3 = Elem
+    if Form1:
+        IrregularVerbsForm1.add(Form1)
+    if Form2:
+        IrregularVerbsPresentSimple.add(Form2)
+    if Form3:
+        IrregularVerbsPastParticiple.add(Form3)

@@ -22,18 +22,18 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             # These are subsentence coordinates BUT NOT WITH ORIGINAL LINENUMBERS
             # the first coordinate is the sentence number, the last two digits represent
             # the subsentence coord.
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
+                       ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 200: True}, '(birds AND is)')])
+            self.assertEqual(Tokens, [({0, 200}, '(birds AND is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({200: True}, 'strong')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
+                       ({0, 101, 200, 400}, 'is'), 'AND', ({200}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({200: True}, '((birds AND is) AND strong)')])
+            self.assertEqual(Tokens, [({200}, '((birds AND is) AND strong)')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('is', 4),
                                         ('strong', 1),
@@ -41,73 +41,73 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                                         ('((birds AND is) AND strong)', 1)]
                              )
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
+                       ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 200: True}, '(birds AND is)')])
+            self.assertEqual(Tokens, [({0, 200}, '(birds AND is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
-            Tokens = [({0: True, 200: True}, '(birds AND is)'), 'AND', ({200: True}, 'strong')]
+            Tokens = [({0, 200}, '(birds AND is)'), 'AND', ({200}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({200: True}, '((birds AND is) AND strong)')])
+            self.assertEqual(Tokens, [({200}, '((birds AND is) AND strong)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('((birds AND is) AND strong)', 1)])
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is'), 'AND', ({0: True, 202: True}, 'are')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
+                       ({0, 101, 200, 400}, 'is'), 'AND', ({0, 202}, 'are')]
             Explains = [('birds', 4), ('is', 4), ('are', 2)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True}, '((birds AND is) AND are)')])
+            self.assertEqual(Tokens, [({0}, '((birds AND is) AND are)')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('is', 4),
                                         ('are', 2),
                                         ('(birds AND is)', 2),
                                         ('((birds AND is) AND are)', 1)])
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'OR',
+                       ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 100: True, 101: True, 200: True, 400: True, 500: True}, '(birds OR is)')])
+            self.assertEqual(Tokens, [({0, 100, 101, 200, 400, 500}, '(birds OR is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
-            Tokens = [({200: True}, 'strong'), 'OR', ({0: True, 202: True}, 'are')]
+            Tokens = [({200}, 'strong'), 'OR', ({0, 202}, 'are')]
             Explains = [('strong', 1), ('are', 2)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 200: True, 202: True}, '(strong OR are)')])
+            self.assertEqual(Tokens, [({0, 200, 202}, '(strong OR are)')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3)])
 
-            Tokens = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'OR', ({}, '(empty_group)')]
+            Tokens = [({200, 0, 202}, '(strong OR are)'), 'OR', (set(), '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 200: True, 202: True}, '((strong OR are) OR (empty_group))')])
+            self.assertEqual(Tokens, [({0, 200, 202}, '((strong OR are) OR (empty_group))')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) OR (empty_group))', 3)])
 
-            Tokens = [({200: True, 0: True, 202: True}, '(strong OR are)'), 'AND', ({}, '(empty_group)')]
+            Tokens = [({200, 0, 202}, '(strong OR are)'), 'AND', (set(), '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({}, '((strong OR are) AND (empty_group))')])
+            self.assertEqual(Tokens, [(set(), '((strong OR are) AND (empty_group))')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) AND (empty_group))', 0)])
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'OR',
-                       ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'OR',
+                       ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 100: True, 101: True, 200: True, 400: True, 500: True}, '(birds OR is)')])
+            self.assertEqual(Tokens, [({0, 100, 101, 200, 400, 500}, '(birds OR is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
-            Tokens = [({0: True, 202: True}, 'are'), 'OR', ({0: True}, 'singing')]
+            Tokens = [({0, 202}, 'are'), 'OR', ({0}, 'singing')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True, 202: True}, '(are OR singing)')])
+            self.assertEqual(Tokens, [({0, 202}, '(are OR singing)')])
             self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2)])
 
-            Tokens = [({0: True, 100: True, 200: True, 500: True}, 'birds'), 'AND', ({0: True, 202: True}, '(are OR singing)'),
-                       'AND', ({0: True, 101: True, 200: True, 400: True}, 'is')]
+            Tokens = [({0, 100, 200, 500}, 'birds'), 'AND', ({0, 202}, '(are OR singing)'),
+                       'AND', ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0: True}, '((birds AND (are OR singing)) AND is)')])
+            self.assertEqual(Tokens, [({0}, '((birds AND (are OR singing)) AND is)')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('are', 2),
                                         ('singing', 1),
@@ -235,93 +235,93 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             if True:
                 Query = "are"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 202: True}
+                ResultWanted = {0, 202}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('are', 2)]) # One Explain: ('Token', NumOfIndexElemsInDocIndex)
 
                 Query = "birds"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 100: True, 200: True, 500: True}
+                ResultWanted = {0, 100, 200, 500}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4)])
 
                 Query = "is"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 101: True, 200: True, 400: True}
+                ResultWanted = {0, 101, 200, 400}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('is', 4)])
 
                 Query = "strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200: True}
+                ResultWanted = {200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('strong', 1)])
 
                 Query = "birds is"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 200: True}
+                ResultWanted = {0, 200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
                 Query = "birds  is,strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200: True}
+                ResultWanted = {200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('(birds AND is)', 2), ('((birds AND is) AND strong)', 1)])
 
                 Query = "(birds  is),strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200: True}
+                ResultWanted = {200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2), ('strong', 1), ('((birds AND is) AND strong)', 1)])
 
                 Query = "(birds  is,are),(strong)"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {}
+                ResultWanted = set()
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('are', 2), ('(birds AND is)', 2), ('((birds AND is) AND are)', 1), ('strong', 1), ('(((birds AND is) AND are) AND strong)', 0)])
 
                 ##### OR ######
                 Query = "birds   OR  is"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 100: True, 101: True, 200: True, 400: True, 500: True}
+                ResultWanted = {0, 100, 101, 200, 400, 500}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
                 Query = "(((strong OR are)))"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 200: True, 202: True}
+                ResultWanted = {0, 200, 202}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3)])
 
                 Query = "(((strong OR are))) OR ()"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 200: True, 202: True}
+                ResultWanted = {0, 200, 202}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3), ('((strong OR are) OR (empty_group))', 3)])
 
                 Query = "(((strong OR are))) AND ()"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {}
+                ResultWanted = set()
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3), ('((strong OR are) AND (empty_group))', 0)])
 
                 #########  COMPLEX QUERY ###########
                 Query = "(birds   OR  is) AND strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {200: True}
+                ResultWanted = {200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6), ('strong', 1), ('((birds OR is) AND strong)', 1)])
 
                 Query = "(birds   OR  is) AND (strong OR are)"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
-                ResultWanted = {0: True, 200: True}
+                ResultWanted = {0, 200}
                 self.assertEqual(Result, ResultWanted)
                 self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6), ('strong', 1), ('are', 2), ('(strong OR are)', 3), ('((birds OR is) AND (strong OR are))', 2)])
 
             Query = "birds (are OR  singing) AND (is)"
             Result, Explains = token_interpreter_wrapper(Prg, Query)
-            ResultWanted = {0: True}
+            ResultWanted = {0}
             self.assertEqual(Result, ResultWanted)
             self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2), ('is', 4), ('(birds AND (are OR singing))', 1), ('((birds AND (are OR singing)) AND is)', 1)])
 

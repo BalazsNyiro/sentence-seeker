@@ -2,7 +2,9 @@
 import seeker_logic, text, util_ui
 
 def seek_and_display(Prg, Wanted):
+    print("Debug: seeke_logic.seek 1")
     TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+    print("Debug: seeke_logic.seek 2")
     print(util_ui.token_explain_summa_to_text(TokenProcessExplainSumma))
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
     print(f"Results Total: {ResultsTotalNum}")

@@ -109,7 +109,7 @@ def token_interpreter(TokensOrig, DocIndex, Explains):
             Result = Token
 
         if is_str_but_not_operator(Token):
-            IndexElems = index_list_to_dict(Token, DocIndex)
+            IndexElems = index_list_to_set(Token, DocIndex)
             Result = (IndexElems, Token) # ResultLineNums, TokenName
             Explains.append((Token, len(IndexElems)))
 
@@ -157,26 +157,26 @@ def operator_exec_left_right(Operator, FunOperator, TokensOrig, ExplainsOrig):
     Explains.append((ResultName, len(LineNumsOp)))
     return Tokens, Explains
 
-def index_list_to_dict(Word, DocIndex):
-    Result = dict()
+def index_list_to_set(Word, DocIndex):
+    Result = set()
     if Word in DocIndex:
         for Position in DocIndex[Word]:
-            Result[Position] = True
+            Result.add(Position)
     return Result
 
 def index_intersect(ResultLeft, ResultRight):
-    Result = dict()
+    Result = set()
     for Key in ResultLeft:
         if Key in ResultRight:
-            Result[Key] = True
+            Result.add(Key)
     return Result
 
 def index_union(ResultLeft, ResultRight):
-    Result = dict()
+    Result = set()
     for Key in ResultLeft:
-        Result[Key] = True
+        Result.add(Key)
     for Key in ResultRight:
-        Result[Key] = True
+        Result.add(Key)
     return Result
 
 Operator_Functions = {"AND": index_intersect,
@@ -230,7 +230,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     Tokens = token_split(Query)
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)
 
+    print("group finder 1")
     TokenGroups = token_group_finder(Tokens)
+    print("group finder 2")
 
     ResultsSelected = []
     TimeLogicStart = time.time()
@@ -243,7 +245,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
         #    continue
 
         Explains = []
+        print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
         Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains)
+        print("TOKEN INTERPRETER <<<<")
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 
         if ExplainOnly: # no Results, only explain

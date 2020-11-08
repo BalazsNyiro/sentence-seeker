@@ -33,8 +33,10 @@ def seek_and_display(KeypressEvent=""):
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
     for WordId, WordWanted in enumerate(WordsWanted):
         TagName = f"Highlighted_{WordId}"
-        SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
-        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
+
+        if WordId in Theme["Highlights"]:
+            SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
+            SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
 
 
 # This class came from here

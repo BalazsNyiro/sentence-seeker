@@ -51,6 +51,6 @@ def test_exec(Args):
 
     # execute search from ui
     seeker.be_ready_to_seeking(Prg)
-    ui_console.seek_and_display(Prg, "looks, like, bird")
+    ui_console.seek_and_display(Prg, Prg["QueryExamples"]["bird_or_cat"])
 
 main()

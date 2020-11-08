@@ -95,6 +95,8 @@ def operators_exec(Tokens, Explains):
 
     return Tokens, Explains
 
+
+_EmptySet = set()
 # TESTED   Tokens is a list with Token elems
 def token_interpreter(TokensOrig, DocIndex, Explains):
     TokensResults = []
@@ -108,7 +110,12 @@ def token_interpreter(TokensOrig, DocIndex, Explains):
             Result = Token
 
         if is_str_but_not_operator(Token):
-            IndexElems = index_list_to_set(Token, DocIndex)
+
+            if Token in DocIndex:
+                IndexElems = set(DocIndex[Token])
+            else:
+                IndexElems = _EmptySet
+
             Result = (IndexElems, Token) # ResultLineNums, TokenName
             Explains.append((Token, len(IndexElems)))
 
@@ -149,30 +156,15 @@ def operator_exec_left_right(Operator, TokensOrig, ExplainsOrig):
     TokenLeft, NameLeft = Tokens[IdOperator - 1]
 
     if Operator == "OR":
-        LineNumsOp = index_union(TokenLeft, TokenRight)
+        LineNumsOp = TokenLeft.union(TokenRight)
     else:
-        LineNumsOp = index_intersect(TokenLeft, TokenRight)
+        LineNumsOp = TokenLeft.intersection(TokenRight)
 
     ResultName = f"({NameLeft} {Operator} {NameRight})"
     Tokens[IdOperator - 1] = (LineNumsOp, ResultName)
 
     Explains.append((ResultName, len(LineNumsOp)))
     return Tokens, Explains
-
-def index_list_to_set(Word, DocIndex):
-    # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums
-    Result = set()
-    if Word in DocIndex:
-        for Position in DocIndex[Word]:
-            Result.add(Position)
-    return Result
-
-def index_intersect(ResultLeft, ResultRight):
-    return ResultLeft.intersection(ResultRight)
-
-def index_union(ResultLeft, ResultRight):
-    return ResultLeft.union(ResultRight)
-
 
 Operators = {"AND", "OR", "(", ")"}
 

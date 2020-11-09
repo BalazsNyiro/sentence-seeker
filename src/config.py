@@ -93,6 +93,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "UiThemes": {
                 "ThemeNameActual": "SunSet",
                 "SunSet": {
+                    "QueryWordEntry": "Helvetica 22 bold",
                     # https://www.schemecolor.com/collection-of-beautiful-pastel-color-schemes.php
                     # coolors.co
                     "Highlights":[
@@ -102,27 +103,29 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                    "pink",
                                    "#90F1EF", # light blue "cyan",
                                    "#85DE77", # light green
-                                   "#FF756D",
-                                   "white",
-                                   "gray",
-                                   "red",
+                                   "#FF756D"
 
-                                    # dark colors are filtered from total tkinter color list
+                        , 'khaki1'
+                        , 'gold'
+                        ,'pale green'
+                        , 'sandy brown'
+                        , 'spring green'
+                        , 'lawn green'
+                        , 'SteelBlue2'
+                        , "red",
+
                                       'snow'
-                                    , 'white smoke'
                                     , 'gainsboro'
                                     , 'antique white'
                                     , 'navajo white'
                                     , 'lemon chiffon'
                                     , 'mint cream'
-                                    , 'azure'
 
                                     , 'lavender'
                                     , 'lavender blush'
                                     , 'misty rose'
 
                                     , 'deep sky blue'
-                                    , 'sky blue'
                                     , 'light sky blue'
                                     , 'steel blue'
                                     , 'light steel blue'
@@ -138,9 +141,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'aquamarine'
                                     , 'dark sea green'
                                     , 'medium sea green'
-                                    , 'pale green'
-                                    , 'spring green'
-                                    , 'lawn green'
                                     , 'medium spring green'
                                     , 'green yellow'
                                     , 'lime green'
@@ -151,12 +151,10 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'light goldenrod yellow'
                                     , 'light yellow'
                                     , 'yellow'
-                                    , 'gold'
                                     , 'light goldenrod'
                                     , 'goldenrod'
                                     , 'rosy brown'
                                     , 'indian red'
-                                    , 'sandy brown'
                                     , 'dark salmon'
                                     , 'salmon'
                                     , 'light salmon'
@@ -166,20 +164,16 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'light coral'
                                     , 'tomato'
                                     , 'orange red'
-                                    , 'red'
                                     , 'hot pink'
                                     , 'deep pink'
                                     , 'pink'
                                     , 'light pink'
                                     , 'pale violet red'
                                     , 'medium orchid'
-                                    , 'dark orchid'
                                     , 'thistle'
                                     , 'snow2'
                                     , 'snow3'
-                                    , 'snow4'
                                     , 'SlateBlue1'
-                                    , 'SteelBlue2'
                                     , 'SteelBlue3'
                                     , 'DeepSkyBlue2'
                                     , 'DeepSkyBlue3'
@@ -211,7 +205,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'DarkOliveGreen1'
                                     , 'DarkOliveGreen2'
                                     , 'DarkOliveGreen3'
-                                    , 'khaki1'
                                     , 'khaki2'
                                     , 'khaki3'
                                     , 'LightGoldenrod1'

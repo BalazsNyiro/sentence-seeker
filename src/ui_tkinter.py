@@ -38,7 +38,6 @@ def seek_and_display(KeypressEvent=""):
         TagName = f"Highlighted_{WordId}"
 
         # here we have problems at irregular verbs
-        print("DEBUG:", WordId, WordId in Theme["Highlights"])
         #if WordId in Theme["Highlights"]:
         SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
         SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
@@ -141,7 +140,7 @@ def win_main(Prg):
     tk.Label(Root, text=" ").grid(row=0, column=0, sticky=tk.W)
 
     global WordsEntry
-    WordsEntry = tk.Entry(Root, background=Theme["BgWords"])
+    WordsEntry = tk.Entry(Root, background=Theme["BgWords"], font=Theme["QueryWordEntry"])
 
     WordsEntry.focus() # focus
     WordsEntry.delete(0, tk.END)

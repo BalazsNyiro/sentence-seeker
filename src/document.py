@@ -70,7 +70,7 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
                         WordPositionInLines=WordPositionInLines,
 
                         # list of sentences
-                        Sentences=util.file_read_lines_simple(FileSentencesAbsPath) if isfile(FileSentencesAbsPath) else [])
+                        Sentences=util.file_read_lines(Prg, Fname=FileSentencesAbsPath) if isfile(FileSentencesAbsPath) else [])
 
 
 def info(Txt, Verbose=True):

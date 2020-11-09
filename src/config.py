@@ -178,8 +178,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'snow2'
                                     , 'snow3'
                                     , 'snow4'
-
-
                                     , 'SlateBlue1'
                                     , 'SteelBlue2'
                                     , 'SteelBlue3'
@@ -223,7 +221,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'LightYellow3'
                                     , 'yellow2'
                                     , 'yellow3'
-                                    , 'yellow4'
                                     , 'gold2'
                                     , 'gold3'
                                     , 'goldenrod1'
@@ -274,7 +271,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                                     , 'OrangeRed3'
                                     , 'red2'
                                     , 'red3'
-                                    , 'red4'
                                     , 'DeepPink2'
                                     , 'DeepPink3'
                                     , 'HotPink1'

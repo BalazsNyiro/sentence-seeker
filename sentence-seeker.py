@@ -64,21 +64,23 @@ def test_exec(Args):
 def color_paletta_tester(Colors):
 
     FONT_SIZE = 16  # (pixels)
+    RowLimit = 24
 
-    root = Tk()
-    root.title("Named colour chart")
-    row = 0
-    col = 0
-    for color in Colors:
-        e = Label(root, text=color, background=color,
+    Root = Tk()
+    Root.title("Named colour chart")
+
+    Row = 0
+    Col = 0
+    for Color in Colors:
+        Elem = Label(Root, text=Color, background=Color,
                   font=(None, -FONT_SIZE))
-        e.grid(row=row, column=col, sticky=E + W)
-        row += 1
-        if (row > 36):
-            row = 0
-            col += 1
+        Elem.grid(row=Row, column=Col, sticky=E + W)
+        Row += 1
+        if Row > RowLimit:
+            Row = 0
+            Col += 1
 
-    root.mainloop()
+    Root.mainloop()
 ####################################################################################
 
 main()

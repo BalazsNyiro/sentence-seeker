@@ -133,28 +133,42 @@ def document_objects_collect_from_dir_documents(Prg,
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
 
-        Futures = []
-        with concurrent.futures.ProcessPoolExecutor() as Executor:
-            for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
+        if Prg["Os"] == "Linux":
+
+            Futures = []
+            with concurrent.futures.ProcessPoolExecutor(max_workers=1) as Executor:
+                for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
+
+                    # this document object describe infos about the document
+                    # for example the version of index algorithm
+                    FileIndexAbsPath = FileTextAbsPath + FileEndIndex
+                    FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
+                    Futures.append(Executor.submit(sentence_and_index_create,
+                                    FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
+                                    FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
+
+                DonePrevLen = -1
+                while True:
+                    Done, NotDone = concurrent.futures.wait(Futures, return_when=FIRST_COMPLETED)
+                    if len(Done) != DonePrevLen:
+                        DonePrevLen = len(Done)
+                        print("indexed:", len(Done), "  waiting:", len(NotDone))
+                    ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(Done))
+                    if not NotDone:
+                        break
+
+        else: # on windows I use one Core to index files
+            for FileNum, FileTextAbsPath in enumerate(FilesTxt,
+                                                      start=1):  # All files recursively collected from DirDocuments
+                ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, FileNum)
 
                 # this document object describe infos about the document
                 # for example the version of index algorithm
                 FileIndexAbsPath = FileTextAbsPath + FileEndIndex
                 FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
-                Futures.append(Executor.submit(sentence_and_index_create,
-                                FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
-                                FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
-            DonePrevLen = -1
-            while True:
-                Done, NotDone = concurrent.futures.wait(Futures, return_when=FIRST_COMPLETED)
-                if len(Done) != DonePrevLen:
-                    DonePrevLen = len(Done)
-                    print("indexed:", len(Done), "  waiting:", len(NotDone))
-                ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(Done))
-                if not NotDone:
-                    break
-
+                FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
+                FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
     ################### parallel index loading ###############
     ######  the parallel solution is slower
     # WordPositionAll = dict()

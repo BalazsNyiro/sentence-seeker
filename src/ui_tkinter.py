@@ -219,3 +219,14 @@ def select_all_words_entry(event):
     WordsEntry.select_range(0, 'end')
     # move cursor to the end
     WordsEntry.icursor('end')
+
+# based on: https://pythonprogramming.altervista.org/tkinters-messagebox-without-the-root-window/
+def independent_yes_no_window(Title, Question, Geometry="200x150"):
+    Root = tkinter.Tk()
+    Root.overrideredirect(1)
+    Root.geometry(Geometry)
+    Root.withdraw()
+    Reply = tkinter.messagebox.askyesno(Title, Question)
+    Root.destroy()
+    return Reply
+

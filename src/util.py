@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
 import sys, array, time, datetime, io
+from ui_tkinter import independent_yes_no_window
 
 ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_Lower = ABC_Eng_Upper.lower()
@@ -401,11 +402,16 @@ def console_available():
 # manually tested
 def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
     if WikiPagesUse == None: # param not given
-        if console_available(): # we are in a real terminal
+        # default:  piped or redirected or started without console
+        WikiPagesUse = "N"
+
+        if Prg["Ui"] == "console": # the user started the program in console mode
             WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
-        else:
-            #  piped or redirected or started without console
-            WikiPagesUse = "y"
+        elif Prg["Ui"] == "tkinter":
+            # TODO: gui progress bar for wikipedia download, too
+            if independent_yes_no_window("Wikipedia interesting articles collection",
+                                         "Do you want to download articles from Sentence Seker site?\nIt takes about 24-26 sec, then program starts."):
+                WikiPagesUse = "Y"
 
     if str(WikiPagesUse).strip().lower() == "y":
         Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"

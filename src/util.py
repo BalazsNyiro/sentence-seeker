@@ -366,16 +366,17 @@ def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is un
 #####################################################################################
 # the progressbar needs a separated fun in background, it's web_get here.
 def web_get_progressbar(Prg, Url, Binary=False, Verbose=True):
-    Name = "web_get"
     # progress bar can receive one param only
-    Prg["ProgressBarParams"]["Params"] = (Name, Url, Binary, Verbose)
-
-    ui_tkinter_boot_progress_bar.bar_display(Prg, web_get_wrapper_oneparam, "Wikipedia articles downloading...")
-    return Prg["ProgressBarParams"]["return"]
+    ui_tkinter_boot_progress_bar.bar_display(Prg, web_get_wrapper_oneparam,
+                                             FunParams=(Url, Binary, Verbose),
+                                             Title="Wikipedia articles downloading...")
+    Ret = Prg["ProgressBarFunRet"] # the called fun can't give back directly
+    del Prg["ProgressBarFunRet"]   # any value, only through the passed Prg
+    return Ret
 
 def web_get_wrapper_oneparam(Prg):
-    ReturnName, Url, Binary, Verbose = Prg["ProgressBarParams"]["Params"]
-    Prg["ProgressBarParams"]["return"] = \
+    Url, Binary, Verbose = Prg["ProgressBarFunParams"]
+    Prg["ProgressBarFunRet"] = \
          web_get(Url=Url, Binary=Binary, Verbose=Verbose, PrgIfProgressBar=Prg)
     ui_tkinter_boot_progress_bar.progressbar_close(Prg)
 #####################################################################################

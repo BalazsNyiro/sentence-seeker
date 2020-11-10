@@ -2,7 +2,7 @@
 import util_ui
 # https://www.geeksforgeeks.org/progressbar-widget-in-tkinter-python/
 
-def bar_display(Prg, FunBehindBar, Title=""):
+def bar_display(Prg, FunBehindBar, FunParams=(), Title=""):
     # STRANGE BUT NECESSARY import here
     # Don't import these on module level because in some environment
     # tkinter is not available and progressbar_close/refresh is
@@ -22,6 +22,7 @@ def bar_display(Prg, FunBehindBar, Title=""):
                                           length=600, mode='determinate')
     ProgressBar.pack(pady=10)
     Prg["ProgressBar"] = ProgressBar
+    Prg["ProgressBarFunParams"] = FunParams
     Prg["ProgressBarRoot"] = Root
 
     # start a function after mainloop
@@ -43,3 +44,4 @@ def progressbar_close(Prg):
         Prg["ProgressBarRoot"].quit()
         del Prg["ProgressBar"]
         del Prg["ProgressBarRoot"]
+        del Prg["ProgressBarFunParams"]

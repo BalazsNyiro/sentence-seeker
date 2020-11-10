@@ -132,11 +132,14 @@ def document_objects_collect_from_dir_documents(Prg,
 
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
+        MultiCore = True
+        if Prg["Os"] != "Linux":
+            MultiCore = False
 
-        if Prg["Os"] == "Linux":
+        if MultiCore:
 
             Futures = []
-            with concurrent.futures.ProcessPoolExecutor(max_workers=1) as Executor:
+            with concurrent.futures.ProcessPoolExecutor() as Executor:
                 for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
 
                     # this document object describe infos about the document

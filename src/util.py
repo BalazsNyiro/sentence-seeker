@@ -2,6 +2,7 @@
 import os, gzip, shutil, pathlib, urllib.request, util_json_obj
 import sys, array, time, datetime, io
 from ui_tkinter import independent_yes_no_window
+import ui_tkinter_boot_progress_bar
 
 ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_Lower = ABC_Eng_Upper.lower()
@@ -362,8 +363,25 @@ def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is un
         Content = str(Bytes, 'utf-8', 'backslashreplace')  # errors can be ignored
     return Content
 
-# TODO? Test??
-def web_get(Url, Binary=False, Verbose=True):
+#####################################################################################
+# the progressbar needs a separated fun in background, it's web_get here.
+def web_get_progressbar(Prg, Url, Binary=False, Verbose=True):
+    Name = "web_get"
+    # progress bar can receive one param only
+    Prg["ProgressBarParams"]["Params"] = (Name, Url, Binary, Verbose)
+
+    ui_tkinter_boot_progress_bar.bar_display(Prg, web_get_wrapper_oneparam, "Wikipedia articles downloading...")
+    return Prg["ProgressBarParams"]["return"]
+
+def web_get_wrapper_oneparam(Prg):
+    ReturnName, Url, Binary, Verbose = Prg["ProgressBarParams"]["Params"]
+    Prg["ProgressBarParams"]["return"] = \
+         web_get(Url=Url, Binary=Binary, Verbose=Verbose, PrgIfProgressBar=Prg)
+    ui_tkinter_boot_progress_bar.progressbar_close(Prg)
+#####################################################################################
+
+# Prg is important only at progressbar case so it's the last param now
+def web_get(Url="", Binary=False, Verbose=True, PrgIfProgressBar=dict()):
     Url = Url.strip()
     if Verbose:
         print(f"web html get: {Url}, Binary:{Binary}")
@@ -386,6 +404,9 @@ def web_get(Url, Binary=False, Verbose=True):
             if Length:
                 Percent = int((Size / Length)*100)
                 print(f"download: {Percent}% {Url}")
+                if PrgIfProgressBar:
+                    ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(
+                        PrgIfProgressBar, Length, Size)
 
         if Binary:
             # https://stackoverflow.com/questions/9419162/download-returned-zip-file-from-url
@@ -416,7 +437,9 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
     if str(WikiPagesUse).strip().lower() == "y":
         Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
         try:
-            BinaryFromWeb = web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+
+            BinaryFromWeb = web_get_progressbar(Prg, "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+
             Bytes = gzip.decompress(BinaryFromWeb)
             print("Url downloading is finished:", Url)
             Lines = utf8_conversion_with_warning(Prg, Bytes, Url, FunCaller="web_get_pack_wikipedia")

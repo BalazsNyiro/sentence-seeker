@@ -71,6 +71,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "DirTestFiles": os.path.join(DirPrgRoot, "test_files"),
             "DirLog": DirLog,
 
+            "ProgressBarParams": dict(),
+
             "DocumentsSourceWebpagesFileName": DocumentsSourceWebpagesFileName,
             "DocumentsSourceWebpagesFileContent": util.file_read_all({}, DocumentsSourceWebpagesFileName)[1], # for html_ui
             "DocumentsSourceWebpages": DocumentsSourceWebpages,

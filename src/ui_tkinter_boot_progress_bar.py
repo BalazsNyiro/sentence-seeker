@@ -2,7 +2,7 @@
 import util_ui
 # https://www.geeksforgeeks.org/progressbar-widget-in-tkinter-python/
 
-def bar_display(Prg, FunBehindBar):
+def bar_display(Prg, FunBehindBar, Title=""):
     # STRANGE BUT NECESSARY import here
     # Don't import these on module level because in some environment
     # tkinter is not available and progressbar_close/refresh is
@@ -12,8 +12,11 @@ def bar_display(Prg, FunBehindBar):
     import tkinter.ttk
     ################################################################
 
+    if not Title:
+        Title = util_ui.title(Prg)
+
     Root = Tk()
-    Root.title(util_ui.title(Prg))
+    Root.title(Title)
     Root.resizable(False, False)
     ProgressBar = tkinter.ttk.Progressbar(Root, orient=HORIZONTAL,
                                           length=600, mode='determinate')
@@ -27,8 +30,8 @@ def bar_display(Prg, FunBehindBar):
 
     mainloop()
 
-def progressbar_refresh_if_displayed(Prg, LenFiles, FileNumActual):
-    ProgressPercent = int((FileNumActual * 100.0) / LenFiles)
+def progressbar_refresh_if_displayed(Prg, TotalNum, ActualNum):
+    ProgressPercent = int((ActualNum * 100.0) / TotalNum)
     if "ProgressBar" in Prg:
         Prg["ProgressBar"]["value"] = ProgressPercent
         Prg["ProgressBarRoot"].update_idletasks()

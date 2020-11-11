@@ -21,9 +21,10 @@ def bar_display(Prg, FunBehindBar, FunParams=(), Title=""):
     ProgressBar = tkinter.ttk.Progressbar(Root, orient=HORIZONTAL,
                                           length=600, mode='determinate')
     ProgressBar.pack(pady=10)
-    Prg["ProgressBar"] = ProgressBar
-    Prg["ProgressBarFunParams"] = FunParams
-    Prg["ProgressBarRoot"] = Root
+    Prg["ProgressBar"] = {"TtkProgressbar": ProgressBar,
+                          "FunParams": FunParams,
+                          "Root": Root,
+                          }
 
     # start a function after mainloop
     # https://stackoverflow.com/questions/459083/how-do-you-run-your-own-code-alongside-tkinters-event-loop
@@ -34,14 +35,12 @@ def bar_display(Prg, FunBehindBar, FunParams=(), Title=""):
 def progressbar_refresh_if_displayed(Prg, TotalNum, ActualNum):
     ProgressPercent = int((ActualNum * 100.0) / TotalNum)
     if "ProgressBar" in Prg:
-        Prg["ProgressBar"]["value"] = ProgressPercent
-        Prg["ProgressBarRoot"].update_idletasks()
+        Prg["ProgressBar"]["TtkProgressbar"]["value"] = ProgressPercent
+        Prg["ProgressBar"]["Root"].update_idletasks()
     return ProgressPercent
 
 def progressbar_close(Prg):
-    if "ProgressBarRoot" in Prg:
-        Prg["ProgressBarRoot"].destroy()
-        Prg["ProgressBarRoot"].quit()
+    if "ProgressBar" in Prg:
+        Prg["ProgressBar"]["Root"].destroy()
+        Prg["ProgressBar"]["Root"].quit()
         del Prg["ProgressBar"]
-        del Prg["ProgressBarRoot"]
-        del Prg["ProgressBarFunParams"]

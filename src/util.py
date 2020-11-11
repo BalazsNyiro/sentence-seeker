@@ -375,9 +375,14 @@ def web_get_progressbar(Prg, Url, Binary=False, Verbose=True):
     return Ret
 
 def web_get_wrapper_oneparam(Prg):
-    Url, Binary, Verbose = Prg["ProgressBarFunParams"]
+    Url, Binary, Verbose = Prg["ProgressBar"]["FunParams"]
+
+    # can't be stored in Prg["ProgressBar"] because it's deleted at close
     Prg["ProgressBarFunRet"] = \
-         web_get(Url=Url, Binary=Binary, Verbose=Verbose, PrgIfProgressBar=Prg)
+        web_get(Url=Url, Binary=Binary, Verbose=Verbose, PrgIfProgressBar=Prg)
+
+    # the main thread is stopped so from here we close the
+    # progressbar and the exec continues after bar_display
     ui_tkinter_boot_progress_bar.progressbar_close(Prg)
 #####################################################################################
 

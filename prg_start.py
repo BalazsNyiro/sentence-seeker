@@ -18,6 +18,13 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False):
     # sys.setprofile(util.TraceFunc)
     print(f"\nUI start: {Ui}")
 
+    if Ui == "tkinter":
+        try: # test: do we have graphical environment or we run in native console?
+            from tkinter import Tk
+            _RootUnused = Tk() # here we have an exception in native Linux terminal
+        except: # use console ui if gui is not available
+            Ui = "console"
+
     # the program planner analyses one execution
     if Ui == "ssp_program_planner":
         seeker.be_ready_to_seeking(Prg)

@@ -248,10 +248,10 @@ def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSe
     return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
 # Tested
-def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<"):
+def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<", ColorRow="", ColorRowEnd=""):
     for Word in Words:
         Pattern = fr"\b({Word})\b"
-        TextNew = fr"{HighlightBefore}\1{HighlightAfter}"
+        TextNew = fr"{ColorRowEnd}{HighlightBefore}\1{HighlightAfter}{ColorRow}"
         Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
     return Text
 

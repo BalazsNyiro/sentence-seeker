@@ -22,6 +22,7 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False):
         try: # test: do we have graphical environment or we run in native console?
             from tkinter import Tk
             _RootUnused = Tk() # here we have an exception in native Linux terminal
+            _RootUnused.destroy()
         except: # use console ui if gui is not available
             Ui = "console"
 

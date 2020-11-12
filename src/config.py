@@ -63,7 +63,14 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
     _Status, JsonObjReply = util_json_obj.obj_from_file(DocumentsSourceWebpagesFileName)
     DocumentsSourceWebpages = JsonObjReply["docs"]
 
-    Prg = { "Os": Os,
+    Prg = {
+            "Settings": {
+                "Ui":{
+                    "DisplaySourceFileName": True,
+                    "DisplaySourceUrl": True
+                }
+            },
+            "Os": Os,
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,

@@ -31,7 +31,7 @@ def token_split(Query):
     TokensWithSpecials = []
     for Token in Query.split(" "):
         if ":" in Token: # : means: special token
-            if Token == ":iverb_ps": # past simple
+            if Token == ":iverbPs": # past simple
                 TokensWithSpecials.append("(")
                 for FormPresentSimple in eng.IrregularVerbsPresentSimple:
                     TokensWithSpecials.append(FormPresentSimple)
@@ -211,10 +211,28 @@ def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "
 
     return ResultNew
 
+def run_commands_in_query(Prg, Query):
+    # it's not a problem if these commands stay in Query,
+    # The token processor skips them
+    if ":urlOff" in Query:
+        Prg["Settings"]["Ui"]["DisplaySourceUrl"] = False
+
+    if ":urlOn" in Query:
+        Prg["Settings"]["Ui"]["DisplaySourceUrl"] = True
+
+    if ":sourceOff" in Query:
+        Prg["Settings"]["Ui"]["DisplaySourceFileName"] = False
+
+    if ":sourceOn" in Query:
+        Prg["Settings"]["Ui"]["DisplaySourceFileName"] = True
+
+
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):
     Query = Query.strip()
     print(Query)
     util.log(Prg, f"Query: {Query}")
+
+    run_commands_in_query(Prg, Query)
 
     Tokens = token_split(Query)
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)

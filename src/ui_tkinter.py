@@ -101,20 +101,25 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.insert(tk.END, Sentence["subsentence_result"], "SentenceDisplayedResult")
     SentencesArea.insert(tk.END, Sentence["subsentences_after"] + "\n", "SentenceDisplayed")
 
-    SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
 
+    if Prg["Settings"]["Ui"]["DisplaySourceFileName"]:
+        SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
+
+    #######################################################
     TagName = f"tag_{DisplayedCounter}"
     SentencesArea.tag_configure(TagName,
                                 foreground="blue",
                                 underline=1,
                                 font=('Tempus Sans ITC', 9, 'normal'),
                                 lmargin1=LeftMarginOtherLines)
-    SentencesArea.tag_bind(TagName, "<1>",
-                           lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
-                          )
-    SentencesArea.tag_bind(TagName, "<Enter>", show_hand_cursor)
-    SentencesArea.tag_bind(TagName, "<Leave>", show_arrow_cursor)
-    SentencesArea.insert(tk.END, Url + "\n\n",  TagName)
+    if Prg["Settings"]["Ui"]["DisplaySourceUrl"]:
+        SentencesArea.tag_bind(TagName, "<1>",
+                               lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
+                              )
+        SentencesArea.tag_bind(TagName, "<Enter>", show_hand_cursor)
+        SentencesArea.tag_bind(TagName, "<Leave>", show_arrow_cursor)
+        SentencesArea.insert(tk.END, Url, TagName)
+    SentencesArea.insert(tk.END, "\n\n", TagName)
 
 def win_main(Prg):
     global PrgGlob

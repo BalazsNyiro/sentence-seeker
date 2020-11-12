@@ -36,8 +36,12 @@ def sentence_result_one_display(Prg, Result, WordsMaybeDetected ):
     Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
 
     LineResultColored = Sentence["subsentences_before"] + text.word_highlight(WordsMaybeDetected, Sentence["subsentence_result"], HighlightBefore=color(Prg, "Yellow"), HighlightAfter=color_reset(Prg)) + Sentence["subsentences_after"]
-    print(f"{LineResultColored}\n{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
-    print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
+    print(f"{LineResultColored}")
+
+    if Prg["Settings"]["Ui"]["DisplaySourceFileName"]:
+        print(f"{color(Prg, 'Bright Red')}{Source}{color_reset(Prg)}")
+    if Prg["Settings"]["Ui"]["DisplaySourceUrl"]:
+        print(f"{color(Prg, 'Bright Red')}{Url}{color_reset(Prg)}\n")
 
 def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):

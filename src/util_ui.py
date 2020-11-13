@@ -51,3 +51,12 @@ def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainL
 
 def title(Prg):
     return f"sentence-seeker: {Prg['DirDocuments']}"
+
+def title_refresh(Prg):
+    if Prg["Settings"]["Ui"]["DisplayDirDocInTitle"]:
+        print("dir doc is displayed")
+        Prg["UiRootObj"].title(title(Prg))
+    else:
+        print("dir doc is hidden")
+        # dir is hidden, because of demo for example :-)
+        Prg["UiRootObj"].title("sentence-seeker.net")

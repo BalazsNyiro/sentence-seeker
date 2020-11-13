@@ -67,7 +67,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "Settings": {
                 "Ui":{
                     "DisplaySourceFileName": True,
-                    "DisplaySourceUrl": True
+                    "DisplaySourceUrl": True,
+                    "DisplayDirDocInTitle": True
                 }
             },
             "Os": Os,
@@ -97,6 +98,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "Statistics": [],
             "LimitDisplayedSampleSentences": 20,
             "Ui": "tkinter",
+            "UiRootObj": None,
             "UiWindowGeometry": "800x600",
             "UiThemes": {
                 "ThemeNameActual": "SunSet",
@@ -340,6 +342,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                          "   but in input please use lower-case words",
                         "\n"
                         "Word class selectors:\n"
+                        " - :iverbInf  irregular verbs, Infinitive\n"
                         " - :iverbPs   irregular verbs, Past Simple\n"
                         " - :iverbPp   irregular verbs, Past Participle\n"
                         "   example: would AND :iverbPs\n"

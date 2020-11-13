@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import text, copy, time, util
-import eng, sys
+import text, util, util_ui
+import eng
 
 # ? MINUS,
 # ? NOT
@@ -45,6 +45,9 @@ def token_split(Query):
 
             if Token == ":iverbPp": # irregular verbs, past participle selector
                 TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsPastParticiple))
+
+            if Token == ":iverbInf": # irregular verbs, past participle selector
+                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsInfinitive))
 
         else:
             TokensWithSpecials.append(Token)
@@ -223,6 +226,14 @@ def run_commands_in_query(Prg, Query):
     # The token processor skips them
     if ":help" in Query:
         print("\n\n" + Prg["UsageInfo"] + "\n")
+
+    if ":dirDocInTitleOff" in Query:
+        Prg["Settings"]["Ui"]["DisplayDirDocInTitle"] = False
+        util_ui.title_refresh(Prg)
+
+    if ":dirDocInTitleOn" in Query:
+        Prg["Settings"]["Ui"]["DisplayDirDocInTitle"] = True
+        util_ui.title_refresh(Prg)
 
     if ":urlOff" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceUrl"] = False

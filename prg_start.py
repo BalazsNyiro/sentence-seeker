@@ -45,6 +45,10 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False):
         httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_json.SimpleHTTPRequestHandler)
         httpd.serve_forever()
     elif Ui == "html":
+        print("the simple html ui can run for 2-3 days without execution.\n"
+              "if you want to run it on server use this from sentence-seeker root dir:\n"
+              "./tools/http_server_restart_daily.sh"
+              "the used port is blocked after 2 days, It's a hotfix.")
         seeker.be_ready_to_seeking(Prg)
         ui_html.SimpleHTTPRequestHandler.Prg = Prg
         httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)

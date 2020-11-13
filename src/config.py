@@ -97,6 +97,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "Statistics": [],
             "LimitDisplayedSampleSentences": 20,
             "Ui": "tkinter",
+            "UiWindowGeometry": "800x600",
             "UiThemes": {
                 "ThemeNameActual": "SunSet",
                 "SunSet": {

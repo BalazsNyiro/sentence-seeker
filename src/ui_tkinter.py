@@ -127,6 +127,7 @@ def win_main(Prg):
 
     Root = tk.Tk()
     Root.title(util_ui.title(Prg))
+    Root.geometry(Prg["UiWindowGeometry"])
 
     MenuBar = tk.Menu(Root)
 

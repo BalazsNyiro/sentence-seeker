@@ -15,7 +15,7 @@ def user_interface_start(Prg, Ui):
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
-        Wanted = input("\nwanted: ").strip()
+        Wanted = input("\nwanted> ").strip()
         if not Wanted:
             print(color_reset(Prg))
             break
@@ -24,13 +24,15 @@ def user_interface_start(Prg, Ui):
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "console":
+        print()
         print(Prg["Licenses"])
+        print()
         print("interesting search: looks, like, bird")
         print("interesting search: elephant")
-
-        print("Exit: press enter, with empty wanted word")
+        print()
+        print("Exit:  Enter only")
+        print("Help:  :help + Enter")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
-
 
 def sentence_result_one_display(Prg, Result, WordsMaybeDetected, DisplayedCounter):
     ColorReset = color_reset(Prg)

@@ -54,7 +54,7 @@ def test_exec(Args):
     seeker.be_ready_to_seeking(Prg)
     ui_console.seek_and_display(Prg, Prg["QueryExamples"]["bird_or_cat"])
 
-    color_paletta_tester(Prg["UiThemes"]["SunSet"]["Highlights"])
+    # color_paletta_tester(Prg["UiThemes"]["SunSet"]["Highlights"])
 
 
 

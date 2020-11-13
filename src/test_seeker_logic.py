@@ -175,6 +175,12 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Words = seeker_logic.words_wanted_from_tokens(Tokens)
             self.assertEqual(Words, ["apple", "orange"])
 
+    def test_word_group_collect(self):
+        if self._test_exec("test_word_group_collect"):
+            Words = ["apple", "orange", "grape"]
+            Group = seeker_logic.word_group_collect(Words)
+            self.assertEqual(Group, ["(", "apple", "OR", "orange", "OR", "grape", ")"])
+
     def test_token_split(self):
         if self._test_exec("test_token_split"):
             Query = "like 1945"

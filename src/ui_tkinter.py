@@ -198,7 +198,7 @@ def win_main(Prg):
     SentencesArea.tag_bind("follow", "<1>",
                            lambda e, t=SentencesArea: t.insert(tk.END, "Click is detected :-)"))
 
-    SentencesArea.insert(tk.END, "Usage short info\n\n", "TextTitle")
+    SentencesArea.insert(tk.END, "Usage\n\n", "TextTitle")
     SentencesArea.insert(tk.END, Prg["UsageInfo"], "SentenceDisplayed")
 
     SentencesArea.insert(tk.END, "\n\nLicense info\n\n", "TextTitle")

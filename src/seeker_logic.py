@@ -14,6 +14,19 @@ def words_wanted_from_tokens(Tokens):
     return Words
 
 # TESTED
+def word_group_collect(Words):
+    TokensWithSpecials = []
+    TokensWithSpecials.append("(")
+
+    for Word in Words:
+        TokensWithSpecials.append(Word)
+        TokensWithSpecials.append("OR")
+
+    TokensWithSpecials.pop()  # remove last OR,
+    TokensWithSpecials.append(")")
+    return TokensWithSpecials
+
+# TESTED
 def token_split(Query):
 
     Query = Query.replace(",", " ")
@@ -23,21 +36,15 @@ def token_split(Query):
 
     ########################################################################
     # every special word has : sign as a separator.
-    # RULES:   From:what
-    # example, long:  Englishlanguage:irregular_verbs_form_2  but I need to use small format:
-    # example, applied   eng:iverb2, iverb3
-    # but in real life we often  use From==eng so if : is starter, it means eng
-
     TokensWithSpecials = []
     for Token in Query.split(" "):
         if ":" in Token: # : means: special token
-            if Token == ":iverbPs": # past simple
-                TokensWithSpecials.append("(")
-                for FormPresentSimple in eng.IrregularVerbsPresentSimple:
-                    TokensWithSpecials.append(FormPresentSimple)
-                    TokensWithSpecials.append("OR")
-                TokensWithSpecials.pop() # remove last OR,
-                TokensWithSpecials.append(")")
+
+            if Token == ":iverbPs": # irregular verbs, past simple selector
+                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsPresentSimple))
+
+            if Token == ":iverbPp": # irregular verbs, past participle selector
+                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsPastParticiple))
 
         else:
             TokensWithSpecials.append(Token)
@@ -214,6 +221,9 @@ def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "
 def run_commands_in_query(Prg, Query):
     # it's not a problem if these commands stay in Query,
     # The token processor skips them
+    if ":help" in Query:
+        print("\n\n" + Prg["UsageInfo"] + "\n")
+
     if ":urlOff" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceUrl"] = False
 
@@ -277,7 +287,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     for ResultSelector in ResultSelectors:
         ResultsSelected = ResultSelector(ResultsSelected, WordsMaybeDetected)
 
-    print("Time interpreter summa", TimeInterpreterSumma)
+    # print("Time interpreter summa", TimeInterpreterSumma)
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
 
 def token_explain_summa(TokenProcessExplainPerDoc):

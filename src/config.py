@@ -324,20 +324,28 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
             "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"},
-            "UsageInfo": "The program can collect sentences with given words.\n"
-                         " - use lowercase words that you want\n"
-                         " - use uppercase logical keywords: AND  OR\n\n"
-                         " - you can use () to group words\n"
-                         " - if you want, you can separate words with space/comma, too\n"
-                         "   example:  eat AND (apple OR banana)\n"
-
+            "UsageInfo": "The program collects sentences:\n"
+                         " - lowercase words: that you seek\n"
+                         " - uppercase keywords: AND  OR\n\n"
+                         " - () group words: (apple, grape) OR (banana, orange)\n"
+                         "\n"
+                         " - You can separate words with space/comma, too\n"
+                         "   example:  (eat, apple) OR (drink water)  \n"
+                         "\n"
                          " - space and comma means AND logically\n"
                          "   example:  egypt, russia, china\n\n"
                          "   in this case the program will find \n"
                          "   Russia, RUSSIA and russia too,\n"
                          "   but in input please use lower-case words",
-            "MessagesForUser": []
-            }
+                        "\n"
+                        "Word class selectors:\n"
+                        " - :iverbPs   irregular verbs, Past Simple\n"
+                        " - :iverbPp   irregular verbs, Past Participle\n"
+                        "   example: would AND :iverbPs\n"
+                        "   example: would have :iverbPp\n"
+
+        "MessagesForUser": []
+    }
 
     return Prg
 

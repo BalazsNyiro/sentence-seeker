@@ -13,10 +13,11 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False):
         print(Prg["UsageInfo"])
         input("press ENTER to start program")
 
-    document.docs_copy_samples_into_dir_if_necessary(Prg)
-
     # sys.setprofile(util.TraceFunc)
     print(f"\nUI start: {Ui}")
+    Prg["Ui"] = Ui
+
+    document.docs_copy_samples_into_dir_if_necessary(Prg)
 
     if Ui == "tkinter":
         try: # test: do we have graphical environment or we run in native console?

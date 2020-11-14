@@ -227,25 +227,25 @@ def run_commands_in_query(Prg, Query):
     if ":help" in Query:
         print("\n\n" + Prg["UsageInfo"] + "\n")
 
-    if ":dirDocInTitleOff" in Query:
-        Prg["Settings"]["Ui"]["DisplayDirDocInTitle"] = False
+    if ":dirDocInGuiTitleOff" in Query:
+        Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = False
         util_ui.title_refresh(Prg)
 
-    if ":dirDocInTitleOn" in Query:
-        Prg["Settings"]["Ui"]["DisplayDirDocInTitle"] = True
+    if ":dirDocInGuiTitleOn" in Query:
+        Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = True
         util_ui.title_refresh(Prg)
 
     if ":urlOff" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceUrl"] = False
+        Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
 
     if ":urlOn" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceUrl"] = True
+        Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
 
     if ":sourceOff" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceFileName"] = False
+        Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
 
     if ":sourceOn" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceFileName"] = True
+        Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
 
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):

@@ -56,9 +56,9 @@ def sentence_result_one_display(Prg, Result, WordsMaybeDetected, DisplayedCounte
                         ColorReset
     print(LineResultColored)
 
-    if Prg["Settings"]["Ui"]["DisplaySourceFileName"]:
+    if Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
         print(f"{color(Prg, 'Bright Red')}{Source}{ColorReset}")
-    if Prg["Settings"]["Ui"]["DisplaySourceUrl"]:
+    if Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"]:
         print(f"{color(Prg, 'Bright Red')}{Url}{ColorReset}")
     print()
 

@@ -66,9 +66,9 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
     Prg = {
             "Settings": {
                 "Ui":{
-                    "DisplaySourceFileName": True,
-                    "DisplaySourceUrl": True,
-                    "DisplayDirDocInTitle": True
+                    "DisplaySourceFileNameBelowSentences": True,
+                    "DisplaySourceUrlBelowSentences": True,
+                    "DisplayDirDocInGuiTitle": True
                 }
             },
             "Os": Os,
@@ -327,19 +327,12 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
             "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"},
-            "UsageInfo": "The program collects sentences:\n"
-                         " - lowercase words: that you seek\n"
-                         " - uppercase keywords: AND  OR\n\n"
-                         " - () group words: (apple, grape) OR (banana, orange)\n"
-                         "\n"
-                         " - You can separate words with space/comma, too\n"
-                         "   example:  (eat, apple) OR (drink water)  \n"
-                         "\n"
-                         " - space and comma means AND logically\n"
-                         "   example:  egypt, russia, china\n\n"
-                         "   in this case the program will find \n"
-                         "   Russia, RUSSIA and russia too,\n"
-                         "   but in input please use lower-case words",
+            "UsageInfo":"How to seek:\n"
+                        " - lowercase words: that you seek in sentences\n"
+                        "   Sentence, SENTENCE, sentence will be found because seeking is not case sensitive\n"
+                        " - AND  OR: logical operators\n\n"
+                        " - () group words: (apple, grape) OR (banana, orange)\n"
+                        " - space and comma means AND:  (apple,orange banana)"
                         "\n"
                         "Word class selectors:\n"
                         " - :iverbInf  irregular verbs, Infinitive\n"
@@ -347,8 +340,14 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                         " - :iverbPp   irregular verbs, Past Participle\n"
                         "   example: would AND :iverbPs\n"
                         "   example: would have :iverbPp\n"
-
-        "MessagesForUser": []
+                        "\n"
+                        "special commands:\n"
+                        " - :urlOff\n"
+                        " - :urlOn\n"
+                        " - :sourceOff\n"
+                        " - :sourceOn\n"
+                        " - :dirDocInGuiTitleOff\n"
+                        " - :dirDocInGuiTitleOn\n"
     }
 
     return Prg

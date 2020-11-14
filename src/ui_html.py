@@ -59,10 +59,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         if Req.path.split("?")[0] == "/seek":
             if "words" in QueryParams:
-                TokenProcessExplainSumma, _WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = \
+                TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = \
                     seeker_logic.seek(self.Prg, QueryParams["words"][0], SentenceFillInResult=True, ExplainOnly=("explain_only" in QueryParams))
 
-                Reply = util_ui.ui_json_answer(self.Prg, MatchNums__ResultInfo, TokenProcessExplainSumma, NewLine="<br />")
+                Reply = util_ui.ui_json_answer(self.Prg,
+                                               TokenProcessExplainSumma,
+                                               WordsMaybeDetected,
+                                               MatchNums__ResultInfo,
+                                               NewLine="<br />")
 
                 self.send_response(200)
                 self.content_type("text/plain")

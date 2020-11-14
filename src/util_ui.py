@@ -30,10 +30,15 @@ def theme_actual(Prg):
     Theme = Prg["UiThemes"][ThemeActual]
     return Theme
 
-def ui_json_answer(Prg, MatchNums__ResultInfo, TokenProcessExplainSumma, NewLine="\n"):
+def ui_json_answer(Prg,
+                   TokenProcessExplainSumma,
+                   WordsMaybeDetected,
+                   MatchNums__ResultInfo,
+                   NewLine="\n"):
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
     Reply = {"results": MatchNums__ResultInfo[:Prg["LimitDisplayedSampleSentences"]],
-             "token_process_explain": Txt}
+             "token_process_explain": Txt,
+             "words_maybe_detected": WordsMaybeDetected}
     Reply = json.dumps(Reply).encode('UTF-8')
     return Reply
 

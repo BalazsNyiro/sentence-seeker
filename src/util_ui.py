@@ -158,3 +158,9 @@ def text_split_at_screensize(SentencesColored, SentencesNotColored, WidthWanted,
         TextBlocksScreenSized.append("\n".join(Rows))
 
     return TextBlocksScreenSized
+
+# in basic case user press key+Enter
+# please solve that he has to press only one button
+def press_key_in_console(Prg):
+    UserReply = input("[p]rev, [n]ext, [q]uery again> ").strip()
+    return UserReply

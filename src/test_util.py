@@ -43,7 +43,7 @@ class UtilTests(util_test.SentenceSeekerTest):
     def test_util_shell(self):
         if self._test_exec("test_shell"):
             Prg = self.Prg
-            if self.Prg["OsIsLinux"]: # the tests with ls/grep don't work on Windows
+            if self.Prg["OsIsUnixBased"]: # the tests with ls/grep don't work on Windows
                 Result = util.shell(f"ls {Prg['DirPrgRoot']} | grep READ").strip()
                 self.assertEqual(Result, "README.md")
 

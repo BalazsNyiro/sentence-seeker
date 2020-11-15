@@ -98,11 +98,11 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     IdLast = len(TextsPerScreen)-1
     while True:
         print(TextsPerScreen[Id])
-        UserReply =input("[p]rev, [n]ext, [q]uery again> ").strip()
+        UserReply = util_ui.press_key_in_console(Prg)
         if UserReply == "p":
             if Id > 0:
                 Id -= 1
-        if UserReply == "n":
+        if UserReply == "n" or UserReply == "": # Simple enter: next
             if Id < IdLast-1:
                 Id += 1
         if UserReply == "q":

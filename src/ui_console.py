@@ -12,6 +12,9 @@ def seek_and_display(Prg, Wanted):
     # print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
+    if Prg["OsIsUnixBased"]: # On Linux and I hope on Mac, we can use history in console with readline module
+        import readline
+
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
@@ -96,17 +99,24 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     # TODO: loop all, based on keypress
     Id = 0
     IdLast = len(TextsPerScreen)-1
-    while True:
-        print(TextsPerScreen[Id])
-        UserReply = util_ui.press_key_in_console(Prg)
-        if UserReply == "p":
-            if Id > 0:
-                Id -= 1
-        if UserReply == "n" or UserReply == "": # Simple enter: next
-            if Id < IdLast-1:
-                Id += 1
-        if UserReply == "q":
-            break
+    Msg = "[p]rev, [n]ext, [q]uery again."
+
+    # 13: Enter
+    # 127: backspace
+    NextChars = "n jBC"+chr(13) # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
+    PrevChars = "pkAD" + chr(127) # A: arrowUp, D: arrowLeft
+    if TextsPerScreen: # if you use special commands, :help for example, we don't have any results
+        while True:
+            print(TextsPerScreen[Id])
+            UserReply = util_ui.press_key_in_console(Msg)
+            if UserReply in PrevChars:
+                if Id > 0:
+                    Id -= 1
+            if UserReply in NextChars:
+                if Id < IdLast-1:
+                    Id += 1
+            if UserReply == "q":
+                break
 
     #    if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
     #        break

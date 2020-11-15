@@ -1,6 +1,22 @@
 # -*- coding: utf-8 -*-
 import text, json, shutil
+
+
 import sys
+try:
+    import tty
+    import termios
+    TtyTermiosModulesAreAvailable = True
+except ImportError:
+    print("tty or termios is not available")
+    TtyTermiosModulesAreAvailable = False
+
+try:
+    import msvcrt # on Windows
+    MsvCrtModuleAvailable = True
+except ImportError:
+    MsvCrtModuleAvailable = False
+
 
 def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
     Source = Result["FileSourceBaseName"]
@@ -159,8 +175,39 @@ def text_split_at_screensize(SentencesColored, SentencesNotColored, WidthWanted,
 
     return TextBlocksScreenSized
 
+
+# FIXME: maybe in the future this module would be a better solution,
+# https://pypi.org/project/readchar/
+# but I don't want external installs
+
 # in basic case user press key+Enter
 # please solve that he has to press only one button
-def press_key_in_console(Prg):
-    UserReply = input("[p]rev, [n]ext, [q]uery again> ").strip()
-    return UserReply
+#  READ: https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
+def press_key_in_console(Msg, MsgEnd=""):
+    # typically on Linux
+    if TtyTermiosModulesAreAvailable:
+        print(Msg, end=MsgEnd, flush=True)
+        Fd = sys.stdin.fileno()
+        OldSettings = termios.tcgetattr(Fd)
+        Char = ""
+        try:
+            tty.setraw(sys.stdin.fileno())
+            Char = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(Fd, termios.TCSADRAIN, OldSettings)
+
+        # on Ubuntu:  UP: "A", Down: "B" rightArrow: "C", leftArrow: "D"
+        # when I press up arrow, it returns with 'A' char
+
+        # backspace: 127
+        # enter: 13
+        # print("Char received: ", Char, ord(Char))
+        print() # newline after message line (where we received user input at the end of the row
+        return Char
+
+    if MsvCrtModuleAvailable: # on Windows
+        return msvcrt.getwch()
+
+    # basic communication solution, type reply and press Enter
+    UserReply = input(Msg).strip()
+    return UserReply[0] # caller want only once char back

@@ -353,6 +353,10 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                         " - :sourceOn\n"
                         " - :dirDocInGuiTitleOff\n"
                         " - :dirDocInGuiTitleOn\n"
+                        "\n"
+                        "Console mode pager keys if you received results:\n"
+                        " - page next: n, Space, ArrowRight, ArrowDown, Enter, j (from vim)\n"
+                        " - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)\n"
     }
 
     return Prg

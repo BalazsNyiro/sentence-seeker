@@ -52,8 +52,9 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
         ColorRow = color(Prg, "Default") # the basic color of the row - it's switched line by line
     else:
         ColorRow = color(Prg, "Green")
+    RowNum = f"{DisplayedCounter} "
 
-    LineResultColored = ColorRow + \
+    LineResultColored = ColorRow + RowNum +\
                         Sentence["subsentences_before"] + \
                         text.word_highlight(WordsMaybeDetected,
                                             Sentence["subsentence_result"],
@@ -65,7 +66,7 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
                         ColorReset + \
                         "\n"
 
-    LineResultNotColored = Sentence["subsentences_before"] + \
+    LineResultNotColored = Sentence["subsentences_before"] + RowNum +\
                            Sentence["subsentence_result"] + \
                            Sentence["subsentences_after"] + \
                            "\n"
@@ -93,7 +94,19 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
 
     # TODO: loop all, based on keypress
-    print(TextsPerScreen[0])
+    Id = 0
+    IdLast = len(TextsPerScreen)-1
+    while True:
+        print(TextsPerScreen[Id])
+        UserReply =input("[p]rev, [n]ext, [q]uery again> ").strip()
+        if UserReply == "p":
+            if Id > 0:
+                Id -= 1
+        if UserReply == "n":
+            if Id < IdLast-1:
+                Id += 1
+        if UserReply == "q":
+            break
 
     #    if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
     #        break

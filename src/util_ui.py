@@ -73,31 +73,35 @@ def get_screen_size():
     return Width, Height
 
 
-def sentence_convert_to_rows(Sentence, WidthWanted):
+def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
 
     Rows = []
     Row = []
     RowWidth = 0
-    print(Sentence)
-    # prevent\nonly\nnewline connected words
-    Sentence = Sentence.replace("\n", "\n ")
 
-    for Word in Sentence.split(" "):
+    # prevent\nonly\nnewline connected words
+    SentenceColored = SentenceColored.replace("\n", "\n ")
+    SentenceNotColored = SentenceNotColored.replace("\n", "\n ")
+
+    WordsNotColored = SentenceNotColored.split(" ")
+    for Id, WordColored in enumerate(SentenceColored.split(" ")):
+        WordNotColored = WordsNotColored[Id]
 
         # the length of the words are not evident. they can be colored, for example.
         # The displayedLength is different from real one
         # +1 because there is a space between words
 
         # if Row is empty:
-        WordLenDisplayed = len(Word)
+        WordLenDisplayed = len(WordNotColored)
         if Row: # if row has previous word, space is necessary before
-            WordLenDisplayed = len(Word) + 1
+            WordLenDisplayed += 1
 
         ForcedNewRowAfterWordInsert = False
-        if "\n" in Word:
-            Word = Word.strip()
+        if "\n" in WordColored:
+            WordColored = WordColored.strip()
+            WordNotColored = WordNotColored.strip()
             ForcedNewRowAfterWordInsert = True
-            WordLenDisplayed = len(Word) + 1
+            WordLenDisplayed = len(WordNotColored) + 1 # set len again because of strip()
 
         TooLongWordCantBeFittedAnywhere = WordLenDisplayed > WidthWanted
         WordCanBeInserted = RowWidth + WordLenDisplayed <= WidthWanted
@@ -106,27 +110,26 @@ def sentence_convert_to_rows(Sentence, WidthWanted):
             (not WordCanBeInserted) and (not TooLongWordCantBeFittedAnywhere)
 
         if WordCanBeInserted:
-            Row.append(Word)
+            Row.append(WordColored)
             RowWidth += WordLenDisplayed
 
         # if you are unlucky and the word can't be fitted into the wanted width
         # then we have to insert it anyway
         if TooLongWordCantBeFittedAnywhere:
             Rows.append(" ".join(Row)) # close the prev row
-            Rows.append(Word)          # and insert the too long new one
+            Rows.append(WordColored)          # and insert the too long new one
             Row = []
             RowWidth = 0
 
         if WordCantBeInsertedBecauseRowIsFull:
             Rows.append(" ".join(Row))
-            Row = [Word]
+            Row = [WordColored]
             RowWidth = WordLenDisplayed
 
         if ForcedNewRowAfterWordInsert:
             Rows.append(" ".join(Row)) # close the prev row
             Row = []
             RowWidth = 0
-
 
     if Row:
         Rows.append(" ".join(Row))
@@ -135,12 +138,15 @@ def sentence_convert_to_rows(Sentence, WidthWanted):
 
 # return with list of splitted texts: [TextScreen1, TextScreen2]
 # one text block fits well on the screen
+# the two sentences are similar but in
 def text_split_at_screensize(SentencesColored, SentencesNotColored, WidthWanted, HeightWanted):
     TextBlocksScreenSized = []
     Rows = []
 
-    for Sentence in SentencesColored:
-        SentenceRows = sentence_convert_to_rows(Sentence, WidthWanted)
+    for Id, SentenceColored in enumerate(SentencesColored):
+        SentenceNotColored = SentencesNotColored[Id]
+
+        SentenceRows = sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted)
         if len(SentenceRows) + len(Rows) < HeightWanted:
             Rows.extend(SentenceRows)
         else:

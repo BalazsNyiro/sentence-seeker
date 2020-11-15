@@ -133,7 +133,7 @@ def document_objects_collect_from_dir_documents(Prg,
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
         MultiCore = True
-        if Prg["Os"] != "Linux":
+        if not Prg["OsIsLinux"]:
             MultiCore = False
 
         if MultiCore:

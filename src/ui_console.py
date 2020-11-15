@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import seeker_logic, text, util_ui
-import time, sys
+import time
 
 def seek_and_display(Prg, Wanted):
     TimeLogicStart = time.time()
@@ -11,16 +11,25 @@ def seek_and_display(Prg, Wanted):
     # print(f"Results Total: {ResultsTotalNum}")
     # print("Time logic: ", TimeLogicUsed)
 
-def user_interface_start(Prg, Ui):
+def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
-        Wanted = input("\nwanted> ").strip()
-        if not Wanted:
-            print(color_reset(Prg))
-            break
+        if QueryAsCmdlineParam:
+            Wanted = QueryAsCmdlineParam.strip()
+        else:
+            Wanted = input("\nwanted> ").strip()
+
+            if not Wanted:
+                print(color_reset(Prg))
+                break
         seek_and_display(Prg, Wanted)
-    #########################################
+        # if we got the query from command line, give it back and exit
+        if QueryAsCmdlineParam:
+            break
+
+
+#########################################
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "console":
@@ -34,7 +43,7 @@ def user_welcome_message(Prg, UserInterface):
         print("Help:  :help + Enter")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
-def sentence_result_one_display(Prg, Result, WordsMaybeDetected, DisplayedCounter):
+def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
     ColorReset = color_reset(Prg)
 
     Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
@@ -51,22 +60,43 @@ def sentence_result_one_display(Prg, Result, WordsMaybeDetected, DisplayedCounte
                                             HighlightBefore=color(Prg, "Yellow"),
                                             HighlightAfter=ColorReset,
                                             ColorRow=ColorRow,
-                                            ColorRowEnd=ColorReset)\
+                                            ColorRowEnd=ColorReset) \
                         + Sentence["subsentences_after"] + \
-                        ColorReset
-    print(LineResultColored)
+                        ColorReset + \
+                        "\n"
+
+    LineResultNotColored = Sentence["subsentences_before"] + \
+                           Sentence["subsentence_result"] + \
+                           Sentence["subsentences_after"] + \
+                           "\n"
 
     if Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
-        print(f"{color(Prg, 'Bright Red')}{Source}{ColorReset}")
+        LineResultColored += f"{color(Prg, 'Bright Red')}{Source}{ColorReset}\n"
+        LineResultNotColored += f"{Source}\n"
+
     if Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"]:
-        print(f"{color(Prg, 'Bright Red')}{Url}{ColorReset}")
-    print()
+        LineResultColored += f"{color(Prg, 'Bright Red')}{Url}{ColorReset}\n"
+        LineResultNotColored += f"{Url}\n"
+
+    return LineResultColored, LineResultNotColored
 
 def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
+    ScreenWidth, ScreenHeight = util_ui.get_screen_size()
+    SentencesColored = []
+    SentencesNotColored = []
+
     for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):
-        sentence_result_one_display(Prg, SentenceObj, WordsMaybeDetected, DisplayedCounter)
-        if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
-            break
+        LineResultColored, LineResultNotColored = sentence_result_one(Prg, SentenceObj, WordsMaybeDetected, DisplayedCounter)
+        SentencesColored.append(LineResultColored)
+        SentencesNotColored.append(LineResultNotColored)
+
+    TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
+
+    # TODO: loop all, based on keypress
+    print(TextsPerScreen[0])
+
+    #    if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
+    #        break
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
@@ -102,7 +132,7 @@ __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
 def color(Prg, ColorName, CnameBackground=""):
 
-    if Prg["Os"] == "Windows": return ""
+    if Prg["OsIsWindows"]: return ""
     # MAYBE: win terminal has color display option, detailed here:
     # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
 

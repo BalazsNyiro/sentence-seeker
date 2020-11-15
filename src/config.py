@@ -72,6 +72,10 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                 }
             },
             "Os": Os,
+            "OsIsLinux": Os == "Linux",
+            "OsIsWindows": Os == "Windows",
+            "OsIsDarwin": Os == "Darwin",
+
             "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,

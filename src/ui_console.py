@@ -99,7 +99,7 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     # TODO: loop all, based on keypress
     Id = 0
     IdLast = len(TextsPerScreen)-1
-    Msg = "[p]rev, [n]ext, [q]uery again."
+    Msg = "[p]rev [n]ext [q]uery again."
 
     # 13: Enter
     # 127: backspace

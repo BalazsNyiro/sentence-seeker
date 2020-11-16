@@ -107,9 +107,9 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
         # The displayedLength is different from real one
         # +1 because there is a space between words
 
-        # if Row is empty:
+        # if there is nothing before the word, than the length is the num of chars:
         WordLenDisplayed = len(WordNotColored)
-        if Row: # if row has previous word, space is necessary before
+        if Row: # It's not the first word, space is necessary before
             WordLenDisplayed += 1
 
         ForcedNewRowAfterWordInsert = False

@@ -359,11 +359,10 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                         " - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)\n"
     }
 
-    # read Settings section from saved json
-    Prg["Settings"].update(util_json_obj.config_get("Settings", DirWorkAbsPath, DefaultVal=dict()))
+    Prg["SettingsSaved"].update(util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict()))
 
     # Save the
-    util_json_obj.config_set(Prg, "Settings")
+    util_json_obj.config_set(Prg, "SettingsSaved")
     return Prg
 
 # Naive html text extractor.

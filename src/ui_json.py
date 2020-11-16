@@ -19,7 +19,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         print(QueryParams)
         if "words" in QueryParams:
             TokenProcessExplainSumma, _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(self.Prg, QueryParams["words"][0])
-            Reply = MatchNums__ResultInfo[:self.Prg["LimitDisplayedSampleSentences"]]
+            Reply = MatchNums__ResultInfo[:self.Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]]
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')

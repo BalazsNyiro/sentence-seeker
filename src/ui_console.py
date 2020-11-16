@@ -74,11 +74,11 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
                            Sentence["subsentences_after"] + \
                            "\n"
 
-    if Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
         LineResultColored += f"{color(Prg, 'Bright Red')}{Source}{ColorReset}\n"
         LineResultNotColored += f"{Source}\n"
 
-    if Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
         LineResultColored += f"{color(Prg, 'Bright Red')}{Url}{ColorReset}\n"
         LineResultNotColored += f"{Url}\n"
 

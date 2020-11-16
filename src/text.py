@@ -263,7 +263,6 @@ def word_wanted(Txt):
             return False
     return True
 
-# FIXME: TEST IT
 def words_count_in_all_document(Prg):
     WordsCounter = dict()
     for Doc in Prg["DocumentObjectsLoaded"].values():

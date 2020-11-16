@@ -435,7 +435,6 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
         if Prg["Ui"] == "console" or Prg["Ui"] == "html": # the user started the program in console mode
             WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
         elif Prg["Ui"] == "tkinter":
-            # TODO: gui progress bar for wikipedia download, too
             if independent_yes_no_window("Wikipedia interesting articles collection",
                                          "Do you want to download articles from Sentence Seker site?\nIt takes about 24-26 sec, then program starts."):
                 WikiPagesUse = "Y"

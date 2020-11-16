@@ -231,33 +231,33 @@ def run_commands_in_query(Prg, Query):
         CommandDetected = True
 
     if ":dirDocInGuiTitleOff" in Query:
-        Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = False
+        Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = False
         util_ui.title_refresh(Prg)
         CommandDetected = True
 
     if ":dirDocInGuiTitleOn" in Query:
-        Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = True
+        Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = True
         util_ui.title_refresh(Prg)
         CommandDetected = True
 
     if ":urlOff" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
+        Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
         CommandDetected = True
 
     if ":urlOn" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
+        Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
         CommandDetected = True
 
     if ":sourceOff" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
+        Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
         CommandDetected = True
 
     if ":sourceOn" in Query:
-        Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
+        Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
         CommandDetected = True
 
     if CommandDetected:
-        util_json_obj.config_set(Prg, "Settings")
+        util_json_obj.config_set(Prg, "SettingsSaved")
     else:
         print("Unknown command in Query>", Query)
 

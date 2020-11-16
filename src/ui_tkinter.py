@@ -29,7 +29,7 @@ def seek_and_display(KeypressEvent=""):
     ##############################################################
     for DisplayedCounter, SentenceObj in enumerate(MatchNums__ResultInfo, start=1):
         sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea, DisplayedCounter)
-        if DisplayedCounter >= PrgGlob["LimitDisplayedSampleSentences"]:
+        if DisplayedCounter >= PrgGlob["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]:
             break
 
     Theme = util_ui.theme_actual(PrgGlob)
@@ -102,7 +102,7 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.insert(tk.END, Sentence["subsentences_after"] + "\n", "SentenceDisplayed")
 
 
-    if Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
         SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
 
     #######################################################
@@ -112,7 +112,7 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
                                 underline=1,
                                 font=('Tempus Sans ITC', 9, 'normal'),
                                 lmargin1=LeftMarginOtherLines)
-    if Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
         SentencesArea.tag_bind(TagName, "<1>",
                                lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
                               )

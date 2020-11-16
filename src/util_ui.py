@@ -53,7 +53,7 @@ def ui_json_answer(Prg,
                    MatchNums__ResultInfo,
                    NewLine="\n"):
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
-    Reply = {"results": MatchNums__ResultInfo[:Prg["LimitDisplayedSampleSentences"]],
+    Reply = {"results": MatchNums__ResultInfo[:Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]],
              "token_process_explain": Txt,
              "words_maybe_detected": WordsMaybeDetected}
     Reply = json.dumps(Reply).encode('UTF-8')
@@ -75,7 +75,7 @@ def title(Prg):
     return f"sentence-seeker: {Prg['DirDocuments']}"
 
 def title_refresh(Prg):
-    if Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"]:
         print("dir doc is displayed")
         Prg["UiRootObj"].title(title(Prg))
     else:

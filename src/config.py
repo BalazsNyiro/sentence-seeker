@@ -64,11 +64,12 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
     DocumentsSourceWebpages = JsonObjReply["docs"]
 
     Prg = {
-            "Settings": {
+            "SettingsSaved": {
                 "Ui":{
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
-                    "DisplayDirDocInGuiTitle": True
+                    "DisplayDirDocInGuiTitle": True,
+                    "LimitDisplayedSentences": 20
                 }
             },
             "Os": Os,
@@ -101,7 +102,6 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
             "ConverterHtmlToText": converter_html_to_txt,
 
             "Statistics": [],
-            "LimitDisplayedSampleSentences": 20,
             "Ui": "tkinter",
             "UiRootObj": None,
             "UiWindowGeometry": "800x600",

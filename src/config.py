@@ -7,15 +7,7 @@ from sys import platform
 
 from html.parser import HTMLParser
 
-def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="", PrintForDeveloper=False):
-
-    if not DirPrgRoot:
-        PathConfigModule = os.path.realpath(__file__)
-        DirSrc = os.path.dirname(PathConfigModule)
-        DirPrgRoot = os.path.realpath(os.path.join(DirSrc, ".."))
-
-    if not DirWorkFromUserHome:
-        DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", ".sentence-seeker", DirPrgRoot)
+def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", Os="", PrintForDeveloper=False):
 
     if not Os: # "Linux", "Windows" "Darwin"
 
@@ -27,6 +19,14 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             Os = "Darwin"
         elif platform == "win32":
             Os = "Windows"
+
+    if not DirPrgExecRoot:
+        PathConfigModule = os.path.realpath(__file__)
+        DirSrc = os.path.dirname(PathConfigModule)
+        DirPrgExecRoot = os.path.realpath(os.path.join(DirSrc, ".."))
+
+    if not DirWorkFromUserHome:
+        DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", DirPrgExecRoot)
 
     DirWorkAbsPath = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
 
@@ -77,11 +77,11 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
             "OsIsDarwin": Os == "Darwin",
             "OsIsUnixBased": Os == "Darwin" or Os == "Linux",
 
-            "DirPrgRoot": DirPrgRoot, # parent dir of program, where sentence-seeker.py exists
+            "DirPrgRoot": DirPrgExecRoot, # parent dir of program, where sentence-seeker.py exists
             "DirWork": DirWorkAbsPath,
             "DirDocuments": DirDocuments,
-            "DirTextSamples": os.path.join(DirPrgRoot, "text_samples"),
-            "DirTestFiles": os.path.join(DirPrgRoot, "test_files"),
+            "DirTextSamples": os.path.join(DirPrgExecRoot, "text_samples"),
+            "DirTestFiles": os.path.join(DirPrgExecRoot, "test_files"),
             "DirLog": DirLog,
 
             "DocumentsSourceWebpagesFileName": DocumentsSourceWebpagesFileName,
@@ -359,6 +359,11 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgRoot="", Os="
                         " - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)\n"
     }
 
+    # read Settings section from saved json
+    Prg["Settings"].update(util_json_obj.config_get("Settings", DirWorkAbsPath, DefaultVal=dict()))
+
+    # Save the
+    util_json_obj.config_set(Prg, "Settings")
     return Prg
 
 # Naive html text extractor.

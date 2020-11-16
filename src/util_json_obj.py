@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os, util, json
 
+FileNameConfig = ".sentence-seeker.config"
+
 ############ JSON #############################
 
 # Tested
@@ -53,20 +55,24 @@ def doc_source_webpages_save_from_memory_to_file(Prg):
 def json_to_str(Obj):
     return json.dumps(Obj, sort_keys=True, indent=4)
 
+
 # Used in tests
 # read wanted key from config file
-def config_get(Key, DefaultVal, DirPrgRoot,
+def config_get(Key, DirPrgExecRoot="", DefaultVal="",
                DirConfigFileParent=None,
-               FileConfigBaseName=".sentence-seeker.config"):
+               FileNameConfigInitial=".sentence-seeker.config"):
+
+    _Status, ConfigInitial = obj_from_file(os.path.join(DirPrgExecRoot, FileNameConfigInitial))
+    DirWorkFromUserHome = ConfigInitial["DirWorkFromUserHome"]
 
     if not DirConfigFileParent:
-        DirConfigFileParent = util.dir_user_home()
+        DirConfigFileParent = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
 
-    FileConfigAbsPath = os.path.join(DirConfigFileParent, FileConfigBaseName)
+    FileConfigAbsPath = os.path.join(DirConfigFileParent, FileNameConfig)
 
     if not os.path.isfile(FileConfigAbsPath):
         print(f"create new config file from default: {FileConfigAbsPath}")
-        util.file_copy(os.path.join(DirPrgRoot, FileConfigBaseName), FileConfigAbsPath)
+        util.file_copy(os.path.join(DirPrgExecRoot, FileNameConfigInitial), FileConfigAbsPath)
     else:
         print(f"config file exists: {FileConfigAbsPath}")
 
@@ -74,5 +80,14 @@ def config_get(Key, DefaultVal, DirPrgRoot,
     if Key in Json:
         return Json[Key]
     return DefaultVal
+
+def config_set(Prg, Key, Val=None):
+    if Val == None:
+        Val = Prg[Key]
+
+    FilePathConfig = os.path.join(Prg["DirWork"], FileNameConfig)
+    _Status, ConfigInDirWork = obj_from_file(FilePathConfig)
+    ConfigInDirWork[Key] = Val
+    obj_to_file(FilePathConfig, ConfigInDirWork)
 
 

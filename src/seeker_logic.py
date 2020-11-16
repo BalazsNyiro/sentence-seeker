@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import text, util, util_ui
+import text, util, util_ui, util_json_obj
 import eng
 
 # ? MINUS,
@@ -224,28 +224,42 @@ def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "
 def run_commands_in_query(Prg, Query):
     # it's not a problem if these commands stay in Query,
     # The token processor skips them
+    CommandDetected = False
+
     if ":help" in Query:
         print("\n\n" + Prg["UsageInfo"] + "\n")
+        CommandDetected = True
 
     if ":dirDocInGuiTitleOff" in Query:
         Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = False
         util_ui.title_refresh(Prg)
+        CommandDetected = True
 
     if ":dirDocInGuiTitleOn" in Query:
         Prg["Settings"]["Ui"]["DisplayDirDocInGuiTitle"] = True
         util_ui.title_refresh(Prg)
+        CommandDetected = True
 
     if ":urlOff" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
+        CommandDetected = True
 
     if ":urlOn" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
+        CommandDetected = True
 
     if ":sourceOff" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
+        CommandDetected = True
 
     if ":sourceOn" in Query:
         Prg["Settings"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
+        CommandDetected = True
+
+    if CommandDetected:
+        util_json_obj.config_set(Prg, "Settings")
+    else:
+        print("Unknown command in Query>", Query)
 
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):

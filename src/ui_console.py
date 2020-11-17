@@ -66,21 +66,23 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
                                             ColorRow=ColorRow,
                                             ColorRowEnd=ColorReset) \
                         + Sentence["subsentences_after"] + \
-                        ColorReset + \
-                        "\n"
+                        ColorReset
 
     LineResultNotColored = Sentence["subsentences_before"] + RowNum +\
                            Sentence["subsentence_result"] + \
-                           Sentence["subsentences_after"] + \
-                           "\n"
+                           Sentence["subsentences_after"]
 
     if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
-        LineResultColored += f"{color(Prg, 'Bright Red')}{Source}{ColorReset}\n"
-        LineResultNotColored += f"{Source}\n"
+        LineResultColored += f"\n{color(Prg, 'Bright Red')}{Source}{ColorReset}"
+        LineResultNotColored += f"\n{Source}"
 
     if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
-        LineResultColored += f"{color(Prg, 'Bright Red')}{Url}{ColorReset}\n"
-        LineResultNotColored += f"{Url}\n"
+        LineResultColored += f"\n{color(Prg, 'Bright Red')}{Url}{ColorReset}"
+        LineResultNotColored += f"\n{Url}"
+
+    if Prg["SettingsSaved"]["Ui"]["Console"]["NewlineBetweenSentences"]:
+        LineResultColored += "\n"
+        LineResultNotColored += "\n"
 
     return LineResultColored, LineResultNotColored
 
@@ -96,7 +98,6 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
 
     TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
 
-    # TODO: loop all, based on keypress
     Id = 0
     IdLast = len(TextsPerScreen)-1
     Msg = "[p]rev [n]ext [q]uery again."

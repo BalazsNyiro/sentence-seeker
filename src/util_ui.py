@@ -114,8 +114,8 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
 
         ForcedNewRowAfterWordInsert = False
         if "\n" in WordColored:
-            WordColored = WordColored.strip()
-            WordNotColored = WordNotColored.strip()
+            WordColored = WordColored.replace("\n", "")
+            WordNotColored = WordNotColored.replace("\n", "")
             ForcedNewRowAfterWordInsert = True
             WordLenDisplayed = len(WordNotColored) + 1 # set len again because of strip()
 
@@ -132,18 +132,21 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
         # if you are unlucky and the word can't be fitted into the wanted width
         # then we have to insert it anyway
         if TooLongWordCantBeFittedAnywhere:
-            Rows.append(" ".join(Row)) # close the prev row
+            if Row:
+                Rows.append(" ".join(Row)) # close the prev row
             Rows.append(WordColored)          # and insert the too long new one
             Row = []
             RowWidth = 0
 
         if WordCantBeInsertedBecauseRowIsFull:
-            Rows.append(" ".join(Row))
+            if Row:
+                Rows.append(" ".join(Row))
             Row = [WordColored]
             RowWidth = WordLenDisplayed
 
         if ForcedNewRowAfterWordInsert:
-            Rows.append(" ".join(Row)) # close the prev row
+            if Row:
+                Rows.append(" ".join(Row)) # close the prev row
             Row = []
             RowWidth = 0
 

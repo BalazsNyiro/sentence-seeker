@@ -69,7 +69,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
                     "DisplayDirDocInGuiTitle": True,
-                    "LimitDisplayedSentences": 20
+                    "LimitDisplayedSentences": 20,
+                    "Console": {"NewlineBetweenSentences": False}
                 }
             },
             "Os": Os,
@@ -359,7 +360,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                         " - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)\n"
     }
 
-    Prg["SettingsSaved"].update(util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict()))
+    SettingsSaved = util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict())
+    util.dict_update_recursive(Prg["SettingsSaved"], SettingsSaved)
 
     # Save the
     util_json_obj.config_set(Prg, "SettingsSaved")

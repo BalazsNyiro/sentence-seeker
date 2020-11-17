@@ -47,6 +47,17 @@ def dict_key_sorted(Dict: dict, Reverse=True):
     Keys.sort(reverse=Reverse)
     return Keys
 
+# TODO: test it
+# when I reload config settings, maybe there are structural differences
+# between the memory stored settings and the saved one.
+# This is a cultural update solution
+def dict_update_recursive(Current, New):
+    for Key, Val in New.items():
+        if is_dict(Val):
+            dict_update_recursive(Current[Key], Val)
+        else:
+            Current[Key] = Val
+
 # Tested, it can delete empty dirs
 def dir_delete_if_exist(Prg, Path, Print=False):
     Ret = ""

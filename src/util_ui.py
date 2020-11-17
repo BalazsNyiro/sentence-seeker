@@ -204,6 +204,7 @@ def press_key_in_console(Msg, MsgEnd=""):
 
         # backspace: 127
         # enter: 13
+        # escape: 27
         # print("Char received: ", Char, ord(Char))
         print() # newline after message line (where we received user input at the end of the row
         return Char

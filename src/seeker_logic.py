@@ -226,40 +226,42 @@ def run_commands_in_query(Prg, Query):
     # The token processor skips them
     CommandDetected = False
 
-    if ":help" in Query:
-        print("\n\n" + Prg["UsageInfo"] + "\n")
-        CommandDetected = True
+    if ":" in Query:
 
-    if ":dirDocInGuiTitleOff" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = False
-        util_ui.title_refresh(Prg)
-        CommandDetected = True
+        if ":help" in Query:
+            print("\n\n" + Prg["UsageInfo"] + "\n")
+            CommandDetected = True
 
-    if ":dirDocInGuiTitleOn" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = True
-        util_ui.title_refresh(Prg)
-        CommandDetected = True
+        if ":dirDocInGuiTitleOff" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = False
+            util_ui.title_refresh(Prg)
+            CommandDetected = True
 
-    if ":urlOff" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
-        CommandDetected = True
+        if ":dirDocInGuiTitleOn" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"] = True
+            util_ui.title_refresh(Prg)
+            CommandDetected = True
 
-    if ":urlOn" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
-        CommandDetected = True
+        if ":urlOff" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
+            CommandDetected = True
 
-    if ":sourceOff" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
-        CommandDetected = True
+        if ":urlOn" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
+            CommandDetected = True
 
-    if ":sourceOn" in Query:
-        Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
-        CommandDetected = True
+        if ":sourceOff" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
+            CommandDetected = True
 
-    if CommandDetected:
-        util_json_obj.config_set(Prg, "SettingsSaved")
-    else:
-        print("Unknown command in Query>", Query)
+        if ":sourceOn" in Query:
+            Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
+            CommandDetected = True
+
+        if CommandDetected:
+            util_json_obj.config_set(Prg, "SettingsSaved")
+        else:
+            print("Unknown command in Query>", Query)
 
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):

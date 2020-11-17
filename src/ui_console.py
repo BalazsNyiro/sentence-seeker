@@ -102,10 +102,14 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     IdLast = len(TextsPerScreen)-1
     Msg = "[p]rev [n]ext [q]uery again."
 
-    # 13: Enter
-    # 127: backspace
-    NextChars = "n jBC"+chr(13) # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
-    PrevChars = "pkAD" + chr(127) # A: arrowUp, D: arrowLeft
+    CharEnter = chr(13)
+    CharBackspace = chr(127)
+    CharEscape = chr(27)
+
+    NextChars = "n jBC"+ CharEnter # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
+    PrevChars = "pkAD" + CharBackspace # A: arrowUp, D: arrowLeft
+    QuitChars = "q" + CharEscape
+
     if TextsPerScreen: # if you use special commands, :help for example, we don't have any results
         while True:
             print(TextsPerScreen[Id])
@@ -116,7 +120,7 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
             if UserReply in NextChars:
                 if Id < IdLast-1:
                     Id += 1
-            if UserReply == "q":
+            if UserReply in QuitChars:
                 break
 
     #    if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:

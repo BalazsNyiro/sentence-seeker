@@ -110,10 +110,16 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     PrevChars = "pkAD" + CharBackspace # A: arrowUp, D: arrowLeft
     QuitChars = "q" + CharEscape
 
+    IdPrev = None
     if TextsPerScreen: # if you use special commands, :help for example, we don't have any results
         while True:
-            print(TextsPerScreen[Id])
-            UserReply = util_ui.press_key_in_console(Msg)
+            IdChanged = Id != IdPrev
+            ChangeWarning = " no more to display!" if not IdChanged else ""
+            if IdChanged:
+                print(TextsPerScreen[Id])
+            IdPrev = Id
+
+            UserReply = util_ui.press_key_in_console(Msg + ChangeWarning)
             if UserReply in PrevChars:
                 if Id > 0:
                     Id -= 1

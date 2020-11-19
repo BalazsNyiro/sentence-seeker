@@ -226,9 +226,7 @@ def run_commands_in_query(Prg, Query):
 
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
-         ResultSelectors=[  result_selectors.remove_sentences_with_too_much_numbers,
-                            result_selectors.sortSentences
-                         ]):
+         ResultSelectors=[result_selectors.sortSentences]):
     Query = Query.strip()
     print(Query)
     util.log(Prg, f"Query: {Query}")

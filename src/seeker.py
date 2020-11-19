@@ -34,7 +34,32 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
         if FileTextAbsPath: # for testing it's easier to get Text from param - and not create/del tmpfile
             _ReadSuccess, Text = util.file_read_all(Prg, Fname=FileTextAbsPath, CheckIsFile=False)
         Sentences = text.sentence_separator(Text)
-        util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(Sentences))
+
+        SentencesFiltered = []
+        KnownSentences = set()
+
+        ###### filter sentences with too much numbers ##################
+        for Sentence in Sentences:
+
+            ############## word with/without nums ratio filter ####################
+            WordNumRatioLow = False
+            WordsHasNum, WordsWithoutNum = util.count_words_with_num(Sentence)
+            if WordsWithoutNum >= WordsHasNum * 4:
+                WordNumRatioLow = True
+
+            ################### avoid duplications in one text ####################
+            if Sentence in KnownSentences:
+                Repeated = True
+            else:
+                Repeated = False
+                KnownSentences.add(Sentence)
+            #######################################################################
+
+            if WordNumRatioLow and not Repeated:
+                SentencesFiltered.append(Sentence)
+        ###### filter sentences with too much numbers ##################
+
+        util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(SentencesFiltered))
 
 # Tested
 def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):

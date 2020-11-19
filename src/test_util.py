@@ -5,6 +5,13 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_count_words_with_numbers(self):
+        if self._test_exec("test_count_words_with_numbers"):
+            Sentence = "apple, banana5, 1 Thesaurus bird"
+            WordsHasNum, WordsWithoutNum = util.count_words_with_num(Sentence)
+            self.assertEqual(WordsWithoutNum, 3)
+            self.assertEqual(WordsHasNum, 2)
+
     def test_dict_value_insert_into_key_group(self):
         if self._test_exec("test_dict_value_insert_into_key_group"):
             Dict = {}

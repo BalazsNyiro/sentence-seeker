@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import os, gzip, shutil, pathlib, urllib.request, util_json_obj
+import os, gzip, shutil, pathlib, urllib.request
+from util_json_obj import doc_source_webpages_update_in_file_and_Prg
 import sys, array, time, datetime, io
 from ui_tkinter import independent_yes_no_window
 import ui_tkinter_boot_progress_bar
@@ -488,7 +489,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                                   "source_name": SourceName,
                                   "license": License}
                         # print("DocObj", DocObj)
-                        util_json_obj.doc_source_webpages_update_in_file_and_Prg(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
+                        doc_source_webpages_update_in_file_and_Prg(Prg, FileNameWithoutExtension, DocObj)  # and reload the updated db
 
                         Url = License = FileName = "-"
                         LinesDoc = []
@@ -612,3 +613,20 @@ def is_tuple(Obj):
 
 def time_spent(Msg, TimeStart):
     print(f"{Msg} {time.time()-TimeStart} sec")
+
+# TESTED
+def count_words_with_num(Sentence):
+    WordsHasNum = 0
+    WordsWithoutNum = 0
+    for Word in Sentence.split(" "):
+        HasNum = False
+        for Char in Word:
+            if Char.isdigit():
+                HasNum = True
+                break
+        if HasNum:
+            WordsHasNum += 1
+        else:
+            WordsWithoutNum += 1
+    return WordsHasNum, WordsWithoutNum
+

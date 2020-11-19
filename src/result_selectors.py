@@ -21,6 +21,8 @@ def sortSentences(_Prg, ResultsOrig, _WordsMaybeDetected):
 
     return Sorted2
 
+
+# the
 def remove_sentences_with_too_much_numbers(Prg, ResultsOrig, _WordsMaybeDetected):
     # THIS IS ONE sentence that I want to filter, keyword: public:
     # =====================================================
@@ -46,19 +48,8 @@ def remove_sentences_with_too_much_numbers(Prg, ResultsOrig, _WordsMaybeDetected
         _StatusFromMemory, Sentence = text.sentence_from_memory(Prg,
                                                                 Result["FileSourceBaseName"],
                                                                 Result["LineNumInSentenceFile"])
-        WordsHasNum = 0
-        WordsWithoutNum = 0
-        for Word in Sentence.split(" "):
-            HasNum = False
-            for Char in Word:
-                if Char.isdigit():
-                    HasNum = True
-                    break
-            if HasNum:
-                WordsHasNum += 1
-            else:
-                WordsWithoutNum += 1
 
+        WordsHasNum, WordsWithoutNum = util.count_words_with_num(Sentence)
         if WordsWithoutNum > WordsHasNum * 5:
             ResultNew.append(Result)
 

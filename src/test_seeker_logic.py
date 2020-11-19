@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest, util_test, copy, util, seeker
-import seeker_logic, text
+import seeker_logic, text, result_selectors
 import os.path
 import document
 
@@ -161,11 +161,11 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
         WordsMaybeDetected = ["part"]
         ResultsSelectedOrig = [Obj1, Obj2]
-        ResultsSelected = seeker_logic.resultSelectors(ResultsSelectedOrig, WordsMaybeDetected)
+        ResultsSelected = result_selectors.sortSentences(dict(), ResultsSelectedOrig, WordsMaybeDetected)
         self.assertEqual(ResultsSelected, [Obj2, Obj1])
 
         ResultsSelectedOrig = [Obj1, Obj2, Obj3]
-        ResultsSelected = seeker_logic.resultSelectors(ResultsSelectedOrig, WordsMaybeDetected)
+        ResultsSelected = result_selectors.sortSentences(dict(), ResultsSelectedOrig, WordsMaybeDetected)
 
         self.assertEqual(ResultsSelected, [Obj2, Obj3, Obj1])
 

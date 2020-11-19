@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import text, util, util_ui, util_json_obj
-import eng
+import eng, result_selectors
 
 # ? MINUS,
 # ? NOT
@@ -182,45 +182,6 @@ def operator_exec_left_right(Operator, TokensOrig, Explains):
 
 Operators = {"AND", "OR", "(", ")"}
 
-
-# ResultsSelected = []
-# Selectors = [result_selectors.shorters_are_better,
-#              result_selectors.duplication_removing]
-
-# for MatchNum in MatchNums__Descending:
-
-#     # PLUGIN ATTACH POINT
-#     # - if it's possible keep the search word order?
-#     # - the words distance (shorter is better)
-
-#     ResultsGroup = GroupsSubsentenceBased_MatchNums_ResultInfos[MatchNum]
-#     for Selector in Selectors:
-#         ResultsGroup = Selector(ResultsGroup)
-#     ResultsSelected.extend(ResultsGroup)
-# TODO: result_selectors.py??
-
-# receive results, give back results
-# example Result Selector, Proof of concept
-# FIXME: distances of wanted words are CRUCIAL
-# tested in test_result_selectors
-def resultSelectors(ResultsOrig, WordsMaybeDetected, SortBy=["SubSentenceLen", "SentenceLen"]):
-    if not SortBy:
-        return ResultsOrig
-
-    ResultNew = []
-    Groups = {}
-    SortKey = SortBy[0]
-
-    for Result in ResultsOrig:
-        Score = Result[SortKey]
-        util.dict_value_insert_into_key_group(Groups, Score, Result)
-
-    for Score in sorted(Groups.keys()):
-        # print(f"\nScore {Score} {SortKey}")
-        ResultNew.extend(resultSelectors(Groups[Score], WordsMaybeDetected, SortBy[1:]))
-
-    return ResultNew
-
 def run_commands_in_query(Prg, Query):
     # it's not a problem if these commands stay in Query,
     # The token processor skips them
@@ -264,7 +225,10 @@ def run_commands_in_query(Prg, Query):
             print("Unknown command in Query>", Query)
 
 
-def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=[resultSelectors]):
+def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
+         ResultSelectors=[  result_selectors.remove_sentences_with_too_much_numbers,
+                            result_selectors.sortSentences
+                         ]):
     Query = Query.strip()
     print(Query)
     util.log(Prg, f"Query: {Query}")
@@ -312,7 +276,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     TokenProcessExplainSumma = token_explain_summa(TokenProcessExplainPerDoc)
 
     for ResultSelector in ResultSelectors:
-        ResultsSelected = ResultSelector(ResultsSelected, WordsMaybeDetected)
+        ResultsSelected = ResultSelector(Prg, ResultsSelected, WordsMaybeDetected)
 
     # print("Time interpreter summa", TimeInterpreterSumma)
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)

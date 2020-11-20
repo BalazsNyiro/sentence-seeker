@@ -73,6 +73,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                     "Console": {"NewlineBetweenSentences": False}
                 }
             },
+            "Cache": dict(),
             "Os": Os,
             "OsIsLinux": Os == "Linux",
             "OsIsWindows": Os == "Windows",

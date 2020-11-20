@@ -382,6 +382,7 @@
         "happy": [
             "cheerful",
             "delighted (She is delighted because...)",
+            "enjoy",
             "glee",
             "happy",
             "merry",
@@ -540,6 +541,10 @@
             "to quit",
             "to slip (she slipped out of the library)",
             "to slope (she sloped away)"
+        ],
+        "to like": [
+            "to became attached to these dogs",
+            "to enjoy"
         ],
         "to lift": [
             "to emerge",

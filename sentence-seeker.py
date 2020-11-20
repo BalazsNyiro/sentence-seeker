@@ -37,7 +37,7 @@ def test_exec(Args):
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")
     import test_util, test_util_json, test_document, \
-        test_text, test_seeker, test_seeker_logic, test_util_ui
+        test_text, test_seeker, test_seeker_logic, test_util_ui, test_eng
     import test_converter
 
     test_util.run_all_tests(Prg)
@@ -49,6 +49,7 @@ def test_exec(Args):
     test_seeker.run_all_tests(Prg)
     test_seeker_logic.run_all_tests(Prg)
     test_util_ui.run_all_tests(Prg)
+    test_eng.run_all_tests(Prg)
     print("##################### TEST END #####################################")
     sys.exit(0)
     # print("\n"*22)

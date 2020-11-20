@@ -27,7 +27,9 @@ def word_group_collect(Words):
     return TokensWithSpecials
 
 # TESTED
-def token_split(Query):
+# FIXME: TEST WITH PRG PARAM
+TokensSpecial = set([":iverbPs", ":iverbInf", ":iverbPp", "end:", "start:"])
+def token_split(Query, Prg=dict()):
 
     Query = Query.replace(",", " ")
 
@@ -48,6 +50,14 @@ def token_split(Query):
 
             if Token == ":iverbInf": # irregular verbs, past participle selector
                 TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsInfinitive))
+
+            if Token.startswith("end:"):
+                End = Token.split(":")[1]
+                TokensWithSpecials.extend(word_group_collect(eng.groups_of_word_ending(Prg, End)))
+
+            if Token.startswith("start:"):
+                Start = Token.split(":")[1]
+                TokensWithSpecials.extend(word_group_collect(eng.groups_of_word_starting(Prg, Start)))
 
         else:
             TokensWithSpecials.append(Token)
@@ -222,7 +232,7 @@ def run_commands_in_query(Prg, Query):
         if CommandDetected:
             util_json_obj.config_set(Prg, "SettingsSaved")
         else:
-            print("Unknown command in Query>", Query)
+           print(": detected but not command in Query>", Query)
 
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
@@ -233,7 +243,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
 
     run_commands_in_query(Prg, Query)
 
-    Tokens = token_split(Query)
+    Tokens = token_split(Query, Prg=Prg)
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)
 
     TokenGroups = token_group_finder(Tokens)

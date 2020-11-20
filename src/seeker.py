@@ -44,7 +44,7 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
             ############## word with/without nums ratio filter ####################
             WordNumRatioLow = False
             WordsHasNum, WordsWithoutNum = util.count_words_with_num(Sentence)
-            if WordsWithoutNum >= WordsHasNum * 4:
+            if WordsWithoutNum >= WordsHasNum * 3:
                 WordNumRatioLow = True
 
             ################### avoid duplications in one text ####################

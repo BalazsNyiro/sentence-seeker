@@ -54,6 +54,7 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
                                                 ReturnType="separated_subsentences",
                                                 ColorBefore= ColorBefore,
                                                 ColorAfter= ColorDefault,
+                                                ColorDetected=color(Prg, "Yellow"),
                                                 ResultNum= ResultNum,
                                                 WordsMaybeDetected=WordsMaybeDetected)
 
@@ -99,7 +100,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
             RowsRenderedLen = len(RowsRendered)
 
             if RowsRenderedLen <= FreeLines:
-                print("".join(RowsRendered))
+                print("\n".join(RowsRendered))
                 FreeLines -= RowsRenderedLen
                 IdNext += 1
                 SomethingDisplayed = True

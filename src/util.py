@@ -630,3 +630,9 @@ def count_words_with_num(Sentence):
             WordsWithoutNum += 1
     return WordsHasNum, WordsWithoutNum
 
+def word_only_abc_chars(Txt):
+    Pure = []
+    for Char in Txt:
+        if Char in ABC_Eng_Lower or Char in ABC_Eng_Upper:
+            Pure.append(Char)
+    return "".join(Pure)

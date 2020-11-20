@@ -27,17 +27,10 @@ except ImportError:
 
 ########################################################################################################################
 class CharObj():
-    def __init__(self, Char, ColorBefore=None, ColorAfter=None):
+    def __init__(self, Char):
         self.Char = Char
-        self.ColorBefore = ColorBefore
-        self.ColorAfter  = ColorAfter
-
     def render(self):
-        Out = []
-        if self.ColorBefore: Out.append(self.ColorBefore)
-        Out.append(self.Char)
-        if self.ColorAfter: Out.append(self.ColorAfter)
-        return "".join(Out)
+        return self.Char
 
 class WordObj():
     def __str__(self):
@@ -46,20 +39,34 @@ class WordObj():
             Out.append(Char.render())
         return "".join(Out)
 
-    def __init__(self, Txt,  WordsMaybeDetected=set(), ColorBefore=None, ColorAfter=None, InResultSubsentence=False):
+    def __init__(self, Txt,  WordsMaybeDetected=set(), ColorBefore=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=""):
         self.Chars = [CharObj(C) for C in Txt]
         self.ColorBefore = ColorBefore
         self.ColorAfter = ColorAfter
-        self.Detected = Txt in WordsMaybeDetected
+        self.ColorDetected = ColorDetected
+
+        self.Detected = False
+
+        if util.word_only_abc_chars(Txt) in WordsMaybeDetected:
+            self.Detected = True
+
         self.Len = len(Txt)
         self.InResultSubsentence = InResultSubsentence
 
-    def render(self):
+    def render(self, ColorSentence):
         Out = []
-        if self.ColorBefore: Out.append(self.ColorBefore)
+        if self.Detected:
+            Out.append(self.ColorDetected)
+        elif self.ColorBefore:
+            Out.append(self.ColorBefore)
+
         for Char in self.Chars:
             Out.append(Char.render())
-        if self.ColorAfter: Out.append(self.ColorAfter)
+
+        if self.ColorAfter:
+            Out.append(self.ColorAfter)
+        else:
+            Out.append(ColorSentence)
         return "".join(Out)
 
 class SentenceObj():
@@ -83,19 +90,26 @@ class SentenceObj():
             else:
                 Rows.append([Word])
 
+        #######################################
         RowsRendered = []
 
         for Row in Rows:
-            Rendered = []
+            if not RowsRendered: # start with sentence color start
+                Rendered = [self.ColorBefore]
+            else:
+                Rendered = []
             for Word in Row:
                 if len(Rendered):
                     Rendered.append(" ")
-                Rendered.append(Word.render())
+                Rendered.append(Word.render(self.ColorBefore))
             RowsRendered.append("".join(Rendered))
+
+        RowsRendered[-1] += self.ColorAfter
+        #######################################
 
         return RowsRendered
 
-    def add_word(self, Txt, ColorBefore=None, ColorAfter=None, InResultSubsentence=False):
+    def add_word(self, Txt, ColorBefore=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=None):
         Txt = Txt.strip()
         if not Txt: return # be sure, insert only real words, not empty strings or whitespaces
 
@@ -103,7 +117,8 @@ class SentenceObj():
                     WordsMaybeDetected=self.WordsMaybeDetected,
                     ColorBefore=ColorBefore,
                     ColorAfter=ColorAfter,
-                    InResultSubsentence=InResultSubsentence)
+                    InResultSubsentence=InResultSubsentence,
+                    ColorDetected=ColorDetected)
         self.Words.append(W)
         if self.Len > 0:
             self.Len += 1
@@ -112,11 +127,15 @@ class SentenceObj():
     # "more word in one big string"
     def add_big_string(self, BigString, InResultSubsentence=False):
         for WordTxt in BigString.split(" "):
-            self.add_word(WordTxt, InResultSubsentence=InResultSubsentence)
+            self.add_word(WordTxt, InResultSubsentence=InResultSubsentence, ColorDetected=self.ColorDetected)
 
-    def __init__(self, Sentence=None, ColorBefore=None, ColorAfter=None, ResultNum=None, WordsMaybeDetected=set(), Url=None, Source=None):
+    def __init__(self, Sentence=None,
+                 ColorBefore=None, ColorAfter=None, ColorDetected=None,
+                 ResultNum=None, WordsMaybeDetected=set(),
+                 Url=None, Source=None):
         self.ColorBefore = ColorBefore
         self.ColorAfter = ColorAfter
+        self.ColorDetected = ColorDetected
         self.ResultNum = ResultNum
         self.Len = 0
         self.Words = []
@@ -126,12 +145,13 @@ class SentenceObj():
 
         if Sentence:
             for Txt in Sentence.split(" "):
-                self.add_word(Txt)
+                self.add_word(Txt, ColorDetected=ColorDetected)
 
 def sentence_get_from_result_oop(Prg, Result,
                                  ReturnType="complete_sentence",
                                  ColorBefore=None,
                                  ColorAfter=None,
+                                 ColorDetected=None,
                                  ResultNum=None,
                                  WordsMaybeDetected=set()):
 
@@ -140,6 +160,7 @@ def sentence_get_from_result_oop(Prg, Result,
     if util.is_dict(Txt):
         Sentence = SentenceObj(ColorBefore=ColorBefore,
                                ColorAfter=ColorAfter,
+                               ColorDetected=ColorDetected,
                                ResultNum=ResultNum,
                                WordsMaybeDetected=WordsMaybeDetected,
                                Url=Url, Source=Source)

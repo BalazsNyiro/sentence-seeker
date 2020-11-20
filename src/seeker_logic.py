@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import text, util, util_ui, util_json_obj
 import eng, result_selectors
-
+import time
 # ? MINUS,
 # ? NOT
 
 # TESTED
 def words_wanted_from_tokens(Tokens):
-    Words = [] # select only lowercase words from tokens
+    Words = set() # select only lowercase words from tokens
     for Token in Tokens:
         if text.word_wanted(Token):
-            Words.append(Token)
+            Words.add(Token)
     return Words
 
 # TESTED
@@ -251,8 +251,6 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     ResultsSelected = []
     TokenProcessExplainPerDoc = dict()
 
-    TimeInterpreterSumma = 0
-
     for FileSourceBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
 
         # use one file during development
@@ -286,7 +284,6 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     for ResultSelector in ResultSelectors:
         ResultsSelected = ResultSelector(Prg, ResultsSelected, WordsMaybeDetected)
 
-    # print("Time interpreter summa", TimeInterpreterSumma)
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
 
 def token_explain_summa(TokenProcessExplainPerDoc):

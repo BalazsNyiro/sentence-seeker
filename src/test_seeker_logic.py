@@ -173,7 +173,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_words_wanted_from_tokens"):
             Tokens = ["(", "apple", "AND", "orange", ")"]
             Words = seeker_logic.words_wanted_from_tokens(Tokens)
-            self.assertEqual(Words, ["apple", "orange"])
+            self.assertEqual(Words, set(["apple", "orange"]))
 
     def test_word_group_collect(self):
         if self._test_exec("test_word_group_collect"):

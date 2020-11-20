@@ -46,62 +46,18 @@ def user_welcome_message(Prg, UserInterface):
         print("Help:  :help + Enter")
         print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
 
-def sentence_result_one(Prg, Result, WordsMaybeDetected, DisplayedCounter):
-    ColorReset = color_reset(Prg)
+def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
+    ColorDefault = color(Prg, "Default")
+    ColorBefore = color(Prg, "Green") if ResultNum % 2 == 0 else ColorDefault
+    return util_ui.sentence_get_from_result_oop(Prg,
+                                                Result,
+                                                ReturnType="separated_subsentences",
+                                                ColorBefore= ColorBefore,
+                                                ColorAfter= ColorDefault,
+                                                ResultNum= ResultNum,
+                                                WordsMaybeDetected=WordsMaybeDetected)
 
-    Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
-
-    if DisplayedCounter % 2 == 0:
-        ColorRow = color(Prg, "Default") # the basic color of the row - it's switched line by line
-    else:
-        ColorRow = color(Prg, "Green")
-    RowNum = f"{DisplayedCounter} "
-
-    LineResultColored = ColorRow + RowNum +\
-                        Sentence["subsentences_before"] + \
-                        text.word_highlight(WordsMaybeDetected,
-                                            Sentence["subsentence_result"],
-                                            HighlightBefore=color(Prg, "Yellow"),
-                                            HighlightAfter=ColorReset,
-                                            ColorRow=ColorRow,
-                                            ColorRowEnd=ColorReset) \
-                        + Sentence["subsentences_after"] + \
-                        ColorReset
-
-    LineResultNotColored = Sentence["subsentences_before"] + RowNum +\
-                           Sentence["subsentence_result"] + \
-                           Sentence["subsentences_after"]
-
-    if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
-        LineResultColored += f"\n{color(Prg, 'Bright Red')}{Source}{ColorReset}"
-        LineResultNotColored += f"\n{Source}"
-
-    if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
-        LineResultColored += f"\n{color(Prg, 'Bright Red')}{Url}{ColorReset}"
-        LineResultNotColored += f"\n{Url}"
-
-    if Prg["SettingsSaved"]["Ui"]["Console"]["NewlineBetweenSentences"]:
-        LineResultColored += "\n"
-        LineResultNotColored += "\n"
-
-    return LineResultColored, LineResultNotColored
-
-def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
-    ScreenWidth, ScreenHeight = util_ui.get_screen_size()
-    SentencesColored = []
-    SentencesNotColored = []
-
-    for DisplayedCounter, SentenceObj in enumerate(SentenceObjects, start=1):
-        LineResultColored, LineResultNotColored = sentence_result_one(Prg, SentenceObj, WordsMaybeDetected, DisplayedCounter)
-        SentencesColored.append(LineResultColored)
-        SentencesNotColored.append(LineResultNotColored)
-
-    TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
-
-    Id = 0
-    IdLast = len(TextsPerScreen)-1
-    Msg = "[p]rev [n]ext [q]uery again."
-
+def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
     CharEnter = chr(13)
     CharBackspace = chr(127)
     CharEscape = chr(27)
@@ -109,28 +65,59 @@ def sentence_result_all_display(Prg, SentenceObjects, WordsMaybeDetected):
     NextChars = "n jBC"+ CharEnter # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
     PrevChars = "pkAD" + CharBackspace # A: arrowUp, D: arrowLeft
     QuitChars = "q" + CharEscape
+    Msg = "[p]rev [n]ext [q]uery again."
 
-    IdPrev = None
-    if TextsPerScreen: # if you use special commands, :help for example, we don't have any results
-        while True:
-            IdChanged = Id != IdPrev
-            ChangeWarning = " no more to display!" if not IdChanged else ""
-            if IdChanged:
-                print(TextsPerScreen[Id])
-            IdPrev = Id
+    ScreenWidth, ScreenHeight = util_ui.get_screen_size()
 
-            UserReply = util_ui.press_key_in_console(Msg + ChangeWarning)
-            if UserReply in PrevChars:
-                if Id > 0:
-                    Id -= 1
-            if UserReply in NextChars:
-                if Id < IdLast-1:
-                    Id += 1
-            if UserReply in QuitChars:
+    #TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
+
+    SentenceObjects = []
+    for DisplayedCounter, SentenceObj in enumerate(SentenceStruct, start=1):
+        SentenceObjects.append(sentence_result_one(Prg, SentenceObj, WordsMaybeDetected, DisplayedCounter))
+
+    IdNext = 0
+    PageNum = -1
+    PageTopSentenceId = dict() # pagenum, sentenceId
+
+    ChangeWarning = ""
+
+    SentenceObjectsLen = len(SentenceObjects)
+    NoResult = SentenceObjectsLen == 0
+
+    while True:
+        FreeLines = ScreenHeight - 3
+
+        PageNum += 1
+        PageTopSentenceId[PageNum] = IdNext
+        print("PageNum", PageNum)
+        SomethingDisplayed = False
+        while FreeLines:
+            LastResultDisplayed = (IdNext >= SentenceObjectsLen)
+            if NoResult or LastResultDisplayed: break
+
+            RowsRendered = SentenceObjects[IdNext].render_console(ScreenWidth)
+            RowsRenderedLen = len(RowsRendered)
+
+            if RowsRenderedLen <= FreeLines:
+                print("".join(RowsRendered))
+                FreeLines -= RowsRenderedLen
+                IdNext += 1
+                SomethingDisplayed = True
+            else:
                 break
 
-    #    if DisplayedCounter >= Prg["LimitDisplayedSampleSentences"]:
-    #        break
+        if not SomethingDisplayed: PageNum -= 1
+
+        UserReply = util_ui.press_key_in_console(Msg + ChangeWarning)
+
+        if UserReply in PrevChars:
+            print("prev char")
+            PageNum -= 2
+            if PageNum < 0: PageNum = 0
+            IdNext = PageTopSentenceId[PageNum]
+
+        if UserReply in QuitChars:
+            break
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors

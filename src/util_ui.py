@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import text, json, shutil
+import text, json, shutil, util
 
 
 import sys
@@ -17,6 +17,139 @@ try:
 except ImportError:
     MsvCrtModuleAvailable = False
 
+
+
+
+
+
+
+
+
+########################################################################################################################
+class CharObj():
+    def __init__(self, Char, ColorBefore=None, ColorAfter=None):
+        self.Char = Char
+        self.ColorBefore = ColorBefore
+        self.ColorAfter  = ColorAfter
+
+    def render(self):
+        Out = []
+        if self.ColorBefore: Out.append(self.ColorBefore)
+        Out.append(self.Char)
+        if self.ColorAfter: Out.append(self.ColorAfter)
+        return "".join(Out)
+
+class WordObj():
+    def __str__(self):
+        Out = []
+        for Char in self.Chars:
+            Out.append(Char.render())
+        return "".join(Out)
+
+    def __init__(self, Txt,  WordsMaybeDetected=set(), ColorBefore=None, ColorAfter=None, InResultSubsentence=False):
+        self.Chars = [CharObj(C) for C in Txt]
+        self.ColorBefore = ColorBefore
+        self.ColorAfter = ColorAfter
+        self.Detected = Txt in WordsMaybeDetected
+        self.Len = len(Txt)
+        self.InResultSubsentence = InResultSubsentence
+
+    def render(self):
+        Out = []
+        if self.ColorBefore: Out.append(self.ColorBefore)
+        for Char in self.Chars:
+            Out.append(Char.render())
+        if self.ColorAfter: Out.append(self.ColorAfter)
+        return "".join(Out)
+
+class SentenceObj():
+    def render_console(self, WidthMax):
+
+        def row_len(Row):
+            SpaceNum = len(Row) - 1 if Row else 0
+            CharNum = 0
+            for W in Row: CharNum+=W.Len
+            return SpaceNum + CharNum
+
+        Rows = [[WordObj(str(self.ResultNum))]]
+        for Word in self.Words:
+            RowLast = Rows[-1]
+
+            SpaceNeed = Word.Len
+            if row_len(RowLast): SpaceNeed += 1
+
+            if row_len(RowLast) + SpaceNeed <= WidthMax:
+                RowLast.append(Word)
+            else:
+                Rows.append([Word])
+
+        RowsRendered = []
+
+        for Row in Rows:
+            Rendered = []
+            for Word in Row:
+                if len(Rendered):
+                    Rendered.append(" ")
+                Rendered.append(Word.render())
+            RowsRendered.append("".join(Rendered))
+
+        return RowsRendered
+
+    def add_word(self, Txt, ColorBefore=None, ColorAfter=None, InResultSubsentence=False):
+        Txt = Txt.strip()
+        if not Txt: return # be sure, insert only real words, not empty strings or whitespaces
+
+        W = WordObj(Txt,
+                    WordsMaybeDetected=self.WordsMaybeDetected,
+                    ColorBefore=ColorBefore,
+                    ColorAfter=ColorAfter,
+                    InResultSubsentence=InResultSubsentence)
+        self.Words.append(W)
+        if self.Len > 0:
+            self.Len += 1
+        self.Len += W.Len
+
+    # "more word in one big string"
+    def add_big_string(self, BigString, InResultSubsentence=False):
+        for WordTxt in BigString.split(" "):
+            self.add_word(WordTxt, InResultSubsentence=InResultSubsentence)
+
+    def __init__(self, Sentence=None, ColorBefore=None, ColorAfter=None, ResultNum=None, WordsMaybeDetected=set(), Url=None, Source=None):
+        self.ColorBefore = ColorBefore
+        self.ColorAfter = ColorAfter
+        self.ResultNum = ResultNum
+        self.Len = 0
+        self.Words = []
+        self.WordsMaybeDetected = WordsMaybeDetected
+        self.Url = Url
+        self.Source = Source
+
+        if Sentence:
+            for Txt in Sentence.split(" "):
+                self.add_word(Txt)
+
+def sentence_get_from_result_oop(Prg, Result,
+                                 ReturnType="complete_sentence",
+                                 ColorBefore=None,
+                                 ColorAfter=None,
+                                 ResultNum=None,
+                                 WordsMaybeDetected=set()):
+
+    Url, Txt, Source = sentence_get_from_result(Prg, Result, ReturnType=ReturnType)
+
+    if util.is_dict(Txt):
+        Sentence = SentenceObj(ColorBefore=ColorBefore,
+                               ColorAfter=ColorAfter,
+                               ResultNum=ResultNum,
+                               WordsMaybeDetected=WordsMaybeDetected,
+                               Url=Url, Source=Source)
+        Sentence.add_big_string(Txt["subsentences_before"])
+        Sentence.add_big_string(Txt["subsentence_result"], InResultSubsentence=True)
+        Sentence.add_big_string(Txt["subsentences_after"])
+
+        return Sentence
+    else:
+        return SentenceObj(Txt, ColorBefore=ColorBefore, ColorAfter=ColorAfter, ResultNum=ResultNum)
 
 def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
     Source = Result["FileSourceBaseName"]
@@ -41,6 +174,7 @@ def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
                     }
 
     return Url, Sentence, Source
+########################################################################################################################
 
 def theme_actual(Prg):
     ThemeActual = Prg["UiThemes"]["ThemeNameActual"]
@@ -154,30 +288,6 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
         Rows.append(" ".join(Row))
 
     return Rows
-
-# return with list of splitted texts: [TextScreen1, TextScreen2]
-# one text block fits well on the screen
-# the two sentences are similar but in
-def text_split_at_screensize(SentencesColored, SentencesNotColored, WidthWanted, HeightWanted):
-    TextBlocksScreenSized = []
-    Rows = []
-
-    for Id, SentenceColored in enumerate(SentencesColored):
-        SentenceNotColored = SentencesNotColored[Id]
-
-        SentenceRows = sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted)
-        if len(SentenceRows) + len(Rows) < HeightWanted:
-            Rows.extend(SentenceRows)
-        else:
-            TextBlocksScreenSized.append("\n".join(Rows))
-            Rows = []
-            Rows.extend(SentenceRows)
-
-    if Rows:
-        TextBlocksScreenSized.append("\n".join(Rows))
-
-    return TextBlocksScreenSized
-
 
 # FIXME: maybe in the future this module would be a better solution,
 # https://pypi.org/project/readchar/

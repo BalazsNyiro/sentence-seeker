@@ -248,11 +248,20 @@ def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSe
     return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
 
 # Tested
-def word_highlight(Words, Text, HighlightBefore=">>", HighlightAfter="<<", ColorRow="", ColorRowEnd=""):
-    for Word in Words:
-        Pattern = fr"\b({Word})\b"
-        TextNew = fr"{ColorRowEnd}{HighlightBefore}\1{HighlightAfter}{ColorRow}"
-        Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
+def word_highlight(WordsMaybeDetected, Text, HighlightBefore=">>", HighlightAfter="<<", ColorRow="", ColorRowEnd=""):
+    WordsInText = set(Text.split(" "))
+
+    # FIXME: compare the length and display from the shorter way,
+    # both for are correct,
+    # for WordMaybeDetected in WordsMaybeDetected:
+    #     if WordMaybeDetected in WordsInText:
+
+    for WordTxt in WordsInText:
+        if WordTxt in WordsMaybeDetected:
+
+            Pattern = fr"\b({WordTxt})\b"
+            TextNew = fr"{ColorRowEnd}{HighlightBefore}\1{HighlightAfter}{ColorRow}"
+            Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
     return Text
 
 # Tested

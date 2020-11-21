@@ -53,12 +53,14 @@ class WordObj():
         elif self.ColorBefore:
             Out.append(self.ColorBefore)
 
-        Out.append(self.Txt)
+        if self.Txt:
+            Out.append(self.Txt)
 
         if self.ColorAfter:
             Out.append(self.ColorAfter)
         else:
-            Out.append(ColorSentence)
+            if ColorSentence:
+                Out.append(ColorSentence)
         # print(Out)
         return "".join(Out)
 
@@ -72,7 +74,11 @@ class SentenceObj():
                 CharNum += W.Len
             return SpaceNum + CharNum
 
-        Rows = [[WordObj(str(self.ResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
+        if self.ResultNum:
+            Rows = [[WordObj(str(self.ResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
+        else:
+            Rows = [[]]
+
         for Word in self.Words:
             RowLast = Rows[-1]
 
@@ -91,12 +97,13 @@ class SentenceObj():
             Rendered = []
             for Word in Row:
                 W = Word.render(self.ColorBasic)
-                if not RowsRendered:
+                if not RowsRendered and self.ColorBasic:
                     W += self.ColorBasic
                 Rendered.append(W)
             RowsRendered.append(" ".join(Rendered))
 
-        RowsRendered[-1] += self.ColorAfter
+        if self.ColorAfter:
+            RowsRendered[-1] += self.ColorAfter
         #######################################
         # print(RowsRendered)
         return RowsRendered

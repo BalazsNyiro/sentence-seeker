@@ -256,23 +256,6 @@ def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSe
                                                                SentenceFillInResult)
 
 # Tested
-def word_highlight(WordsMaybeDetected, Text, HighlightBefore=">>", HighlightAfter="<<", ColorRow="", ColorRowEnd=""):
-    WordsInText = set(Text.split(" "))
-
-    # FIXME: compare the length and display from the shorter way,
-    # both for are correct,
-    # for WordMaybeDetected in WordsMaybeDetected:
-    #     if WordMaybeDetected in WordsInText:
-
-    for WordTxt in WordsInText:
-        if WordTxt in WordsMaybeDetected:
-
-            Pattern = fr"\b({WordTxt})\b"
-            TextNew = fr"{ColorRowEnd}{HighlightBefore}\1{HighlightAfter}{ColorRow}"
-            Text = replace_regexp(Text, Pattern, TextNew, IgnoreCase=True)
-    return Text
-
-# Tested
 def word_wanted(Txt):
     for Char in Txt:
         # accept low letter chars and numbers

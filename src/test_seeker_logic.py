@@ -33,12 +33,13 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                        ({0, 101, 200, 400}, 'is'), 'AND', ({200}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({200}, '((birds AND is) AND strong)')])
+            self.assertEqual(Tokens, [({200}, '(birds AND (is AND strong))')])
+
             self.assertEqual(Explains, [('birds', 4),
                                         ('is', 4),
                                         ('strong', 1),
-                                        ('(birds AND is)', 2),
-                                        ('((birds AND is) AND strong)', 1)]
+                                        ('(is AND strong)', 1),
+                                        ('(birds AND (is AND strong))', 1)]
                              )
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
@@ -58,12 +59,12 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                        ({0, 101, 200, 400}, 'is'), 'AND', ({0, 202}, 'are')]
             Explains = [('birds', 4), ('is', 4), ('are', 2)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0}, '((birds AND is) AND are)')])
+            self.assertEqual(Tokens, [({0}, '(birds AND (is AND are))')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('is', 4),
                                         ('are', 2),
-                                        ('(birds AND is)', 2),
-                                        ('((birds AND is) AND are)', 1)])
+                                        ('(is AND are)', 1),
+                                        ('(birds AND (is AND are))', 1)])
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'OR',
                        ({0, 101, 200, 400}, 'is')]
@@ -107,13 +108,13 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                        'AND', ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
             Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
-            self.assertEqual(Tokens, [({0}, '((birds AND (are OR singing)) AND is)')])
+            self.assertEqual(Tokens, [({0}, '(birds AND ((are OR singing) AND is))')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('are', 2),
                                         ('singing', 1),
                                         ('is', 4),
-                                        ('(birds AND (are OR singing))', 1),
-                                        ('((birds AND (are OR singing)) AND is)', 1)])
+                                        ('((are OR singing) AND is)', 1),
+                                        ('(birds AND ((are OR singing) AND is))', 1)])
 
     def test_is_operator(self):
         if self._test_exec("test_is_operator"):
@@ -273,7 +274,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = {200}
                 self.assertEqual(Result, ResultWanted)
-                self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('(birds AND is)', 2), ('((birds AND is) AND strong)', 1)])
+                self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('(is AND strong)', 1), ('(birds AND (is AND strong))', 1)])
 
                 Query = "(birds  is),strong"
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
@@ -285,7 +286,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                 Result, Explains = token_interpreter_wrapper(Prg, Query)
                 ResultWanted = set()
                 self.assertEqual(Result, ResultWanted)
-                self.assertEqual(Explains, [('birds', 4), ('is', 4), ('are', 2), ('(birds AND is)', 2), ('((birds AND is) AND are)', 1), ('strong', 1), ('(((birds AND is) AND are) AND strong)', 0)])
+                self.assertEqual(Explains, [('birds', 4), ('is', 4), ('are', 2), ('(is AND are)', 1), ('(birds AND (is AND are))', 1), ('strong', 1), ('((birds AND (is AND are)) AND strong)', 0)])
 
                 ##### OR ######
                 Query = "birds   OR  is"
@@ -329,7 +330,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Result, Explains = token_interpreter_wrapper(Prg, Query)
             ResultWanted = {0}
             self.assertEqual(Result, ResultWanted)
-            self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2), ('is', 4), ('(birds AND (are OR singing))', 1), ('((birds AND (are OR singing)) AND is)', 1)])
+            self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2), ('is', 4), ('((are OR singing) AND is)', 1), ('(birds AND ((are OR singing) AND is))', 1)])
 
             ################ restore original state #####################################
             document.doc_objects_delete__file_abspath(Prg, FilePathBird)

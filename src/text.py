@@ -222,15 +222,17 @@ def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None, ReplaceSubsent
     return True, Subsentences # return with a list, with more than one subsentence
 
 # Tested
-def linenum_subsentencenum_get(LineNum_SubSentenceNum, SubSentenceMultiplayer=100):
-    SubSentenceNum = LineNum_SubSentenceNum % SubSentenceMultiplayer
+def linenum_subsentencenum_get(LineNum__SubSentenceNum, SubSentenceMultiplayer=100):
+    SubSentenceNum = LineNum__SubSentenceNum % SubSentenceMultiplayer
+    LineNum = 0
 
-    # the default multiplier was 100
-    if LineNum_SubSentenceNum < SubSentenceMultiplayer:  # I store 2 numbers info in one number and LineNum can be zero, too
-        return 0, SubSentenceNum   # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
+    # I store 2 numbers info in one number and LineNum can be zero, too
+    # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
     # and if the num is smaller than 100 it means LineNum = 0
+    if LineNum__SubSentenceNum > SubSentenceMultiplayer:
+        LineNum = (LineNum__SubSentenceNum - SubSentenceNum) // SubSentenceMultiplayer
 
-    return (LineNum_SubSentenceNum - SubSentenceNum) // SubSentenceMultiplayer, SubSentenceNum
+    return LineNum, SubSentenceNum
 
 # tested/used in test_seeker_logic.test_result_selectors
 def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult):
@@ -245,7 +247,13 @@ def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Senten
 def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
     StatusFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
     StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
-    return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult)
+
+    return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName,
+                                                               LineNumInSentenceFile,
+                                                               SubSentenceNum,
+                                                               Sentence,
+                                                               SubSentenceResult,
+                                                               SentenceFillInResult)
 
 # Tested
 def word_highlight(WordsMaybeDetected, Text, HighlightBefore=">>", HighlightAfter="<<", ColorRow="", ColorRowEnd=""):

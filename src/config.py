@@ -73,6 +73,7 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                     "Console": {"NewlineBetweenSentences": False}
                 }
             },
+            "TooManyTokenLimit": 300, # don't explain above this level
             "Cache": dict(),
             "Os": Os,
             "OsIsLinux": Os == "Linux",

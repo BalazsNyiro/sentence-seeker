@@ -5,8 +5,10 @@ import sys, array, time, datetime, io
 from ui_tkinter import independent_yes_no_window
 import ui_tkinter_boot_progress_bar
 
-ABC_Eng_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-ABC_Eng_Lower = ABC_Eng_Upper.lower()
+ABC_Eng_UpperTxt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ABC_Eng_LowerTxt = ABC_Eng_UpperTxt.lower()
+ABC_Eng_Upper = set(list(ABC_Eng_UpperTxt))
+ABC_Eng_Lower = set(list(ABC_Eng_LowerTxt))
 
 # Tested
 def shell(Cmd):

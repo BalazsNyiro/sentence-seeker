@@ -34,6 +34,8 @@ def token_split(Query, Prg=dict()):
     Query = Query.replace(",", " ")
 
     for Operator in Operators:
+        # example query:  (apple,orange) OR (banana,kiwi)
+        # insert space around parenthesis
         Query = Query.replace(Operator, f" {Operator} ")
 
     ########################################################################
@@ -66,11 +68,10 @@ def token_split(Query, Prg=dict()):
     Tokens = []   # insert AND if necessary:
     TokenPrev = ""
     for Token in TokensWithSpecials:
-    #for Token in Query.split(" "):
         if Token: # with multiple spaces a token can be "", too
             if TokenPrev:
                 # two low char with one space between them - missing operator, AND is default
-                if   (TokenPrev == ")" or text.word_wanted(TokenPrev)) \
+                if (TokenPrev == ")" or text.word_wanted(TokenPrev)) \
                  and (text.word_wanted(Token) or Token == "("):
                     Tokens.append("AND")
 
@@ -102,7 +103,7 @@ def token_group_finder(Tokens):
 #  OR
 
 #                  Tokens: list()
-def operators_exec(Tokens, Explains):
+def operators_exec(Tokens, Explains, TooManyTokenLimit=300):
     OperatorPositions = {}
     for Operator in Operators:
         OperatorPositions[Operator] = []
@@ -111,7 +112,7 @@ def operators_exec(Tokens, Explains):
         if is_operator(Token):
             OperatorPositions[Token].append(Position)
 
-    TooMuchToken = len(Tokens) > 100
+    TooManyTokens = len(Tokens) >= TooManyTokenLimit
 
     for Operator in Operators:
 
@@ -127,7 +128,7 @@ def operators_exec(Tokens, Explains):
                 LineNumsOp = TokenLeft.intersection(TokenRight)
 
             # the string creation/concatenation is too slow if you use thousands of tokens
-            if TooMuchToken: # no explain, no detailed/explained token info
+            if TooManyTokens: # no explain, no detailed/explained token info
                 Tokens[OperatorPositionLast-1] = (LineNumsOp, "")
                 Tokens.pop(OperatorPositionLast + 1)
                 Tokens.pop(OperatorPositionLast)
@@ -145,39 +146,44 @@ def operators_exec(Tokens, Explains):
 
 _EmptySet = set()
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(TokensOrig, DocIndex, Explains): # Explains type: list()
+def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300): # Explains type: list()
     TokensResults = []
 
-    TimeFor = time.time()
+    TooManyTokens = len(TokensOrig) >= TooManyTokenLimit
+
     for Token in TokensOrig:
 
         if util.is_str(Token):
 
             if is_operator(Token):
-                Result = Token
+                TokensResults.append(Token)
 
             else: # str but not operator
                 # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums
                 # IndexElems has to be set, because later we use Union, Intersect operators on these results
                 IndexElems = set(DocIndex.get(Token, _EmptySet))
-                Explains.append((Token, len(IndexElems)))
-                Result = (IndexElems, Token)  # ResultLineNums, TokenName
+
+                if TooManyTokens: # SPEED UP: REMOVE NOT IMPORTANT OPERATOR:
+
+                    if TokensResults and (not IndexElems) and TokensResults[-1] == "OR":
+                        # remove Last "OR", because:
+                        # ELEMS OR NOTHING -> ELEMS, you can remove 'OR NOTHING'
+                        TokensResults.pop()
+                    else:
+                        # HERE we don't append Explain: no Explains.append()
+                        Result = (IndexElems, Token)
+                        TokensResults.append(Result)  # ResultLineNums, TokenName
+
+                else: # not Too Many Tokens, normal/base process
+                    Explains.append((Token, len(IndexElems)))
+                    Result = (IndexElems, Token)
+                    TokensResults.append(Result) # ResultLineNums, TokenName
 
         elif util.is_list(Token):
-            Result = token_interpreter(Token, DocIndex, Explains)
+            Result = token_interpreter(Token, DocIndex, Explains, TooManyTokenLimit=TooManyTokenLimit)
+            TokensResults.append(Result)
 
-        TokensResults.append(Result)
-
-    TimeDelta= time.time() - TimeFor
-    print(">> Token, time for", TimeDelta)
-    if TimeDelta > 0.3:
-        pass
-        #print(TokensOrig)
-
-    TimeExec = time.time()
-    TokensResults, Explains = operators_exec(TokensResults, Explains)
-    TimeDelta= time.time() - TimeExec
-    print(">> operator exec", TimeDelta)
+    TokensResults, Explains = operators_exec(TokensResults, Explains, TooManyTokenLimit=TooManyTokenLimit)
 
     if TokensResults:
         TokenFirst = TokensResults[0]
@@ -252,23 +258,26 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
 
     run_commands_in_query(Prg, Query)
 
-    TimeTokenSplitStart = time.time()
+    #TimeTokenSplitStart = time.time()
     Tokens = token_split(Query, Prg=Prg)
-    print("token split time", time.time() - TimeTokenSplitStart)
+    #print("token split time", time.time() - TimeTokenSplitStart)
 
-    TimeMaybeStart = time.time()
+    #TimeMaybeStart = time.time()
     WordsMaybeDetected = words_wanted_from_tokens(Tokens)
-    print("maybe time", time.time() - TimeMaybeStart)
+    #print("maybe time", time.time() - TimeMaybeStart)
 
-    TimeGroups = time.time()
+    #TimeGroups = time.time()
     TokenGroups = token_group_finder(Tokens)
-    print("groups time", time.time() - TimeGroups)
+    #print("groups time", time.time() - TimeGroups)
 
     ResultsSelected = []
     TokenProcessExplainPerDoc = dict()
 
     TimeBigFor  = time.time()
     TimeInterpreterSumma = 0
+
+    SubSentenceMultiplayer = Prg["SubSentenceMultiplayer"]
+
     for FileSourceBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
 
         # use one file during development
@@ -277,9 +286,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
 
         Explains = []
         # print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
-        TimeInterpreterStart = time.time()
-        Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains)
-        TimeInterpreterSumma += time.time() - TimeInterpreterStart
+        #TimeInterpreterStart = time.time()
+        Results, _ResultName = token_interpreter(TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"])
+        #TimeInterpreterSumma += time.time() - TimeInterpreterStart
         # print("TOKEN INTERPRETER <<<<", TimeInterpreter)
 
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
@@ -288,15 +297,15 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
             continue
 
         for LineNum__SubSentenceNum in Results: # if we have any result from WordPosition:
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum, Prg["SubSentenceMultiplayer"])
-            _Status, Obj = text.result_obj_from_memory(Prg, FileSourceBaseName,
-                                                                LineNum,
-                                                                SubSentenceNum,
-                                                                SentenceFillInResult=SentenceFillInResult
-                                                               )
+            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum, SubSentenceMultiplayer)
+            _Status, Obj = text.result_obj_from_memory(Prg,
+                                                       FileSourceBaseName,
+                                                       LineNum,
+                                                       SubSentenceNum,
+                                                       SentenceFillInResult=SentenceFillInResult)
             ResultsSelected.append(Obj)
 
-    print("time interpreter summa", TimeInterpreterSumma)
+    # print("time interpreter summa", TimeInterpreterSumma)
     print("big for time", time.time() - TimeBigFor)
 
 

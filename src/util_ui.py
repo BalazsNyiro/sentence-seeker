@@ -26,21 +26,12 @@ except ImportError:
 
 
 ########################################################################################################################
-class CharObj():
-    def __init__(self, Char):
-        self.Char = Char
-    def render(self):
-        return self.Char
-
 class WordObj():
     def __str__(self):
-        Out = []
-        for Char in self.Chars:
-            Out.append(Char.render())
-        return "".join(Out)
+        return self.Txt
 
     def __init__(self, Txt,  WordsMaybeDetected=set(), ColorBefore=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=""):
-        self.Chars = [CharObj(C) for C in Txt]
+        self.Txt = Txt
         self.ColorBefore = ColorBefore
         self.ColorAfter = ColorAfter
         self.ColorDetected = ColorDetected
@@ -60,8 +51,7 @@ class WordObj():
         elif self.ColorBefore:
             Out.append(self.ColorBefore)
 
-        for Char in self.Chars:
-            Out.append(Char.render())
+        Out.append(self.Txt)
 
         if self.ColorAfter:
             Out.append(self.ColorAfter)

@@ -49,12 +49,15 @@ def user_welcome_message(Prg, UserInterface):
 def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
     ColorDefault = color(Prg, "Default")
     ColorBefore = color(Prg, "Green") if ResultNum % 2 == 0 else ColorDefault
+    ColorDetected = color(Prg, "Yellow")
+    ColorResultNum = color(Prg, "Red")
     return util_ui.sentence_get_from_result_oop(Prg,
                                                 Result,
                                                 ReturnType="separated_subsentences",
                                                 ColorBefore= ColorBefore,
                                                 ColorAfter= ColorDefault,
-                                                ColorDetected=color(Prg, "Yellow"),
+                                                ColorDetected=ColorDetected,
+                                                ColorResultNum=ColorResultNum,
                                                 ResultNum= ResultNum,
                                                 WordsMaybeDetected=WordsMaybeDetected)
 
@@ -70,52 +73,54 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
     ScreenWidth, ScreenHeight = util_ui.get_screen_size()
 
-    #TextsPerScreen = util_ui.text_split_at_screensize(SentencesColored, SentencesNotColored, ScreenWidth, ScreenHeight-3)
-
-    SentenceObjects = []
-    for DisplayedCounter, SentenceObj in enumerate(SentenceStruct, start=1):
-        SentenceObjects.append(sentence_result_one(Prg, SentenceObj, WordsMaybeDetected, DisplayedCounter))
-
-    IdNext = 0
-    PageNum = -1
+    IdNow = 0
+    PageNum = 0
     PageTopSentenceId = dict() # pagenum, sentenceId
+    PageTopSentenceId[PageNum] = IdNow
 
-    ChangeWarning = ""
-
-    SentenceObjectsLen = len(SentenceObjects)
-    NoResult = SentenceObjectsLen == 0
+    ResultsNum = len(SentenceStruct)
+    NoResult = ResultsNum == 0
 
     while True:
         FreeLines = ScreenHeight - 3
 
-        PageNum += 1
-        PageTopSentenceId[PageNum] = IdNext
-        print("PageNum", PageNum)
+        # print("PageNum", PageNum)
         SomethingDisplayed = False
+
+        IdNow = PageTopSentenceId[PageNum]
         while FreeLines:
-            LastResultDisplayed = (IdNext >= SentenceObjectsLen)
+            LastResultDisplayed = (IdNow >= ResultsNum)
             if NoResult or LastResultDisplayed: break
 
-            RowsRendered = SentenceObjects[IdNext].render_console(ScreenWidth)
+            SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsMaybeDetected, IdNow)
+            RowsRendered = SentenceObject.render_console(ScreenWidth)
             RowsRenderedLen = len(RowsRendered)
 
             if RowsRenderedLen <= FreeLines:
                 print("\n".join(RowsRendered))
                 FreeLines -= RowsRenderedLen
-                IdNext += 1
+                IdNow += 1
                 SomethingDisplayed = True
             else:
                 break
 
-        if not SomethingDisplayed: PageNum -= 1
+        if SomethingDisplayed:
+            PageTopSentenceId[PageNum+1] = IdNow
 
-        UserReply = util_ui.press_key_in_console(Msg + ChangeWarning)
+        UserReply = util_ui.press_key_in_console(Msg)
+        if UserReply in NextChars:
+            # print("next char")
+            if PageNum+1 in PageTopSentenceId:
+                NextIdInResults = PageTopSentenceId[PageNum + 1] < ResultsNum
+                if NextIdInResults:
+                    PageNum += 1
+                else:
+                    print("No more result")
 
         if UserReply in PrevChars:
-            print("prev char")
-            PageNum -= 2
+            # print("prev char")
+            PageNum -= 1
             if PageNum < 0: PageNum = 0
-            IdNext = PageTopSentenceId[PageNum]
 
         if UserReply in QuitChars:
             break

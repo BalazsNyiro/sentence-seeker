@@ -31,7 +31,6 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
         if QueryAsCmdlineParam:
             break
 
-
 #########################################
 
 def user_welcome_message(Prg, UserInterface):
@@ -108,6 +107,8 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
             PageTopSentenceId[PageNum+1] = IdNow
 
         UserReply = util_ui.press_key_in_console(Msg)
+        print("\n"*ScreenWidth) # clear screen
+
         if UserReply in NextChars:
             # print("next char")
             if PageNum+1 in PageTopSentenceId:

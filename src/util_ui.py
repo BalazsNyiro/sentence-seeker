@@ -152,6 +152,7 @@ def sentence_get_from_result_oop(Prg, Result,
         Sentence = SentenceObj(ColorBasic=ColorBefore,
                                ColorAfter=ColorAfter,
                                ColorDetected=ColorDetected,
+                               ColorResultNum=ColorResultNum,
                                ResultNum=ResultNum,
                                WordsMaybeDetected=WordsMaybeDetected,
                                Url=Url, Source=Source)

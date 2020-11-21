@@ -111,18 +111,34 @@ def operators_exec(Tokens, Explains):
         if is_operator(Token):
             OperatorPositions[Token].append(Position)
 
+    TooMuchToken = len(Tokens) > 100
+
     for Operator in Operators:
+
         while OperatorPositions[Operator]:
             OperatorPositionLast = OperatorPositions[Operator].pop()
-            operator_exec_left_right(Operator, Tokens, Explains, OperatorPositionLast)
 
-            # keep original Explains pointer but insert the new result into it
+            TokenLeft, NameLeft = Tokens[OperatorPositionLast - 1]
+            TokenRight, NameRight = Tokens[OperatorPositionLast + 1]
 
-            # Explains.clear()
-            # Explains.extend(ExplainsNew)
+            if Operator == "OR":
+                LineNumsOp = TokenLeft.union(TokenRight)
+            else:
+                LineNumsOp = TokenLeft.intersection(TokenRight)
 
-            # print(" Results: ", Results)
-            # print("Explains: ", ExplainsNew)
+            # the string creation/concatenation is too slow if you use thousands of tokens
+            if TooMuchToken: # no explain, no detailed/explained token info
+                Tokens[OperatorPositionLast-1] = (LineNumsOp, "")
+                Tokens.pop(OperatorPositionLast + 1)
+                Tokens.pop(OperatorPositionLast)
+            else:
+                ResultName = f"({NameLeft} {Operator} {NameRight})"
+
+                Tokens[OperatorPositionLast-1] = (LineNumsOp, ResultName)
+                Tokens.pop(OperatorPositionLast + 1)
+                Tokens.pop(OperatorPositionLast)
+
+                Explains.append((ResultName, len(LineNumsOp)))
 
     return Tokens, Explains
 
@@ -182,26 +198,6 @@ def is_operator(Token):
     if util.is_str(Token): # if we got a string, then check in the Operators, else False
         return Token in Operators
     return False
-
-# FIXME: INPROGRESS: test, operator_exec
-#                                  Tokens: list()  Explains: list
-def operator_exec_left_right(Operator, Tokens, Explains, IdOperator):
-
-    TokenLeft, NameLeft = Tokens[IdOperator - 1]
-    TokenRight, NameRight = Tokens[IdOperator + 1]
-
-    if Operator == "OR":
-        LineNumsOp = TokenLeft.union(TokenRight)
-    else:
-        LineNumsOp = TokenLeft.intersection(TokenRight)
-
-    ResultName = f"({NameLeft} {Operator} {NameRight})"
-
-    Tokens[IdOperator-1] = (LineNumsOp, ResultName)
-    Tokens.pop(IdOperator + 1)
-    Tokens.pop(IdOperator)
-
-    Explains.append((ResultName, len(LineNumsOp)))
 
 Operators = {"AND", "OR", "(", ")"}
 

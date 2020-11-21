@@ -114,7 +114,7 @@ def operators_exec(Tokens, Explains):
     for Operator in Operators:
         while OperatorPositions[Operator]:
             OperatorPositionLast = OperatorPositions[Operator].pop()
-            Tokens = operator_exec_left_right(Operator, Tokens, Explains, OperatorPositionLast)
+            operator_exec_left_right(Operator, Tokens, Explains, OperatorPositionLast)
 
             # keep original Explains pointer but insert the new result into it
 
@@ -184,11 +184,11 @@ def is_operator(Token):
     return False
 
 # FIXME: INPROGRESS: test, operator_exec
-#                                  TokensOrig: list()  ExplainsOrig: list
-def operator_exec_left_right(Operator, TokensOrig, Explains, IdOperator):
+#                                  Tokens: list()  Explains: list
+def operator_exec_left_right(Operator, Tokens, Explains, IdOperator):
 
-    TokenRight, NameRight = TokensOrig[IdOperator + 1]
-    TokenLeft, NameLeft = TokensOrig[IdOperator - 1]
+    TokenLeft, NameLeft = Tokens[IdOperator - 1]
+    TokenRight, NameRight = Tokens[IdOperator + 1]
 
     if Operator == "OR":
         LineNumsOp = TokenLeft.union(TokenRight)
@@ -197,12 +197,11 @@ def operator_exec_left_right(Operator, TokensOrig, Explains, IdOperator):
 
     ResultName = f"({NameLeft} {Operator} {NameRight})"
 
-    Tokens = TokensOrig[:IdOperator - 1]
-    Tokens.append( (LineNumsOp, ResultName) )
-    Tokens.extend( TokensOrig[IdOperator + 2:] )  # Right Token was IdOperator+1, attach from the next one
+    Tokens[IdOperator-1] = (LineNumsOp, ResultName)
+    Tokens.pop(IdOperator + 1)
+    Tokens.pop(IdOperator)
 
     Explains.append((ResultName, len(LineNumsOp)))
-    return Tokens
 
 Operators = {"AND", "OR", "(", ")"}
 

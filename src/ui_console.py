@@ -8,8 +8,8 @@ def seek_and_display(Prg, Wanted):
     TimeLogicUsed = time.time() - TimeLogicStart
 
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
-    # print(f"Results Total: {ResultsTotalNum}")
-    # print("Time logic: ", TimeLogicUsed)
+    print(f"Results Total: {ResultsTotalNum}")
+    print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     if Prg["OsIsUnixBased"]: # On Linux and I hope on Mac, we can use history in console with readline module

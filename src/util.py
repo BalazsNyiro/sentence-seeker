@@ -89,7 +89,8 @@ def dir_create_if_necessary(Prg=dict(), Path="", LogCreate=True):
 
     else:
         if Path:
-            os.mkdir(Path)
+            os.makedirs(Path, exist_ok=True)
+            
             Msg = f"dir created, it was necessary: {Path}"
             Created = True
 

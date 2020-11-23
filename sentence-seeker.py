@@ -6,7 +6,7 @@ from tkinter import *
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
 
-import config, util_test, argparse, prg_start
+import config, util_test, argparse, separated_prg_launcher
 ##########################################################
 
 import seeker, ui_console
@@ -29,7 +29,7 @@ def main():
     if TestExecution:
         test_exec(Args)
     else: # separated program start because of ssp program planner import
-        prg_start.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
+        separated_prg_launcher.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
 
 def test_exec(Args):
     Prg = config.prg_config_create(Args, PrintForDeveloper=False)

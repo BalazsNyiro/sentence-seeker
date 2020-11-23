@@ -67,6 +67,7 @@ def config_get(Key, DirPrgExecRoot="", DefaultVal="",
 
     if not DirConfigFileParent:
         DirConfigFileParent = os.path.join(util.dir_user_home(), DirWorkFromUserHome)
+    util.dir_create_if_necessary(Path=DirConfigFileParent)
 
     FileConfigAbsPath = os.path.join(DirConfigFileParent, FileNameConfig)
 

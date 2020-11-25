@@ -78,7 +78,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             Reply = file_local_read(File, EncodeUtf8=False)
             if "index.html" in File:
                 License = self.Prg["Licenses"].replace("\n", "<br />")
-
                 Replaces = (
                     ("PLACEHOLDER_DOCUMENT_JSON", self.Prg["DocumentsSourceWebpagesFileContent"]),
                     ("PLACEHOLDER_HOST", self.Prg["ServerHost"]),

@@ -207,8 +207,8 @@ def ui_json_answer(Prg,
                    NewLine="\n"):
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
     Reply = {"results": MatchNums__ResultInfo[:Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]],
-             "token_process_explain": Txt,
-             "words_maybe_detected": WordsMaybeDetected}
+             "token_process_explain": Txt,                     # below list() is nececcary because
+             "words_maybe_detected": list(WordsMaybeDetected)} # Words set can't be converted to json
     Reply = json.dumps(Reply).encode('UTF-8')
     return Reply
 

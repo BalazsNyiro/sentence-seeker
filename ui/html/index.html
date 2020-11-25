@@ -88,16 +88,21 @@ table {
     var wordHilitor; // https://e-motiv.github.io/hilitor/example/#example
     function source_display(BaseName){
         DocInfo = PLACEHOLDER_DOCUMENT_JSON;
-        for (var key in DocInfo.docs) {
-            if (key == BaseName) {
-                Elem = DocInfo.docs[key];
-                return "<a target='_blank' href='"+Elem.url+"'>" + DocInfo["source_names"][Elem.source_name] + "</a>";
-            }
+        if (BaseName in DocInfo.docs) {
+            Elem = DocInfo.docs[BaseName];
+            return "<a target='_blank' href='"+Elem.url+"'>" + nice_source_name(Elem.source_name) + "</a>";
         }
+
         return BaseName;
     }
     function message(Msg){
         document.getElementById("message").innerHTML = Msg;
+    }
+
+    function nice_source_name(SourceName) {
+        if (SourceName == "gutenberg") return "gutenberg.org";
+        if (SourceName == "wikipedia") return "wikipedia.org";
+        return SourceName;
     }
 
     function seek_func(){
@@ -112,15 +117,23 @@ table {
         xmlhttp.onreadystatechange = function() {
 
           wordHilitor = new Hilitor("body");
+            message("<b>Reply is coming ...</b>");
 
           if (this.readyState == 4 && this.status == 200) {
+            message("<b>Reply processing...</b>");
             Response = JSON.parse(this.responseText);
+            message("<b>Reply parsing...</b>");
             Results = Response.results;
+            message("<b>result read...</b>");
             txt += Response.token_process_explain + "<table border='1'>";
+            message("<b> token explain...</b>");
             for (x in Results) {
-              txt += "<tr><td>" + Results[x].Sentence + "<br /><div class='source_name'>" + source_display(Results[x].FileSourceBaseName) + "</div>" + "</td></tr>";
+              txt += "<tr><td>" + Results[x].Sentence + "<br /><div class='source_name'>" +
+                                  source_display(Results[x].FileSourceBaseName) + "</div>" +
+                     "</td></tr>";
             }
             txt += "</table>";
+            message("<b>Data render...</b>");
             document.getElementById("demo").innerHTML = txt;
 
             wordHilitor.apply(Response.words_maybe_detected.join(" "));

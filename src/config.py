@@ -71,7 +71,8 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
                     "DisplayDirDocInGuiTitle": True,
                     "LimitDisplayedSentences": 20,
                     "Console": {"NewlineBetweenSentences": False}
-                }
+                },
+                "DefaultWikiTextPackageUsage": "Y"
             },
             "TooManyTokenLimit": 300, # don't explain above this level
             "Cache": dict(),

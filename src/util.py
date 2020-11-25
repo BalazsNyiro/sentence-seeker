@@ -447,7 +447,11 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
         # default:  piped or redirected or started without console
         WikiPagesUse = "N"
         if Prg["Ui"] in ["console", "html", "json"]: # the user started the program in console mode
-            WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+            try: # if you execute the prg from an external script, daemon command, maybe it can't read from console.
+                WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
+            except:
+                WikiPagesUse = Prg["SettingsSaved"]["DefaultWikiTextPackageUsage"]
+
         elif Prg["Ui"] == "tkinter":
             if independent_yes_no_window("Wikipedia interesting articles collection",
                                          "Do you want to download articles from Sentence Seker site?\nIt takes about 24-26 sec, then program starts."):

@@ -446,8 +446,7 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
     if WikiPagesUse == None: # param not given
         # default:  piped or redirected or started without console
         WikiPagesUse = "N"
-
-        if Prg["Ui"] == "console" or Prg["Ui"] == "html": # the user started the program in console mode
+        if Prg["Ui"] in ["console", "html", "json"]: # the user started the program in console mode
             WikiPagesUse = input("\nDo you want to use Wikipedia page pack from Sentence seeker server? (y/n) ").strip()
         elif Prg["Ui"] == "tkinter":
             if independent_yes_no_window("Wikipedia interesting articles collection",
@@ -456,9 +455,12 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
 
     if str(WikiPagesUse).strip().lower() == "y":
         Url = "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz"
+        print("Text pack url:", Url)
         try:
-
-            BinaryFromWeb = web_get_progressbar(Prg, "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+            if Prg["Ui"] in ["tkinter"]:
+                BinaryFromWeb = web_get_progressbar(Prg, "http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
+            else:
+                BinaryFromWeb = web_get("http://sentence-seeker.net/texts/packs/wikipedia.txt.gz", Binary=True)
 
             Bytes = gzip.decompress(BinaryFromWeb)
             print("Url downloading is finished:", Url)

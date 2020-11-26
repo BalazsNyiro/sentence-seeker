@@ -5,6 +5,7 @@ from tkinter import *
 
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
+sys.path.append(os.path.join(DirPrgParent, "test"))
 
 import config, util_test, argparse, separated_prg_launcher
 ##########################################################
@@ -36,20 +37,26 @@ def test_exec(Args):
 
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")
-    import test_util, test_util_json, test_document, \
-        test_text, test_seeker, test_seeker_logic, test_util_ui, test_eng
+    import test_text
+    import test_eng
+    import test_util_json
+    import test_util_ui
+    import test_seeker_logic
+    import test_util
+    import test_document
+    import test_seeker
     import test_converter
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
     test_document.run_all_tests(Prg)
     test_converter.run_all_tests(Prg)
-    util_test.result_all(Prg)
     test_text.run_all_tests(Prg)
     test_seeker.run_all_tests(Prg)
     test_seeker_logic.run_all_tests(Prg)
     test_util_ui.run_all_tests(Prg)
     test_eng.run_all_tests(Prg)
+    util_test.result_all(Prg)
     print("##################### TEST END #####################################")
     sys.exit(0)
     # print("\n"*22)

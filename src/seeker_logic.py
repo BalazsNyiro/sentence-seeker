@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import text, util, util_ui, util_json_obj
 import eng, result_selectors
-import time
+import time, tokens
 # ? MINUS,
 # ? NOT
 
@@ -45,15 +45,8 @@ def token_split(Query, Prg=dict()):
     # every special word has : sign as a separator.
     for Token in Query.split(" "):
         Sign = ".."
-        LenSign = len(Sign)
-        if Sign in Token:
-            StarPrefix = Token.startswith(Sign)
-            StarPostfix = Token.endswith(Sign)
-            if     StarPrefix and     StarPostfix: Token = "in:"    + Token[LenSign:-LenSign]
-            if     StarPrefix and not StarPostfix: Token = "start:" + Token[LenSign:]
-            if not StarPrefix and     StarPostfix: Token = "end:"   + Token[:-LenSign]
-            print("new token:", Token)
-
+        Token = tokens.quick_form_convert_to_special_form(Token, "*")
+        Token = tokens.quick_form_convert_to_special_form(Token, "..")
         if ":" in Token: # : means: special token
 
             if Token == "iverb:ps": # irregular verbs, past simple selector

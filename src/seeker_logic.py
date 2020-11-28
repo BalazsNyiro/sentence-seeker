@@ -273,7 +273,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     ResultsSelected = []
     TokenProcessExplainPerDoc = dict()
 
-    TimeBigFor  = time.time()
+    TimeBigFor = time.time()
     TimeInterpreterSumma = 0
 
     SubSentenceMultiplayer = Prg["SubSentenceMultiplayer"]

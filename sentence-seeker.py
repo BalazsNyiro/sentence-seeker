@@ -27,6 +27,10 @@ def main():
     # SysArgvOrig = sys.argv
     sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
+    print("Under development:")
+    print(" - colorful terminal usage in windows 10")
+    # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
+
     if TestExecution:
         test_exec(Args)
     else: # separated program start because of ssp program planner import
@@ -73,7 +77,7 @@ def test_exec(Args):
 ####################################################################################
 # color paletta original source - thank you
 # http://www.science.smith.edu/dftwiki/index.php/Color_Charts_for_TKinter
-def color_paletta_tester(Colors):
+def tkinter_gui_color_paletta_tester(Colors):
 
     FONT_SIZE = 16  # (pixels)
     RowLimit = 24

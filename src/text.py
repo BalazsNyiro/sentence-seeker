@@ -229,7 +229,7 @@ def linenum_subsentencenum_get(LineNum__SubSentenceNum, SubSentenceMultiplayer=1
     # I store 2 numbers info in one number and LineNum can be zero, too
     # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
     # and if the num is smaller than 100 it means LineNum = 0
-    if LineNum__SubSentenceNum > SubSentenceMultiplayer:
+    if LineNum__SubSentenceNum >= SubSentenceMultiplayer:
         LineNum = (LineNum__SubSentenceNum - SubSentenceNum) // SubSentenceMultiplayer
 
     return LineNum, SubSentenceNum

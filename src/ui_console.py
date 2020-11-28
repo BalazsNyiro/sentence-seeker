@@ -163,9 +163,10 @@ def color(Prg, ColorName, CnameBackground=""):
     if Prg["OsIsWindows"]: return ""
     # MAYBE: win terminal has color display option, detailed here:
     # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
+    
+    # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
 
-    # If os == windows, return with empty string, because
-    # we have to test colors in Windows terminal
+
 
     ColorBackground=""
     global __color_name_last_used, __style_last_used

@@ -63,6 +63,10 @@ class TextTests(util_test.SentenceSeekerTest):
 
     def test_linenum_subsentencenum_get(self):
         if self._test_exec("test_linenum_subsentencenum_get"):
+            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(100)
+            self.assertEqual(LineNum, 1)
+            self.assertEqual(SubSentenceNum, 0)
+
             LineNum, SubSentenceNum = text.linenum_subsentencenum_get(95)
             self.assertEqual(LineNum, 0)
             self.assertEqual(SubSentenceNum, 95)

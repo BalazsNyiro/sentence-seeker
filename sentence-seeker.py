@@ -28,6 +28,7 @@ def main():
     sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
     print("Under development:")
+    print(" - GUI/tkinter pager for faster result processing (it's implemented yet in console mode!!!)")
     print(" - colorful terminal usage in windows 10")
     # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
 

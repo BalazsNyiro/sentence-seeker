@@ -49,23 +49,26 @@ def token_split(Query, Prg=dict()):
             if Token == "iverb:ps": # irregular verbs, past simple selector
                 word_group_into_tokens(eng.IrregularVerbsPresentSimple)
 
-            if Token == "iverb:pp": # irregular verbs, past participle selector
+            elif Token == "iverb:pp": # irregular verbs, past participle selector
                 word_group_into_tokens(eng.IrregularVerbsPastParticiple)
 
-            if Token == "iverb:inf": # irregular verbs, past participle selector
+            elif Token == "iverb:inf": # irregular verbs, past participle selector
                 word_group_into_tokens(eng.IrregularVerbsInfinitive)
 
-            if Token.startswith("end:"):
+            elif Token.startswith("end:"):
                 End = Token.split(":")[1]
                 word_group_into_tokens(eng.groups_of_word_ending(Prg, End))
 
-            if Token.startswith("start:"):
+            elif Token.startswith("start:"):
                 Start = Token.split(":")[1]
                 word_group_into_tokens(eng.groups_of_word_starting(Prg, Start))
 
-            if Token.startswith("in:"):
+            elif Token.startswith("in:"):
                 In = Token.split(":")[1]
                 word_group_into_tokens(eng.groups_of_word_include(Prg, In))
+
+            else:
+                print("unknown special group selector:", Query)
 
         else:
             TokensWithSpecials.append(Token)
@@ -252,17 +255,18 @@ def run_commands_in_query(Prg, Query):
 
         if CommandDetected:
             util_json_obj.config_set(Prg, "SettingsSaved")
-        else:
-           print(": detected but not command in Query>", Query)
 
+    return CommandDetected
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
          ResultSelectors=[result_selectors.sortSentences]):
-    Query = Query.strip()
-    print(Query)
     util.log(Prg, f"Query: {Query}")
 
-    run_commands_in_query(Prg, Query)
+    CommandDetected = run_commands_in_query(Prg, Query)
+    if CommandDetected:
+        Query = "special_command_executed"
+    Query = Query.strip()
+    print(Query)
 
     #TimeTokenSplitStart = time.time()
     Tokens = token_split(Query, Prg=Prg)

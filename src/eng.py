@@ -199,7 +199,7 @@ def word_selecting(Prg, Selector, Params):
             if Selector(Word, Params):
                 Selecteds.add(Word)
     #print("selecting total:", time.time() - TimeStart)
-    print("word selecting total:", len(Selecteds))
+    #print("word selecting total:", len(Selecteds), Selecteds)
     return Selecteds
 
 _group_initialised = False

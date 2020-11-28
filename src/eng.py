@@ -1,4 +1,4 @@
-import time
+import util
 verbs_irregular = {
     # Base Form	Past Simple	Past Participle
     ("arise",	"arose",	"arisen"),
@@ -187,6 +187,9 @@ def selector_word_end(Word, Pattern):
 def selector_word_start(Word, Pattern):
     return Word.startswith(Pattern)
 
+def selector_word_include(Word, Pattern):
+    return Pattern in Word
+
 # TESTED
 def word_selecting(Prg, Selector, Params):
     Selecteds = set()
@@ -199,24 +202,45 @@ def word_selecting(Prg, Selector, Params):
     print("word selecting total:", len(Selecteds))
     return Selecteds
 
-# TESTED
-def groups_of_word_ending(Prg, End):
+_group_initialised = False
+def group_cache_init(Prg):
+    global _group_initialised
+    if _group_initialised:
+        return
     if "Cache" not in Prg:
         Prg["Cache"] = dict()
-    if End in Prg["Cache"]:
-        return Prg["Cache"][End]
+    Cache = Prg["Cache"]
+    for Key in ["End", "Start", "Include"]:
+        if Key not in Cache:
+            Cache[Key] = dict()
+    _group_initialised = True
 
-    Selecteds = word_selecting(Prg, selector_word_end, End)
-
-    Prg["Cache"][End] = Selecteds
+# TESTED
+def groups_of_word_ending(Prg, Pattern):
+    group_cache_init(Prg)
+    if Pattern in Prg["Cache"]["End"]:
+        return Prg["Cache"]["End"][Pattern]
+    Selecteds = word_selecting(Prg, selector_word_end, Pattern)
+    Prg["Cache"]["End"][Pattern] = Selecteds
     return Selecteds
 
 # TESTED
-def groups_of_word_starting(Prg, Start):
-    if Start in Prg["Cache"]:
-        return Prg["Cache"][Start]
+def groups_of_word_starting(Prg, Pattern):
+    group_cache_init(Prg)
+    if Pattern in Prg["Cache"]["Start"]:
+        return Prg["Cache"]["Start"][Pattern]
 
-    Selecteds = word_selecting(Prg, selector_word_start, Start)
+    Selecteds = word_selecting(Prg, selector_word_start, Pattern)
+    Prg["Cache"]["Start"][Pattern] = Selecteds
+    return Selecteds
 
-    Prg["Cache"][Start] = Selecteds
+# TESTED
+def groups_of_word_include(Prg, Pattern):
+    group_cache_init(Prg)
+    if Pattern in Prg["Cache"]["Include"]:
+        return Prg["Cache"]["Include"][Pattern]
+
+    Selecteds = word_selecting(Prg, selector_word_include, Pattern)
+
+    Prg["Cache"]["Include"][Pattern] = Selecteds
     return Selecteds

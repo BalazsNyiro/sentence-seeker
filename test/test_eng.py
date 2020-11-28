@@ -20,6 +20,11 @@ class EngTests(util_test.SentenceSeekerTest):
                 },
                 "Cache": dict()
             }
+            Selector = eng.selector_word_include
+            Received = eng.word_selecting(PrgFake, Selector, "ead")
+            Wanted = set(["reading", "read"])
+            self.assertEqual(Received, Wanted)
+
             Selector = eng.selector_word_start
             Received = eng.word_selecting(PrgFake, Selector, "r")
             Wanted = set(["reading", "read"])
@@ -44,6 +49,14 @@ class EngTests(util_test.SentenceSeekerTest):
 
             Wanted = set(["any"])
             Received = eng.groups_of_word_starting(PrgFake, "an")
+            self.assertEqual(Received, Wanted)
+
+            Wanted = set(["read", "reading", "write", "writing"])
+            Received = eng.groups_of_word_include(PrgFake, "r")
+            self.assertEqual(Received, Wanted)
+
+            Wanted = set()
+            Received = eng.groups_of_word_include(PrgFake, "unknown_pattern")
             self.assertEqual(Received, Wanted)
 
 def run_all_tests(Prg):

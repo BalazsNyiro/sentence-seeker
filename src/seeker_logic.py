@@ -28,7 +28,6 @@ def word_group_collect(Words):
 
 # TESTED
 # FIXME: TEST WITH PRG PARAM
-TokensSpecial = set([":iverbPs", ":iverbInf", ":iverbPp", "end:", "start:"])
 def token_split(Query, Prg=dict()):
 
     Query = Query.replace(",", " ")
@@ -38,28 +37,35 @@ def token_split(Query, Prg=dict()):
         # insert space around parenthesis
         Query = Query.replace(Operator, f" {Operator} ")
 
+    def word_group_into_tokens(Group):
+        TokensWithSpecials.extend(word_group_collect(Group))
+
     ########################################################################
     # every special word has : sign as a separator.
     TokensWithSpecials = []
     for Token in Query.split(" "):
         if ":" in Token: # : means: special token
 
-            if Token == ":iverbPs": # irregular verbs, past simple selector
-                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsPresentSimple))
+            if Token == "iverb:ps": # irregular verbs, past simple selector
+                word_group_into_tokens(eng.IrregularVerbsPresentSimple)
 
-            if Token == ":iverbPp": # irregular verbs, past participle selector
-                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsPastParticiple))
+            if Token == "iverb:pp": # irregular verbs, past participle selector
+                word_group_into_tokens(eng.IrregularVerbsPastParticiple)
 
-            if Token == ":iverbInf": # irregular verbs, past participle selector
-                TokensWithSpecials.extend(word_group_collect(eng.IrregularVerbsInfinitive))
+            if Token == "iverb:inf": # irregular verbs, past participle selector
+                word_group_into_tokens(eng.IrregularVerbsInfinitive)
 
             if Token.startswith("end:"):
                 End = Token.split(":")[1]
-                TokensWithSpecials.extend(word_group_collect(eng.groups_of_word_ending(Prg, End)))
+                word_group_into_tokens(eng.groups_of_word_ending(Prg, End))
 
             if Token.startswith("start:"):
                 Start = Token.split(":")[1]
-                TokensWithSpecials.extend(word_group_collect(eng.groups_of_word_starting(Prg, Start)))
+                word_group_into_tokens(eng.groups_of_word_starting(Prg, Start))
+
+            if Token.startswith("in:"):
+                In = Token.split(":")[1]
+                word_group_into_tokens(eng.groups_of_word_include(Prg, In))
 
         else:
             TokensWithSpecials.append(Token)

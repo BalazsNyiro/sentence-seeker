@@ -219,8 +219,7 @@ def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainL
     if len(TokenProcessExplainSumma) > ExplainLimit:
         return "Too complex Token explaining"
 
-    for Exp in TokenProcessExplainSumma:
-        Token, ResultNum = Exp
+    for Token, ResultNum in TokenProcessExplainSumma.items():
         TokenExplainText.append(f"{Token}: {ResultNum}")
 
     return NewLine.join(TokenExplainText)

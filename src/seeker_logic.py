@@ -323,19 +323,12 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
 
 def token_explain_summa(TokenProcessExplainPerDoc):
-    TokenProcessExplainSumma = []
-
+    TokenProcessExplainSumma = dict()
     for Source, Explains in TokenProcessExplainPerDoc.items():
-        if not TokenProcessExplainSumma:
-            for Explain in Explains:
-                TokenProcessExplainSumma.append(Explain)
-        else:
-            for Id, Explain in enumerate(Explains):
-                Token, ResultsNumNow = Explain
-                _, ResultsSumma = TokenProcessExplainSumma[Id]
-                TokenProcessExplainSumma[Id] = (Token, ResultsSumma + ResultsNumNow)
-
-        # print("exp:", Source, Explain)
+        for Explain in Explains:
+            Token, ResultsNumNow = Explain
+            util.dict_key_insert_if_necessary(TokenProcessExplainSumma, Token, 0)
+            TokenProcessExplainSumma[Token] += ResultsNumNow
 
     return TokenProcessExplainSumma
 

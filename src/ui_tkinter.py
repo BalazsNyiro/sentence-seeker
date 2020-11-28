@@ -34,12 +34,14 @@ def seek_and_display(KeypressEvent=""):
 
     Theme = util_ui.theme_actual(PrgGlob)
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
+
+    NumOfColorThemes = len(Theme["Highlights"])
     for WordId, WordWanted in enumerate(WordsWanted):
         TagName = f"Highlighted_{WordId}"
 
         # here we have problems at irregular verbs
-        #if WordId in Theme["Highlights"]:
-        SentencesArea.tag_configure(TagName, background=Theme["Highlights"][WordId])
+        ThemeId = WordId % NumOfColorThemes # if we have too much words, keep the id in the range of available colors
+        SentencesArea.tag_configure(TagName, background=Theme["Highlights"][ThemeId])
         SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
 
 

@@ -12,7 +12,8 @@ def seek_and_display(Prg, Wanted):
     print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
-    if Prg["OsIsUnixBased"]: # On Linux and I hope on Mac, we can use history in console with readline module
+    # On Linux and I hope on Mac, we can use history in console
+    if Prg["OsIsUnixBased"]:
         import readline
 
     user_welcome_message(Prg, Ui)
@@ -53,11 +54,11 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
     return util_ui.sentence_get_from_result_oop(Prg,
                                                 Result,
                                                 ReturnType="separated_subsentences",
-                                                ColorBefore= ColorBefore,
-                                                ColorAfter= ColorDefault,
+                                                ColorBefore=ColorBefore,
+                                                ColorAfter=ColorDefault,
                                                 ColorDetected=ColorDetected,
                                                 ColorResultNum=ColorResultNum,
-                                                ResultNum= ResultNum,
+                                                ResultNum=ResultNum,
                                                 WordsMaybeDetected=WordsMaybeDetected)
 
 def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):

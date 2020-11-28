@@ -74,7 +74,7 @@ class SentenceObj():
                 CharNum += W.Len
             return SpaceNum + CharNum
 
-        if self.ResultNum:
+        if self.ResultNum is not None:
             Rows = [[WordObj(str(self.ResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
         else:
             Rows = [[]]
@@ -83,7 +83,8 @@ class SentenceObj():
             RowLast = Rows[-1]
 
             SpaceNeed = Word.Len
-            if row_len(RowLast): SpaceNeed += 1
+            if row_len(RowLast):
+                SpaceNeed += 1
 
             if row_len(RowLast) + SpaceNeed <= WidthMax:
                 RowLast.append(Word)

@@ -37,13 +37,21 @@ def token_split(Query, Prg=dict()):
         # insert space around parenthesis
         Query = Query.replace(Operator, f" {Operator} ")
 
+    ########################################################################
+    TokensWithSpecials = []
     def word_group_into_tokens(Group):
         TokensWithSpecials.extend(word_group_collect(Group))
-
     ########################################################################
     # every special word has : sign as a separator.
-    TokensWithSpecials = []
     for Token in Query.split(" "):
+        if ".." in Token:
+            StartDots = Token.startswith("..")
+            EndDots = Token.endswith("..")
+            if     StartDots and     EndDots: Token = "in:"    + Token[2:-2]
+            if     StartDots and not EndDots: Token = "start:" + Token[2:]
+            if not StartDots and     EndDots: Token = "end:"   + Token[:-2]
+            print("new token:", Token)
+
         if ":" in Token: # : means: special token
 
             if Token == "iverb:ps": # irregular verbs, past simple selector

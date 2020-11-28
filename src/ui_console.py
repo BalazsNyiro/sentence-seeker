@@ -121,8 +121,10 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
         if UserReply in PrevChars:
             # print("prev char")
-            PageNum -= 1
-            if PageNum < 0: PageNum = 0
+            if PageNum > 0:
+                PageNum -= 1
+            else:
+                print("This is the first page!")
 
         if UserReply in QuitChars:
             break

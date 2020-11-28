@@ -38,7 +38,9 @@ class WordObj():
 
         self.Detected = False
 
-        if util.word_only_abc_chars(Txt) in WordsMaybeDetected:
+        # the case-insensivity is important because words can start with upper/lower case
+        # chars, too
+        if util.word_only_abc_chars(Txt).lower() in WordsMaybeDetected:
             self.Detected = True
 
         self.Len = len(Txt)

@@ -44,12 +44,14 @@ def token_split(Query, Prg=dict()):
     ########################################################################
     # every special word has : sign as a separator.
     for Token in Query.split(" "):
-        if ".." in Token:
-            StartDots = Token.startswith("..")
-            EndDots = Token.endswith("..")
-            if     StartDots and     EndDots: Token = "in:"    + Token[2:-2]
-            if     StartDots and not EndDots: Token = "start:" + Token[2:]
-            if not StartDots and     EndDots: Token = "end:"   + Token[:-2]
+        Sign = ".."
+        LenSign = len(Sign)
+        if Sign in Token:
+            StarPrefix = Token.startswith(Sign)
+            StarPostfix = Token.endswith(Sign)
+            if     StarPrefix and     StarPostfix: Token = "in:"    + Token[LenSign:-LenSign]
+            if     StarPrefix and not StarPostfix: Token = "start:" + Token[LenSign:]
+            if not StarPrefix and     StarPostfix: Token = "end:"   + Token[:-LenSign]
             print("new token:", Token)
 
         if ":" in Token: # : means: special token

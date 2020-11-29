@@ -108,7 +108,10 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             "ConverterPdfToText": converter_pdf_to_text(Os),
             "ConverterHtmlToText": converter_html_to_txt,
 
-            "Statistics": [],
+            "Statistics": {
+                "ColorsConsoleUsedForeGround": set(),
+                "Memory":[]
+            },
             "Ui": "tkinter",
             "UiRootObj": None,
             "UiWindowGeometry": "800x600",

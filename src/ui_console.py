@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import seeker_logic, text, util_ui
+import seeker_logic, util, util_ui
 import time
 
 def seek_and_display(Prg, Wanted):
@@ -15,6 +15,8 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     # On Linux and I hope on Mac, we can use history in console
     if Prg["OsIsUnixBased"]:
         import readline
+
+    util.if_win__set_windows_console_enable_ansi_escapes(Prg)
 
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
@@ -189,13 +191,12 @@ __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
 def color(Prg, ColorName, CnameBackground=""):
 
-    if Prg["OsIsWindows"]: return ""
+    Prg["Statistics"]["ColorsConsoleUsedForeGround"].add(ColorName)
+
     # MAYBE: win terminal has color display option, detailed here:
     # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
     
     # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
-
-
 
     ColorBackground=""
     global __color_name_last_used, __style_last_used

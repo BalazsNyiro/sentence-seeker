@@ -645,3 +645,22 @@ def word_only_abc_chars(Txt):
         if Char in ABC_Eng_Lower or Char in ABC_Eng_Upper:
             Pure.append(Char)
     return "".join(Pure)
+
+# in windows cmd shell, winver  gui program show info
+# if you execute cmd, it display at the top the version info, too
+#https://stackoverflow.com/questions/38935715/get-windows-10-build-version-release-id
+def get_windows_release_id():
+    key = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+    val = r"ReleaseID"
+
+    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key) as key:
+        releaseId = int(winreg.QueryValueEx(key, val)[0])
+
+    return releaseId
+
+# https://stackoverflow.com/questions/36760127/how-to-use-the-new-support-for-ansi-escape-sequences-in-the-windows-10-console^
+def if_win__set_windows_console_enable_ansi_escapes(Prg):
+    if Prg["OsIsWindows"]:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)

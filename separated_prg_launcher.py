@@ -55,4 +55,4 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
         httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)
         httpd.serve_forever()
 
-    print(Prg["Statistics"])
+    # print("Statistics", Prg["Statistics"])

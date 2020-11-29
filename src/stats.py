@@ -9,5 +9,5 @@ def time_save(Prg, Msg):
     Stat = {  "Time": Time,
                "Msg": Msg,
             "Memory": "psutil.virtual_memory()"}
-    Prg["Statistics"].append(Stat)
+    Prg["Statistics"]["Memory"].append(Stat)
     return Time

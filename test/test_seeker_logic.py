@@ -3,6 +3,7 @@ import unittest, util_test, copy, util, seeker
 import seeker_logic, text, result_selectors
 import os.path
 import document
+import tokens
 
 class SeekerLogicTests(util_test.SentenceSeekerTest):
     # for higher text collector functions I will build up a test text
@@ -25,14 +26,14 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
                        ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 200}, '(birds AND is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
                        ({0, 101, 200, 400}, 'is'), 'AND', ({200}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({200}, '(birds AND (is AND strong))')])
 
             self.assertEqual(Explains, [('birds', 4),
@@ -45,20 +46,20 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
                        ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 200}, '(birds AND is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds AND is)', 2)])
 
             Tokens = [({0, 200}, '(birds AND is)'), 'AND', ({200}, 'strong')]
             Explains = [('birds', 4), ('is', 4), ('strong', 1)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({200}, '((birds AND is) AND strong)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('strong', 1), ('((birds AND is) AND strong)', 1)])
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND',
                        ({0, 101, 200, 400}, 'is'), 'AND', ({0, 202}, 'are')]
             Explains = [('birds', 4), ('is', 4), ('are', 2)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0}, '(birds AND (is AND are))')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('is', 4),
@@ -69,45 +70,45 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Tokens = [({0, 100, 200, 500}, 'birds'), 'OR',
                        ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 100, 101, 200, 400, 500}, '(birds OR is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
             Tokens = [({200}, 'strong'), 'OR', ({0, 202}, 'are')]
             Explains = [('strong', 1), ('are', 2)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 200, 202}, '(strong OR are)')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('(strong OR are)', 3)])
 
             Tokens = [({200, 0, 202}, '(strong OR are)'), 'OR', (set(), '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 200, 202}, '((strong OR are) OR (empty_group))')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) OR (empty_group))', 3)])
 
             Tokens = [({200, 0, 202}, '(strong OR are)'), 'AND', (set(), '(empty_group)')]
             Explains = [('strong', 1), ('are', 2)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [(set(), '((strong OR are) AND (empty_group))')])
             self.assertEqual(Explains, [('strong', 1), ('are', 2), ('((strong OR are) AND (empty_group))', 0)])
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'OR',
                        ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('is', 4)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 100, 101, 200, 400, 500}, '(birds OR is)')])
             self.assertEqual(Explains, [('birds', 4), ('is', 4), ('(birds OR is)', 6)])
 
             Tokens = [({0, 202}, 'are'), 'OR', ({0}, 'singing')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0, 202}, '(are OR singing)')])
             self.assertEqual(Explains, [('birds', 4), ('are', 2), ('singing', 1), ('(are OR singing)', 2)])
 
             Tokens = [({0, 100, 200, 500}, 'birds'), 'AND', ({0, 202}, '(are OR singing)'),
                        'AND', ({0, 101, 200, 400}, 'is')]
             Explains = [('birds', 4), ('are', 2), ('singing', 1), ('is', 4)]
-            Tokens, Explains = seeker_logic.operators_exec(Tokens, Explains)
+            Tokens, Explains = tokens.operators_exec(Tokens, Explains)
             self.assertEqual(Tokens, [({0}, '(birds AND ((are OR singing) AND is))')])
             self.assertEqual(Explains, [('birds', 4),
                                         ('are', 2),
@@ -119,32 +120,32 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
     def test_is_operator(self):
         if self._test_exec("test_is_operator"):
 
-            self.assertFalse(seeker_logic.is_operator("Mother"))
-            self.assertFalse(seeker_logic.is_operator("and"))
-            self.assertFalse(seeker_logic.is_operator("Or"))
+            self.assertFalse(tokens.is_operator("Mother"))
+            self.assertFalse(tokens.is_operator("and"))
+            self.assertFalse(tokens.is_operator("Or"))
 
             # not operator, not string
-            self.assertFalse(seeker_logic.is_operator(["big", "AND", "car"]))
+            self.assertFalse(tokens.is_operator(["big", "AND", "car"]))
 
-            self.assertTrue(seeker_logic.is_operator("("))
-            self.assertTrue(seeker_logic.is_operator(")"))
-            self.assertTrue(seeker_logic.is_operator("AND"))
-            self.assertTrue(seeker_logic.is_operator("OR"))
+            self.assertTrue(tokens.is_operator("("))
+            self.assertTrue(tokens.is_operator(")"))
+            self.assertTrue(tokens.is_operator("AND"))
+            self.assertTrue(tokens.is_operator("OR"))
 
     def test_is_str_but_not_operator(self):
         if self._test_exec("test_is_str_but_not_operator"):
 
-            self.assertTrue(seeker_logic.is_str_but_not_operator("Mother"))
-            self.assertTrue(seeker_logic.is_str_but_not_operator("and"))
-            self.assertTrue(seeker_logic.is_str_but_not_operator("Or"))
+            self.assertTrue(tokens.is_str_but_not_operator("Mother"))
+            self.assertTrue(tokens.is_str_but_not_operator("and"))
+            self.assertTrue(tokens.is_str_but_not_operator("Or"))
 
             # not operator, not string
-            self.assertFalse(seeker_logic.is_str_but_not_operator(["big", "AND", "car"]))
+            self.assertFalse(tokens.is_str_but_not_operator(["big", "AND", "car"]))
 
-            self.assertFalse(seeker_logic.is_str_but_not_operator("("))
-            self.assertFalse(seeker_logic.is_str_but_not_operator(")"))
-            self.assertFalse(seeker_logic.is_str_but_not_operator("AND"))
-            self.assertFalse(seeker_logic.is_str_but_not_operator("OR"))
+            self.assertFalse(tokens.is_str_but_not_operator("("))
+            self.assertFalse(tokens.is_str_but_not_operator(")"))
+            self.assertFalse(tokens.is_str_but_not_operator("AND"))
+            self.assertFalse(tokens.is_str_but_not_operator("OR"))
 
 
     def test_result_selectors(self):
@@ -173,32 +174,32 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
     def test_words_wanted_from_tokens(self):
         if self._test_exec("test_words_wanted_from_tokens"):
             Tokens = ["(", "apple", "AND", "orange", ")"]
-            Words = seeker_logic.words_wanted_from_tokens(Tokens)
+            Words = tokens.words_wanted_collect(Tokens)
             self.assertEqual(Words, set(["apple", "orange"]))
 
     def test_word_group_collect(self):
         if self._test_exec("test_word_group_collect"):
             Words = ["apple", "orange", "grape"]
-            Group = seeker_logic.word_group_collect(Words)
+            Group = tokens.word_group_collect(Words)
             self.assertEqual(Group, ["(", "apple", "OR", "orange", "OR", "grape", ")"])
 
     def test_token_split(self):
         if self._test_exec("test_token_split"):
             Query = "like 1945"
             Wanted = ["like", "AND", "1945"]
-            self.assertEqual(seeker_logic.token_split(Query), Wanted)
+            self.assertEqual(tokens.token_split(Query), Wanted)
 
             Query = "(apple   house,mouse)"
             Wanted = ["(", "apple", "AND", "house", "AND", "mouse", ")"]
-            self.assertEqual(seeker_logic.token_split(Query), Wanted)
+            self.assertEqual(tokens.token_split(Query), Wanted)
 
             Query = "(every OR special) AND (events OR (bird OR audience))"
-            TokensDetected = seeker_logic.token_split(Query)
+            TokensDetected = tokens.token_split(Query)
             TokensWanted = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
             self.assertEqual(TokensDetected, TokensWanted)
 
             Query = "birds (are OR  singing) AND (is)"
-            TokensDetected = seeker_logic.token_split(Query)
+            TokensDetected = tokens.token_split(Query)
             TokensWanted = ["birds", "AND", "(", "are", "OR", "singing", ")", "AND", "(", "is", ")"]
             self.assertEqual(TokensDetected, TokensWanted)
 
@@ -207,13 +208,13 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Query = "apple  house"
             Wanted = ["apple", "AND", "house"]
 
-            TokensDetected = seeker_logic.token_split(Query)
+            TokensDetected = tokens.token_split(Query)
             self.assertEqual(TokensDetected, Wanted)
 
     def test_token_group_finder(self):
         if self._test_exec("test_token_group_finder"):
             Tokens = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
-            TokenGroupsDetected = seeker_logic.token_group_finder(Tokens)
+            TokenGroupsDetected = tokens.token_group_finder(Tokens)
             TokenGroupsWanted = [['every', 'OR', 'special'], 'AND', ['events', 'OR', ['bird', 'OR', 'audience']]]
             self.assertEqual(TokenGroupsDetected, TokenGroupsWanted)
 
@@ -231,12 +232,12 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             ######################################################################
 
             def token_interpreter_wrapper(Prg, Query):
-                Tokens = seeker_logic.token_split(Query)
-                TokenGroups = seeker_logic.token_group_finder(Tokens)
+                Tokens = tokens.token_split(Query)
+                TokenGroups = tokens.token_group_finder(Tokens)
                 DocIndex = Prg["DocumentObjectsLoaded"]["test_document_bird"]["WordPosition"]
 
                 Explains = []
-                ResultDict, ResultName = seeker_logic.token_interpreter(TokenGroups, DocIndex, Explains)
+                ResultDict, ResultName = tokens.token_interpreter(TokenGroups, DocIndex, Explains)
                 return ResultDict, Explains
 
             if True:

@@ -63,13 +63,12 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
 
 def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
     CharEnter = chr(13)
-    CharBackspace = chr(127)
-    CharEscape = chr(27)
+    CharEscape = chr(27) # it's a problem because some special key's code starts with 27, too
 
-    NextChars = "n jBC"+ CharEnter # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
-    PrevChars = "pkAD" + CharBackspace # A: arrowUp, D: arrowLeft
-    QuitChars = "q" + CharEscape
-    Msg = "[p]rev [n]ext [q]uery again."
+    NextKeys = {"n", " ", "j", CharEnter, "KeyArrowDown", "KeyArrowRight"} # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
+    PrevKeys = {"p", "k", "KeyBackSpace", "KeyArrowUp", "KeyArrowLeft"}
+    QuitKeys = {"q"}
+    Msg = "[p]rev [n]ext [q]uit, query."
 
     ScreenWidth, ScreenHeight = util_ui.get_screen_size()
 
@@ -111,14 +110,14 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
         if Step == 0: # ask new instruction if no more steps
             UserReply = util_ui.press_key_in_console(f"{Msg}   total: {ResultsNum}")
+            print("user reply:", UserReply)
+            if len(UserReply) == 1 and UserReply in QuitKeys: break
 
-            if len(UserReply) == 1 and UserReply in QuitChars: break
-
-            if UserReply in NextChars:
+            if UserReply in NextKeys:
                 Step = 1
                 util_ui.clear_screen(ScreenHeight)
 
-            if UserReply in PrevChars:
+            if UserReply in PrevKeys:
                 Step = -1
                 util_ui.clear_screen(ScreenHeight)
 

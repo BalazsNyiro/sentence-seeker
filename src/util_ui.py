@@ -317,7 +317,7 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
 # in basic case user press key+Enter
 # please solve that he has to press only one button
 #  READ: https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
-def keypress_detect():
+def keypress_detect_linux():
     Fd = sys.stdin.fileno()
 
     OldSettings = termios.tcgetattr(Fd)
@@ -329,32 +329,34 @@ def keypress_detect():
         termios.tcsetattr(Fd, termios.TCSADRAIN, OldSettings)
     return Char
 
+
+
 def press_key_in_console(Msg, MsgEnd=""):
     # typically on Linux
     if TtyTermiosModulesAreAvailable:
         print(Msg, end=MsgEnd, flush=True)
-        Reply = keypress_detect() # in simple case it's one character
+        Reply = keypress_detect_linux() # in simple case it's one character
         ReplyOrig = Reply
 
         ###################### Linux ###########3##################
         if ord(Reply) == 27: # more than one char arrives, special keys
 
-            Char2 = keypress_detect()
-            Char3 = keypress_detect()
-            # print("Char2 >>", Char2, ord(Char2))
-            # print("Char3 >>", Char3, ord(Char3))
+            Char2 = keypress_detect_linux()
+            Char3 = keypress_detect_linux()
+            print("Char2 >>", Char2, ord(Char2))
+            print("Char3 >>", Char3, ord(Char3))
 
             ############# X11 keycodes, in Linux GUI ##################
+            if Char2 == "[" and Char3 == "A": Reply = "KeyArrowUp"
+            if Char2 == "[" and Char3 == "B": Reply = "KeyArrowDown"
+            if Char2 == "[" and Char3 == "C": Reply = "KeyArrowRight"
+            if Char2 == "[" and Char3 == "D": Reply = "KeyArrowLeft"
             if Char2 == "[" and Char3 == "H": Reply = "KeyHome"
             if Char2 == "[" and Char3 == "F": Reply = "KeyEnd"
 
             ##########  Linux virtual consoles: ctrl+alt+F1, different in last char  ########
             if Char2 == "[" and Char3 == "1": Reply = "KeyHome"
             if Char2 == "[" and Char3 == "4": Reply = "KeyEnd"
-
-
-        # on Ubuntu:  UP: "A", Down: "B" rightArrow: "C", leftArrow: "D"
-        # when I press up arrow, it returns with 'A' char
 
         # backspace: 127
         # enter: 13
@@ -364,11 +366,30 @@ def press_key_in_console(Msg, MsgEnd=""):
         CharCodes = ",".join([str(ord(Char)) for Char in ReplyOrig])
         # print("Reply received: ", Reply, CharCodes)
         # sys.exit()
+
+        if ord(ReplyOrig) == 127: Reply = "KeyBackSpace"
+
         print() # newline after message line (where we received user input at the end of the row
         return Reply
 
     if MsvCrtModuleAvailable: # on Windows
-        return msvcrt.getwch()
+        Reply = msvcrt.getwch()
+        # print("Char win os1", ord(Reply), Reply)
+        if Reply == chr(8): Reply = "KeyBackSpace"
+
+        if Reply == chr(224): # special keys, home/end, left, right
+            Reply = msvcrt.getwch()
+            # print("Char win os2", ord(Reply), Reply)
+            if Reply == chr(71): Reply = "KeyHome"
+            if Reply == chr(79): Reply = "KeyEnd"
+
+            if Reply == chr(72): Reply = "KeyArrowUp"
+            if Reply == chr(75): Reply = "KeyArrowLeft"
+            if Reply == chr(77): Reply = "KeyArrowRight"
+            if Reply == chr(80): Reply = "KeyArrowDown"
+
+        print()
+        return Reply
 
     # basic communication solution, type reply and press Enter
     UserReply = input(Msg).strip()

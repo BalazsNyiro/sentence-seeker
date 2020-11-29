@@ -367,7 +367,9 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                         "    means\n"
                         "    'in:look AND start:like AND end:ing'\n"
                         "\n"
-                        "examples: 'move.. since'  result example ->  ...has moved since...\n"
+                        "examples:\n"
+                        " - 'move.. since'   ->  ...has moved since...\n"
+                        " - 'plant.. grow..' ->  ...plants grown...\n"
                         
                         "\n"
                         "On/Off commands, turn on/off some settings:\n"

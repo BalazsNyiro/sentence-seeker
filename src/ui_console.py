@@ -89,6 +89,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
         SomethingDisplayed = False
 
         IdNow = PageTopSentenceId[PageNum]
+        print("")
         while FreeLines:
             LastResultDisplayed = (IdNow >= ResultsNum)
             if NoResult or LastResultDisplayed: break
@@ -113,13 +114,23 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
             if len(UserReply) == 1 and UserReply in QuitChars: break
 
-            if UserReply in NextChars: Step = 1
-            if UserReply in PrevChars: Step = -1
-            if UserReply == "KeyHome": PageNum = 0
-            if UserReply == "KeyEnd": Step = ResultsNum #
-                                                       # theoretically it's wrong because lot of results can be on a page
-                                                       # but I guess one result will be smaller than one page so it's a good upper limit
-            util_ui.clear_screen(ScreenHeight)
+            if UserReply in NextChars:
+                Step = 1
+                util_ui.clear_screen(ScreenHeight)
+
+            if UserReply in PrevChars:
+                Step = -1
+                util_ui.clear_screen(ScreenHeight)
+
+            if UserReply == "KeyHome":
+                Step = -PageNum
+                util_ui.clear_screen(ScreenHeight)
+
+            if UserReply == "KeyEnd":
+                Step = ResultsNum
+                # theoretically it's wrong because lot of results can be on a page
+                # but I guess one result will be smaller than one page so it's a good upper limit
+                util_ui.clear_screen(ScreenHeight)
 
         if Step > 0:
             if PageNum+1 in PageTopSentenceId:

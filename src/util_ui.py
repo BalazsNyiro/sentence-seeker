@@ -334,14 +334,24 @@ def press_key_in_console(Msg, MsgEnd=""):
     if TtyTermiosModulesAreAvailable:
         print(Msg, end=MsgEnd, flush=True)
         Reply = keypress_detect() # in simple case it's one character
+        ReplyOrig = Reply
 
+        ###################### Linux ###########3##################
         if ord(Reply) == 27: # more than one char arrives, special keys
+
             Char2 = keypress_detect()
             Char3 = keypress_detect()
             # print("Char2 >>", Char2, ord(Char2))
             # print("Char3 >>", Char3, ord(Char3))
+
+            ############# X11 keycodes, in Linux GUI ##################
             if Char2 == "[" and Char3 == "H": Reply = "KeyHome"
             if Char2 == "[" and Char3 == "F": Reply = "KeyEnd"
+
+            ##########  Linux virtual consoles: ctrl+alt+F1, different in last char  ########
+            if Char2 == "[" and Char3 == "1": Reply = "KeyHome"
+            if Char2 == "[" and Char3 == "4": Reply = "KeyEnd"
+
 
         # on Ubuntu:  UP: "A", Down: "B" rightArrow: "C", leftArrow: "D"
         # when I press up arrow, it returns with 'A' char
@@ -351,8 +361,9 @@ def press_key_in_console(Msg, MsgEnd=""):
         # escape: 27
         # home: 7
         # end:
-        CharCodes = ",".join([str(ord(Char)) for Char in Reply])
-        #print("Reply received: ", Reply, CharCodes)
+        CharCodes = ",".join([str(ord(Char)) for Char in ReplyOrig])
+        # print("Reply received: ", Reply, CharCodes)
+        # sys.exit()
         print() # newline after message line (where we received user input at the end of the row
         return Reply
 

@@ -1,0 +1,18 @@
+{
+    "docs": {
+        "apple_tree": {
+            "license": "license_unknown",
+            "source_name": "source_unknown",
+            "url": "url_unknown"
+        },
+        "test_file_document_example": {
+            "license": "license_unknown",
+            "source_name": "source_unknown",
+            "url": "url_unknown"
+        }
+    },
+    "source_names": {
+        "gutenberg": "Project Gutenberg",
+        "wikipedia": "Wikipedia"
+    }
+}

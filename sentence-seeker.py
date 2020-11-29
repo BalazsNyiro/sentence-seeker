@@ -38,7 +38,7 @@ def main():
         separated_prg_launcher.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
 
 def test_exec(Args):
-    Prg = config.prg_config_create(Args, PrintForDeveloper=False)
+    Prg = config.prg_config_create(TestExecution=True, PrintForDeveloper=False)
 
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")
@@ -51,6 +51,7 @@ def test_exec(Args):
     import test_document
     import test_seeker
     import test_converter
+    import test_ui_html
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
@@ -61,7 +62,9 @@ def test_exec(Args):
     test_seeker_logic.run_all_tests(Prg)
     test_util_ui.run_all_tests(Prg)
     test_eng.run_all_tests(Prg)
-    util_test.result_all(Prg)
+    test_ui_html.run_all_tests(Prg)
+
+
     print("##################### TEST END #####################################")
     sys.exit(0)
     # print("\n"*22)

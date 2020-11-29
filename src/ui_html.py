@@ -30,7 +30,17 @@ def file_local_read(File, EncodeUtf8=True, Mode="r"):
 
         return Content
 
+# separated fun for test reasons
+def one_search(Prg, WordsInOneString, ExplainOnly=False):
+    TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, _ResultsTotalNum = \
+        seeker_logic.seek(Prg, WordsInOneString, SentenceFillInResult=True, ExplainOnly=ExplainOnly)
 
+    Reply = util_ui.ui_json_answer(Prg,
+                                   TokenProcessExplainSumma,
+                                   WordsMaybeDetected,
+                                   MatchNums__ResultInfo,
+                                   NewLine="<br />")
+    return Reply
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
@@ -59,14 +69,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         if Req.path.split("?")[0] == "/seek":
             if "words" in QueryParams:
-                TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = \
-                    seeker_logic.seek(self.Prg, QueryParams["words"][0], SentenceFillInResult=True, ExplainOnly=("explain_only" in QueryParams))
+                WordsInOneString = QueryParams["words"][0]
+                ExplainOnly = "explain_only" in QueryParams
 
-                Reply = util_ui.ui_json_answer(self.Prg,
-                                               TokenProcessExplainSumma,
-                                               WordsMaybeDetected,
-                                               MatchNums__ResultInfo,
-                                               NewLine="<br />")
+                Reply = one_search(self.Prg, WordsInOneString, ExplainOnly)
 
                 self.send_response(200)
                 self.content_type("text/plain")
@@ -109,6 +115,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         self.end_headers()
         self.wfile.write(Reply)
+
 
     def content_type(self, Type):
         if Type == "html":

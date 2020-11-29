@@ -7,7 +7,7 @@ from sys import platform
 
 from html.parser import HTMLParser
 
-def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", Os="", PrintForDeveloper=False):
+def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoot="", Os="", PrintForDeveloper=False):
 
     if not Os: # "Linux", "Windows" "Darwin"
 
@@ -43,6 +43,9 @@ def prg_config_create(TestExecution, DirWorkFromUserHome="", DirPrgExecRoot="", 
     Time = int(time.time())
     FileLog = f"log_{Time}"
     DirDocuments = os.path.join(DirWorkAbsPath, "documents")
+
+    if TestExecution:
+        DirDocuments = os.path.join(DirPrgExecRoot, "test_files", "documents_user_dir_simulator")
 
     if not os.path.isdir(DirDocuments):
         # debugger dies at Path(...) lines so I guard it with if

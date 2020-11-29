@@ -81,6 +81,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
     ResultsNum = len(SentenceStruct)
     NoResult = ResultsNum == 0
 
+    Step = 0
     while True:
         FreeLines = ScreenHeight - 3
 
@@ -107,27 +108,42 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
         if SomethingDisplayed:
             PageTopSentenceId[PageNum+1] = IdNow
 
-        UserReply = util_ui.press_key_in_console(Msg)
-        print("\n"*ScreenWidth) # clear screen
+        if Step == 0: # ask new instruction if no more steps
+            UserReply = util_ui.press_key_in_console(f"{Msg}   total: {ResultsNum}")
 
-        if UserReply in NextChars:
-            # print("next char")
+            if len(UserReply) == 1 and UserReply in QuitChars: break
+
+            if UserReply in NextChars: Step = 1
+            if UserReply in PrevChars: Step = -1
+            if UserReply == "KeyHome": PageNum = 0
+            if UserReply == "KeyEnd": Step = ResultsNum #
+                                                       # theoretically it's wrong because lot of results can be on a page
+                                                       # but I guess one result will be smaller than one page so it's a good upper limit
+            util_ui.clear_screen(ScreenHeight)
+
+        if Step > 0:
             if PageNum+1 in PageTopSentenceId:
                 NextIdInResults = PageTopSentenceId[PageNum + 1] < ResultsNum
                 if NextIdInResults:
                     PageNum += 1
                 else:
                     print("No more result")
+                    Step = 0
+            else:
+                Step = 0
 
-        if UserReply in PrevChars:
-            # print("prev char")
+            if Step > 0: # guard condition, sooner or later Step -> 0
+                Step -= 1
+
+        if Step < 0: # go back to the head
+            Step += 1
             if PageNum > 0:
                 PageNum -= 1
             else:
                 print("This is the first page!")
+                Step = 0
+        # print("Step:", Step)
 
-        if UserReply in QuitChars:
-            break
 
 # https://www.geeksforgeeks.org/formatted-text-linux-terminal-using-python/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors

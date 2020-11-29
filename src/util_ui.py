@@ -317,18 +317,31 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
 # in basic case user press key+Enter
 # please solve that he has to press only one button
 #  READ: https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
+def keypress_detect():
+    Fd = sys.stdin.fileno()
+
+    OldSettings = termios.tcgetattr(Fd)
+    Char = ""
+    try:
+        tty.setraw(sys.stdin.fileno())
+        Char = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(Fd, termios.TCSADRAIN, OldSettings)
+    return Char
+
 def press_key_in_console(Msg, MsgEnd=""):
     # typically on Linux
     if TtyTermiosModulesAreAvailable:
         print(Msg, end=MsgEnd, flush=True)
-        Fd = sys.stdin.fileno()
-        OldSettings = termios.tcgetattr(Fd)
-        Char = ""
-        try:
-            tty.setraw(sys.stdin.fileno())
-            Char = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(Fd, termios.TCSADRAIN, OldSettings)
+        Reply = keypress_detect() # in simple case it's one character
+
+        if ord(Reply) == 27: # more than one char arrives, special keys
+            Char2 = keypress_detect()
+            Char3 = keypress_detect()
+            # print("Char2 >>", Char2, ord(Char2))
+            # print("Char3 >>", Char3, ord(Char3))
+            if Char2 == "[" and Char3 == "H": Reply = "KeyHome"
+            if Char2 == "[" and Char3 == "F": Reply = "KeyEnd"
 
         # on Ubuntu:  UP: "A", Down: "B" rightArrow: "C", leftArrow: "D"
         # when I press up arrow, it returns with 'A' char
@@ -336,9 +349,12 @@ def press_key_in_console(Msg, MsgEnd=""):
         # backspace: 127
         # enter: 13
         # escape: 27
-        # print("Char received: ", Char, ord(Char))
+        # home: 7
+        # end:
+        CharCodes = ",".join([str(ord(Char)) for Char in Reply])
+        #print("Reply received: ", Reply, CharCodes)
         print() # newline after message line (where we received user input at the end of the row
-        return Char
+        return Reply
 
     if MsvCrtModuleAvailable: # on Windows
         return msvcrt.getwch()
@@ -346,3 +362,6 @@ def press_key_in_console(Msg, MsgEnd=""):
     # basic communication solution, type reply and press Enter
     UserReply = input(Msg).strip()
     return UserReply[0] # caller want only once char back
+
+def clear_screen(ScreenHeight):
+    print("\n"*ScreenHeight) # clear screen

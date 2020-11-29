@@ -5,6 +5,7 @@ class UiHtmlTest(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    # it works from documents_user_dir_simulator
     def test_ui_html(self):
         if self._test_exec("test_ui_html"):
             SeekResult = ui_html.one_search(self.Prg, "apple")

@@ -13,8 +13,12 @@ def quick_form_convert_to_special_form(Token, Sign):
         StarPrefix = Token.startswith(Sign)
         StarPostfix = Token.endswith(Sign)
         if StarPrefix and StarPostfix: Token = "in:" + Token[LenSign:-LenSign]
-        if StarPrefix and not StarPostfix: Token = "start:" + Token[LenSign:]
-        if not StarPrefix and StarPostfix: Token = "end:" + Token[:-LenSign]
+
+        #  *move  -> reMOVE
+        if StarPrefix and (not StarPostfix): Token = "end:" + Token[LenSign:]
+
+        # move* -> MOVEment
+        if (not StarPrefix) and StarPostfix: Token = "start:" + Token[:-LenSign]
     return Token
 
 ########################################################################
@@ -25,7 +29,6 @@ def group_words_collect(Prg, Query):
 
     # every special word has : sign as a separator.
     for Token in Query.split(" "):
-        Sign = ".."
         Token = quick_form_convert_to_special_form(Token, "*")
         Token = quick_form_convert_to_special_form(Token, "..")
         if ":" in Token:  # : means: special token

@@ -206,54 +206,133 @@ def subsentences_use_only_one_separator(Txt):
     return Txt
 
 # Tested
-def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None, ReplaceSubsentenceEndsToOneSeparator=True):
-    if ReplaceSubsentenceEndsToOneSeparator:
-        Sentence = subsentences_use_only_one_separator(Sentence)
+def subsentences(Prg=None, Sentence="", SubSentenceIdWanted=None, KeepSubsentenceEnd=False):
+    SubSentences = []
 
-    Subsentences = Sentence.split(";")
+    ################# collect subsentences by character ###################################
+    SubSen = []
+    def pack_subsen(SubSenChars):
+        return "".join(SubSenChars)
+
+    for Char in Sentence:
+        Separator = Char in SubSentenceEnds
+        if KeepSubsentenceEnd or not Separator:
+            SubSen.append(Char)
+        if Separator:
+            SubSentences.append(pack_subsen(SubSen))
+            SubSen = []
+    if SubSen:
+        SubSentences.append(pack_subsen(SubSen))
+    ####################################################
+
     if SubSentenceIdWanted is not None: # it can be 0, too. and if 0 == False!
-        if SubSentenceIdWanted < len(Subsentences):
+        if SubSentenceIdWanted < len(SubSentences):
             # return with one subsentence
-            return True, Subsentences[SubSentenceIdWanted]
+            return True, SubSentences[SubSentenceIdWanted]
         else:
             Msg = f"subsentence {SubSentenceIdWanted} id is missing"
             util.log(Prg, Msg)
             return False, [Msg]
-    return True, Subsentences # return with a list, with more than one subsentence
+    return True, SubSentences # return with a list, with more than one subsentence
 
-# Tested
-def linenum_subsentencenum_get(LineNum__SubSentenceNum, SubSentenceMultiplayer=100):
-    SubSentenceNum = LineNum__SubSentenceNum % SubSentenceMultiplayer
+
+def only_subsentence_num__and__wordnum(Num, WordMultiplier = 100):
+    # example: 902:   ( 902 - 2 ) / 100 = 9
+    SubSentenceNum = (Num - (Num % WordMultiplier)) // WordMultiplier
+
+    # 902 - 9*100
+    WordNum = Num - SubSentenceNum * WordMultiplier
+    return SubSentenceNum, WordNum
+
+# Tested - default values are important for testcases
+def linenum_subsentencenum_wordnum_get(Line_SubSentence_WordPos, SubSentenceMultiplier=100, WordMultiplier=100):
+
+    # I store 3 numbers info in one number and LineNum can be zero, too
+    # basically Line1 == 10000, Line 23 == 230000  so the rule: LineNumber, SubSentenceNum, WordNum
+
+    # complex example: 12345 means: Line=1, Subsentence = 23, WordPos = 45
     LineNum = 0
+    SubSentenceNum = 0
+    WordNum = 0
 
-    # I store 2 numbers info in one number and LineNum can be zero, too
-    # basically Line1 == 100, Line 23 == 2300  so the last 2 digits strore Subsentence Num
-    # and if the num is smaller than 100 it means LineNum = 0
-    if LineNum__SubSentenceNum >= SubSentenceMultiplayer:
-        LineNum = (LineNum__SubSentenceNum - SubSentenceNum) // SubSentenceMultiplayer
+    MultiSubWord = SubSentenceMultiplier * WordMultiplier
 
-    return LineNum, SubSentenceNum
+    if WordMultiplier > Line_SubSentence_WordPos >= 0:
+        WordNum = Line_SubSentence_WordPos
+    elif MultiSubWord > Line_SubSentence_WordPos >= WordMultiplier:
+        SubSentenceNum, WordNum = only_subsentence_num__and__wordnum(Line_SubSentence_WordPos)
+    else:
+        # without //, a simple / results a float num: 10/2 = 5.0 and I need an integer as result
+        LineNum = (Line_SubSentence_WordPos - (Line_SubSentence_WordPos % MultiSubWord)) // MultiSubWord
+        SubSentence_WordPos = Line_SubSentence_WordPos - LineNum * MultiSubWord
+        SubSentenceNum, WordNum = only_subsentence_num__and__wordnum(SubSentence_WordPos)
+
+    return LineNum, SubSentenceNum, WordNum
 
 # tested/used in test_seeker_logic.test_result_selectors
-def result_obj(FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, Sentence, SubSentenceResult, SentenceFillInResult):
-    return {"FileSourceBaseName": FileSourceBaseName,
-            "LineNumInSentenceFile": LineNumInSentenceFile,
-            "SubSentenceNum": SubSentenceNum,
-            "Sentence": Sentence if SentenceFillInResult else "-",
-            "SentenceLen": len(Sentence),
-            "SubSentenceLen": len(SubSentenceResult)
-           }
-# Tested
-def result_obj_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, SentenceFillInResult=False):
-    StatusFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
-    StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
+class sentence_obj_from_memory():
+    Counter = -1
 
-    return StatusFromMemory and StatusSubSentences, result_obj(FileSourceBaseName,
-                                                               LineNumInSentenceFile,
-                                                               SubSentenceNum,
-                                                               Sentence,
-                                                               SubSentenceResult,
-                                                               SentenceFillInResult)
+    def subsentence_num_add(self, SubSentenceNum):
+        self.SubSentenceNums.add(SubSentenceNum)
+        if SubSentenceNum < self.SubSentenceNumMin: self.SubSentenceNumMin = SubSentenceNum
+        if SubSentenceNum > self.SubSentenceNumMax: self.SubSentenceNumMax = SubSentenceNum
+
+    def word_num_add(self, WordNum):
+        self.WordNums.add(WordNum)
+
+    def represent_as_dict(self): # in tests it's easier to check matching with dicts
+        return { 'FileSourceBaseName':             self.FileSourceBaseName,
+                 'LineNumInSentenceFile':          self.LineNumInSentenceFile,
+                 'Sentence':                       self.Sentence,
+                 'SentenceLen':                    self.SentenceLen,
+                 'SubSentenceLen':                 self.SubSentenceLen,
+                 'SubSentenceNums':                self.SubSentenceNums,
+                 'SubSentenceNumMin':              self.SubSentenceNumMin,
+                 'SubSentenceNumMax':              self.SubSentenceNumMax,
+                 'WordNums':                       self.WordNums
+                 }
+
+    def to_json(self): # in tests it's easier to check matching with dicts
+        return { 'FileSourceBaseName':             self.FileSourceBaseName,
+                 'LineNumInSentenceFile':          self.LineNumInSentenceFile,
+                 'Sentence':                       self.Sentence,
+                 'SentenceLen':                    self.SentenceLen,
+                 'SubSentenceLen':                 self.SubSentenceLen,
+                 'SubSentenceNums':                list(self.SubSentenceNums), # sets can't be converted to json
+                 'SubSentenceNumMin':              self.SubSentenceNumMin,
+                 'SubSentenceNumMax':              self.SubSentenceNumMax,
+                 'WordNums':                       list(self.WordNums)
+                 }
+
+
+    def __init__(self, Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, WordNum, SentenceFillInResult, SentenceFromTest="", SubSentenceFromTest=""):
+
+        if SentenceFromTest:
+            StatusSentenceFromMemory = True
+            StatusSubSentences = True
+            Sentence = SentenceFromTest
+            SubSentenceResult = SubSentenceFromTest
+        else:
+            StatusSentenceFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
+            StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
+
+        sentence_obj_from_memory.Counter += 1
+        self.Id = sentence_obj_from_memory.Counter # in tests it's easier to tell: the object where id = 0, 1...
+
+        self.Status = {StatusSentenceFromMemory: StatusSentenceFromMemory,
+                       StatusSubSentences: StatusSubSentences}
+        self.FileSourceBaseName = FileSourceBaseName
+
+        self.LineNumInSentenceFile = LineNumInSentenceFile
+        self.SubSentenceNums = {SubSentenceNum}
+        self.SubSentenceNumMin = SubSentenceNum
+        self.SubSentenceNumMax = SubSentenceNum
+        self.WordNums = {WordNum}
+
+        self.Sentence = Sentence if SentenceFillInResult else "-"
+        self.SentenceLen = len(Sentence)
+        self.SubSentenceLen = len(SubSentenceResult)
 
 # Tested
 def word_wanted(Txt):
@@ -271,3 +350,4 @@ def words_count_in_all_document(Prg):
                 WordsCounter[Word] = 0
             WordsCounter[Word] += len(LineNums)
     return WordsCounter
+

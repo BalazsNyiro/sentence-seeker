@@ -112,7 +112,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
         if Step == 0: # ask new instruction if no more steps
             UserReply = util_ui.press_key_in_console(f"{Msg}   total: {ResultsNum}")
-            print("user reply:", UserReply)
+            # print("user reply:", UserReply)
             if len(UserReply) == 1 and UserReply in QuitKeys: break
 
             if UserReply in NextKeys:

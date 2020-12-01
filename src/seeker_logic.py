@@ -33,7 +33,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     TimeBigFor = time.time()
     TimeInterpreterSumma = 0
 
-    SubSentenceMultiplayer = Prg["SubSentenceMultiplayer"]
+    SubSentenceMultiplier = Prg["SubSentenceMultiplier"]
+    WordPositionMultiplier = Prg["WordPositionMultiplier"]
+
 
     for FileSourceBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
 
@@ -44,23 +46,39 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
         Explains = []
         # print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
         #TimeInterpreterStart = time.time()
-        Results, _ResultName = tokens.token_interpreter(TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"])
+        Results_Line_Subsen_Wordpos, _ResultName = tokens.token_interpreter(TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"])
+
+
         #TimeInterpreterSumma += time.time() - TimeInterpreterStart
         # print("TOKEN INTERPRETER <<<<", TimeInterpreter)
 
         TokenProcessExplainPerDoc[FileSourceBaseName] = Explains
 
-        if ExplainOnly: # no Results, only explain
+        if ExplainOnly: # no Results_Line_Subsen_Wordpos, only explain
             continue
 
-        for LineNum__SubSentenceNum in Results: # if we have any result from WordPosition:
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(LineNum__SubSentenceNum, SubSentenceMultiplayer)
-            _Status, Obj = text.result_obj_from_memory(Prg,
-                                                       FileSourceBaseName,
-                                                       LineNum,
-                                                       SubSentenceNum,
-                                                       SentenceFillInResult=SentenceFillInResult)
-            ResultsSelected.append(Obj)
+        Results_Per_Sentence = dict()
+        # Same sentence can be more than once in Results_Line_Subsen_Wordpos if you search more words.
+        for LineNum__SubSentenceNum__WordNum in Results_Line_Subsen_Wordpos: # if we have any result from WordPosition:
+            LineNum, SubSentenceNum, WordNum = \
+                text.linenum_subsentencenum_wordnum_get(LineNum__SubSentenceNum__WordNum, SubSentenceMultiplier, WordPositionMultiplier)
+
+            if LineNum not in Results_Per_Sentence:
+
+                Obj = text.sentence_obj_from_memory(Prg,
+                                                    FileSourceBaseName,
+                                                    LineNum,
+                                                    SubSentenceNum,
+                                                    WordNum,
+                                                    SentenceFillInResult)
+                Results_Per_Sentence[LineNum] = Obj
+            else:
+                Obj = Results_Per_Sentence[LineNum]
+                Obj.subsentence_num_add(SubSentenceNum)
+                Obj.word_num_add(WordNum)
+
+        for ResultObj in Results_Per_Sentence.values():
+            ResultsSelected.append(ResultObj)
 
     # print("time interpreter summa", TimeInterpreterSumma)
     print("big for time", time.time() - TimeBigFor)

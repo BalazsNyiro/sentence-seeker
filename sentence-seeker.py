@@ -52,6 +52,7 @@ def test_exec(Args):
     import test_seeker
     import test_converter
     import test_ui_html
+    import test_tokens
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)
@@ -63,7 +64,8 @@ def test_exec(Args):
     test_util_ui.run_all_tests(Prg)
     test_eng.run_all_tests(Prg)
     test_ui_html.run_all_tests(Prg)
-
+    test_tokens.run_all_tests(Prg)
+    util_test.result_all(Prg)
 
     print("##################### TEST END #####################################")
     sys.exit(0)

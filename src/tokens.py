@@ -1,7 +1,7 @@
 import eng, util, text
 # python has token module so i use tokens here.
 
-Operators = {"AND", "OR", "(", ")"}
+Operators = {"AND", "OR", "(", ")", "THEN"}
 
 # ..pattern..  -> in:pattern
 import util_json_obj
@@ -135,12 +135,25 @@ def token_group_finder(Tokens):
 
     return Group
 
+def values_select_in_scope(ResultsScoped, ResultsLeft, ResultsRight, SubSentenceMulti, WordPositionMulti, Scope):
+    LineNums = set()
+    ResultsUnion = ResultsLeft.union(ResultsRight)
+    for ResultScoped in ResultsScoped:
+        for ResultPrecise in ResultsUnion:  # check all elems to find the good ones
+            _, ResModified = result_scope_modify(ResultPrecise, SubSentenceMulti, WordPositionMulti, Scope)
+            if ResultScoped == ResModified:
+                LineNums.add(ResultPrecise)
+    return LineNums
+
 # PRECEDENCE:
 #  NOT
 #  AND
 #  OR
 #                  Tokens: list()
-def operators_exec(Tokens, Explains, TooManyTokenLimit=300):
+def operators_exec(Tokens,
+                   Explains,
+                   TooManyTokenLimit=300, Scope="subsentence",
+                   SubSentenceMulti=100, WordPositionMulti=100):
     OperatorPositions = {}
     for Operator in Operators:
         OperatorPositions[Operator] = []
@@ -156,29 +169,71 @@ def operators_exec(Tokens, Explains, TooManyTokenLimit=300):
         while OperatorPositions[Operator]:
             OperatorPositionLast = OperatorPositions[Operator].pop()
 
-            TokenLeft, NameLeft = Tokens[OperatorPositionLast - 1]
-            TokenRight, NameRight = Tokens[OperatorPositionLast + 1]
+            ResultsLeft, NameLeft = Tokens[OperatorPositionLast - 1]
+            ResultsRight, NameRight = Tokens[OperatorPositionLast + 1]
+
+            if Scope == "subsentence":
+                # remove word positions from tokens:
+                ResultsLeftScoped = results_scope_modify(ResultsLeft, SubSentenceMulti, WordPositionMulti, Scope)
+                ResultsRightScoped = results_scope_modify(ResultsRight, SubSentenceMulti, WordPositionMulti, Scope)
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             if Operator == "OR":
-                LineNumsOp = TokenLeft.union(TokenRight)
-            else:
-                LineNumsOp = TokenLeft.intersection(TokenRight)
+                ResultsScoped = ResultsLeftScoped.union(ResultsRightScoped)
+            elif Operator == "AND":
+                ResultsScoped = ResultsLeftScoped.intersection(ResultsRightScoped)
+
+            elif Operator == "THEN":
+                ResultsScoped = exec_THEN_operator(ResultsLeftScoped, ResultsRightScoped)
+
+            # select original tokens based on selected scope:
+
+            LineNums = values_select_in_scope(ResultsScoped, ResultsLeft, ResultsRight, SubSentenceMulti, WordPositionMulti, Scope)
 
             # the string creation/concatenation is too slow if you use thousands of tokens
             if TooManyTokens: # no explain, no detailed/explained token info
-                Tokens[OperatorPositionLast-1] = (LineNumsOp, "")
+                Tokens[OperatorPositionLast-1] = (LineNums, "")
                 Tokens.pop(OperatorPositionLast + 1)
                 Tokens.pop(OperatorPositionLast)
             else:
                 ResultName = f"({NameLeft} {Operator} {NameRight})"
 
-                Tokens[OperatorPositionLast-1] = (LineNumsOp, ResultName)
+                Tokens[OperatorPositionLast-1] = (LineNums, ResultName)
                 Tokens.pop(OperatorPositionLast + 1)
                 Tokens.pop(OperatorPositionLast)
 
-                Explains.append((ResultName, len(LineNumsOp)))
+                Explains.append((ResultName, len(LineNums)))
 
     return Tokens, Explains
+
+# create intersection WHEN the order if from left to right
+def exec_THEN_operator(TokenLeft, TokenRight):
+    LineNumsOp = TokenLeft.intersection(TokenRight)
+    return LineNumsOp
+
+
+def result_scope_modify(Line_SubSentence_WordPos,
+                        SubSentenceMultiplier=100, WordMultiplier=100, Scope="subsentence"):
+    LineNum, SubSentenceNum, WordNum = \
+        text.linenum_subsentencenum_wordnum_get(Line_SubSentence_WordPos, SubSentenceMultiplier, WordMultiplier)
+
+    if Scope == "subsentence":
+        return True, (LineNum * SubSentenceMultiplier + SubSentenceNum)
+
+    if Scope == "sentence":
+        return True, LineNum
+
+    return False, -1
+
+def results_scope_modify(Results,
+                         SubSentenceMultiplier=100, WordMultiplier=100, Scope="subsentence"):
+    Result = set()
+    for Line_SubSentence_WordPos in Results:
+        Status, Modified = \
+            result_scope_modify(Line_SubSentence_WordPos, SubSentenceMultiplier, WordMultiplier, Scope=Scope)
+        if Status == True:
+            Result.add(Modified)
+    return Result
 
 # Tested
 def is_str_but_not_operator(Token): # Token can be List or Operator

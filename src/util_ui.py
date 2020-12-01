@@ -156,7 +156,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                  ResultNum=None,
                                  WordsMaybeDetected=set()):
 
-    Url, Txt, Source = sentence_get_from_result(Prg, Result, ReturnType=ReturnType)
+    Url, Txt, Source = sentence_text_from_obj(Prg, Result, ReturnType=ReturnType)
 
     if util.is_dict(Txt):
         Sentence = SentenceObj(ColorBasic=ColorBefore,
@@ -173,9 +173,9 @@ def sentence_get_from_result_oop(Prg, Result,
     else:
         return SentenceObj(Txt, ColorBasic=ColorBefore, ColorAfter=ColorAfter, ResultNum=ResultNum)
 
-def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
-    Source = Result["FileSourceBaseName"]
-    LineNum = Result["LineNumInSentenceFile"]
+def sentence_text_from_obj(Prg, SentenceObj, ReturnType="complete_sentence"):
+    Source = SentenceObj.FileSourceBaseName
+    LineNum = SentenceObj.LineNumInSentenceFile
 
     _Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
 
@@ -184,16 +184,24 @@ def sentence_get_from_result(Prg, Result, ReturnType="complete_sentence"):
         Url = Prg["DocumentsSourceWebpages"][Source]["url"]
 
     if ReturnType == "separated_subsentences":
-        SubSentenceNum = Result["SubSentenceNum"]
-        _Status, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
 
-        # split at first match, more than one can be in subsentence
-        SubSentencesBefore, SubSentencesAfter = Sentence.split(SubSentenceResult, 1)
+        # theoretically more than one subsentence can be found in a sentence
+        ResultSubSentenceNumMin = SentenceObj.SubSentenceNumMin
+        ResultSubSentenceNumMax = SentenceObj.SubSentenceNumMin
 
-        Sentence = {"subsentences_before": SubSentencesBefore,
-                    "subsentence_result": SubSentenceResult,
-                    "subsentences_after": SubSentencesAfter
-                    }
+        SubSentencesBefore = []
+        SubSentencesResult = []
+        SubSentencesAfter = []
+
+        _, SubSentences = text.subsentences(Prg, Sentence, KeepSubsentenceEnd=True)
+        for SubSenNum, SubSentence in enumerate(SubSentences):
+            if SubSenNum < ResultSubSentenceNumMin:   SubSentencesBefore.append(SubSentence)
+            elif SubSenNum > ResultSubSentenceNumMax: SubSentencesAfter.append(SubSentence)
+            else:                                     SubSentencesResult.append(SubSentence)
+
+        Sentence = {"subsentences_before": " ".join(SubSentencesBefore),
+                    "subsentence_result" : " ".join(SubSentencesResult),
+                    "subsentences_after" : " ".join(SubSentencesAfter)}
 
     return Url, Sentence, Source
 ########################################################################################################################
@@ -206,10 +214,15 @@ def theme_actual(Prg):
 def ui_json_answer(Prg,
                    TokenProcessExplainSumma,
                    WordsMaybeDetected,
-                   MatchNums__ResultInfo,
+                   SentenceObjects,
                    NewLine="\n"):
+
+
+    MaximizedSentences = SentenceObjects[:Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]]
+    SentencesToJson = [Sen.to_json() for Sen in MaximizedSentences]
+
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
-    Reply = {"results": MatchNums__ResultInfo[:Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]],
+    Reply = {"results": SentencesToJson,
              "token_process_explain": Txt,                     # below list() is nececcary because
              "words_maybe_detected": list(WordsMaybeDetected)} # Words set can't be converted to json
     Reply = json.dumps(Reply).encode('UTF-8')

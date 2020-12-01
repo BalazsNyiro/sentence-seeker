@@ -96,7 +96,7 @@ def show_arrow_cursor(event):
     event.widget.configure(cursor="")
 
 def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
-    Url, Sentence, Source = util_ui.sentence_get_from_result(Prg, Result, ReturnType="separated_subsentences")
+    Url, Sentence, Source = util_ui.sentence_text_from_obj(Prg, Result, ReturnType="separated_subsentences")
 
     # SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
     SentencesArea.insert(tk.END, Sentence["subsentences_before"], "SentenceDisplayed")

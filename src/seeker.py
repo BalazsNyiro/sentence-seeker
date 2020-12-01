@@ -62,45 +62,46 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
         util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(SentencesFiltered))
 
 # Tested
-def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath):
-    if not os.path.isfile(FileIndexAbsPath):
+def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath, ForcedWrite=False):
+    if (not os.path.isfile(FileIndexAbsPath)) or ForcedWrite or Prg["TestExecution"]:
         WordPositions = dict()
 
-        _Success, TextAll = util.file_read_all(Prg, FileSentencesAbsPath, CheckIsFile=False)
+        _, TextAll = util.file_read_all(Prg, FileSentencesAbsPath, CheckIsFile=False)
         TextAll = TextAll.lower()
-        TextAll = text.subsentences_use_only_one_separator(TextAll)
 
         # more than one minus: -- or --- signs: replace them
         TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
         Lines = TextAll.split("\n") # one sentence is in one line, it's guaranted
-        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplayer"] - 1
+        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplier"] - 1
+        WordPositionMultiplyerMinusOne = Prg["WordPositionMultiplier"] - 1
 
         for LineNum, Line in enumerate(Lines):
 
-            # if LineNum % 1000 == 0:
-            #     Percent = int(LineNum / len(Lines)* 100)
-            #     print(f"index create: {Percent} %", flush=True)
+            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplier"] * Prg["WordPositionMultiplier"]
 
-            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplayer"]
-
-            # we replaced all subsentence separators in ONE FUN CALL at the beginning
-            _Satus, SubSentences = text.subsentences(Prg, Line, ReplaceSubsentenceEndsToOneSeparator=False)
+            _, SubSentences = text.subsentences(Prg, Line)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
                 if SubSentenceNum > SubSentenceMultiplyerMinusOne:
                     SubSentenceNum = SubSentenceMultiplyerMinusOne # the last num that we can represent
-                WordPosition = LineNumMultiplied + SubSentenceNum
-                indexing(WordPositions, SubSentence, WordPosition)
+
+                LineSubWordBase = LineNumMultiplied + SubSentenceNum * Prg["WordPositionMultiplier"]
+                indexing(WordPositions, SubSentence, LineSubWordBase, WordPositionMultiplyerMinusOne)
 
         Out = []
         for Word, LineNumsInts in WordPositions.items():
-            LineNums = [str(Num) for Num in LineNumsInts]
+            LineNums = [] #easier to debug it instead of list comprehension
+            for Num in LineNumsInts:
+                try:
+                    LineNums.append(str(Num))
+                except:
+                    print("index problem:", Num)
             Out.append(f'"{Word}": [{",".join(LineNums)}]')
-        Content="{\n"+"\n,".join(Out) + "\n}"
+        Content = "{\n"+"\n,".join(Out) + "\n}"
 
         util.file_write_with_check(Prg, Fname=FileIndexAbsPath, Content=Content)
 
-def indexing(WordPositions, SubSentence, WordPosition):
+def indexing(WordPositions, SubSentence, WordPositionBase, WordPositionMultiplyerMinusOne):
 
     # IMPORTANT: I tried to refactor/reorganise this function,
     # with avoiding join() in remove_non_alpha_chars and local usage of it
@@ -109,7 +110,7 @@ def indexing(WordPositions, SubSentence, WordPosition):
 
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
-    for Word in SubSentence.split(): # split at space, tab, newline
+    for Pos, Word in enumerate(SubSentence.split()): # split at space, tab, newline
         # TODO: words short form expand:
         # I've -> "I", "have" are two separated words,
         # wouldn't -> would is the real word
@@ -119,5 +120,8 @@ def indexing(WordPositions, SubSentence, WordPosition):
         if Word not in WordPositions:
             WordPositions[Word] = set()
 
-        if WordPosition not in WordPositions[Word]: # save the word only once
-            WordPositions[Word].add(WordPosition)
+        PosInserted = Pos
+        if PosInserted > WordPositionMultiplyerMinusOne:
+            PosInserted = WordPositionMultiplyerMinusOne
+        WordPos = WordPositionBase + PosInserted
+        WordPositions[Word].add(WordPos)

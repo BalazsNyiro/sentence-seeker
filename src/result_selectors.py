@@ -3,23 +3,15 @@ import util, text
 
 LimitGeneral = 400
 ################### USED modifiers  ###############################
+# the parameter struct is fixed, here we don't use Prg but maybe in other modifiers yes.
+
 def sortSentences(_Prg, ResultsOrig, _WordsMaybeDetected):
+    # the sorting has to happen in groups to keep the first sorting's result
+    Groups = [ResultsOrig]
+    Groups = groups_sort(Groups, "SubSentenceLen")
+    Groups = groups_sort(Groups, "SentenceLen")
+    return util.list_flat_embedded_lists(Groups)
 
-    def sort(Results, By):
-        New = []
-        Groups = {}
-        for Result in Results:
-            Score = Result[By]
-            util.dict_value_insert_into_key_group(Groups, Score, Result)
-
-        for KeyScore in sorted(Groups.keys()):
-            New.extend(Groups[KeyScore])
-        return New
-
-    Sorted1 = sort(ResultsOrig, "SubSentenceLen")
-    Sorted2 = sort(Sorted1, "SentenceLen")
-
-    return Sorted2
 ################### USED modifiers  ###############################
 
 
@@ -69,3 +61,22 @@ def duplication_removing(ResultGroup, Limit=LimitGeneral):
 
     return ResultGroupFresh
 
+#################  utils for selectors ##############
+
+def groups_sort(Groups, By):
+    SortedGroups = []
+    for Grp in Groups:                  # but sorting creates sub-groups from the original one
+        Sorted = sentence_sort(Grp, By) # so the result will be more group
+        SortedGroups.extend(Sorted)     # BUT ORIGINAL ORDER IS KEPT
+    return SortedGroups
+
+def sentence_sort(Sentences, By):
+    New = []
+    Groups = {}
+    for Sentence in Sentences:
+        Score = vars(Sentence)[By]
+        util.dict_value_insert_into_key_group(Groups, Score, Sentence)
+
+    for KeyScore in sorted(Groups.keys()):
+        New.append(Groups[KeyScore])
+    return New

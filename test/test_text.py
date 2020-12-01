@@ -21,21 +21,24 @@ class TextTests(util_test.SentenceSeekerTest):
             FileSourceBaseName = "Filename"
             LineNumInSentenceFile = 1
             SubSentenceNum = 2
+            WordNum = 0
 
-            Status, Obj = text.result_obj_from_memory(
-                            Prg,
-                            FileSourceBaseName,
-                            LineNumInSentenceFile, SubSentenceNum,
-                            SentenceFillInResult=False)
+            Obj = text.sentence_obj_from_memory(Prg,
+                                                FileSourceBaseName,
+                                                LineNumInSentenceFile, SubSentenceNum, WordNum,
+                                                SentenceFillInResult=False)
             ObjWanted = {'FileSourceBaseName': 'Filename',
                          'LineNumInSentenceFile': 1,
                          'Sentence': '-',
                          'SentenceLen': 33,
                          'SubSentenceLen': 1,
-                         'SubSentenceNum': 2}
+                         'SubSentenceNums': {2},
+                         'SubSentenceNumMin': 2,
+                         'SubSentenceNumMax': 2,
+                         'WordNums': {0}}
 
-            self.assertEqual((False, ObjWanted), (Status, Obj))
-
+            ObjRepresentedAsDict = Obj.represent_as_dict()
+            self.assertEqual(ObjWanted, ObjRepresentedAsDict)
 
             Prg = {"DocumentObjectsLoaded":
                     {"Filename":
@@ -47,37 +50,87 @@ class TextTests(util_test.SentenceSeekerTest):
             FileSourceBaseName = "Filename"
             LineNumInSentenceFile = 1
             SubSentenceNum = 2
+            WordNum = 0
 
-            Status, Obj = text.result_obj_from_memory(
-                Prg,
-                FileSourceBaseName,
-                LineNumInSentenceFile, SubSentenceNum,
-                SentenceFillInResult=False)
+            Obj = text.sentence_obj_from_memory(Prg,
+                                                FileSourceBaseName,
+                                                LineNumInSentenceFile, SubSentenceNum, WordNum,
+                                                SentenceFillInResult=False)
             ObjWanted = {'FileSourceBaseName': 'Filename',
                          'LineNumInSentenceFile': 1,
                          'Sentence': '-',
                          'SentenceLen': 51,
                          'SubSentenceLen': 14,
-                         'SubSentenceNum': 2}
-            self.assertEqual((True, ObjWanted), (Status, Obj))
+                         'SubSentenceNums': {2},
+                         'SubSentenceNumMin': 2,
+                         'SubSentenceNumMax': 2,
+                         'WordNums': {0}
+                        }
+            self.assertEqual(ObjWanted, Obj.represent_as_dict())
+
+    def test_only_subsentence_num__and__wordnum(self):
+        if self._test_exec("test_only_subsentence_num__and__wordnum"):
+            SubSentenceNum, WordNum = text.only_subsentence_num__and__wordnum(0)
+            self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 0)
+
+            SubSentenceNum, WordNum = text.only_subsentence_num__and__wordnum(9)
+            self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 9)
+
+            SubSentenceNum, WordNum = text.only_subsentence_num__and__wordnum(99)
+            self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 99)
+
+            SubSentenceNum, WordNum = text.only_subsentence_num__and__wordnum(876)
+            self.assertEqual(SubSentenceNum, 8)
+            self.assertEqual(WordNum, 76)
+
+            SubSentenceNum, WordNum = text.only_subsentence_num__and__wordnum(1876)
+            self.assertEqual(SubSentenceNum, 18)
+            self.assertEqual(WordNum, 76)
 
     def test_linenum_subsentencenum_get(self):
         if self._test_exec("test_linenum_subsentencenum_get"):
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(5)
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(0)
             self.assertEqual(LineNum, 0)
-            self.assertEqual(SubSentenceNum, 5)
-
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(100)
-            self.assertEqual(LineNum, 1)
             self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 0)
 
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(95)
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(5)
             self.assertEqual(LineNum, 0)
-            self.assertEqual(SubSentenceNum, 95)
+            self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 5)
 
-            LineNum, SubSentenceNum = text.linenum_subsentencenum_get(23456)
-            self.assertEqual(LineNum, 234)
-            self.assertEqual(SubSentenceNum, 56)
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(50)
+            self.assertEqual(LineNum, 0)
+            self.assertEqual(SubSentenceNum, 0)
+            self.assertEqual(WordNum, 50)
+
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(102)
+            self.assertEqual(LineNum, 0)
+            self.assertEqual(SubSentenceNum, 1)
+            self.assertEqual(WordNum, 2)
+
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(987)
+            self.assertEqual(LineNum, 0)
+            self.assertEqual(SubSentenceNum, 9)
+            self.assertEqual(WordNum, 87)
+
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(9985)
+            self.assertEqual(LineNum, 0)
+            self.assertEqual(SubSentenceNum, 99)
+            self.assertEqual(WordNum, 85)
+
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(23456)
+            self.assertEqual(LineNum, 2)
+            self.assertEqual(SubSentenceNum, 34)
+            self.assertEqual(WordNum, 56)
+
+            LineNum, SubSentenceNum, WordNum = text.linenum_subsentencenum_wordnum_get(1234567)
+            self.assertEqual(LineNum, 123)
+            self.assertEqual(SubSentenceNum, 45)
+            self.assertEqual(WordNum, 67)
 
     def test_char_add_into_sentence(self): #
         if self._test_exec("test_char_add_into_sentence"):
@@ -252,6 +305,15 @@ class TextTests(util_test.SentenceSeekerTest):
 
             self.assertEqual((True, ' in Boston'), text.subsentences(None, Txt, 3))
             self.assertEqual((False, ["subsentence 33 id is missing"]), text.subsentences(None, Txt, 33))
+
+            Txt = 'I am angry; I have to know: Lisa and Pete lived in a big house, in Boston, did they?'
+            Wanted = ['I am angry;',
+                      ' I have to know:',
+                      ' Lisa and Pete lived in a big house,',
+                      ' in Boston,',
+                      ' did they?']
+            Status, SubSentences = text.subsentences(Sentence=Txt, KeepSubsentenceEnd=True)
+            self.assertEqual((True, Wanted), (Status, SubSentences))
 
 def run_all_tests(Prg):
     TextTests.Prg = Prg

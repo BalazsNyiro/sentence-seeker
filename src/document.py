@@ -78,9 +78,9 @@ def info(Txt, Verbose=True):
 
 # can't be embedded function in another func!
 # Can't pass Prg through multiple function parameter pass, you have to create a thin Prg before fun call
-def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplayer, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
+def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplier, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
     FunSentenceCreate({}, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
-    FunIndexCreate({"SubSentenceMultiplayer": SubSentenceMultiplayer}, FileIndexAbsPath, FileSentencesAbsPath)
+    FunIndexCreate({"SubSentenceMultiplier": SubSentenceMultiplier}, FileIndexAbsPath, FileSentencesAbsPath)
     return FileTextAbsPath
 
 def word_pos_in_line_load(FileIndexAbsPath):
@@ -91,7 +91,7 @@ def word_pos_in_line_load(FileIndexAbsPath):
 
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
-                WordPositionInLines[Word] = array.array("I", IndexList)
+                WordPositionInLines[Word] = array.array("Q", IndexList)
                 # fastest to call array directly than
                 # util.int_list_to_array(IndexList)
         else:
@@ -133,7 +133,11 @@ def document_objects_collect_from_dir_documents(Prg,
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
         MultiCore = True
-        if not Prg["OsIsUnixBased"]:
+
+        # FIXME: something wrong if I use multicore index creation
+        MultiCore = False # Set it false if you want to debug
+
+        if not Prg["OsIsUnixBased"] or Prg["TestExecution"]:
             MultiCore = False
 
         if MultiCore:
@@ -147,7 +151,7 @@ def document_objects_collect_from_dir_documents(Prg,
                     FileIndexAbsPath = FileTextAbsPath + FileEndIndex
                     FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
                     Futures.append(Executor.submit(sentence_and_index_create,
-                                    FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplayer"],
+                                    FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplier"],
                                     FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
                 DonePrevLen = -1
@@ -172,6 +176,10 @@ def document_objects_collect_from_dir_documents(Prg,
 
                 FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
                 FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
+
+
+                print("indexed:", FileNum, "  waiting:", len(FilesTxt) - FileNum)
+
     ################### parallel index loading ###############
     ######  the parallel solution is slower
     # WordPositionAll = dict()

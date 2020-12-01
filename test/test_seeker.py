@@ -22,12 +22,15 @@ class SeekerTests(util_test.SentenceSeekerTest):
 
             FileIndex = os.path.join(Prg["DirWork"], "test_file_create_index.txt")
             util.file_del(FileIndex)
-            seeker.file_index_create(Prg, FileIndex, FileSentences)
+            seeker.file_index_create(Prg, FileIndex, FileSentences, ForcedWrite=True)
             #seeker.file_index_create(Prg, "/tmp/index.txt", FileSentences)
             # print(util.file_read_all(Prg, FileIndex))
 
+            MultiSub = Prg["SubSentenceMultiplier"]
+            MultiSubAndWord = Prg["SubSentenceMultiplier"] * Prg["WordPositionMultiplier"]
             _Status, WordPosition = util_json_obj.obj_from_file(FileIndex)
-            self.assertEqual(set(WordPosition["london"]), set([101, 102, 201]))
+
+            self.assertEqual(set(WordPosition["london"]), set([10100,10201,20104]))
 
             util.file_del(FileSentences)
             util.file_del(FileIndex)

@@ -341,7 +341,16 @@ def print_dev(Prg, *args):
 
 # wrapper, not tested
 def int_list_to_array(L):
-    return array.array("I", L)
+    return array.array("Q", L) # int, 8 byte
+
+def list_flat_embedded_lists(L):
+    Flat = []
+    for Elem in L:
+        if is_list(Elem):
+            Flat.extend(list_flat_embedded_lists(Elem))
+        else:
+            Flat.append(Elem)
+    return Flat
 
 # Tested with usage in tests...
 def log(Prg, Msg, Caller="-"):
@@ -664,3 +673,6 @@ def if_win__set_windows_console_enable_ansi_escapes(Prg):
         import ctypes
         kernel32 = ctypes.windll.kernel32
         kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+
+def sentence_subsentence_wordpos_calc(SentenceNum, SubSentenceNum, Wordposition, SubSentenceMultiply, WordMultiply):
+    return (SentenceNum * SubSentenceMultiply + SubSentenceNum) * WordMultiply + Wordposition

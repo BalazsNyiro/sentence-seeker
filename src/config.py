@@ -99,7 +99,8 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             "DocumentObjectsLoaded": dict(),
             "DocumentObjectsLoadedWordsCounterGlobal": dict(),
 
-            "SubSentenceMultiplayer": 100,  # 10001  the last 2 digits shows the num of subsentence
+            "SubSentenceMultiplier": 100,  # "10001ww"  the last 2 digits shows the num of subsentence, ww is word positions
+            "WordPositionMultiplier": 100,
 
             "FileLog": os.path.join(DirLog, FileLog),
             "TestResults": [],

@@ -5,6 +5,12 @@ class UtilTests(util_test.SentenceSeekerTest):
     TestsExecutedOnly = []
     #TestsExecutedOnly = [""]
 
+    def test_sentence_subsentence_wordpos_calc(self):
+        if self._test_exec("test_sentence_subsentence_wordpos_calc"):
+            Wanted = 200304
+            Result = util.sentence_subsentence_wordpos_calc(2, 3, 4, 1000, 100)
+            self.assertEqual(Wanted, Result)
+
     def test_count_words_with_numbers(self):
         if self._test_exec("test_count_words_with_numbers"):
             Sentence = "apple, banana5, 1 Thesaurus bird"

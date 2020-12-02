@@ -172,10 +172,9 @@ def operators_exec(Tokens,
             ResultsLeft, NameLeft = Tokens[OperatorPositionLast - 1]
             ResultsRight, NameRight = Tokens[OperatorPositionLast + 1]
 
-            if Scope == "subsentence":
-                # remove word positions from tokens:
-                ResultsLeftScoped = results_scope_modify(ResultsLeft, SubSentenceMulti, WordPositionMulti, Scope)
-                ResultsRightScoped = results_scope_modify(ResultsRight, SubSentenceMulti, WordPositionMulti, Scope)
+            # remove subsentence/word positions from tokens:
+            ResultsLeftScoped = results_scope_modify(ResultsLeft, SubSentenceMulti, WordPositionMulti, Scope)
+            ResultsRightScoped = results_scope_modify(ResultsRight, SubSentenceMulti, WordPositionMulti, Scope)
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             if Operator == "OR":
@@ -184,7 +183,9 @@ def operators_exec(Tokens,
                 ResultsScoped = ResultsLeftScoped.intersection(ResultsRightScoped)
 
             elif Operator == "THEN":
-                ResultsScoped = exec_THEN_operator(ResultsLeftScoped, ResultsRightScoped)
+                ResultsScoped = exec_THEN_operator(ResultsLeftScoped, ResultsRightScoped,
+                                                   ResultsLeft,       ResultsRight,
+                                                   SubSentenceMulti,  WordPositionMulti, Scope)
 
             # select original tokens based on selected scope:
 
@@ -207,9 +208,51 @@ def operators_exec(Tokens,
     return Tokens, Explains
 
 # create intersection WHEN the order if from left to right
-def exec_THEN_operator(TokenLeft, TokenRight):
-    LineNumsOp = TokenLeft.intersection(TokenRight)
-    return LineNumsOp
+def exec_THEN_operator(PositionsLeftScoped, PositionsRightScoped,
+                       PositionsLeft,       PositionsRight,
+                       SubSentenceMulti,    WordPositionMulti, Scope):
+
+    # scopes that appear on both side, selected with intersection
+    PositionsPairedScoped = dict()
+    for Pos in PositionsLeftScoped.intersection(PositionsRightScoped):
+        PositionsPairedScoped[Pos] = {"ExactsLeft": set(), "ExactsRight": set()}
+
+    #### collect exact positions into scopes ##############
+    for PositionExact in PositionsLeft:
+        Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
+        if Scoped in PositionsPairedScoped:
+            PositionsPairedScoped[Scoped]["ExactsLeft"].add(PositionExact)
+
+    for PositionExact in PositionsRight:
+        Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
+        if Scoped in PositionsPairedScoped:
+            PositionsPairedScoped[Scoped]["ExactsRight"].add(PositionExact)
+
+    ######## select where the order is acceptable: ##########
+
+    PositionsOrdered = set()
+    for PosScope, Exacts in PositionsPairedScoped.items():
+        Accepted = False
+        for ExactLeft in Exacts["ExactsLeft"]:
+
+            if Scope == "sentence":
+                for ExactRight in Exacts["ExactsRight"]:
+                    if ExactLeft < ExactRight:
+                        Accepted = True
+                        break
+                if Accepted:
+                    break
+            elif Scope == "subsentence":
+                for ExactRight in Exacts["ExactsRight"]:
+                    if subsentence_same(ExactLeft, ExactRight, WordPositionMulti):
+                        if ExactLeft < ExactRight:
+                            Accepted = True
+                            break
+                if Accepted:
+                    break
+        if Accepted:
+            PositionsOrdered.add(PosScope)
+    return PositionsOrdered
 
 
 def result_scope_modify(Line_SubSentence_WordPos,
@@ -342,3 +385,6 @@ def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300): # 
         ResultExplains = "(empty_group)"  # empty group, example: "()"
 
     return (ResultLineNums, ResultExplains)
+
+def subsentence_same(PosExactLeft, PosExactRight, WordPositionMulti):
+    return (PosExactLeft // WordPositionMulti) == (PosExactRight // WordPositionMulti)

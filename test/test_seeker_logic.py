@@ -168,16 +168,16 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
 
         WordsMaybeDetected = ["part"]
         self.maxDiff = None
+
         ResultsSelectedOrig = [Obj1, Obj2]
-        Selected = result_selectors.sortSentences(dict(), ResultsSelectedOrig, WordsMaybeDetected)
+        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsMaybeDetected)
         IdsSelectedSentences = [Sen.Id for Sen in Selected]
+        self.assertEqual([Obj2.Id, Obj1.Id], IdsSelectedSentences)
 
-        self.assertEqual([ Obj2.Id, Obj1.Id], IdsSelectedSentences)
-
-        # ResultsSelectedOrig = [Obj1, Obj2, Obj3]
-        # ResultsSelected = result_selectors.sortSentences(dict(), ResultsSelectedOrig, WordsMaybeDetected)
-
-        # self.assertEqual(ResultsSelected, [Obj2, Obj3, Obj1])
+        ResultsSelectedOrig = [Obj1, Obj2, Obj3]
+        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsMaybeDetected)
+        IdsSelectedSentences = [Sen.Id for Sen in Selected]
+        self.assertEqual([Obj2.Id, Obj3.Id, Obj1.Id], IdsSelectedSentences)
 
     def test_words_wanted_from_tokens(self):
         if self._test_exec("test_words_wanted_from_tokens"):

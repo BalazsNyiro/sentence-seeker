@@ -6,7 +6,10 @@ import time, tokens
 # ? NOT
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
-         ResultSelectors=[result_selectors.sortSentences]):
+         ResultSelectors=[
+             result_selectors.short_sorter,
+             result_selectors.uniq_filter
+             ]):
     util.log(Prg, f"Query: {Query}")
 
     CommandDetected = tokens.run_commands_in_query(Prg, Query)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import text, util
+import text, util, sys
 import result_selectors
 import time, tokens
 # ? MINUS,
@@ -39,6 +39,8 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     SubSentenceMultiplier = Prg["SubSentenceMultiplier"]
     WordPositionMultiplier = Prg["WordPositionMultiplier"]
 
+    Flattened = util.list_flat_embedded_lists(TokenGroups)
+    NumOfOperators = len([T for T in Flattened if tokens.is_operator(T)]) * len(Prg["DocumentObjectsLoaded"])
 
     for FileSourceBaseName, DocObj in Prg["DocumentObjectsLoaded"].items():
 
@@ -49,8 +51,9 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
         Explains = []
         # print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
         #TimeInterpreterStart = time.time()
-        Results_Line_Subsen_Wordpos, _ResultName = tokens.token_interpreter(TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"])
-
+        Results_Line_Subsen_Wordpos, _ResultName = tokens.token_interpreter(
+            TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"],
+            NumOfOperators=NumOfOperators)
 
         #TimeInterpreterSumma += time.time() - TimeInterpreterStart
         # print("TOKEN INTERPRETER <<<<", TimeInterpreter)

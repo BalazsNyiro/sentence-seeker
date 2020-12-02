@@ -208,6 +208,7 @@ def operators_exec(Tokens,
     return Tokens, Explains
 
 # create intersection WHEN the order if from left to right
+# TODO: TEST IT
 def exec_THEN_operator(PositionsLeftScoped, PositionsRightScoped,
                        PositionsLeft,       PositionsRight,
                        SubSentenceMulti,    WordPositionMulti, Scope):
@@ -343,8 +344,14 @@ def token_explain_summa(TokenProcessExplainPerDoc):
 #################################################################################
 _EmptySet = set()
 # TESTED   Tokens is a list with Token elems
-def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300): # Explains type: list()
+_NumOfOperatorsToDo = -1
+_NumOfOperatorsTotal = -1
+def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, NumOfOperators=0): # Explains type: list()
     TokensResults = []
+    global _NumOfOperatorsToDo, _NumOfOperatorsTotal
+    if NumOfOperators and _NumOfOperatorsToDo == -1:
+        _NumOfOperatorsToDo = NumOfOperators
+        _NumOfOperatorsTotal = NumOfOperators
 
     TooManyTokens = len(TokensOrig) >= TooManyTokenLimit
 
@@ -354,6 +361,12 @@ def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300): # 
 
             if is_operator(Token):
                 TokensResults.append(Token)
+                ###################################################
+                _NumOfOperatorsToDo -= 1 # one is processed
+                if _NumOfOperatorsToDo % 100 == 0:
+                    Percent = ((_NumOfOperatorsToDo / _NumOfOperatorsTotal) * 100) // 1
+                    print("Operator processing", Percent, "%" )
+                ###################################################
 
             else: # str but not operator
                 # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums

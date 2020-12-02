@@ -212,19 +212,25 @@ def exec_THEN_operator(PositionsLeftScoped, PositionsRightScoped,
                        PositionsLeft,       PositionsRight,
                        SubSentenceMulti,    WordPositionMulti, Scope):
 
+    if not PositionsLeft: return set()
+    if not PositionsRight: return set()
+
+    Intersect = PositionsLeftScoped.intersection(PositionsRightScoped)
+    if not Intersect: return set()
+
     # scopes that appear on both side, selected with intersection
     PositionsPairedScoped = dict()
-    for Pos in PositionsLeftScoped.intersection(PositionsRightScoped):
+    for Pos in Intersect:
         PositionsPairedScoped[Pos] = {"ExactsLeft": set(), "ExactsRight": set()}
 
     #### collect exact positions into scopes ##############
     for PositionExact in PositionsLeft:
-        Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
+        _, Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
         if Scoped in PositionsPairedScoped:
             PositionsPairedScoped[Scoped]["ExactsLeft"].add(PositionExact)
 
     for PositionExact in PositionsRight:
-        Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
+        _, Scoped = result_scope_modify(PositionExact, SubSentenceMulti, WordPositionMulti, Scope)
         if Scoped in PositionsPairedScoped:
             PositionsPairedScoped[Scoped]["ExactsRight"].add(PositionExact)
 

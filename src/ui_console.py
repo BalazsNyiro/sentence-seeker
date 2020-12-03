@@ -70,7 +70,6 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
     NextKeys = {"n", " ", "j", CharEnter, "KeyArrowDown", "KeyArrowRight"} # B = arrowDown, C=arrowRight buttons, fun return with these chars if I press arrow buttons
     PrevKeys = {"p", "k", "KeyBackSpace", "KeyArrowUp", "KeyArrowLeft"}
     QuitKeys = {"q"}
-    Msg = "[p]rev [n]ext [q]uit, query."
 
     ScreenWidth, ScreenHeight = util_ui.get_screen_size()
 
@@ -111,7 +110,12 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
             PageTopSentenceId[PageNum+1] = IdNow
 
         if Step == 0: # ask new instruction if no more steps
-            UserReply = util_ui.press_key_in_console(f"{Msg}   total: {ResultsNum}")
+
+            ColorMsg = color(Prg, "Blue")
+            ColorHigh = color(Prg, "Cyan")
+            Msg = f"{ColorMsg}[{ColorHigh}p{ColorMsg}]rev [{ColorHigh}n{ColorMsg}]ext [{ColorHigh}q{ColorMsg}]uit, query.   total: {ResultsNum}{color(Prg, 'Default')}"
+
+            UserReply = util_ui.press_key_in_console(Msg)
             # print("user reply:", UserReply)
             if len(UserReply) == 1 and UserReply in QuitKeys: break
 

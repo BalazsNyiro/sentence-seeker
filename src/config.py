@@ -73,7 +73,15 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                     "DisplaySourceUrlBelowSentences": True,
                     "DisplayDirDocInGuiTitle": True,
                     "LimitDisplayedSentences": 20,
-                    "Console": {"NewlineBetweenSentences": False}
+                    "Console": {"NewlineBetweenSentences": False,
+                                "ColorUserInfo": "Blue",
+                                "ColorUserInfoHigh": "Cyan",
+                                "ColorRowOdd": "Default",
+                                "ColorRowEven": "Green",
+                                "ColorRowNum": "Red",
+                                "ColorWanted": "Cyan",
+                                "ColorWordDetected": "Yellow",
+                                }
                 },
                 "DefaultWikiTextPackageUsage": "Y"
             },

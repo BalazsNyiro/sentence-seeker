@@ -24,10 +24,11 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
         if QueryAsCmdlineParam:
             Wanted = QueryAsCmdlineParam.strip()
         else:
-            Wanted = input("\nwanted> ").strip()
+            ColorWanted = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWanted"])
+            Wanted = input(f"\n{ColorWanted}wanted>{color('Default')} ").strip()
 
             if not Wanted:
-                print(color_reset(Prg))
+                print(color_reset())
                 break
         seek_and_display(Prg, Wanted)
         # if we got the query from command line, give it back and exit
@@ -46,13 +47,16 @@ def user_welcome_message(Prg, UserInterface):
         print()
         print("Exit:  Enter only")
         print("Help:  :help + Enter")
-        print(f"{color(Prg, 'Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset(Prg)}")
+        print(f"{color('Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset()}")
 
 def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
-    ColorDefault = color(Prg, "Default")
-    ColorBefore = color(Prg, "Green") if ResultNum % 2 == 0 else ColorDefault
-    ColorDetected = color(Prg, "Yellow")
-    ColorResultNum = color(Prg, "Red")
+    ColorDefault = color("Default")
+
+    ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if ResultNum % 2 == 0 \
+        else      color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
+
+    ColorDetected = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWordDetected"])
+    ColorResultNum = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowNum"])
     return util_ui.sentence_get_from_result_oop(Prg,
                                                 Result,
                                                 ReturnType="separated_subsentences",
@@ -111,11 +115,11 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
         if Step == 0: # ask new instruction if no more steps
 
-            ColorMsg = color(Prg, "Blue")
-            ColorHigh = color(Prg, "Cyan")
-            Msg = f"{ColorMsg}[{ColorHigh}p{ColorMsg}]rev [{ColorHigh}n{ColorMsg}]ext [{ColorHigh}q{ColorMsg}]uit, query.   total: {ResultsNum}{color(Prg, 'Default')}"
+            ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+            ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
+            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uit, query.   total: {ColorHigh}{ResultsNum}{color('Default')}"
 
-            UserReply = util_ui.press_key_in_console(Msg)
+            UserReply = util_ui.press_key_in_console(UserInfo)
             # print("user reply:", UserReply)
             if len(UserReply) == 1 and UserReply in QuitKeys: break
 
@@ -185,16 +189,14 @@ Colors = {
     'CursorHide':    '?25l',
     'CursorShow':    '?25h'
 }
-def color_reset(Prg):
-    return color(Prg, "Plain")+color(Prg, "Default")
+def color_reset():
+    return color("Plain")+color("Default")
 
 
 
 __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
-def color(Prg, ColorName, CnameBackground=""):
-
-    Prg["Statistics"]["ColorsConsoleUsedForeGround"].add(ColorName)
+def color(ColorName, CnameBackground=""):
 
     # MAYBE: win terminal has color display option, detailed here:
     # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line

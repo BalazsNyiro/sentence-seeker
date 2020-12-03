@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import config, document, seeker, ui_console, ui_html
+import config, document, seeker, ui_console, ui_html, util
 import ui_tkinter_boot_progress_bar, ui_tkinter, ui_json
 from http.server import HTTPServer
 
@@ -16,6 +16,9 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
     # sys.setprofile(util.TraceFunc)
     print(f"\nUI start: {Ui}")
     Prg["Ui"] = Ui
+
+    # not only console mode but gui/tkinter can print to the terminal
+    util.if_win__set_windows_console_enable_ansi_escapes(Prg)
 
     document.docs_copy_samples_into_dir_if_necessary(Prg)
 

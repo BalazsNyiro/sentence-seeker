@@ -16,8 +16,6 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     if Prg["OsIsUnixBased"]:
         import readline
 
-    util.if_win__set_windows_console_enable_ansi_escapes(Prg)
-
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
     while True:
@@ -213,7 +211,7 @@ def color(ColorName, CnameBackground=""):
             ColorBackground = ";48;5;" + str(int(CnameBackground))
         ControlChars = ColorFg + ColorBackground +  "m" 
         # print(ControlChars)
-        return util_ui.AnsiControlInit + ControlChars # 38: foreground
+        return AnsiControlInit + ControlChars # 38: foreground
 
     except: # ha ColorName szoveges, tehat a fenti tablazatbol kell kivalasztani vmit
         if CnameBackground:
@@ -262,6 +260,6 @@ def color(ColorName, CnameBackground=""):
         # it doesn't work: return '\\e[' + colorCode + 'm'    
         ColorControl = colorCode + ColorBackground + 'm'    
         # print("ColorControl: " + ColorControl)
-        return util_ui.AnsiControlInit + ColorControl
+        return AnsiControlInit + ColorControl
 
-
+AnsiControlInit = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python

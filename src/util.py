@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os, gzip, shutil, pathlib, urllib.request
-from util_json_obj import doc_source_webpages_update_in_file_and_Prg
 import sys, array, time, datetime, io
-from ui_tkinter import independent_yes_no_window
 import ui_tkinter_boot_progress_bar
+
+from util_json_obj import doc_source_webpages_update_in_file_and_Prg
+from ui_tkinter import independent_yes_no_window
+from ui_console_progress_bar import progress_bar_console
 
 ABC_Eng_UpperTxt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ABC_Eng_LowerTxt = ABC_Eng_UpperTxt.lower()
@@ -420,8 +422,10 @@ def web_get(Url="", Binary=False, Verbose=True, PrgIfProgressBar=dict()):
         Length = Response.getheader('content-length')
         BlockSize = 1024*64  # default value
 
+        ProgressBarConsole = None
         if Length:
             Length = int(Length)
+            ProgressBarConsole = progress_bar_console(ValueTo=Length)
 
         BufferAll = io.BytesIO()
         Size = 0
@@ -433,7 +437,12 @@ def web_get(Url="", Binary=False, Verbose=True, PrgIfProgressBar=dict()):
             Size += len(BufferNow)
             if Length:
                 Percent = int((Size / Length)*100)
-                print(f"download: {Percent}% {Url}")
+
+                # simple console display
+                # print(f"download: {Percent}% {Url}")
+                if ProgressBarConsole:
+                    ProgressBarConsole.display_percent(Percent)
+
                 if PrgIfProgressBar:
                     ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(
                         PrgIfProgressBar, Length, Size)

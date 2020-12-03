@@ -62,8 +62,11 @@ def file_sentence_create(Prg, FileSentencesAbsPath, Text="", FileTextAbsPath="")
         util.file_write_utf8_error_avoid(Prg, FileSentencesAbsPath, "\n".join(SentencesFiltered))
 
 # Tested
-def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath, ForcedWrite=False):
-    if (not os.path.isfile(FileIndexAbsPath)) or ForcedWrite or Prg["TestExecution"]:
+def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath, SubSentenceMultiplier=100, WordPositionMultiplier=100, ForcedWrite=False):
+    if "TestExecution" in Prg: # in multicore indexing we can't see it in Prg but during tests I use single core
+        if Prg["TestExecution"]: ForcedWrite = True
+
+    if (not os.path.isfile(FileIndexAbsPath)) or ForcedWrite:
         WordPositions = dict()
 
         _, TextAll = util.file_read_all(Prg, FileSentencesAbsPath, CheckIsFile=False)
@@ -73,19 +76,19 @@ def file_index_create(Prg, FileIndexAbsPath, FileSentencesAbsPath, ForcedWrite=F
         TextAll = text.replace_regexp(TextAll, "[-][-]+", " ")
 
         Lines = TextAll.split("\n") # one sentence is in one line, it's guaranted
-        SubSentenceMultiplyerMinusOne = Prg["SubSentenceMultiplier"] - 1
-        WordPositionMultiplyerMinusOne = Prg["WordPositionMultiplier"] - 1
+        SubSentenceMultiplyerMinusOne = SubSentenceMultiplier - 1
+        WordPositionMultiplyerMinusOne = WordPositionMultiplier - 1
 
         for LineNum, Line in enumerate(Lines):
 
-            LineNumMultiplied = LineNum * Prg["SubSentenceMultiplier"] * Prg["WordPositionMultiplier"]
+            LineNumMultiplied = LineNum * SubSentenceMultiplier * WordPositionMultiplier
 
             _, SubSentences = text.subsentences(Prg, Line)
             for SubSentenceNum, SubSentence in enumerate(SubSentences):
                 if SubSentenceNum > SubSentenceMultiplyerMinusOne:
                     SubSentenceNum = SubSentenceMultiplyerMinusOne # the last num that we can represent
 
-                LineSubWordBase = LineNumMultiplied + SubSentenceNum * Prg["WordPositionMultiplier"]
+                LineSubWordBase = LineNumMultiplied + SubSentenceNum * WordPositionMultiplier
                 indexing(WordPositions, SubSentence, LineSubWordBase, WordPositionMultiplyerMinusOne)
 
         Out = []

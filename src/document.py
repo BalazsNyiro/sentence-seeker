@@ -78,9 +78,9 @@ def info(Txt, Verbose=True):
 
 # can't be embedded function in another func!
 # Can't pass Prg through multiple function parameter pass, you have to create a thin Prg before fun call
-def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplier, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
+def sentence_and_index_create(FunSentenceCreate, FunIndexCreate, SubSentenceMultiplier, WordPositionMultiplier, FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath):
     FunSentenceCreate({}, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
-    FunIndexCreate({"SubSentenceMultiplier": SubSentenceMultiplier}, FileIndexAbsPath, FileSentencesAbsPath)
+    FunIndexCreate({}, FileIndexAbsPath, FileSentencesAbsPath, SubSentenceMultiplier=SubSentenceMultiplier, WordPositionMultiplier=WordPositionMultiplier)
     return FileTextAbsPath
 
 def word_pos_in_line_load(FileIndexAbsPath):
@@ -134,8 +134,7 @@ def document_objects_collect_from_dir_documents(Prg,
     if FunSentenceCreate and FunIndexCreate:
         MultiCore = True
 
-        # FIXME: something wrong if I use multicore index creation
-        MultiCore = False # Set it false if you want to debug
+        # MultiCore = False # Set it false if you want to debug
 
         if not Prg["OsIsUnixBased"] or Prg["TestExecution"]:
             MultiCore = False
@@ -151,7 +150,8 @@ def document_objects_collect_from_dir_documents(Prg,
                     FileIndexAbsPath = FileTextAbsPath + FileEndIndex
                     FileSentencesAbsPath = FileTextAbsPath + FileEndSentence
                     Futures.append(Executor.submit(sentence_and_index_create,
-                                    FunSentenceCreate, FunIndexCreate, Prg["SubSentenceMultiplier"],
+                                    FunSentenceCreate, FunIndexCreate,
+                                    Prg["SubSentenceMultiplier"], Prg["WordPositionMultiplier"],
                                     FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
                 DonePrevLen = -1

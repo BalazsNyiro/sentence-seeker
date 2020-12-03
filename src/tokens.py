@@ -344,14 +344,8 @@ def token_explain_summa(TokenProcessExplainPerDoc):
 #################################################################################
 _EmptySet = set()
 # TESTED   Tokens is a list with Token elems
-_NumOfOperatorsToDo = -1
-_NumOfOperatorsTotal = -1
-def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, NumOfOperators=0): # Explains type: list()
+def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, ProgressBarConsole=None): # Explains type: list()
     TokensResults = []
-    global _NumOfOperatorsToDo, _NumOfOperatorsTotal
-    if NumOfOperators and _NumOfOperatorsToDo == -1:
-        _NumOfOperatorsToDo = NumOfOperators
-        _NumOfOperatorsTotal = NumOfOperators
 
     TooManyTokens = len(TokensOrig) >= TooManyTokenLimit
 
@@ -361,12 +355,9 @@ def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, Num
 
             if is_operator(Token):
                 TokensResults.append(Token)
-                ###################################################
-                _NumOfOperatorsToDo -= 1 # one is processed
-                if _NumOfOperatorsToDo % 100 == 0:
-                    Percent = ((_NumOfOperatorsToDo / _NumOfOperatorsTotal) * 100) // 1
-                    print("Operator processing", Percent, "%" )
-                ###################################################
+
+                if ProgressBarConsole:
+                    ProgressBarConsole.update()
 
             else: # str but not operator
                 # DocIndex is dict: {'word': array('I', [1, 5, 21])} and list of nums
@@ -390,7 +381,7 @@ def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, Num
                     TokensResults.append(Result) # ResultLineNums, TokenName
 
         elif util.is_list(Token):
-            Result = token_interpreter(Token, DocIndex, Explains, TooManyTokenLimit=TooManyTokenLimit)
+            Result = token_interpreter(Token, DocIndex, Explains, TooManyTokenLimit=TooManyTokenLimit, ProgressBarConsole=ProgressBarConsole)
             TokensResults.append(Result)
 
     TokensResults, Explains = operators_exec(TokensResults, Explains, TooManyTokenLimit=TooManyTokenLimit)

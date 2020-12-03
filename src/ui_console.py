@@ -184,7 +184,6 @@ Colors = {
 def color_reset(Prg):
     return color(Prg, "Plain")+color(Prg, "Default")
 
-CSI = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python
 
 
 __color_name_last_used=["Default"]
@@ -208,7 +207,7 @@ def color(Prg, ColorName, CnameBackground=""):
             ColorBackground = ";48;5;" + str(int(CnameBackground))
         ControlChars = ColorFg + ColorBackground +  "m" 
         # print(ControlChars)
-        return     CSI + ControlChars # 38: foreground
+        return util_ui.AnsiControlInit + ControlChars # 38: foreground
 
     except: # ha ColorName szoveges, tehat a fenti tablazatbol kell kivalasztani vmit
         if CnameBackground:
@@ -257,6 +256,6 @@ def color(Prg, ColorName, CnameBackground=""):
         # it doesn't work: return '\\e[' + colorCode + 'm'    
         ColorControl = colorCode + ColorBackground + 'm'    
         # print("ColorControl: " + ColorControl)
-        return CSI + ColorControl
+        return util_ui.AnsiControlInit + ColorControl
 
 

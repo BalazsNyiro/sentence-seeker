@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import text, json, shutil, util
-
-
 import sys
+
 try:
     import tty
     import termios
@@ -16,14 +15,6 @@ try:
     MsvCrtModuleAvailable = True
 except ImportError:
     MsvCrtModuleAvailable = False
-
-
-
-
-
-
-
-
 
 ########################################################################################################################
 class WordObj():
@@ -342,8 +333,6 @@ def keypress_detect_linux():
         termios.tcsetattr(Fd, termios.TCSADRAIN, OldSettings)
     return Char
 
-
-
 def press_key_in_console(Msg, MsgEnd=""):
     # typically on Linux
     if TtyTermiosModulesAreAvailable:
@@ -410,3 +399,44 @@ def press_key_in_console(Msg, MsgEnd=""):
 
 def clear_screen(ScreenHeight):
     print("\n"*ScreenHeight) # clear screen
+
+
+AnsiControlInit = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python
+class progress_bar_console():
+    def __init__(self, BarLen=30, ValueFrom=0, ValueTo=100, ValueNow=0, DisplayDifferencePercent=4):
+
+        self.ValueFrom = ValueFrom
+        self.ValueTo = ValueTo
+        if ValueFrom > ValueTo: # ValueFrom < ValueTo!!! if not, replace them to guarantee it.
+            self.ValueFrom = ValueTo
+            self.ValueTo = ValueFrom
+
+        self.ValueRange = self.ValueTo - self.ValueFrom
+        self.ValueNow = ValueNow
+        self.BarLen = BarLen
+        self.DisplayDifferencePercent = DisplayDifferencePercent
+        self.Percent = 0
+        self.PercentLastDisplayed = 0
+        print("") # to be sure that display starts from first char
+
+    def update(self, Change=1, Msg=""):
+        self.ValueNow += Change
+        Progress = self.ValueNow - self.ValueFrom
+        self.Percent = (Progress / self.ValueRange) * 100
+        if (self.Percent - self.PercentLastDisplayed > self.DisplayDifferencePercent) or self.Percent == 100:
+            self.PercentLastDisplayed = self.Percent
+            self.display(Msg=Msg)
+        if self.Percent == 100:
+            print("") # leave the row of progress bar
+
+    def display(self, Msg=""):
+        CharBack = AnsiControlInit + f"{111}D" # move back to the first column of line
+        BarFilledLen = int((self.BarLen/100)*self.Percent)
+        BarEmptyLen = self.BarLen - BarFilledLen
+        BarFilled = "=" * BarFilledLen
+        BarEmpty = "." * BarEmptyLen
+        sys.stdout.write(f"{CharBack}[{BarFilled}{BarEmpty}] {int(self.Percent)}%")
+        sys.stdout.flush()
+
+
+

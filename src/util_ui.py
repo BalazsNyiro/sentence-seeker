@@ -335,8 +335,9 @@ def keypress_detect_linux():
 
 def press_key_in_console(Msg, MsgEnd=""):
     # typically on Linux
+    print(Msg, end=MsgEnd, flush=True)
+
     if TtyTermiosModulesAreAvailable:
-        print(Msg, end=MsgEnd, flush=True)
         Reply = keypress_detect_linux() # in simple case it's one character
         ReplyOrig = Reply
 

@@ -84,6 +84,10 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
     NoResult = ResultsNum == 0
 
     Step = 0
+
+    ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+    ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
+
     while True:
         FreeLines = ScreenHeight - 3
 
@@ -113,13 +117,12 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
 
         if Step == 0: # ask new instruction if no more steps
 
-            ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
-            ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
             UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uit, query.   total: {ColorHigh}{ResultsNum}{color('Default')}"
 
             UserReply = util_ui.press_key_in_console(UserInfo)
             # print("user reply:", UserReply)
-            if len(UserReply) == 1 and UserReply in QuitKeys: break
+            if len(UserReply) == 1 and UserReply in QuitKeys:
+                break
 
             if UserReply in NextKeys:
                 Step = 1

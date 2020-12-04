@@ -195,19 +195,19 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_token_split"):
             Query = "like 1945"
             Wanted = ["like", "AND", "1945"]
-            self.assertEqual(tokens.token_split(Query), Wanted)
+            self.assertEqual(tokens.token_split__group_words_collect(Query), Wanted)
 
             Query = "(apple   house,mouse)"
             Wanted = ["(", "apple", "AND", "house", "AND", "mouse", ")"]
-            self.assertEqual(tokens.token_split(Query), Wanted)
+            self.assertEqual(tokens.token_split__group_words_collect(Query), Wanted)
 
             Query = "(every OR special) AND (events OR (bird OR audience))"
-            TokensDetected = tokens.token_split(Query)
+            TokensDetected = tokens.token_split__group_words_collect(Query)
             TokensWanted = ["(", "every", "OR", "special", ")", "AND", "(", "events", "OR", "(", "bird", "OR", "audience", ")", ")"]
             self.assertEqual(TokensDetected, TokensWanted)
 
             Query = "birds (are OR  singing) AND (is)"
-            TokensDetected = tokens.token_split(Query)
+            TokensDetected = tokens.token_split__group_words_collect(Query)
             TokensWanted = ["birds", "AND", "(", "are", "OR", "singing", ")", "AND", "(", "is", ")"]
             self.assertEqual(TokensDetected, TokensWanted)
 
@@ -216,7 +216,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             Query = "apple  house"
             Wanted = ["apple", "AND", "house"]
 
-            TokensDetected = tokens.token_split(Query)
+            TokensDetected = tokens.token_split__group_words_collect(Query)
             self.assertEqual(TokensDetected, Wanted)
 
     def test_token_group_finder(self):
@@ -240,7 +240,7 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             ######################################################################
 
             def token_interpreter_wrapper(Prg, Query):
-                Tokens = tokens.token_split(Query)
+                Tokens = tokens.token_split__group_words_collect(Query)
                 TokenGroups = tokens.token_group_finder(Tokens)
                 DocIndex = Prg["DocumentObjectsLoaded"]["test_document_bird"]["WordPosition"]
 

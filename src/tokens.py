@@ -177,8 +177,11 @@ def operators_exec(Tokens,
             ResultsRightScoped = results_scope_modify(ResultsRight, SubSentenceMulti, WordPositionMulti, Scope)
             # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+            # slow test: ..eading
             if Operator == "OR":
                 ResultsScoped = ResultsLeftScoped.union(ResultsRightScoped)
+
+            # slow test: prefer AND reading AND cards AND the AND yet
             elif Operator == "AND":
                 ResultsScoped = ResultsLeftScoped.intersection(ResultsRightScoped)
 
@@ -297,7 +300,7 @@ def is_operator(Token):
 
 # TESTED
 # FIXME: TEST WITH PRG PARAM
-def token_split(Query, Prg=dict()):
+def token_split__group_words_collect(Query, Prg=dict()):
 
     Query = Query.replace(",", " ")
 
@@ -369,6 +372,7 @@ def token_interpreter(TokensOrig, DocIndex, Explains, TooManyTokenLimit=300, Pro
                     if TokensResults and (not IndexElems) and TokensResults[-1] == "OR":
                         # remove Last "OR", because:
                         # ELEMS OR NOTHING -> ELEMS, you can remove 'OR NOTHING'
+                        # print("OR removing...")
                         TokensResults.pop()
                     else:
                         # HERE we don't append Explain: no Explains.append()

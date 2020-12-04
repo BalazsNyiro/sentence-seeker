@@ -35,7 +35,7 @@ def file_convert_to_txt_if_necessary(Prg, FileOrigAbsPath, Converted__FileBaseNa
                 info(ConversionErrorMsg)
 
 _DocsSampleSourceWebpages = None
-def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileOrigNames_AbsPath, FileTextAbsPath, ProgressPercent, FileIndexAbsPath, FileSentencesAbsPath, Verbose=True, WordPositionInLines=None):
+def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileOrigNames_AbsPath, FileTextAbsPath, FileIndexAbsPath, FileSentencesAbsPath, WordPositionInLines=None):
     if WordPositionInLines == None:
         WordPositionInLines = dict()
 
@@ -210,8 +210,8 @@ def document_objects_collect_from_dir_documents(Prg,
         _, WordPositionInLines, MessageForUser = word_pos_in_line_load(FileIndexAbsPath)
 
         document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileBaseNames__OrigNames,
-                                                FileTextAbsPath, ProgressPercent,
-                                                FileIndexAbsPath, FileSentencesAbsPath, Verbose=Verbose, WordPositionInLines = WordPositionInLines)
+                                                FileTextAbsPath, FileIndexAbsPath, FileSentencesAbsPath,
+                                                 WordPositionInLines = WordPositionInLines)
 
     util_json_obj.doc_source_webpages_save_from_memory_to_file(Prg)
     return DocumentObjects

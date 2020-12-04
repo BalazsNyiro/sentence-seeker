@@ -20,7 +20,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     print(Query)
 
     #TimeTokenSplitStart = time.time()
-    Tokens = tokens.token_split(Query, Prg=Prg)
+    Tokens = tokens.token_split__group_words_collect(Query, Prg=Prg)
     #print("token split time", time.time() - TimeTokenSplitStart)
 
     #TimeMaybeStart = time.time()
@@ -53,6 +53,8 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
         Explains = []
         # print("TOKEN INTERPRETER >>>>", FileSourceBaseName)
         #TimeInterpreterStart = time.time()
+        # print("TokenGroups: ", TokenGroups)
+        # input("PRESS ENTER")
         Results_Line_Subsen_Wordpos, _ResultName = tokens.token_interpreter(
             TokenGroups, DocObj["WordPosition"], Explains, TooManyTokenLimit=Prg["TooManyTokenLimit"], ProgressBarConsole=ProgressBarConsole)
 

@@ -18,14 +18,16 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
 
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
+
     while True:
         if QueryAsCmdlineParam:
             Wanted = QueryAsCmdlineParam.strip()
         else:
             ColorWanted = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWanted"])
-            Wanted = input(f"\n{ColorWanted}wanted>{color('Default')} ").strip()
+            ColorUserInfo = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+            Wanted = input(f"\n{ColorUserInfo}:help :quit {ColorWanted}wanted>{color('Default')} ").strip()
 
-            if not Wanted:
+            if Wanted in Prg["SettingsSaved"]["Ui"]["CommandsExit"]:
                 print(color_reset())
                 break
         seek_and_display(Prg, Wanted)
@@ -118,6 +120,10 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
         if Step == 0: # ask new instruction if no more steps
 
             UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uit, query.   total: {ColorHigh}{ResultsNum}{color('Default')}"
+
+            if ResultsNum == 0: # return to new search if no result
+                print(f"{ColorHigh}No result!{color('Default')}")
+                break
 
             UserReply = util_ui.press_key_in_console(UserInfo)
             # print("user reply:", UserReply)

@@ -69,6 +69,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
     Prg = {
             "SettingsSaved": {
                 "Ui":{
+                    "CommandsExit": [":q", ":quit", ":exit"],
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
                     "DisplayDirDocInGuiTitle": True,
@@ -396,6 +397,8 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                         "Console mode pager keys if you received results:\n"
                         " - page next: n, Space, ArrowRight, ArrowDown, Enter, j (from vim)\n"
                         " - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)\n"
+                        "\n"
+                        "Exit from console mode: :q  :quit, :exit\n"
     }
 
     SettingsSaved = util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict())

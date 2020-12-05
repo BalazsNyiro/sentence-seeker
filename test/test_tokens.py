@@ -2,6 +2,10 @@
 import unittest, util_test
 import tokens
 
+# For speed tests, slow queries:
+# 'not seemed to be'
+
+
 class TokenTests(util_test.SentenceSeekerTest):
 
     def test_token_scope_modify(self):

@@ -68,7 +68,8 @@ class SentenceObj():
             return SpaceNum + CharNum
 
         if self.ResultNum is not None:
-            Rows = [[WordObj(str(self.ResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
+            HumanResultNum = self.ResultNum + 1
+            Rows = [[WordObj(str(HumanResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
         else:
             Rows = [[]]
 

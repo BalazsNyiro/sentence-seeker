@@ -1,5 +1,10 @@
 {
     "docs": {
+        "WilliamShakespeare__CompleteWorks__gutenberg_org_100-0": {
+            "license": "public_domain",
+            "source_name": "gutenberg",
+            "url": "http://www.gutenberg.org/ebooks/100"
+        },
         "apple_tree": {
             "license": "license_unknown",
             "source_name": "source_unknown",

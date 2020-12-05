@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os, sys
+import os
 from tkinter import *
 
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
 sys.path.append(os.path.join(DirPrgParent, "test"))
 
-import config, util_test, argparse, separated_prg_launcher
+import config, util_test, argparse, separated_prg_launcher, util
 ##########################################################
 
 import seeker, ui_console
@@ -53,6 +53,19 @@ def test_exec(Args):
     import test_converter
     import test_ui_html
     import test_tokens
+
+    # for token testing I need a real, huge text base.
+    # to avoid plus storage, I use the text samples
+    BooksForTest = [{"_novels", "WilliamShakespeare__CompleteWorks__gutenberg_org_100-0"}]
+    for DirSample, BookBaseName in BooksForTest:
+        PathTest = os.path.join(Prg["DirDocuments"], BookBaseName + ".txt")
+        PathSource = os.path.join(Prg["DirTextSamples"], DirSample, BookBaseName + ".gz")
+        if not os.path.isfile(PathTest):
+            print(f"Docs for testing: {BookBaseName} not in test docs dir")
+            print(PathTest)
+            print(PathSource)
+            _, Txt = util.file_read_all(Fname=PathSource, Gzipped=True)
+            util.file_write_utf8_error_avoid(dict(), Fname=PathTest, Content=Txt)
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)

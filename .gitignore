@@ -1,3 +1,6 @@
 *.pyc
 /.idea/
 /venv
+test_files/documents_user_dir_simulator/WilliamShakespeare__CompleteWorks__gutenberg_org_100-0.txt
+test_files/documents_user_dir_simulator/WilliamShakespeare__CompleteWorks__gutenberg_org_100-0.txt_sentence_separator_v03_index_in_subsentence
+test_files/documents_user_dir_simulator/WilliamShakespeare__CompleteWorks__gutenberg_org_100-0.txt_wordindex_v03_index_in_subsentence

@@ -56,16 +56,18 @@ def test_exec(Args):
 
     # for token testing I need a real, huge text base.
     # to avoid plus storage, I use the text samples
-    BooksForTest = [{"_novels", "WilliamShakespeare__CompleteWorks__gutenberg_org_100-0"}]
-    for DirSample, BookBaseName in BooksForTest:
+    BooksForTest = [("_novels", "WilliamShakespeare__CompleteWorks__gutenberg_org_100-0")]
+    for Book in BooksForTest:
+        DirSample, BookBaseName = Book
         PathTest = os.path.join(Prg["DirDocuments"], BookBaseName + ".txt")
-        PathSource = os.path.join(Prg["DirTextSamples"], DirSample, BookBaseName + ".gz")
+        PathSource = os.path.join(Prg["DirTextSamples"], DirSample, BookBaseName + ".txt.gz")
         if not os.path.isfile(PathTest):
-            print(f"Docs for testing: {BookBaseName} not in test docs dir")
-            print(PathTest)
-            print(PathSource)
+            print("Doesn't EXIST:", PathTest)
+            #print(PathSource)
             _, Txt = util.file_read_all(Fname=PathSource, Gzipped=True)
             util.file_write_utf8_error_avoid(dict(), Fname=PathTest, Content=Txt)
+        else:
+            print("       EXISTs:", PathTest)
 
     test_util.run_all_tests(Prg)
     test_util_json.run_all_tests(Prg)

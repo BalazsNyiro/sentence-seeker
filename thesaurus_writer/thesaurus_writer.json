@@ -247,7 +247,10 @@
             "to steer"
         ],
         "to drink": ["to drink", "to drain the bottle"],
-        "to eat": ["to eat", "to bolt - she bolted down her cold supper"],
+        "to eat": [ "to eat",
+                    "to bolt - she bolted down her cold supper",
+                    "to devour"
+                    ],
         "envy": [
             "envy",
             "jealous"
@@ -401,6 +404,7 @@
             "narrowly",
             "slightly (to the right)"
         ],
+        "to hate": ["La Grande Sauterelle had declared her loathing of the military several times. (Jacques Poulin: Volkswagen Blues)"],
         "to hide": [
             "to camouflage",
             "to conceal",

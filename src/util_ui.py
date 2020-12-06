@@ -216,7 +216,7 @@ def ui_json_answer(Prg,
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
     Reply = {"results": SentencesToJson,
              "token_process_explain": Txt,                     # below list() is nececcary because
-             "words_maybe_detected": list(WordsMaybeDetected)} # Words set can't be converted to json
+             "words_maybe_detected": sorted(list(WordsMaybeDetected))} # Words set can't be converted to json
     Reply = json.dumps(Reply).encode('UTF-8')
     return Reply
 

@@ -18,6 +18,8 @@ class progress_bar_console():
         self.DisplayDifferencePercent = DisplayDifferencePercent
         self.Percent = 0
         self.PercentLastDisplayed = 0
+
+        self.OneHundredPercentDisplayed = False
         print("") # to be sure that display starts from first char
 
     def update(self, Change=1, Msg=""):
@@ -27,9 +29,13 @@ class progress_bar_console():
         if self.Percent > 100: # with too high Change the caller can reach higher than 100%
             self.Percent = 100
 
-        if (self.Percent - self.PercentLastDisplayed > self.DisplayDifferencePercent) or self.Percent == 100:
-            self.PercentLastDisplayed = self.Percent
-            self.display(Msg=Msg)
+        if not self.OneHundredPercentDisplayed: # Display the result only once
+            if (self.Percent - self.PercentLastDisplayed > self.DisplayDifferencePercent) or self.Percent == 100:
+                self.PercentLastDisplayed = self.Percent
+                self.display(Msg=Msg)
+
+            if self.Percent >= 100:
+                self.OneHundredPercentDisplayed = True
 
     # here we simply display a given value instead of any inner calculation
     def display_percent(self, Percent):

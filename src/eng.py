@@ -165,18 +165,18 @@ verbs_irregular = {
     (None,  "were", None)
 }
 
-IrregularVerbsInfinitive = set()
-IrregularVerbsPresentSimple = set()
-IrregularVerbsPastParticiple = set()
+IrregularVerbsInfinitive = list()
+IrregularVerbsPresentSimple = list()
+IrregularVerbsPastParticiple = list()
 
 for Elem in verbs_irregular: #
     Form1, Form2, Form3 = Elem
     if Form1:
-        IrregularVerbsInfinitive.add(Form1)
+        IrregularVerbsInfinitive.append(Form1)
     if Form2:
-        IrregularVerbsPresentSimple.add(Form2)
+        IrregularVerbsPresentSimple.append(Form2)
     if Form3:
-        IrregularVerbsPastParticiple.add(Form3)
+        IrregularVerbsPastParticiple.append(Form3)
 
 #######################################
 # TESTED

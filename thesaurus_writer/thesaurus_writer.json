@@ -107,7 +107,8 @@
             "to provoke",
             "to taunt",
             "to thunder",
-            "to quarrel"
+            "to quarrel",
+            "to reproach"
         ],
         "to arrive, appear": [
             "to appear (she appeared out of the darkness)",
@@ -178,7 +179,8 @@
         "certainly": [
             "certainly",
             "surely",
-            "truly"
+            "truly",
+            "She had an unerring sense of direction (Jacques Poulin: Volkswagen Blues)"
         ],
         "close": [
             "to bar",
@@ -198,7 +200,8 @@
         ],
         "create": [
             "to create",
-            "to produce"
+            "to produce",
+            "to accomplish"
         ],
         "dark, dangerous, full with unknown consequences": [
             "baleful (the robber turned and gave us a baleful glance)",
@@ -340,6 +343,7 @@
             "to hurry",
             "to jog",
             "to leap",
+            "they were loafing",
             "to limp (your leg are hurt and you can't walk normally)",
             "to march",
             "to pace (back and forth)",
@@ -405,6 +409,7 @@
             "to skulk"
         ],
         "to hit": ["to bang", "to beat", "to hit", "to pound"],
+        "hungry": ["I am ravenous"],
         "hurt": [
             "to insult",
             "to hurt",
@@ -560,6 +565,7 @@
             "to manage",
             "to tackle"
             ],
+        "to make": ["fix me something to eat"],
         "nearly (I almost finished my plan)": [
             "almost",
             "nearly",
@@ -702,7 +708,8 @@
             "to suppose",
             "to suspect",
             "to think",
-            "to work out a new idea"
+            "to work out a new idea",
+            "The ideas are jostling one another in his head, they come faster and faster, and he wonders if he will be able to keep up the rhythm.. (Jacques Poulin: Volkswagen Blues)"
         ],
         "to decide, make a decision": [
             "to decide",
@@ -750,12 +757,22 @@
             "to pant",
             "to wheeze"
         ],
+        "to piss": [
+            "to give the cat a chance to do what he hadn’t done since morning (Jacques Poulin: Volkswagen Blues)"
+        ],
+        "to read": [
+            "he started leafing through the book",
+            "he turned the pages"
+        ],
         "to realise, to understand": [
             "to catch",
             "to check",
-            "to notice",
+            "to notice: having noted that they were speaking Italian",
             "to realise",
             "to spot"
+        ],
+        "to represent": [
+            "the monument testified to the fact that it was the birthplace of the hero"
         ],
         "to return, to come back": [
             "to come back",
@@ -803,7 +820,8 @@
             "accidentally",
             "incredibly",
             "suddenly",
-            "surprisingly"
+            "surprisingly",
+            "sheer coincidence"
         ],
         "unpack": [
             "to rummage (She rummaged around in her wardrobe)",

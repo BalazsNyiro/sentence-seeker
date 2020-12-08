@@ -18,7 +18,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     print(Query)
 
     Tokens = tokens.token_split(Query, Prg=Prg)
-    WordsMaybeDetected = set()
+    WordsDetected = set()
     TokenGroups = tokens.token_group_finder(Tokens)
     ResultsSelected = []
     TokenProcessExplainPerDoc = dict()
@@ -37,7 +37,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
         TokenObjects = []
         for Elem in TokenTxtList:
             if util.is_str(Elem):
-                TokenObjects.append(tokens.TokenObj(Elem, Index, Prg=Prg, WordsMaybeDetected=WordsMaybeDetected))
+                TokenObjects.append(tokens.TokenObj(Elem, Index, Prg=Prg, WordsDetected=WordsDetected))
             if util.is_list(Elem):
                 TokenObjects.append(TxtToObj(Elem, Index))
         return TokenObjects
@@ -92,8 +92,8 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
     TokenProcessExplainSumma = tokens.token_explain_summa(TokenProcessExplainPerDoc)
 
     for ResultSelector in ResultSelectors:
-        ResultsSelected = ResultSelector(Prg, ResultsSelected, WordsMaybeDetected)
+        ResultsSelected = ResultSelector(Prg, ResultsSelected, WordsDetected)
 
-    return TokenProcessExplainSumma, WordsMaybeDetected, ResultsSelected, len(ResultsSelected)
+    return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected)
 
 

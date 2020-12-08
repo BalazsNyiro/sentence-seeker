@@ -19,7 +19,7 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    TokenProcessExplainSumma, WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
+    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
 
     TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
@@ -36,13 +36,13 @@ def seek_and_display(KeypressEvent=""):
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
 
     NumOfColorThemes = len(Theme["Highlights"])
-    for WordId, WordWanted in enumerate(WordsWanted):
+    for WordId, WordDetected in enumerate(WordsDetected):
         TagName = f"Highlighted_{WordId}"
 
         # here we have problems at irregular verbs
         ThemeId = WordId % NumOfColorThemes # if we have too much words, keep the id in the range of available colors
         SentencesArea.tag_configure(TagName, background=Theme["Highlights"][ThemeId])
-        SentencesArea.highlight_pattern(fr"\y{WordWanted}\y", TagName, regexp=True, NoCase=True)
+        SentencesArea.highlight_pattern(fr"\y{WordDetected}\y", TagName, regexp=True, NoCase=True)
 
 
 # This class came from here

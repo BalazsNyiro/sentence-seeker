@@ -18,7 +18,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         QueryParams = urllib.parse.parse_qs(o.query)
         print(QueryParams)
         if "words" in QueryParams:
-            TokenProcessExplainSumma, _WordsWanted, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(self.Prg, QueryParams["words"][0])
+            TokenProcessExplainSumma, _WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(self.Prg, QueryParams["words"][0])
             Reply = MatchNums__ResultInfo[:self.Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]]
 
         self.send_response(200)

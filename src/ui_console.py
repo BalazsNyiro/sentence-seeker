@@ -4,10 +4,10 @@ import time
 
 def seek_and_display(Prg, Wanted):
     TimeLogicStart = time.time()
-    TokenProcessExplainSumma, WordsMaybeDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
     TimeLogicUsed = time.time() - TimeLogicStart
 
-    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsMaybeDetected)
+    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected)
     print(f"Results Total: {ResultsTotalNum}")
     print("Time logic: ", TimeLogicUsed)
 
@@ -49,7 +49,7 @@ def user_welcome_message(Prg, UserInterface):
         print("Help:  :help + Enter")
         print(f"{color('Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset()}")
 
-def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
+def sentence_result_one(Prg, Result, WordsDetected, ResultNum):
     ColorDefault = color("Default")
 
     ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if ResultNum % 2 == 0 \
@@ -65,9 +65,9 @@ def sentence_result_one(Prg, Result, WordsMaybeDetected, ResultNum):
                                                 ColorDetected=ColorDetected,
                                                 ColorResultNum=ColorResultNum,
                                                 ResultNum=ResultNum,
-                                                WordsMaybeDetected=WordsMaybeDetected)
+                                                WordsDetected=WordsDetected)
 
-def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
+def sentence_result_all_display(Prg, SentenceStruct, WordsDetected):
     CharEnter = chr(13)
     CharEscape = chr(27) # it's a problem because some special key's code starts with 27, too
 
@@ -102,7 +102,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsMaybeDetected):
             LastResultDisplayed = (IdNow >= ResultsNum)
             if NoResult or LastResultDisplayed: break
 
-            SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsMaybeDetected, IdNow)
+            SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsDetected, IdNow)
             RowsRendered = SentenceObject.render_console(ScreenWidth)
             RowsRenderedLen = len(RowsRendered)
 

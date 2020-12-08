@@ -36,16 +36,16 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
                                    "Sentence first part, when subsentence length is equal with Obj1 but the main sentence is shorter.",
                                    "Sentence first part")
 
-        WordsMaybeDetected = ["part"]
+        WordsDetected = ["part"]
         self.maxDiff = None
 
         ResultsSelectedOrig = [Obj1, Obj2]
-        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsMaybeDetected)
+        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsDetected)
         IdsSelectedSentences = [Sen.Id for Sen in Selected]
         self.assertEqual([Obj2.Id, Obj1.Id], IdsSelectedSentences)
 
         ResultsSelectedOrig = [Obj1, Obj2, Obj3]
-        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsMaybeDetected)
+        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsDetected)
         IdsSelectedSentences = [Sen.Id for Sen in Selected]
         self.assertEqual([Obj2.Id, Obj3.Id, Obj1.Id], IdsSelectedSentences)
 

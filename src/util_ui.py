@@ -21,7 +21,7 @@ class WordObj():
     def __str__(self):
         return self.Txt
 
-    def __init__(self, Txt, WordsMaybeDetected=set(), ColorBasic=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=None):
+    def __init__(self, Txt, WordsDetected=set(), ColorBasic=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=None):
         self.Txt = Txt
         self.ColorBefore = ColorBasic
         self.ColorAfter = ColorAfter
@@ -31,7 +31,7 @@ class WordObj():
 
         # the case-insensivity is important because words can start with upper/lower case
         # chars, too
-        if util.word_only_abc_chars(Txt).lower() in WordsMaybeDetected:
+        if util.word_only_abc_chars(Txt).lower() in WordsDetected:
             self.Detected = True
 
         self.Len = len(Txt)
@@ -108,7 +108,7 @@ class SentenceObj():
         if not Txt: return # be sure, insert only real words, not empty strings or whitespaces
 
         W = WordObj(Txt,
-                    WordsMaybeDetected=self.WordsMaybeDetected,
+                    WordsDetected=self.WordsDetected,
                     ColorBasic=ColorBasic,
                     ColorAfter=ColorAfter,
                     InResultSubsentence=InResultSubsentence,
@@ -123,7 +123,7 @@ class SentenceObj():
     def __init__(self, Sentence=None,
                  ColorBasic=None, ColorAfter=None,
                  ColorDetected=None, ColorResultNum=None,
-                 ResultNum=None, WordsMaybeDetected=set(),
+                 ResultNum=None, WordsDetected=set(),
                  Url=None, Source=None):
         self.ColorBasic = ColorBasic
         self.ColorAfter = ColorAfter
@@ -131,7 +131,7 @@ class SentenceObj():
         self.ColorResultNum = ColorResultNum
         self.ResultNum = ResultNum
         self.Words = []
-        self.WordsMaybeDetected = WordsMaybeDetected
+        self.WordsDetected = WordsDetected
         self.Url = Url
         self.Source = Source
 
@@ -146,7 +146,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                  ColorDetected=None,
                                  ColorResultNum=None,
                                  ResultNum=None,
-                                 WordsMaybeDetected=set()):
+                                 WordsDetected=set()):
 
     Url, Txt, Source = sentence_text_from_obj(Prg, Result, ReturnType=ReturnType)
 
@@ -156,7 +156,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                ColorDetected=ColorDetected,
                                ColorResultNum=ColorResultNum,
                                ResultNum=ResultNum,
-                               WordsMaybeDetected=WordsMaybeDetected,
+                               WordsDetected=WordsDetected,
                                Url=Url, Source=Source)
         Sentence.add_big_string(Txt["subsentences_before"])
         Sentence.add_big_string(Txt["subsentence_result"], InResultSubsentence=True)
@@ -205,7 +205,7 @@ def theme_actual(Prg):
 
 def ui_json_answer(Prg,
                    TokenProcessExplainSumma,
-                   WordsMaybeDetected,
+                   WordsDetected,
                    SentenceObjects,
                    NewLine="\n"):
 
@@ -215,8 +215,8 @@ def ui_json_answer(Prg,
 
     Txt = token_explain_summa_to_text(TokenProcessExplainSumma, NewLine=NewLine) + 2*NewLine
     Reply = {"results": SentencesToJson,
-             "token_process_explain": Txt,                     # below list() is nececcary because
-             "words_maybe_detected": sorted(list(WordsMaybeDetected))} # Words set can't be converted to json
+             "token_process_explain": Txt,  # below list() is nececcary because
+             "words_detected": sorted(list(WordsDetected))} # Words set can't be converted to json
     Reply = json.dumps(Reply).encode('UTF-8')
     return Reply
 

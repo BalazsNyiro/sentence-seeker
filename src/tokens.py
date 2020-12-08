@@ -264,7 +264,7 @@ class TokenObj():
             ExplainTotal.extend(Parent.explain())
         return ExplainTotal
 
-    def __init__(self, Words, DocIndex=dict(), Results=[], SubSentenceMultiplier=100, WordMultiplier=100, Prg=dict(), WordsMaybeDetected=set()):
+    def __init__(self, Words, DocIndex=dict(), Results=[], SubSentenceMultiplier=100, WordMultiplier=100, Prg=dict(), WordsDetected=set()):
 
         if util.is_str(Words): Words = [Words]
 
@@ -272,7 +272,7 @@ class TokenObj():
                              # if you have more than one elem in Words, you get it after an operator exec
 
         self.Prg = Prg
-        self.WordsMaybeDetected = WordsMaybeDetected
+        self.WordsDetected = WordsDetected
         self.DocIndex = DocIndex
         self.SubSentenceMultiplier = SubSentenceMultiplier
         self.WordMultiplier = WordMultiplier
@@ -314,9 +314,10 @@ class TokenObj():
 
     def load_from_docindex(self, Words):
         for Word in Words:
-            self.WordsMaybeDetected.add(Word)
-            for Line_SubSentence_WordPos in self.DocIndex.get(Word, _EmptySet):
-                self.Results.append(ResultObj(Line_SubSentence_WordPos, self.SubSentenceMultiplier, self.WordMultiplier))
+            if Word in self.DocIndex:
+                self.WordsDetected.add(Word)
+                for Line_SubSentence_WordPos in self.DocIndex[Word]:
+                    self.Results.append(ResultObj(Line_SubSentence_WordPos, self.SubSentenceMultiplier, self.WordMultiplier))
 
     # WANTED WORDS EXTENDING!!!
     def group_words_collect(self, KeyWord):

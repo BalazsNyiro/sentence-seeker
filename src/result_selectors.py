@@ -27,12 +27,6 @@ def uniq_filter(Prg, SentencesObj, _WordsMaybeDetected):
 ################### USED modifiers  ###############################
 
 
-def text_source_mixing(ResultGroup, Limit=LimitGeneral):
-    # TODO : source mixing
-    return ResultGroup
-
-
-    return ResultGroupFresh
 
 #################  utils for selectors ##############
 

@@ -71,7 +71,6 @@ def token_group_finder(Tokens):
 
 
 # create intersection WHEN the order if from left to right
-# TODO: FIX IT WITH NEW TokenOBJ
 def exec_THEN_operator(PositionsLeftScoped, PositionsRightScoped,
                        PositionsLeft,       PositionsRight,
                        SubSentenceMulti,    WordPositionMulti, Scope):
@@ -134,7 +133,6 @@ def is_operator(Token):
     return False
 
 # TESTED
-# FIXME: TEST WITH PRG PARAM
 def token_split(Query, Prg=dict()):
 
     Query = Query.replace(",", " ")

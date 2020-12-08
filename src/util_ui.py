@@ -315,7 +315,7 @@ def sentence_convert_to_rows(SentenceColored, SentenceNotColored, WidthWanted):
 
     return Rows
 
-# FIXME: maybe in the future this module would be a better solution,
+# maybe in the future this module would be a better solution,
 # https://pypi.org/project/readchar/
 # but I don't want external installs
 

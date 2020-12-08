@@ -114,9 +114,6 @@ def indexing(WordPositions, SubSentence, WordPositionBase, WordPositionMultiplye
     SubSentence = text.remove_non_alpha_chars(SubSentence, " ", CharsKeepThem="-")
 
     for Pos, Word in enumerate(SubSentence.split()): # split at space, tab, newline
-        # TODO: words short form expand:
-        # I've -> "I", "have" are two separated words,
-        # wouldn't -> would is the real word
 
         # one word can be more than once in a subsentence. If we
         # detect it once, don't save it again

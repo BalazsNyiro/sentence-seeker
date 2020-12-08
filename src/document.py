@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-import util, os, time, sys
+import util, os
 import util_json_obj, ui_tkinter_boot_progress_bar
 from os.path import isfile
 import array
 import concurrent.futures
 from concurrent.futures import FIRST_COMPLETED, ALL_COMPLETED
 
-# TODO: refactor this func, LOAD document db in local config
-# and don't use document_samples in real environment
 ExtensionsConvertable = [".pdf", ".htm", ".html"]
 ExtensionsInFuture = [".epub", ".mobi"]
 
@@ -227,7 +225,6 @@ def document_obj(FileOrigPathAbs="", FileTextAbsPath="", FileIndex="", FileSente
             }
 
 
-# TODO: TEST it
 def docs_copy_samples_into_dir_if_necessary(Prg):
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
     print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)

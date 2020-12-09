@@ -17,9 +17,12 @@ class TokenTests(util_test.SentenceSeekerTest):
             ProgressBarConsole = None
             Index = self.Prg["DocumentObjectsLoaded"]["WilliamShakespeare__CompleteWorks__gutenberg_org_100-0"]["WordPosition"]
 
+            def token(Txt):
+                return TokenObj(Txt, Index)
+
             if True:
                 # =================================================
-                Tokens = [TokenObj("apple", Index)]
+                Tokens = [token("apple")]
                 tokens.operator_exec(Tokens)
 
                 ResultWanted = [2990004, 301610113, 334040104, 370530102, 409740202, 537520004, 538300204, 547420107, 612450404, 625760001]
@@ -27,7 +30,7 @@ class TokenTests(util_test.SentenceSeekerTest):
                 self.assertEqual(ResultWanted, ResultsCollected)
                 # =================================================
 
-                Tokens = [TokenObj("apple", Index), TokenObj("AND"), TokenObj("like", Index)]
+                Tokens = [token("apple"), token("AND"), token("like")]
                 tokens.operator_exec(Tokens)
 
                 ResultWanted = [2990004, 301610113, 538300204]
@@ -35,7 +38,7 @@ class TokenTests(util_test.SentenceSeekerTest):
                 self.assertEqual(ResultWanted, ResultsCollected)
 
                 # =================================================
-                Tokens = [[TokenObj("apple", Index), TokenObj("AND"), TokenObj("like", Index)], TokenObj("AND"), TokenObj("tart", Index)]
+                Tokens = [[token("apple"), token("AND"), token("like")], token("AND"), token("tart")]
                 tokens.operator_exec(Tokens)
 
                 ResultWanted = [538300204]
@@ -43,7 +46,7 @@ class TokenTests(util_test.SentenceSeekerTest):
                 self.assertEqual(ResultWanted, ResultsCollected)
 
                 # =================================================
-                Tokens = [TokenObj("apple", Index), TokenObj("OR"), TokenObj("walking", Index)]
+                Tokens = [token("apple"), token("OR"), token("walking")]
                 tokens.operator_exec(Tokens)
 
                 ResultToken = Tokens[0]
@@ -67,7 +70,7 @@ class TokenTests(util_test.SentenceSeekerTest):
 
 
             # =================================================
-            Tokens = [TokenObj("raining", Index), TokenObj("OR"), TokenObj("located", Index)]
+            Tokens = [token("raining"), token("OR"), token("located")]
             tokens.operator_exec(Tokens)
 
             ResultWanted = [30004, 30113, 336371700, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
@@ -77,7 +80,7 @@ class TokenTests(util_test.SentenceSeekerTest):
 
 
             # =================================================
-            Tokens = [[TokenObj("raining", Index), TokenObj("OR"), TokenObj("located", Index)], TokenObj("OR"), TokenObj("january", Index)]
+            Tokens = [[token("raining"), token("OR"), token("located")], token("OR"), token("january")]
             tokens.operator_exec(Tokens)
 
             ResultWanted = [30004, 30113, 40300, 336371700, 417250104, 664630008, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
@@ -86,12 +89,20 @@ class TokenTests(util_test.SentenceSeekerTest):
             self.assertEqual(ResultWanted, ResultsCollected)
 
             # =================================================
-            Tokens = [[[TokenObj("reading", Index)]]] # triple embedded group
+            Tokens = [[[token("reading")]]] # triple embedded group
             tokens.operator_exec(Tokens)
             ResultWanted = [8660103, 17690203, 26300100, 39430401, 55290100, 55500100, 56390010, 103280003, 106060002, 127410100, 127420008, 150260100, 182990403, 254540006, 254900108, 259100100, 285090100, 292450210, 298080004, 318910103, 327310301, 339320100, 416960200, 422130102, 424280605, 427130103, 461060002, 598470004, 598500003, 616850006, 629060004, 635530007, 671880302, 681760001]
             ResultsCollected = Tokens[0].get_results()
             self.assertEqual(ResultWanted, ResultsCollected)
             ###################################
+
+
+            Tokens = [token("looks"), token("AND"), token("like"), token("AND"), [token("giant"), token("OR"), token("king")]]
+            tokens.operator_exec(Tokens)
+
+            ResultWanted = [121010003, 235780303, 477070003]
+            ResultsCollected = Tokens[0].get_results()
+            self.assertEqual(ResultWanted, ResultsCollected)
 
             self.Prg = PrgOrig
 

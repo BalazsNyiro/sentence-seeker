@@ -175,18 +175,18 @@ def token_explain_summa(TokenProcessExplainPerDoc):
 
 def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositionMulti=100, CallLevel=0, ProgressBarConsole=None):
 
-    for Id, TokenMaybeList in enumerate(Tokens): # expand all groups in all levels first
-        if util.is_list(TokenMaybeList):
-            operator_exec(TokenMaybeList, Scope=Scope, SubSentenceMulti=SubSentenceMulti, WordPositionMulti=WordPositionMulti, CallLevel=CallLevel+1)
-            Tokens[Id] = TokenMaybeList[0]
-            Tokens[Id].IsGroup = True # the main, collector, result object is group
-
     OperatorPositions = {}
     for Operator in Operators:
         OperatorPositions[Operator] = []
 
-    for Position, Token in enumerate(Tokens):
-        if Token.IsOperator:
+    for Position in range(0, len(Tokens)): # expand all groups in all levels first
+        Token = Tokens[Position]
+        if util.is_list(Token):
+            operator_exec(Token, Scope=Scope, SubSentenceMulti=SubSentenceMulti, WordPositionMulti=WordPositionMulti, CallLevel=CallLevel+1)
+            Tokens[Position] = Token[0]
+            Tokens[Position].IsGroup = True # the main, collector, result object is group
+
+        elif Token.IsOperator:
             OperatorPositions[Token.OperatorName].append(Position)
 
     for Operator in Operators:
@@ -229,7 +229,7 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
             #                                        SubSentenceMulti,  WordPositionMulti, Scope)
 
             OperatorObj = Tokens[OperatorPositionLast]
-            ObjResult = TokenObj(ParamLeft.Words + OperatorObj.Words + ParamRight.Words, Results=ResultOpExec)
+            ObjResult = TokenObj(ParamLeft.words() + OperatorObj.words() + ParamRight.words(), Results=ResultOpExec)
             ObjResult.Explain = [ParamLeft, OperatorObj, ParamRight]
             Tokens[OperatorPositionLast-1] = ObjResult
             Tokens.pop(OperatorPositionLast + 1)
@@ -245,22 +245,42 @@ class ResultObj():
 
 _EmptySet = set()
 class TokenObj():
-    def name(self):
-        Pre = ""
-        Post = ""
-        if self.IsGroup:
-            Pre = "("
-            Post = ")"
-        return Pre + " ".join(self.Words) + Post
-
     def explain(self):
         if self.IsOperator:
             return [] # operators don't have explains
 
-        ExplainTotal = [(self.name(), len(self.Results))]
+        ExplainTotal = [(self.words(ToStr=True), len(self.Results))]
         for Parent in self.Explain:
             ExplainTotal.extend(Parent.explain())
         return ExplainTotal
+
+    def words(self, ToStr=False):
+        if ToStr:
+            Pre = Post = ""
+            if self.IsGroup:
+                Pre, Post = "(", ")"
+
+            # there can be ( ) signs in Words, too
+            Out = []
+            for W in self.Words:
+                if W == "(":
+                    Out.append(W) # add "(", ")" signs without space into text
+                elif W == ")":
+                    if Out[-1] == " ":
+                        Out.pop()
+                    Out.append(W)  # add "(", ")" signs without space into text
+                else:
+                    Out.append(W)
+                    Out.append(" ")
+
+            if Out[-1] == " ": # if we have a space as last elem, remove it
+                Out.pop()
+            return Pre + "".join(Out) + Post
+        else:
+            Pre = Post = []
+            if self.IsGroup:
+                Pre, Post = ["("], [")"]
+            return Pre + self.Words + Post
 
     def __init__(self, Words, DocIndex=dict(), Results=[], SubSentenceMultiplier=100, WordMultiplier=100, Prg=dict(), WordsDetected=set()):
 

@@ -387,6 +387,8 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                         "examples:\n"
                         " - 'move.. since'   ->  ...has moved since...\n"
                         " - 'plant.. grow..' ->  ...plants grown...\n"
+                        " - '..ible' ->          impossible, incredible, terrible...\n"
+                        
                         
                         "\n"
                         "On/Off commands, turn on/off some settings:\n"

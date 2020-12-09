@@ -30,7 +30,7 @@ def main():
     print("Under development:")
     print(" - write a lot of tests for Tokens")
     print(" - group detection is incorrect, fix it:   'apple AND (eat OR drink)  in Examples")
-    print(" - eng:have_all   means: 'have, has, v, had, haven, hasn, hadn'")
+    print(" - eng:have_all   means: 'have, has, ve, had, haven, hasn, hadn'")
     print(" - THEN OPERATOR")
     # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
 

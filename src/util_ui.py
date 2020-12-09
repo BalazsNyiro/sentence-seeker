@@ -221,7 +221,7 @@ def ui_json_answer(Prg,
     return Reply
 
 def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainLimit=64):
-    TokenExplainText = []
+    TokenExplainText = ["Same sentences can be counted more than once from different results!"]
 
     if len(TokenProcessExplainSumma) > ExplainLimit:
         return "Too complex Token explaining"

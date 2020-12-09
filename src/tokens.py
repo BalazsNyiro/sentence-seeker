@@ -173,11 +173,15 @@ def token_explain_summa(TokenProcessExplainPerDoc):
 
 ############################# REFACTOR ###########################
 
-def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositionMulti=100, CallLevel=0, ProgressBarConsole=None):
-
+def get_operator_positions(Tokens):
     OperatorPositions = {}
-    for Operator in Operators:
-        OperatorPositions[Operator] = []
+    for Position, Token in enumerate(Tokens):
+        if Token.IsOperator:
+            util.dict_key_insert_if_necessary(OperatorPositions, Token.OperatorName, list())
+            OperatorPositions[Token.OperatorName].append(Position)
+    return OperatorPositions
+
+def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositionMulti=100, CallLevel=0, ProgressBarConsole=None):
 
     for Position in range(0, len(Tokens)): # expand all groups in all levels first
         Token = Tokens[Position]
@@ -186,12 +190,14 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
             Tokens[Position] = Token[0]
             Tokens[Position].IsGroup = True # the main, collector, result object is group
 
-        elif Token.IsOperator:
-            OperatorPositions[Token.OperatorName].append(Position)
 
     for Operator in Operators:
 
-        while OperatorPositions[Operator]:
+        # during operator exec, the positions can be changed so I have to check them in every Op
+        OperatorPositions = get_operator_positions(Tokens)
+
+        # if operator exist in the position lists and it has any open position
+        while (Operator in OperatorPositions) and OperatorPositions[Operator]:
 
             if ProgressBarConsole:                  # I work with 3 tokens in same time:
                 ProgressBarConsole.update(Change=3) # the operators and two operands

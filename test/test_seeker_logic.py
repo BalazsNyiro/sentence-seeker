@@ -21,33 +21,6 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
             self.assertTrue(tokens.is_operator("AND"))
             self.assertTrue(tokens.is_operator("OR"))
 
-    #def __init__(self, Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, WordNum, SentenceFillInResult):
-    def test_result_selectors(self):
-        if self._test_exec("test_result_selectors"):
-            Prg = dict()
-            Obj1 = text.sentence_obj_from_memory(Prg, "FileSourceBaseName1", 11, 1, 0, True,
-                                   "Sentence first part, and the other very long subsentence with interesting words because the main sentence has to be very long.",
-                                   "Sentence first part")
-            Obj2 = text.sentence_obj_from_memory(Prg, "FileSourceBaseName2", 11, 2, 0, True,
-                                   "Sentence first section, second part.",
-                                   "second part.")
-
-            Obj3 = text.sentence_obj_from_memory(Prg, "FileSourceBaseName1", 11, 1, 0, True,
-                                   "Sentence first part, when subsentence length is equal with Obj1 but the main sentence is shorter.",
-                                   "Sentence first part")
-
-        WordsDetected = ["part"]
-        self.maxDiff = None
-
-        ResultsSelectedOrig = [Obj1, Obj2]
-        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsDetected)
-        IdsSelectedSentences = [Sen.Id for Sen in Selected]
-        self.assertEqual([Obj2.Id, Obj1.Id], IdsSelectedSentences)
-
-        ResultsSelectedOrig = [Obj1, Obj2, Obj3]
-        Selected = result_selectors.short_sorter(dict(), ResultsSelectedOrig, WordsDetected)
-        IdsSelectedSentences = [Sen.Id for Sen in Selected]
-        self.assertEqual([Obj2.Id, Obj3.Id, Obj1.Id], IdsSelectedSentences)
 
     def test_token_split(self):
         if self._test_exec("test_token_split"):

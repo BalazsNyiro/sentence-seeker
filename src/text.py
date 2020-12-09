@@ -280,6 +280,7 @@ class sentence_obj_from_memory():
 
     def word_num_add(self, WordNum):
         self.WordNums.add(WordNum)
+        self.HitNum = len(self.WordNums)
 
     def represent_as_dict(self): # in tests it's easier to check matching with dicts
         return { 'FileSourceBaseName':             self.FileSourceBaseName,
@@ -290,7 +291,8 @@ class sentence_obj_from_memory():
                  'SubSentenceNums':                self.SubSentenceNums,
                  'SubSentenceNumMin':              self.SubSentenceNumMin,
                  'SubSentenceNumMax':              self.SubSentenceNumMax,
-                 'WordNums':                       self.WordNums
+                 'WordNums':                       self.WordNums,
+                 'HitNum':                         self.HitNum
                  }
 
     def to_json(self): # in tests it's easier to check matching with dicts
@@ -302,7 +304,8 @@ class sentence_obj_from_memory():
                  'SubSentenceNums':                list(self.SubSentenceNums), # sets can't be converted to json
                  'SubSentenceNumMin':              self.SubSentenceNumMin,
                  'SubSentenceNumMax':              self.SubSentenceNumMax,
-                 'WordNums':                       list(self.WordNums)
+                 'WordNums':                       list(self.WordNums),
+                 'HitNum':                         self.HitNum
                  }
 
 
@@ -329,6 +332,7 @@ class sentence_obj_from_memory():
         self.SubSentenceNumMin = SubSentenceNum
         self.SubSentenceNumMax = SubSentenceNum
         self.WordNums = {WordNum}
+        self.HitNum = 1
 
         self.Sentence = Sentence if SentenceFillInResult else "-"
         self.SentenceLen = len(Sentence)

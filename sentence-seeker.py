@@ -29,6 +29,7 @@ def main():
 
     print("Under development:")
     print(" - write a lot of tests for Tokens")
+    print(" - check: where and why you use list() or set()")
     print(" - THEN OPERATOR")
     # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
 
@@ -42,17 +43,18 @@ def test_exec(Args):
 
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")
-    import test_text
+    import test_converter
+    import test_document
     import test_eng
+    import test_result_selectors
+    import test_seeker
+    import test_seeker_logic
+    import test_text
+    import test_tokens
+    import test_ui_html
+    import test_util
     import test_util_json
     import test_util_ui
-    import test_seeker_logic
-    import test_util
-    import test_document
-    import test_seeker
-    import test_converter
-    import test_ui_html
-    import test_tokens
 
     # for token testing I need a real, huge text base.
     # to avoid plus storage, I use the text samples
@@ -80,6 +82,7 @@ def test_exec(Args):
     test_eng.run_all_tests(Prg)
     test_ui_html.run_all_tests(Prg)
     test_tokens.run_all_tests(Prg)
+    test_result_selectors.run_all_tests(Prg)
     util_test.result_all(Prg)
 
     print("##################### TEST END #####################################")

@@ -35,7 +35,9 @@ class TextTests(util_test.SentenceSeekerTest):
                          'SubSentenceNums': {2},
                          'SubSentenceNumMin': 2,
                          'SubSentenceNumMax': 2,
-                         'WordNums': {0}}
+                         'WordNums': {0},
+                         'HitNum': 1
+                         }
 
             ObjRepresentedAsDict = Obj.represent_as_dict()
             self.assertEqual(ObjWanted, ObjRepresentedAsDict)
@@ -64,7 +66,8 @@ class TextTests(util_test.SentenceSeekerTest):
                          'SubSentenceNums': {2},
                          'SubSentenceNumMin': 2,
                          'SubSentenceNumMax': 2,
-                         'WordNums': {0}
+                         'WordNums': {0},
+                         'HitNum': 1
                         }
             self.assertEqual(ObjWanted, Obj.represent_as_dict())
 

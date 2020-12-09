@@ -4,11 +4,7 @@ import result_selectors
 import time, tokens
 import ui_console_progress_bar
 
-def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
-         ResultSelectors=[
-             result_selectors.short_sorter,
-             result_selectors.uniq_filter
-             ]):
+def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=None):
     util.log(Prg, f"Query: {Query}")
 
     CommandDetected = tokens.run_commands_in_query(Prg, Query)
@@ -91,8 +87,19 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False,
 
     TokenProcessExplainSumma = tokens.token_explain_summa(TokenProcessExplainPerDoc)
 
-    for ResultSelector in ResultSelectors:
-        ResultsSelected = ResultSelector(Prg, ResultsSelected, WordsDetected)
+    #########################################################
+    if not ResultSelectors:
+        ResultSelectors = [
+            result_selectors.sort_by_relevance,
+            result_selectors.sort_by_sentence_len,
+            result_selectors.remove_duplicated_sentences
+        ]
+
+    ResultsSelectedGroups = [ResultsSelected] # the selectors work with groups. At the beginning we have only one group.
+    for ResultSelector in ResultSelectors:    # the last uniq selector flatten the groups into a single list
+        ResultSelector(Prg, ResultsSelectedGroups, WordsDetected)
+    ResultsSelected = util.list_flat_embedded_lists(ResultsSelectedGroups)
+    #########################################################
 
     return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected)
 

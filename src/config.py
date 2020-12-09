@@ -388,8 +388,16 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                         " - 'move.. since'   ->  ...has moved since...\n"
                         " - 'plant.. grow..' ->  ...plants grown...\n"
                         " - '..ible' ->          impossible, incredible, terrible...\n"
-                        
-                        
+
+                        "Other selectors:\n"
+                        " - have:all           -> have,has,had,haven,hasn,hadn,ve\n"          
+                        " - pronouns:subject   -> i,you,he,she,it,we,they\n"
+                        " - pronouns:object    -> me,you,him,her,it,we,us\n"
+                        " - pronouns:personal  -> pronouns:subject + pronouns:object\n"
+                        "\n"
+                        "Complex examples:\n"
+                        " - pronouns:personal AND have:all AND iverb:pp   -> They've written"
+                        "\n"
                         "\n"
                         "On/Off commands, turn on/off some settings:\n"
                         " - :urlOn/Off >> show/hide url of the result\n"

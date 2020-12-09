@@ -349,14 +349,13 @@ class TokenObj():
         KeyWord = quick_form_convert_to_special_form(KeyWord, "..")
         if ":" in KeyWord:  # : means: special token
 
-            if KeyWord == "iverb:ps":  # irregular verbs, past simple selector
-                self.load_from_docindex(eng.IrregularVerbsPresentSimple)
-
-            elif KeyWord == "iverb:pp":  # irregular verbs, past participle selector
-                self.load_from_docindex(eng.IrregularVerbsPastParticiple)
-
-            elif KeyWord == "iverb:inf":  # irregular verbs, past participle selector
-                self.load_from_docindex(eng.IrregularVerbsInfinitive)
+            if   KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
+            elif KeyWord == "pronouns:subject":   self.load_from_docindex(eng.PronounsSubject)
+            elif KeyWord == "pronouns:object":    self.load_from_docindex(eng.PronounsObject)
+            elif KeyWord == "pronouns:personal":  self.load_from_docindex(eng.PronounsPersonal)
+            elif KeyWord == "iverb:ps":           self.load_from_docindex(eng.IrregularVerbsPresentSimple)
+            elif KeyWord == "iverb:pp":           self.load_from_docindex(eng.IrregularVerbsPastParticiple)
+            elif KeyWord == "iverb:inf":          self.load_from_docindex(eng.IrregularVerbsInfinitive)
 
             elif KeyWord.startswith("end:"):
                 End = KeyWord.split(":")[1]

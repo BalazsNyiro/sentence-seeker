@@ -169,6 +169,11 @@ IrregularVerbsInfinitive = list()
 IrregularVerbsPresentSimple = list()
 IrregularVerbsPastParticiple = list()
 
+HaveAll = "have,has,had,haven,hasn,hadn,ve".split(",")
+PronounsSubject = "i,you,he,she,it,we,they".split(",")
+PronounsObject = "me,you,him,her,it,we,us".split(",")
+PronounsPersonal = list(set(PronounsObject).union(set(PronounsSubject)))
+
 for Elem in verbs_irregular: #
     Form1, Form2, Form3 = Elem
     if Form1:

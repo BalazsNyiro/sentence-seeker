@@ -56,14 +56,17 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
 
 def user_welcome_message(Prg, UserInterface):
     if UserInterface == "console":
+        ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+        ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
+
         print()
         print(Prg["Licenses"])
         print()
-        print("example search: looks AND like AND bird")
-        print("example search: pronouns:personal AND have:all AND iverb:pp")
-        print()
-        print("Exit:  Enter only")
-        print("Help:  :help + Enter")
+        print(f"{ColorInf}example search: {ColorHigh}looks AND like AND bird")
+        print(f"{ColorInf}example search: {ColorHigh}pronouns:personal AND have:all AND iverb:pp")
+        print(f"{color('Default')}")
+        print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q")
+        print(f"{ColorInf}Help: {ColorHigh}:help")
         print(f"{color('Yellow')}Documents dir: {Prg['DirDocuments']}{color_reset()}")
 
 def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):

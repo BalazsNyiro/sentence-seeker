@@ -135,7 +135,11 @@ def is_operator(Token):
 # TESTED
 def token_split(Query, Prg=dict()):
 
-    Query = Query.replace(",", " ")
+    Replaces = (
+        (",", " "),
+        (">", " THEN ")
+    )
+    Query = text.replace_pairs(Query, Replaces)
 
     for Operator in Operators:
         # example query:  (apple,orange) OR (banana,kiwi)
@@ -189,7 +193,6 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
             operator_exec(Token, Scope=Scope, SubSentenceMulti=SubSentenceMulti, WordPositionMulti=WordPositionMulti, CallLevel=CallLevel+1)
             Tokens[Position] = Token[0]
             Tokens[Position].IsGroup = True # the main, collector, result object is group
-
 
     for Operator in Operators:
 

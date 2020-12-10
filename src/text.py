@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import re, util, text
+import re, util
 
 SentenceEnds = {".", "!", "?", "…"} # searching in sets is faster than simple lists
 SubSentenceEnds = {",", ";", ":"}
@@ -318,7 +318,7 @@ class sentence_obj_from_memory():
             SubSentenceResult = SubSentenceFromTest
         else:
             StatusSentenceFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)
-            StatusSubSentences, SubSentenceResult = text.subsentences(Prg, Sentence, SubSentenceNum)
+            StatusSubSentences, SubSentenceResult = subsentences(Prg, Sentence, SubSentenceNum)
 
         sentence_obj_from_memory.Counter += 1
         self.Id = sentence_obj_from_memory.Counter # in tests it's easier to tell: the object where id = 0, 1...

@@ -98,6 +98,18 @@ Examples:
 
 Exit from console mode: *:q  :quit, :exit*
 
+## Special commands: ##
+- :back N    *where N can be 1, 2, 3, 4, 5, 6 or empty.*
+You can use it only in Linux virtual consoles (not from any GUI!)
+This is a special command but really USEFUL
+if you use sentence-seeker.py from virtual-console mode where
+you can change between consoles with Alt+F1, ALT+F2, you can use
+and editor in one terminal (I use vim in console 1) and sentence-seeker.py in
+another virtual terminal.
+when you type :back,  the program switch back into the given terminal without
+any magic with ALT+Fn
+
+
 # User guide #
 
 The program uses a Working directory, based on user_home/.sentence-seeker.config

@@ -89,6 +89,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                 },
                 "DefaultWikiTextPackageUsage": "Y"
             },
+            "ChangeVirtualConsoleCmd": "chvt",
             "TooManyTokenLimit": 300, # don't explain above this level
             "Cache": dict(),
             "Os": Os,

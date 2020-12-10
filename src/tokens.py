@@ -393,7 +393,8 @@ class TokenObj():
         KeyWord = quick_form_convert_to_special_form(KeyWord, "..")
         if ":" in KeyWord:  # : means: special token
 
-            if   KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
+            if   KeyWord == "be:all":             self.load_from_docindex(eng.BeAll)
+            elif KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
             elif KeyWord == "pronouns:subject":   self.load_from_docindex(eng.PronounsSubject)
             elif KeyWord == "pronouns:object":    self.load_from_docindex(eng.PronounsObject)
             elif KeyWord == "pronouns:personal":  self.load_from_docindex(eng.PronounsPersonal)

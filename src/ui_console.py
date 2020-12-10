@@ -85,7 +85,8 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{ColorInf}example search: {ColorHigh}looks AND like AND bird")
         print(f"{ColorInf}example search: {ColorHigh}pronouns:personal AND have:all AND iverb:pp")
         print(f"{color('Default')}")
-        print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q")
+        print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q q ")
+        print(f"                {ColorInf}command {ColorHigh}q{ColorInf} is an exception from : sign usage")
         print(f"{ColorInf}Help: {ColorHigh}:help")
 
         AllowedOutput = Prg['DirDocuments']

@@ -169,6 +169,9 @@ IrregularVerbsInfinitive = list()
 IrregularVerbsPresentSimple = list()
 IrregularVerbsPastParticiple = list()
 
+# is and has can be represented with 's but I don't insert it into the sets
+# because from 's I can't define exactly the word
+BeAll = "be,was,were,been,wasn,weren,am,are,is,aren,isn".split(",")
 HaveAll = "have,has,had,haven,hasn,hadn,ve".split(",")
 PronounsSubject = "i,you,he,she,it,we,they".split(",")
 PronounsObject = "me,you,him,her,it,we,us".split(",")

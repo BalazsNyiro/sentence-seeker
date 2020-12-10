@@ -69,7 +69,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
     Prg = {
             "SettingsSaved": {
                 "Ui":{
-                    "CommandsExit": [":q", ":quit", ":exit"],
+                    "CommandsExit": [":q", ":quit", ":exit", "q"],
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
                     "DirDocDisplay": True,

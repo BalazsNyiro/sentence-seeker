@@ -79,6 +79,7 @@ Examples:
 - '..ible' *impossible, incredible, terrible...*
 
 ## Other selectors: ##
+- be:all (be,was,were,been,wasn,weren,am,are,is,aren,isn)
 - have:all (have,has,had,haven,hasn,hadn,ve)
 - pronouns:subject (i,you,he,she,it,we,they)
 - pronouns:object (me,you,him,her,it,we,us)
@@ -96,7 +97,30 @@ Examples:
 - page next: *n, Space, ArrowRight, ArrowDown, Enter, j (from vim)*
 - page prev: *p, BackSpace, ArrowLeft, ArrowUp, k (from vim)*
 
-Exit from console mode: *:q  :quit, :exit*
+Exit from console mode: *q :q  :quit, :exit*
+
+# Big question: why does the program have more exit/quit command? # 
+At the prompt where you write your query, somehow I have to
+separate the query from special commands - the ':' sign does this.
+The main rule: every special command has ':' sign,
+
+Answer: ':q', ':quit' come from vim. For users who likes it, it's comfortable.
+but in result viewer the program uses one character to 'next', 'prev' and 'quit'
+because there I detect keypresses - there the ':' character and Enter pressing
+is not important, you can handle the result viewer with simple key presses,
+
+And when you often use the program, from the result viewer 
+you associate the simple Q with quit. But at the prompt a simple 'q' would be
+a normal query.
+
+So this is an exception, for the better user experience. And I don't want
+to break my rule so the program has normal quit commands, and others that users like.
+
+In the Result viewer you can use space, enter, right-arrow, n, j as a next button,
+because it's natural. Sorry about it, I try to find the balance between
+rules and the acceptable comfort.
+
+And I use the program every day so I will implement the most fine solutions.
 
 ## Special commands: ##
 - :back N    *where N can be 1, 2, 3, 4, 5, 6 or empty.*

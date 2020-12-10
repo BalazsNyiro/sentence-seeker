@@ -229,10 +229,19 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
                         ResultOpExec.append(ResSmall)
 
             ###############################################################
-            # elif Operator == "THEN":
-            #     ResultsScoped = exec_THEN_operator(ResultsLeftScoped, ResultsRightScoped,
-            #                                        ParamLeft.Results, ParamRight.Results,
-            #                                        SubSentenceMulti,  WordPositionMulti, Scope)
+            elif Operator == "THEN":
+
+                ResRightScoped = dict()
+                for ResRight in ParamRight.Results:
+                    # store the current scope AND the finest scope to detect the word order later
+                    ResRightScoped[ResRight.Scopes[Scope]] = ResRight.Scopes["word"]
+
+                ResultOpExec = []
+                for ResLeft in ParamLeft.Results:
+                    if ResLeft.Scopes[Scope] in ResRightScoped:
+                        if ResLeft.Scopes["word"] < ResRightScoped[  ResLeft.Scopes[Scope]   ]:
+                            ResultOpExec.append(ResLeft)
+            ###############################################################
 
             OperatorObj = Tokens[OperatorPositionLast]
             ObjResult = TokenObj(ParamLeft.words() + OperatorObj.words() + ParamRight.words(), Results=ResultOpExec)

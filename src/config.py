@@ -355,7 +355,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
             "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"},
-            "UsageInfo": util.file_read_all_simple(os.path.join(DirPrgExecRoot, "doc", "user_guide_examples.txt" ))
+            "UsageInfo": util.file_read_all_simple(os.path.join(DirPrgExecRoot, "README.md"))
     }
 
     SettingsSaved = util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict())

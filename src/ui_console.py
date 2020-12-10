@@ -16,7 +16,7 @@ def seek_and_display(Prg, Wanted):
         MatchNums__ResultInfo = []
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
-        WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "=="}
+        WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
     else:
         ReturnType="separated_subsentences"
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
@@ -64,7 +64,7 @@ def user_welcome_message(Prg, UserInterface):
         print()
         print("Exit:  Enter only")
         print("Help:  :help + Enter")
-        print(f"{color('Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset()}")
+        print(f"{color('Yellow')}Documents dir: {Prg['DirDocuments']}{color_reset()}")
 
 def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):
     ColorDefault = color("Default")
@@ -139,7 +139,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
         if Step == 0: # ask new instruction if no more steps
 
-            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}{color('Default')}"
+            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}    {ColorInf}for VIM users: {ColorHigh}j{ColorInf}, {ColorHigh}k {color('Default')}"
 
             if ResultsNum == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")

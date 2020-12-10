@@ -248,7 +248,7 @@ def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainL
     return NewLine.join(TokenExplainText)
 
 def title(Prg):
-    return f"sentence-seeker: {Prg['DirDocuments']}"
+    return f"sentence-seeker Documents dir: {Prg['DirDocuments']}"
 
 def title_refresh(Prg):
     if Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"]:

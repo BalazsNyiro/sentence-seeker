@@ -1,0 +1,9 @@
+Under development:
+ - write a lot of tests for Tokens")
+ - check: where and why you use list() or set()")
+  https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
+
+Install from Debian/Ubuntu repo when program is stable
+  - https://askubuntu.com/questions/16446/how-to-get-my-software-into-ubuntu
+    - https://wiki.debian.org/DebianMentorsFaq
+    - https://www.debian.org/doc/manuals/developers-reference/pkgs.html#newpackage

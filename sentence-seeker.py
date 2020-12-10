@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
+import os, sys
 from tkinter import *
 
 DirPrgParent = os.path.dirname(os.path.realpath(__file__))
@@ -26,12 +26,6 @@ def main():
     TestExecution = Args.test
     # SysArgvOrig = sys.argv
     sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
-
-    print("Under development:")
-    print(" - write a lot of tests for Tokens")
-    print(" - check: where and why you use list() or set()")
-    print(" - THEN OPERATOR")
-    # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
 
     if TestExecution:
         test_exec(Args)

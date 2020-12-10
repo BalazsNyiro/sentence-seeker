@@ -251,7 +251,7 @@ def title(Prg):
     return f"sentence-seeker Documents dir: {Prg['DirDocuments']}"
 
 def title_refresh(Prg):
-    if Prg["SettingsSaved"]["Ui"]["DisplayDirDocInGuiTitle"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"]:
         print("dir doc is displayed")
         Prg["UiRootObj"].title(title(Prg))
     else:

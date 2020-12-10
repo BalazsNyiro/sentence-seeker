@@ -72,7 +72,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                     "CommandsExit": [":q", ":quit", ":exit"],
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
-                    "DisplayDirDocInGuiTitle": True,
+                    "DisplayDirDoc": True,
                     "LimitDisplayedSentences": 100,
                     "Console": {"NewlineBetweenSentences": False,
                                 "ColorUserInfo": "Blue",

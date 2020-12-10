@@ -67,7 +67,9 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{color('Default')}")
         print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q")
         print(f"{ColorInf}Help: {ColorHigh}:help")
-        print(f"{color('Yellow')}Documents dir: {Prg['DirDocuments']}{color_reset()}")
+
+        if Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"]:
+            print(f"{color('Yellow')}Documents dir: {Prg['DirDocuments']}{color_reset()}")
 
 def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):
     ColorDefault = color("Default")

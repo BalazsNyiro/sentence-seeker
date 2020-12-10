@@ -31,7 +31,8 @@ class WordObj():
 
         # the case-insensivity is important because words can start with upper/lower case
         # chars, too
-        if util.word_only_abc_chars(Txt).lower() in WordsDetected:
+        if util.word_only_abc_chars(Txt).lower() in WordsDetected or Txt in WordsDetected:
+            # if it's exactly in detected: special signs, for help documentation, = sign for example
             self.Detected = True
 
         self.Len = len(Txt)
@@ -73,7 +74,7 @@ class SentenceObj():
             else:
                 HumanResultNum = f"{self.ResultNum + 1: <{AlignRight}}"
 
-            Rows = [[WordObj(str(HumanResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
+            Rows = [[WordObj(HumanResultNum, ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
         else:
             Rows = [[]]
 
@@ -167,7 +168,14 @@ def sentence_get_from_result_oop(Prg, Result,
         Sentence.add_big_string(Txt["subsentences_after"])
         return Sentence
     else:
-        return SentenceObj(Txt, ColorBasic=ColorBefore, ColorAfter=ColorAfter, ResultNum=ResultNum)
+        return SentenceObj(Txt,
+                           ColorBasic=ColorBefore,
+                           ColorAfter=ColorAfter,
+                           ColorDetected=ColorDetected,
+                           ColorResultNum=ColorResultNum,
+                           ResultNum=ResultNum,
+                           WordsDetected=WordsDetected,
+                           Url=Url, Source=Source)
 
 def sentence_text_from_obj(Prg, SentenceObj, ReturnType="complete_sentence"):
     Source = SentenceObj.FileSourceBaseName

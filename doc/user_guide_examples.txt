@@ -1,0 +1,57 @@
+== How to seek:sentences ==
+ - lowercase words: that you seek in sentences
+ - Sentence|SENTENCE|sentence will be found: seeking is NOT case sensitive
+ - AND OR: logical operators
+ - () group words: (apple, grape) OR (banana, orange)
+ - space and comma means AND:  (apple,orange banana)
+
+ - THEN operator: 'go home' is typical. But 'go' is after 'home'?
+ . example: 'home THEN go'
+
+ . '>' shorter form of THEN:
+ . example: 'one > of > them'
+
+examples:
+ - 'enormous (quantity OR volume)
+
+== Word class selectors: ==\n"
+ - iverb:inf irregular verbs, Infinitive
+ - iverb:ps  irregular verbs, Past Simple
+ - iverb:pp  irregular verbs, Past Participle
+ . example: would AND iverb:ps
+ . example: would have iverb:pp
+
+== Word class with pattern selectors: ==
+ - start:ha words with 'ha' prefix:   HAve, HAd...
+ - end:ed words with 'ed' postfix:  highlightED
+ - in:cl words with 'cl' included: inCLuded, CLear
+
+== Quick writing forms, everybody can use his favourite: ==
+ -  '..look.. AND like.. AND ..ing'
+ -  '*look* AND like* AND *ing'
+means: 'in:look AND start:like AND end:ing'
+
+examples:
+ - 'move.. since' ---> ...has moved since...
+ - 'plant.. grow..' -> ...plants grown...
+ - '..ible' ---------> impossible, incredible, terrible...
+
+== Other selectors: ==
+ - have:all ----------> have,has,had,haven,hasn,hadn,ve
+ - pronouns:subject --> i,you,he,she,it,we,they
+ - pronouns:object ---> me,you,him,her,it,we,us
+ - pronouns:personal -> pronouns:subject + pronouns:object
+
+== Complex examples: ==
+ - pronouns:personal AND have:all AND iverb:pp   -> They've written
+
+== On/Off commands, turn on/off some settings: ==
+ - :urlOn/Off -> show/hide url of the result
+ - :sourceOn/Off -> show/hide source doc name of the result
+ - :dirDocInGuiTitleOn/Off -> hide/show your document directory path in gui title
+
+== Console mode pager keys if you received results: ==
+ - page next: n, Space, ArrowRight, ArrowDown, Enter, j (from vim)
+ - page prev: p, BackSpace, ArrowLeft, ArrowUp, k (from vim)
+
+Exit from console mode: :q  :quit, :exit

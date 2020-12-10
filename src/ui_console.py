@@ -10,18 +10,21 @@ def seek_and_display(Prg, Wanted):
     TimeLogicStart = time.time()
 
     Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
-    if Wanted == ":help2":
+    ReturnType = "complete_sentence" # in separated_subsentence case the non-alphabhet chars become separators.
+
+    if Wanted == ":help":
         MatchNums__ResultInfo = []
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
-        WordsDetected = {"OR", "AND", "THEN", "example", "examples", "commands", "operator", "=="}
+        WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "=="}
     else:
+        ReturnType="separated_subsentences"
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
         TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
 
     TimeLogicUsed = time.time() - TimeLogicStart
 
-    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected)
+    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
     # print(f"Results Total: {ResultsTotalNum}")
     print("Time logic: ", TimeLogicUsed)
 

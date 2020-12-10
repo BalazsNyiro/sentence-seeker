@@ -16,7 +16,7 @@ def run_commands_in_query(Prg, Query):
 
     if ":" in Query:
 
-        if ":help" in Query:
+        if ":help_plain" in Query:
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True
 

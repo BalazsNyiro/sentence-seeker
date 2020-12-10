@@ -68,7 +68,7 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q")
         print(f"{ColorInf}Help: {ColorHigh}:help")
 
-        if Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"]:
+        if Prg["SettingsSaved"]["Ui"]["DirDocDisplay"]:
             print(f"{color('Yellow')}Documents dir: {Prg['DirDocuments']}{color_reset()}")
 
 def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):

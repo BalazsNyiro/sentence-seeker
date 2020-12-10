@@ -20,13 +20,13 @@ def run_commands_in_query(Prg, Query):
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True
 
-        if ":dirDocInGuiTitleOff" in Query:
-            Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"] = False
+        if ":dirDocDisplayOff" in Query:
+            Prg["SettingsSaved"]["Ui"]["DirDocDisplay"] = False
             util_ui.title_refresh(Prg)
             CommandDetected = True
 
-        if ":dirDocInGuiTitleOn" in Query:
-            Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"] = True
+        if ":dirDocDisplayOn" in Query:
+            Prg["SettingsSaved"]["Ui"]["DirDocDisplay"] = True
             util_ui.title_refresh(Prg)
             CommandDetected = True
 

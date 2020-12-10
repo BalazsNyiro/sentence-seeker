@@ -251,13 +251,14 @@ def title(Prg):
     return f"sentence-seeker Documents dir: {Prg['DirDocuments']}"
 
 def title_refresh(Prg):
-    if Prg["SettingsSaved"]["Ui"]["DisplayDirDoc"]:
-        print("dir doc is displayed")
-        Prg["UiRootObj"].title(title(Prg))
-    else:
-        print("dir doc is hidden")
-        # dir is hidden, because of demo for example :-)
-        Prg["UiRootObj"].title("sentence-seeker.net")
+    if Prg["UiRootObj"]: # if gui is active
+        if Prg["SettingsSaved"]["Ui"]["DirDocDisplay"]:
+            print("dir doc is displayed")
+            Prg["UiRootObj"].title(title(Prg))
+        else:
+            print("dir doc is hidden")
+            # dir is hidden, because of demo for example :-)
+            Prg["UiRootObj"].title("sentence-seeker.net")
 
 # https://stackoverflow.com/questions/566746/how-to-get-linux-console-window-width-in-python
 def get_screen_size():

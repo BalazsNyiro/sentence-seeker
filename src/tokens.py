@@ -36,6 +36,7 @@ def run_commands_in_query(Prg, Query):
                         TerminalNum = "1"
 
                 os.system(f"{Cmd} {TerminalNum}")
+            CommandDetected = True
 
         if ":help_plain" in Query:
             print("\n\n" + Prg["UsageInfo"] + "\n")
@@ -175,11 +176,22 @@ def token_split(Query, Prg=dict()):
     Tokens = []   # insert AND if necessary:
     TokenPrev = ""
     for Token in TokensWithGroups:
+        Token = Token.strip()
         if Token: # with multiple spaces a token can be "", too
             if TokenPrev:
                 # two low char with one space between them - missing operator, AND is default
-                if (TokenPrev == ")" or text.word_wanted(TokenPrev)) \
-                        and (text.word_wanted(Token) or Token == "("):
+                AND_insert = False
+
+                if (TokenPrev not in Operators) and (Token not in Operators):
+                    AND_insert = True
+
+                if TokenPrev == ")" and Token not in Operators:
+                    AND_insert = True
+
+                if (TokenPrev not in Operators) and (Token == "("):
+                    AND_insert = True
+
+                if AND_insert:
                     Tokens.append("AND")
 
             Tokens.append(Token)
@@ -376,7 +388,6 @@ class TokenObj():
                 for Line_SubSentence_WordPos in self.DocIndex[Word]:
                     self.Results.append(ResultObj(Line_SubSentence_WordPos, self.SubSentenceMultiplier, self.WordMultiplier))
 
-    # WANTED WORDS EXTENDING!!!
     def group_words_collect(self, KeyWord):
         KeyWord = quick_form_convert_to_special_form(KeyWord, "*")
         KeyWord = quick_form_convert_to_special_form(KeyWord, "..")

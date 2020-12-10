@@ -190,7 +190,7 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
     for Position in range(0, len(Tokens)): # expand all groups in all levels first
         Token = Tokens[Position]
         if util.is_list(Token):
-            operator_exec(Token, Scope=Scope, SubSentenceMulti=SubSentenceMulti, WordPositionMulti=WordPositionMulti, CallLevel=CallLevel+1)
+            operator_exec(Token, Scope=Scope, SubSentenceMulti=SubSentenceMulti, WordPositionMulti=WordPositionMulti, CallLevel=CallLevel+1, ProgressBarConsole=ProgressBarConsole)
             Tokens[Position] = Token[0]
             Tokens[Position].IsGroup = True # the main, collector, result object is group
 

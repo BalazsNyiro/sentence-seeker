@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 import seeker_logic, text, util_ui
-import time
+import time, msg_errors
+
+try:
+    import psutil # not available
+    PsutilAvailable = True
+except:
+    PsutilAvailable = False
+
 
 def sentence_builder(Prg, Sentence, FileSourceBaseName=""):
     return text.sentence_obj_from_memory(Prg, FileSourceBaseName, 0, 0, 0,
@@ -42,7 +49,20 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
         else:
             ColorWanted = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWanted"])
             ColorUserInfo = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
-            Wanted = input(f"\n{ColorUserInfo}:help :quit {ColorWanted}wanted>{color('Default')} ").strip()
+            ColorBattery = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorBattery"])
+
+            BatteryInfo = ""
+            if Prg["SettingsSaved"]["Ui"]["Console"]["BatteryInfoShow"]:
+                if PsutilAvailable:
+                    Battery = psutil.sensors_battery()
+                    Plugged = Battery.power_plugged
+                    Percent = int(Battery.percent)
+                    Plugged = " <-" if Plugged else ""
+                    BatteryInfo = f"{ColorBattery}{Percent}%{Plugged} "
+                else: # the user wants to display battey info but module is missing
+                    print(msg_errors.ModuleMissingPsutil)
+
+            Wanted = input(f"\n{BatteryInfo}{ColorUserInfo}:help :quit {ColorWanted}wanted>{color('Default')} ").strip()
 
             if Wanted in Prg["SettingsSaved"]["Ui"]["CommandsExit"]:
                 print(color_reset())

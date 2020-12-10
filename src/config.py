@@ -75,6 +75,8 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                     "DirDocDisplay": True,
                     "LimitDisplayedSentences": 100,
                     "Console": {"NewlineBetweenSentences": False,
+                                "BatteryInfoShow": True,
+                                "ColorBattery": "Red",
                                 "ColorUserInfo": "Blue",
                                 "ColorUserInfoHigh": "Cyan",
 

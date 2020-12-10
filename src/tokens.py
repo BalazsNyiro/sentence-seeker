@@ -37,8 +37,6 @@ def run_commands_in_query(Prg, Query):
 
                 os.system(f"{Cmd} {TerminalNum}")
 
-
-
         if ":help_plain" in Query:
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True

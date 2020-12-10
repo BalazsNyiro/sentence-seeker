@@ -309,12 +309,12 @@ class sentence_obj_from_memory():
                  }
 
 
-    def __init__(self, Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, WordNum, SentenceFillInResult, SentenceFromTest="", SubSentenceFromTest=""):
+    def __init__(self, Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, WordNum, SentenceFillInResult=False, SentenceFromOutside=None, SubSentenceFromTest=""):
 
-        if SentenceFromTest:
+        if SentenceFromOutside is not None:
             StatusSentenceFromMemory = True
             StatusSubSentences = True
-            Sentence = SentenceFromTest
+            Sentence = SentenceFromOutside
             SubSentenceResult = SubSentenceFromTest
         else:
             StatusSentenceFromMemory, Sentence = sentence_from_memory(Prg, FileSourceBaseName, LineNumInSentenceFile)

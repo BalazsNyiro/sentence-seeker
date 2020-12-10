@@ -58,7 +58,7 @@ class WordObj():
         return "".join(Out)
 
 class SentenceObj():
-    def render_console(self, WidthMax):
+    def render_console(self, WidthMax, AlignRight=None):
 
         def row_len(Row):
             SpaceNum = len(Row) - 1 if Row else 0
@@ -68,7 +68,11 @@ class SentenceObj():
             return SpaceNum + CharNum
 
         if self.ResultNum is not None:
-            HumanResultNum = self.ResultNum + 1
+            if AlignRight is None:
+                HumanResultNum = str(self.ResultNum + 1)
+            else:
+                HumanResultNum = f"{self.ResultNum + 1: <{AlignRight}}"
+
             Rows = [[WordObj(str(HumanResultNum), ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
         else:
             Rows = [[]]
@@ -167,9 +171,13 @@ def sentence_get_from_result_oop(Prg, Result,
 
 def sentence_text_from_obj(Prg, SentenceObj, ReturnType="complete_sentence"):
     Source = SentenceObj.FileSourceBaseName
-    LineNum = SentenceObj.LineNumInSentenceFile
 
-    _Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
+    # if sentence obj knows the sentence, use that, for example in help info
+    if SentenceObj.Sentence != "-":
+        Sentence = SentenceObj.Sentence
+    else:
+        LineNum = SentenceObj.LineNumInSentenceFile
+        _Status, Sentence = text.sentence_from_memory(Prg, Source, LineNum, Strip=True)
 
     Url = ""
     if Source in Prg["DocumentsSourceWebpages"]:

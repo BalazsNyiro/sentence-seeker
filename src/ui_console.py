@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
-import seeker_logic, util, util_ui
+import seeker_logic, text, util_ui
 import time
+
+def sentence_builder(Prg, Sentence, FileSourceBaseName=""):
+    return text.sentence_obj_from_memory(Prg, FileSourceBaseName, 0, 0, 0,
+                                         SentenceFromOutside=Sentence, SentenceFillInResult=True)
 
 def seek_and_display(Prg, Wanted):
     TimeLogicStart = time.time()
-    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+
+    Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
+    if Wanted == ":help2":
+        MatchNums__ResultInfo = []
+        for Line in Prg["UsageInfo"].split("\n"):
+            MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
+        WordsDetected = {"OR", "AND", "THEN", "example", "examples", "commands", "operator", "=="}
+    else:
+        Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
+        TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+
     TimeLogicUsed = time.time() - TimeLogicStart
 
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected)
-    print(f"Results Total: {ResultsTotalNum}")
+    # print(f"Results Total: {ResultsTotalNum}")
     print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
@@ -49,17 +63,20 @@ def user_welcome_message(Prg, UserInterface):
         print("Help:  :help + Enter")
         print(f"{color('Yellow')}Docs dir: {Prg['DirDocuments']}{color_reset()}")
 
-def sentence_result_one(Prg, Result, WordsDetected, ResultNum):
+def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):
     ColorDefault = color("Default")
 
-    ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if ResultNum % 2 == 0 \
-        else      color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
+    if Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"]:
+        ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
+    else:
+        ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if ResultNum % 2 == 0 \
+            else      color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
 
     ColorDetected = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWordDetected"])
     ColorResultNum = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowNum"])
     return util_ui.sentence_get_from_result_oop(Prg,
                                                 Result,
-                                                ReturnType="separated_subsentences",
+                                                ReturnType=ReturnType,
                                                 ColorBefore=ColorBefore,
                                                 ColorAfter=ColorDefault,
                                                 ColorDetected=ColorDetected,
@@ -67,7 +84,7 @@ def sentence_result_one(Prg, Result, WordsDetected, ResultNum):
                                                 ResultNum=ResultNum,
                                                 WordsDetected=WordsDetected)
 
-def sentence_result_all_display(Prg, SentenceStruct, WordsDetected):
+def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="separated_subsentences"):
     CharEnter = chr(13)
     CharEscape = chr(27) # it's a problem because some special key's code starts with 27, too
 
@@ -102,8 +119,8 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected):
             LastResultDisplayed = (IdNow >= ResultsNum)
             if NoResult or LastResultDisplayed: break
 
-            SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsDetected, IdNow)
-            RowsRendered = SentenceObject.render_console(ScreenWidth)
+            SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsDetected, IdNow, ReturnType=ReturnType)
+            RowsRendered = SentenceObject.render_console(ScreenWidth, AlignRight=2) #len(str(ResultsNum)))
             RowsRenderedLen = len(RowsRendered)
 
             if RowsRenderedLen <= FreeLines:
@@ -119,7 +136,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected):
 
         if Step == 0: # ask new instruction if no more steps
 
-            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uit, query.   total: {ColorHigh}{ResultsNum}{color('Default')}"
+            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}{color('Default')}"
 
             if ResultsNum == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")

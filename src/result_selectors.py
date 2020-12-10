@@ -14,7 +14,7 @@ def sort_by_relevance(Prg, Group, _WordsMaybeDetected):
     reach_the_deepest_lists_and_modify(Prg, Group, grouping_hitnum, dict())
 
 
-def sort_by_sentence_len(Prg, Group, _WordsMaybeDetected):
+def sort_by_sentence_len(Prg, Group, _WordsDetected):
 
     def grouping_sentencelen(_Prg, GroupOrig, _Params):
         obj_grouping(GroupOrig, "SentenceLen", OverwriteOrig=True)
@@ -25,12 +25,16 @@ def sort_by_sentence_len(Prg, Group, _WordsMaybeDetected):
     reach_the_deepest_lists_and_modify(Prg, Group, grouping_sentencelen, dict())
     reach_the_deepest_lists_and_modify(Prg, Group, grouping_subsentencelen, dict())
 
-def remove_duplicated_sentences(Prg, Group, _WordsMaybeDetected):
+def remove_duplicated_sentences(Prg, Group, _WordsDetected):
     def removing_duplicates(_Prg, Sentences, KnownSentences):
         ToDelete = []
 
         for Id, SenObj in enumerate(Sentences):
-            _Status, Sentence = text.sentence_from_memory(Prg, SenObj.FileSourceBaseName, SenObj.LineNumInSentenceFile)
+            if SenObj.Sentence != "-":
+                Sentence = SenObj.Sentence
+            else:
+                _Status, Sentence = text.sentence_from_memory(Prg, SenObj.FileSourceBaseName, SenObj.LineNumInSentenceFile)
+
             TextRaw = Sentence.lower().replace(" ", "").replace("\t", "").strip()
             if TextRaw in KnownSentences:
                 ToDelete.append(Id)

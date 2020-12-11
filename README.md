@@ -169,9 +169,16 @@ https://www.python.org/downloads/windows/
    if you simply copy a txt/html/pdf file into the doc dir, at next start
    the program indexes it at start automatically.
 
- - simple query: looks AND like AND (bird OR cat)
+ - simple query: 
+    AND: order is not important, THEN: order is important
+    - cat AND dog
+    - cat > dog    ==  cat THEN dog  
+    - (apple OR orange) AND eat
  - operators: AND, OR, THEN, >, (,)
  - class usage: 
-     pronouns:personal AND have:all AND iverb:pp 
+   - pronouns:personal AND have:all AND iverb:pp 
      example result: 'They've written'
+   - be:all > ..ywhere  
+   - (be:all) > ..ible
+   - move.. > (from OR to) > ..where 
      

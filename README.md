@@ -91,7 +91,7 @@ Examples:
 ## On/Off commands, turn on/off some settings: ##
 - :urlOn/Off *show/hide url of the result*
 - :sourceOn/Off *show/hide source doc name of the result*
-- :dirDocDisplayOn/Off *hide/show your document directory path in gui title*
+- :displayPersonalInfoOn/Off *hide/show your document directory path in gui title*
 
 ## Console mode pager keys if you received results: ##
 - page next: *n, Space, ArrowRight, ArrowDown, Enter, j (from vim)*

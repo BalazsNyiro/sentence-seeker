@@ -90,7 +90,7 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{ColorInf}Help: {ColorHigh}:help")
 
         AllowedOutput = Prg['DirDocuments']
-        if not Prg["SettingsSaved"]["Ui"]["DirDocDisplay"]:
+        if not Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"]:
             AllowedOutput = "(demo mode) probably homedir/.sentence-seeker/documents"
         print(f"{color('Yellow')}Documents dir: {AllowedOutput}{color_reset()}")
 

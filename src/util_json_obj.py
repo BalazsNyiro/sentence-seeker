@@ -75,7 +75,8 @@ def config_get(Key, DirPrgExecRoot="", DefaultVal="",
         print(f"create new config file from default: {FileConfigAbsPath}")
         util.file_copy(os.path.join(DirPrgExecRoot, FileNameConfigInitial), FileConfigAbsPath)
     else:
-        print(f"config file exists: {FileConfigAbsPath}")
+        #   print(f"config file exists: {FileConfigAbsPath}")
+        pass
 
     _Status, Json = obj_from_file(FileConfigAbsPath)
     if Key in Json:

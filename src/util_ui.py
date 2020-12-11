@@ -252,7 +252,7 @@ def title(Prg):
 
 def title_refresh(Prg):
     if Prg["UiRootObj"]: # if gui is active
-        if Prg["SettingsSaved"]["Ui"]["DirDocDisplay"]:
+        if Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"]:
             print("dir doc is displayed")
             Prg["UiRootObj"].title(title(Prg))
         else:

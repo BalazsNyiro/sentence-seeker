@@ -227,7 +227,7 @@ def document_obj(FileOrigPathAbs="", FileTextAbsPath="", FileIndex="", FileSente
 
 def docs_copy_samples_into_dir_if_necessary(Prg):
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
-    print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
+    # print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
 
     DirTextSamples = os.path.join(Prg["DirDocuments"], "text_samples")
     util.dir_create_if_necessary(Prg, DirTextSamples)

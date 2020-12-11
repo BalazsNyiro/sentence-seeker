@@ -90,7 +90,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     #########################################################
     if not ResultSelectors:
         ResultSelectors = [
-            result_selectors.sort_by_relevance,
+            # result_selectors.sort_by_relevance, # too big sentences can't fit on screen with this
             result_selectors.sort_by_sentence_len,
             result_selectors.remove_duplicated_sentences
         ]

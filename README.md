@@ -158,6 +158,20 @@ The program uses a Working directory, based on user_home/.sentence-seeker.config
 Please install Python for Windows, the installer contains Tkinter automatically.
 https://www.python.org/downloads/windows/
    
-# for Demonstation: # 
- - will > (take OR took OR taken) > day..
+# Program demo #
+ - start consol/gui mode
 
+ - the program arrives with pre-packed text files, they are in 
+   .sentence-seeker/documents directory in your home dir after
+   the first execution.
+
+ - the program creates index at first execution, it takes about 2 minutes.
+   if you simply copy a txt/html/pdf file into the doc dir, at next start
+   the program indexes it at start automatically.
+
+ - simple query: looks AND like AND (bird OR cat)
+ - operators: AND, OR, THEN, >, (,)
+ - class usage: 
+     pronouns:personal AND have:all AND iverb:pp 
+     example result: 'They've written'
+     

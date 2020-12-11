@@ -86,7 +86,7 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{ColorInf}example search: {ColorHigh}pronouns:personal AND have:all AND iverb:pp")
         print(f"{color('Default')}")
         print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q q ")
-        print(f"                {ColorInf}command {ColorHigh}q{ColorInf} is an exception from : sign usage")
+        print(f"       {ColorInf}command {ColorHigh}q{ColorInf} is an exception from : sign usage")
         print(f"{ColorInf}Help: {ColorHigh}:help")
 
         AllowedOutput = Prg['DirDocuments']
@@ -168,7 +168,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
         if Step == 0: # ask new instruction if no more steps
 
-            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}    {ColorInf}for VIM users: {ColorHigh}j{ColorInf}, {ColorHigh}k {color('Default')}"
+            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}    {ColorInf}VIM keys: {ColorHigh}j{ColorInf}, {ColorHigh}k {color('Default')}"
 
             if ResultsNum == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")

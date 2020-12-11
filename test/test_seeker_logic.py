@@ -46,7 +46,31 @@ class SeekerLogicTests(util_test.SentenceSeekerTest):
         if self._test_exec("test_token_split_and"):
             Query = "apple  house"
             Wanted = ["apple", "AND", "house"]
+            TokensDetected = tokens.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
 
+            Query = "(apple) (house)"
+            Wanted = ["(", "apple", ")", "AND", "(", "house", ")"]
+            TokensDetected = tokens.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
+
+            Query = "(apple) house"
+            Wanted = ["(", "apple", ")", "AND", "house"]
+            TokensDetected = tokens.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
+
+            Query = "apple (house)"
+            Wanted = ["apple", "AND", "(", "house", ")"]
+            TokensDetected = tokens.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
+
+            Query = "apple (house) (mouse)"
+            Wanted = ["apple", "AND", "(", "house", ")", "AND", "(", "mouse", ")"]
+            TokensDetected = tokens.token_split(Query)
+            self.assertEqual(TokensDetected, Wanted)
+
+            Query = "apple ((house) (mouse))"
+            Wanted = ["apple", "AND", "(", "(", "house", ")", "AND", "(", "mouse", ")", ")"]
             TokensDetected = tokens.token_split(Query)
             self.assertEqual(TokensDetected, Wanted)
 

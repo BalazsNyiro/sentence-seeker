@@ -185,10 +185,13 @@ def token_split(Query, Prg=dict()):
                 if (TokenPrev not in Operators) and (Token not in Operators):
                     AND_insert = True
 
-                if TokenPrev == ")" and Token not in Operators:
+                if TokenPrev == ")" and (Token not in Operators):
                     AND_insert = True
 
                 if (TokenPrev not in Operators) and (Token == "("):
+                    AND_insert = True
+
+                if TokenPrev == ")" and Token == "(":
                     AND_insert = True
 
                 if AND_insert:

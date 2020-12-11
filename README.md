@@ -158,5 +158,6 @@ The program uses a Working directory, based on user_home/.sentence-seeker.config
 Please install Python for Windows, the installer contains Tkinter automatically.
 https://www.python.org/downloads/windows/
    
-
+# for Demonstation: # 
+ - will > (take OR took OR taken) > day..
 

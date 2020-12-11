@@ -19,7 +19,7 @@ def seek_and_display(Prg, Wanted):
     Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
     ReturnType = "complete_sentence" # in separated_subsentence case the non-alphabhet chars become separators.
 
-    if Wanted == ":help":
+    if Wanted == ":help" or Wanted == ":h" or Wanted == "h":
         MatchNums__ResultInfo = []
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
@@ -33,7 +33,7 @@ def seek_and_display(Prg, Wanted):
 
     sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
     # print(f"Results Total: {ResultsTotalNum}")
-    print("Time logic: ", TimeLogicUsed)
+    # print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     # On Linux and I hope on Mac, we can use history in console
@@ -57,12 +57,21 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
                     Battery = psutil.sensors_battery()
                     Plugged = Battery.power_plugged
                     Percent = int(Battery.percent)
-                    Plugged = " <-" if Plugged else ""
+
+                    #Plugged = " <-" if Plugged else ""
+                    Plugged = ""
+
                     BatteryInfo = f"{ColorBattery}{Percent}%{Plugged} "
                 else: # the user wants to display battey info but module is missing
                     print(msg_errors.ModuleMissingPsutil)
 
-            Wanted = input(f"\n{BatteryInfo}{ColorUserInfo}:help :quit {ColorWanted}wanted>{color('Default')} ").strip()
+            print(f"\n{BatteryInfo}{ColorWanted}>>>{color_reset()}", end="")
+            # if user uses backspace in console, the space stops it to go back to the '...wanted>>' part
+            # of the line. Without input('display') param, the backspace has side effect on the line
+            # and colorful part disappears
+            # you can't insert color information into input("colored prompt") fun because terminal can't detect
+            # correctly the end of the line if you enter color information into input()
+            Wanted = input(" ").strip()
 
             if Wanted in Prg["SettingsSaved"]["Ui"]["CommandsExit"]:
                 print(color_reset())
@@ -86,8 +95,7 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{ColorInf}example search: {ColorHigh}pronouns:personal AND have:all AND iverb:pp")
         print(f"{color('Default')}")
         print(f"{ColorInf}Exit: {ColorHigh}:exit :quit :q q ")
-        print(f"       {ColorInf}command {ColorHigh}q{ColorInf} is an exception from : sign usage")
-        print(f"{ColorInf}Help: {ColorHigh}:help")
+        print(f"{ColorInf}Help: {ColorHigh}:help :h h")
 
         AllowedOutput = Prg['DirDocuments']
         if not Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"]:
@@ -254,12 +262,7 @@ __color_name_last_used=["Default"]
 __style_last_used=["Plain"]
 def color(ColorName, CnameBackground=""):
 
-    # MAYBE: win terminal has color display option, detailed here:
-    # https://stackoverflow.com/questions/2048509/how-to-echo-with-different-colors-in-the-windows-command-line
-    
-    # https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
-
-    ColorBackground=""
+    ColorBackground = ""
     global __color_name_last_used, __style_last_used
 
     # print('\033[38;5;188;48;5;22mAlma')
@@ -318,6 +321,8 @@ def color(ColorName, CnameBackground=""):
         # it doesn't work: return '\\e[' + colorCode + 'm'    
         ColorControl = colorCode + ColorBackground + 'm'    
         # print("ColorControl: " + ColorControl)
-        return AnsiControlInit + ColorControl
+
+        ColorString = AnsiControlInit + ColorControl
+        return ColorString
 
 AnsiControlInit = '\033[' # echo -e "\x1b[93;41m"  # example  \x1b is \033 in python

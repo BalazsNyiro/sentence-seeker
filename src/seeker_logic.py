@@ -29,13 +29,13 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     NumOfTokens = len(Flattened) * len(Prg["DocumentObjectsLoaded"])
     ProgressBarConsole = ui_console_progress_bar.progress_bar_console(ValueTo=NumOfTokens)
 
-    def TxtToObj(TokenTxtList, Index): # recursive txt-> TokenObj converter
+    def TxtToObj(TokenTxtList, Index, FileSourceBaseName): # recursive txt-> TokenObj converter
         TokenObjects = []
         for Elem in TokenTxtList:
             if util.is_str(Elem):
-                TokenObjects.append(tokens.TokenObj(Elem, Index, Prg=Prg, WordsDetected=WordsDetected))
+                TokenObjects.append(tokens.TokenObj(Elem, Index, Prg=Prg, WordsDetected=WordsDetected, FileSourceBaseName=FileSourceBaseName))
             if util.is_list(Elem):
-                TokenObjects.append(TxtToObj(Elem, Index))
+                TokenObjects.append(TxtToObj(Elem, Index, FileSourceBaseName))
         return TokenObjects
 
     if TokenGroups: # if user gave real input, not an Enter for example
@@ -43,7 +43,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
 
             DocIndex = DocObj["WordPosition"]
             #TimeStart = time.time()
-            Tokens = TxtToObj(TokenGroups, DocIndex)
+            Tokens = TxtToObj(TokenGroups, DocIndex, FileSourceBaseName)
             #print(">>> time end TxtToObj", time.time() - TimeStart)
 
             #TimeStart = time.time()

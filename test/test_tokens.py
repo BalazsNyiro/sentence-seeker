@@ -14,11 +14,10 @@ class TokenTests(util_test.SentenceSeekerTest):
             PrgOrig = copy.deepcopy(self.Prg)
             seeker.be_ready_to_seeking(self.Prg, Verbose=False)
 
-            ProgressBarConsole = None
-            Index = self.Prg["DocumentObjectsLoaded"]["WilliamShakespeare__CompleteWorks__gutenberg_org_100-0"]["WordPosition"]
+            Doc = "WilliamShakespeare__CompleteWorks__gutenberg_org_100-0"
 
             def token(Txt):
-                return TokenObj(Txt, Index)
+                return TokenObj(Txt,self.Prg["DocumentObjectsLoaded"][Doc]["WordPosition"], FileSourceBaseName=Doc)
 
             if True:
                 # =================================================
@@ -69,38 +68,54 @@ class TokenTests(util_test.SentenceSeekerTest):
 
 
 
-            # =================================================
-            Tokens = [token("raining"), token("OR"), token("located")]
+                # =================================================
+                Tokens = [token("raining"), token("OR"), token("located")]
+                tokens.operator_exec(Tokens)
+
+                ResultWanted = [30004, 30113, 336371700, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
+                ResultsCollected = Tokens[0].get_results()
+                # print(">>>>>>", ResultsCollected)
+                self.assertEqual(ResultWanted, ResultsCollected)
+
+
+                # =================================================
+                Tokens = [[token("raining"), token("OR"), token("located")], token("OR"), token("january")]
+                tokens.operator_exec(Tokens)
+
+                ResultWanted = [30004, 30113, 40300, 336371700, 417250104, 664630008, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
+                ResultsCollected = Tokens[0].get_results()
+                # print(">>>>>> or 3 elem: ", ResultsCollected)
+                self.assertEqual(ResultWanted, ResultsCollected)
+
+                # =================================================
+                Tokens = [[[token("reading")]]] # triple embedded group
+                tokens.operator_exec(Tokens)
+                ResultWanted = [8660103, 17690203, 26300100, 39430401, 55290100, 55500100, 56390010, 103280003, 106060002, 127410100, 127420008, 150260100, 182990403, 254540006, 254900108, 259100100, 285090100, 292450210, 298080004, 318910103, 327310301, 339320100, 416960200, 422130102, 424280605, 427130103, 461060002, 598470004, 598500003, 616850006, 629060004, 635530007, 671880302, 681760001]
+                ResultsCollected = Tokens[0].get_results()
+                self.assertEqual(ResultWanted, ResultsCollected)
+                ###################################
+
+
+                Tokens = [token("looks"), token("AND"), token("like"), token("AND"), [token("giant"), token("OR"), token("king")]]
+                tokens.operator_exec(Tokens)
+
+                ResultWanted = [121010003, 235780303, 477070003]
+                ResultsCollected = Tokens[0].get_results()
+                self.assertEqual(ResultWanted, ResultsCollected)
+
+                Tokens = [token("cat"), token("AND"), token("like")]
+                tokens.operator_exec(Tokens)
+
+                ResultWanted = [340110303, 418140107]
+                ResultsCollected = Tokens[0].get_results()
+                self.assertEqual(ResultWanted, ResultsCollected)
+
+
+            Doc = "bird"
+            Tokens = [token("nightingale"), token("THEN"), token("blackbird")]
             tokens.operator_exec(Tokens)
 
-            ResultWanted = [30004, 30113, 336371700, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
-            ResultsCollected = Tokens[0].get_results()
-            # print(">>>>>>", ResultsCollected)
-            self.assertEqual(ResultWanted, ResultsCollected)
-
-
-            # =================================================
-            Tokens = [[token("raining"), token("OR"), token("located")], token("OR"), token("january")]
-            tokens.operator_exec(Tokens)
-
-            ResultWanted = [30004, 30113, 40300, 336371700, 417250104, 664630008, 674870904, 676760505, 677640403, 681870016, 681910009, 681980004, 681980113]
-            ResultsCollected = Tokens[0].get_results()
-            # print(">>>>>> or 3 elem: ", ResultsCollected)
-            self.assertEqual(ResultWanted, ResultsCollected)
-
-            # =================================================
-            Tokens = [[[token("reading")]]] # triple embedded group
-            tokens.operator_exec(Tokens)
-            ResultWanted = [8660103, 17690203, 26300100, 39430401, 55290100, 55500100, 56390010, 103280003, 106060002, 127410100, 127420008, 150260100, 182990403, 254540006, 254900108, 259100100, 285090100, 292450210, 298080004, 318910103, 327310301, 339320100, 416960200, 422130102, 424280605, 427130103, 461060002, 598470004, 598500003, 616850006, 629060004, 635530007, 671880302, 681760001]
-            ResultsCollected = Tokens[0].get_results()
-            self.assertEqual(ResultWanted, ResultsCollected)
-            ###################################
-
-
-            Tokens = [token("looks"), token("AND"), token("like"), token("AND"), [token("giant"), token("OR"), token("king")]]
-            tokens.operator_exec(Tokens)
-
-            ResultWanted = [121010003, 235780303, 477070003]
+            ResultWanted = [100001]
             ResultsCollected = Tokens[0].get_results()
             self.assertEqual(ResultWanted, ResultsCollected)
 

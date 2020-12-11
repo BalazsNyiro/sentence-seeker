@@ -273,17 +273,33 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
                 ResRightScoped = dict()
                 for ResRight in ParamRight.Results:
                     # store the current scope AND the finest scope to detect the word order later
-                    ResRightScoped[ResRight.Scopes[Scope]] = ResRight.Scopes["word"]
+                    ResRightScope = ResRight.Scopes[Scope]
+                    if ResRightScope not in ResRightScoped:
+                        ResRightScoped[ResRightScope] = []
+
+                    ResRightScoped[ResRightScope].append(ResRight.Scopes["word"])
 
                 ResultOpExec = []
-                for ResLeft in ParamLeft.Results:
-                    if ResLeft.Scopes[Scope] in ResRightScoped:
-                        if ResLeft.Scopes["word"] < ResRightScoped[  ResLeft.Scopes[Scope]   ]:
-                            ResultOpExec.append(ResLeft)
+                if ResRightScoped: # try to find common elems if something is in Right
+                    for ResLeft in ParamLeft.Results:
+                        if not ResRightScoped:
+                            break
+
+                        ResLeftScope = ResLeft.Scopes[Scope]
+                        if ResLeftScope in ResRightScoped:
+
+                            for ResRightScopedWord in ResRightScoped[ResLeftScope]:
+                                if ResLeft.Scopes["word"] < ResRightScopedWord:
+                                    ResultOpExec.append(ResLeft)
+                                    # remove the right scope because one hit is enough
+                                    # from one sentence
+                                    # and I decrease the work for next for loops
+                                    del ResRightScoped[ResLeftScope]
+                                    break
             ###############################################################
 
             OperatorObj = Tokens[OperatorPositionLast]
-            ObjResult = TokenObj(ParamLeft.words() + OperatorObj.words() + ParamRight.words(), Results=ResultOpExec)
+            ObjResult = TokenObj(ParamLeft.words() + OperatorObj.words() + ParamRight.words(), Results=ResultOpExec, FileSourceBaseName=ParamLeft.FileSourceBaseName)
             ObjResult.Explain = [ParamLeft, OperatorObj, ParamRight]
             Tokens[OperatorPositionLast-1] = ObjResult
             Tokens.pop(OperatorPositionLast + 1)
@@ -336,7 +352,7 @@ class TokenObj():
                 Pre, Post = ["("], [")"]
             return Pre + self.Words + Post
 
-    def __init__(self, Words, DocIndex=dict(), Results=[], SubSentenceMultiplier=100, WordMultiplier=100, Prg=dict(), WordsDetected=set()):
+    def __init__(self, Words, DocIndex=dict(), Results=[], SubSentenceMultiplier=100, WordMultiplier=100, Prg=dict(), WordsDetected=set(), FileSourceBaseName=""):
 
         if util.is_str(Words): Words = [Words]
 
@@ -346,6 +362,7 @@ class TokenObj():
         self.Prg = Prg
         self.WordsDetected = WordsDetected
         self.DocIndex = DocIndex
+        self.FileSourceBaseName = FileSourceBaseName
         self.SubSentenceMultiplier = SubSentenceMultiplier
         self.WordMultiplier = WordMultiplier
 

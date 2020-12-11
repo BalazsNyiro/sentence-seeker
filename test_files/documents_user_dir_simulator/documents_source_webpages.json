@@ -10,6 +10,11 @@
             "source_name": "source_unknown",
             "url": "url_unknown"
         },
+        "bird": {
+            "license": "license_unknown",
+            "source_name": "source_unknown",
+            "url": "url_unknown"
+        },
         "test_document_bird": {
             "license": "license_unknown",
             "source_name": "source_unknown",

@@ -115,13 +115,11 @@ def indexing(WordPositions, SubSentence, WordPositionBase, WordPositionMultiplye
 
     for Pos, Word in enumerate(SubSentence.split()): # split at space, tab, newline
 
-        # one word can be more than once in a subsentence. If we
-        # detect it once, don't save it again
         if Word not in WordPositions:
-            WordPositions[Word] = set()
+            WordPositions[Word] = list()
 
         PosInserted = Pos
         if PosInserted > WordPositionMultiplyerMinusOne:
             PosInserted = WordPositionMultiplyerMinusOne
         WordPos = WordPositionBase + PosInserted
-        WordPositions[Word].add(WordPos)
+        WordPositions[Word].append(WordPos)

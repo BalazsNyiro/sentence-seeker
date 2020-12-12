@@ -125,6 +125,7 @@ And I use the program every day so I will implement the most fine solutions.
 ## Special commands: ##
 - :back N    *where N can be 1, 2, 3, 4, 5, 6 or empty.*
   short form: b
+  the 'b' works from result viewer too, in tty console.
 You can use it only in Linux virtual consoles (not from any GUI!)
 This is a special command but really USEFUL
 if you use sentence-seeker.py from virtual-console mode where

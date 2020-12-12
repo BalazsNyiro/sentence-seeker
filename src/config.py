@@ -106,9 +106,12 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             "ChangeVirtualConsoleCmd": "chvt",
             "TooManyTokenLimit": 300, # don't explain above this level
             "CacheWordGroups": dict(),
+
             "Os": Os,
             "OsIsLinux": Os == "Linux",
             "Terminal": {"Type": "pseudo_teletype_in_gui", "Num": -1}, # in virtual console, tty1-tty6, or in X gui: /dev/pts/N
+            "CommandBackToTtyConsoleAvailable": False,
+
             "OsIsWindows": Os == "Windows",
             "OsIsDarwin": Os == "Darwin",
             "OsIsUnixBased": Os == "Darwin" or Os == "Linux",
@@ -388,6 +391,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                 TerminalType = "tty_console"
                 # in virtual console or teletype console: tty1-tty6
                 Prg["Terminal"] = {"Type": TerminalType, "Num": TerminalNum}
+                Prg["CommandBackToTtyConsoleAvailable"] = True
 
         # in X gui: /dev/pts/N
         elif "/pts/" in Ret:

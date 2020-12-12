@@ -33,7 +33,7 @@ def seek_and_display(Prg, Wanted):
     elif len(Wanted) == 3 and Wanted[:2] == "b ":
         Wanted = ":back " + Wanted[2]
 
-    if ":back" == Wanted[:5] and Prg["Terminal"]["Type"] == "tty_console":
+    if ":back" == Wanted[:5] and Prg["CommandBackToTtyConsoleAvailable"]:
         # this is a special command but really USEFUL
         # if you use sentence-seeker.py from virtual-console mode where
         # you can change between consoles with Alt+F1, ALT+F2, you can use
@@ -172,7 +172,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
     # the :back function can work from GUI->tty_console, too,
     # maybe IsOsLinux==True would be enough?
-    if Prg["Terminal"]["Type"] == "tty_console":
+    if Prg["CommandBackToTtyConsoleAvailable"]:
         QuitKeys.add("b") # in tty console you can go back to a given console
 
     ScreenWidth, ScreenHeight = util_ui.get_screen_size()
@@ -187,7 +187,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
     Step = 0
 
-    ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+    ColorInfo = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
     ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
 
     Location = "ResultViewer" # the user is in Result Viewer now
@@ -220,8 +220,20 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
             PageTopSentenceId[PageNum+1] = IdNow
 
         if Step == 0: # ask new instruction if no more steps
+            def high(T) :
+                return f"{ColorHigh}{T}{ColorInfo}"
 
-            UserInfo = f"{ColorInf}[{ColorHigh}p{ColorInf}]rev [{ColorHigh}n{ColorInf}]ext [{ColorHigh}q{ColorInf}]uery.   total: {ColorHigh}{ResultsNum}    {ColorInf}VIM keys: {ColorHigh}j{ColorInf}, {ColorHigh}k {color('Default')}"
+            TextPrev  = f"{ColorInfo}[{high('p')}]rev"
+            TextNext  = f"{ColorInfo}[{high('n')}]ext"
+            TextQuery = f"{ColorInfo}[{high('q')}]uery"
+
+            TextBack = ""
+            if Prg["CommandBackToTtyConsoleAvailable"]:
+                TextBack = f"{ColorInfo}[{high('b')}]ackTty"
+
+            TextTotal = f"{ColorInfo}total: {high(ResultsNum)}"
+            TextVim = f"{ColorInfo}VIM keys: {high('j')}, {high('k')} {color('Default')}"
+            UserInfo = f"{TextPrev} {TextNext} {TextQuery} {TextBack}  {TextTotal}    {TextVim} {color('Default')}"
 
             if ResultsNum == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")

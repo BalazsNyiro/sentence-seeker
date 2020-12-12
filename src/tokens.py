@@ -9,35 +9,13 @@ import util_ui
 
 ########################################################################
 
+# These commands can be arrive from console/gui/html ui
 def run_commands_in_query(Prg, Query):
     # it's not a problem if these commands stay in Query,
     # The token processor skips them
     CommandDetected = False
 
     if ":" in Query:
-
-        # this is a special command but really USEFUL
-        # if you use sentence-seeker.py from virtual-console mode where
-        # you can change between consoles with Alt+F1, ALT+F2, you can use
-        # and editor in one terminal (I use vim) and sentence-seeker.py in
-        # another virtual terminal.
-        # when you type :back,  the program switch back into the given terminal without
-        # any magic with ALT+Fn
-
-        if ":back" in Query:
-            if Prg["OsIsLinux"]: # Mac doesn't have virtual consoles
-                Cmd = Prg["ChangeVirtualConsoleCmd"]
-                TerminalNum = "1"
-                if " " in Query:
-                    TerminalNum = Query.split(" ")[2]
-                    # SECURITY: allow only these chars
-                    # Linux has only six virtual consoles
-                    if TerminalNum not in list('123456'):
-                        TerminalNum = "1"
-
-                os.system(f"{Cmd} {TerminalNum}")
-            CommandDetected = True
-
         if ":help_plain" in Query:
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True

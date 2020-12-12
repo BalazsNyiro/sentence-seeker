@@ -124,6 +124,7 @@ And I use the program every day so I will implement the most fine solutions.
 
 ## Special commands: ##
 - :back N    *where N can be 1, 2, 3, 4, 5, 6 or empty.*
+  short form: b
 You can use it only in Linux virtual consoles (not from any GUI!)
 This is a special command but really USEFUL
 if you use sentence-seeker.py from virtual-console mode where
@@ -159,6 +160,8 @@ Please install Python for Windows, the installer contains Tkinter automatically.
 https://www.python.org/downloads/windows/
    
 # Program demo #
+ - youtube records:
+    - 2020 dec 11: https://youtu.be/cYZlCB7Hdew
  - start consol/gui mode
 
  - the program arrives with pre-packed text files, they are in 
@@ -172,8 +175,10 @@ https://www.python.org/downloads/windows/
  - simple query: 
     AND: order is not important, THEN: order is important
     - cat AND dog
+    - cat AND dog > day..
     - cat > dog    ==  cat THEN dog  
     - (apple OR orange) AND eat
+    - (apple OR orange) AND (eat OR drink)
  - operators: AND, OR, THEN, >, (,)
  - class usage: 
    - pronouns:personal AND have:all AND iverb:pp 
@@ -182,3 +187,6 @@ https://www.python.org/downloads/windows/
    - (be:all) > ..ible
    - move.. > (from OR to) > ..where 
      
+# Interesting request collection - for a separated youtube video #
+ - (sack OR bag) > of
+ 

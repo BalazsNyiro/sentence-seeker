@@ -7,6 +7,9 @@ import ui_console_progress_bar
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=None):
     util.log(Prg, f"Query: {Query}")
 
+    Location = "seeker_logic"
+    Prg["UserInputHistory"].event_new(Location, "seek()", Query)
+
     CommandDetected = tokens.run_commands_in_query(Prg, Query)
     if CommandDetected:
         Query = "special_command_executed"

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import seeker_logic, text, util_ui
+import seeker_logic, text, util_ui, os
 import time, msg_errors
 
 try:
@@ -24,16 +24,46 @@ def seek_and_display(Prg, Wanted):
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
         WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
+
+    # this one char conversion works only in console mode because
+    # you can use back only in virtual console
+    elif Wanted == "b":
+        Wanted = ":back"
+    # 'b 1', 'b 2' switch to given virtual console is working, too
+    elif len(Wanted) == 3 and Wanted[:2] == "b ":
+        Wanted = ":back " + Wanted[2]
+
+    if ":back" == Wanted[:5] and Prg["Terminal"]["Type"] == "tty_console":
+        # this is a special command but really USEFUL
+        # if you use sentence-seeker.py from virtual-console mode where
+        # you can change between consoles with Alt+F1, ALT+F2, you can use
+        # and editor in one terminal (I use vim) and sentence-seeker.py in
+        # another virtual terminal.
+        # when you type :back,  the program switch back into the given terminal without
+        # any magic with ALT+Fn
+
+        Cmd = Prg["ChangeVirtualConsoleCmd"]
+        TerminalNum = "1"
+        if " " in Wanted:
+            TerminalNum = Wanted.split(" ")[2]
+            # SECURITY: allow only these chars
+            # Linux has only six virtual consoles
+            if TerminalNum not in list('123456'):
+                TerminalNum = "1"
+
+        os.system(f"{Cmd} {TerminalNum}")
+        #################################################
+
     else:
-        ReturnType="separated_subsentences"
+        ReturnType = "separated_subsentences"
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
         TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
 
-    TimeLogicUsed = time.time() - TimeLogicStart
+        TimeLogicUsed = time.time() - TimeLogicStart
 
-    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
-    # print(f"Results Total: {ResultsTotalNum}")
-    # print("Time logic: ", TimeLogicUsed)
+        sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
+        # print(f"Results Total: {ResultsTotalNum}")
+        # print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     # On Linux and I hope on Mac, we can use history in console
@@ -47,6 +77,7 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
         if QueryAsCmdlineParam:
             Wanted = QueryAsCmdlineParam.strip()
         else:
+
             ColorWanted = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWanted"])
             ColorUserInfo = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
             ColorBattery = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorBattery"])
@@ -71,7 +102,14 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
             # and colorful part disappears
             # you can't insert color information into input("colored prompt") fun because terminal can't detect
             # correctly the end of the line if you enter color information into input()
-            Wanted = input(" ").strip()
+
+            LocationPrev, EventNamePrev, EventValuePrev = Prg["UserInputHistory"].event_last()
+            if LocationPrev == "ResultViewer" and EventNamePrev == "KeyQuit" and EventValuePrev == "b":
+                Wanted = ":back"
+                Location = "ui_console"
+                Prg["UserInputHistory"].event_new(Location, "get_user_input", "back_exit_from_resultviewer")
+            else:
+                Wanted = input(" ").strip()
 
             if Wanted in Prg["SettingsSaved"]["Ui"]["CommandsExit"]:
                 print(color_reset())
@@ -132,6 +170,11 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
     PrevKeys = {"p", "k", "KeyBackSpace", "KeyArrowUp", "KeyArrowLeft"}
     QuitKeys = {"q"}
 
+    # the :back function can work from GUI->tty_console, too,
+    # maybe IsOsLinux==True would be enough?
+    if Prg["Terminal"]["Type"] == "tty_console":
+        QuitKeys.add("b") # in tty console you can go back to a given console
+
     ScreenWidth, ScreenHeight = util_ui.get_screen_size()
 
     IdNow = 0
@@ -146,6 +189,8 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
     ColorInf = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
     ColorHigh = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfoHigh"])
+
+    Location = "ResultViewer" # the user is in Result Viewer now
 
     while True:
         FreeLines = ScreenHeight - 3
@@ -185,25 +230,30 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
             UserReply = util_ui.press_key_in_console(UserInfo)
             # print("user reply:", UserReply)
             if len(UserReply) == 1 and UserReply in QuitKeys:
+                Prg["UserInputHistory"].event_new(Location, "KeyQuit", UserReply)
                 break
 
             if UserReply in NextKeys:
                 Step = 1
                 util_ui.clear_screen(ScreenHeight)
+                Prg["UserInputHistory"].event_new(Location, "KeyPageNext", UserReply)
 
             if UserReply in PrevKeys:
                 Step = -1
                 util_ui.clear_screen(ScreenHeight)
+                Prg["UserInputHistory"].event_new(Location, "KeyPagePrev", UserReply)
 
             if UserReply == "KeyHome":
                 Step = -PageNum
                 util_ui.clear_screen(ScreenHeight)
+                Prg["UserInputHistory"].event_new(Location, "KeyPageFirst", UserReply)
 
             if UserReply == "KeyEnd":
                 Step = ResultsNum
                 # theoretically it's wrong because lot of results can be on a page
                 # but I guess one result will be smaller than one page so it's a good upper limit
                 util_ui.clear_screen(ScreenHeight)
+                Prg["UserInputHistory"].event_new(Location, "KeyPageLast", UserReply)
 
         if Step > 0:
             if PageNum+1 in PageTopSentenceId:

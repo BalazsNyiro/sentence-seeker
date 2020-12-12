@@ -66,6 +66,18 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
     _Status, JsonObjReply = util_json_obj.obj_from_file(DocumentsSourceWebpagesFileName)
     DocumentsSourceWebpages = JsonObjReply["docs"]
 
+    class HistoryEvent():
+        def __init__(self):
+            self.Events = []
+        def event_new(self, Location, EventName, EventValue):
+            self.Events.append((Location, EventName, EventValue))
+
+        def event_last(self):
+            if self.Events:
+                return self.Events[-1]
+            else:
+                return (None, None, None)
+
     Prg = {
             "SettingsSaved": {
                 "Ui":{
@@ -93,9 +105,10 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             },
             "ChangeVirtualConsoleCmd": "chvt",
             "TooManyTokenLimit": 300, # don't explain above this level
-            "Cache": dict(),
+            "CacheWordGroups": dict(),
             "Os": Os,
             "OsIsLinux": Os == "Linux",
+            "Terminal": {"Type": "pseudo_teletype_in_gui", "Num": -1}, # in virtual console, tty1-tty6, or in X gui: /dev/pts/N
             "OsIsWindows": Os == "Windows",
             "OsIsDarwin": Os == "Darwin",
             "OsIsUnixBased": Os == "Darwin" or Os == "Linux",
@@ -358,11 +371,29 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             "ServerPort": 8000,
             "Licenses": """Licenses: Books from Gutenberg.org are in Public Domain.\nThe Wikipedia articles are typically under 'Creative Commons Attribution-ShareAlike License', please always check the original source page.""",
             "QueryExamples": {"bird_or_cat": "looks AND like AND (bird OR cat)"},
-            "UsageInfo": util.file_read_all_simple(os.path.join(DirPrgExecRoot, "README.md"))
+            "UsageInfo": util.file_read_all_simple(os.path.join(DirPrgExecRoot, "README.md")),
+            "UserInputHistory": HistoryEvent()
     }
 
     SettingsSaved = util_json_obj.config_get("SettingsSaved", DirWorkAbsPath, DefaultVal=dict())
     util.dict_update_recursive(Prg["SettingsSaved"], SettingsSaved)
+
+    ################## detect terminal type ##############################
+    if Prg["OsIsLinux"]:
+        Ret = util.shell("tty")
+
+        if "/tty" in Ret:
+            TerminalNum = int(Ret.split("/tty")[1].strip())
+            if 0 < TerminalNum < 7:
+                TerminalType = "tty_console"
+                # in virtual console or teletype console: tty1-tty6
+                Prg["Terminal"] = {"Type": TerminalType, "Num": TerminalNum}
+
+        # in X gui: /dev/pts/N
+        elif "/pts/" in Ret:
+            TerminalNum = int(Ret.split("/pts/")[1].strip())
+            TerminalType = "pseudo_teletype_in_gui"
+            Prg["Terminal"] = {"Type": TerminalType, "Num": TerminalNum}
 
     # Save the
     util_json_obj.config_set(Prg, "SettingsSaved")

@@ -215,9 +215,9 @@ def group_cache_init(Prg):
     global _group_initialised
     if _group_initialised:
         return
-    if "Cache" not in Prg:
-        Prg["Cache"] = dict()
-    Cache = Prg["Cache"]
+    if "CacheWordGroups" not in Prg:
+        Prg["CacheWordGroups"] = dict()
+    Cache = Prg["CacheWordGroups"]
     for Key in ["End", "Start", "Include"]:
         if Key not in Cache:
             Cache[Key] = dict()
@@ -226,29 +226,29 @@ def group_cache_init(Prg):
 # TESTED
 def groups_of_word_ending(Prg, Pattern):
     group_cache_init(Prg)
-    if Pattern in Prg["Cache"]["End"]:
-        return Prg["Cache"]["End"][Pattern]
+    if Pattern in Prg["CacheWordGroups"]["End"]:
+        return Prg["CacheWordGroups"]["End"][Pattern]
     Selecteds = word_selecting(Prg, selector_word_end, Pattern)
-    Prg["Cache"]["End"][Pattern] = Selecteds
+    Prg["CacheWordGroups"]["End"][Pattern] = Selecteds
     return Selecteds
 
 # TESTED
 def groups_of_word_starting(Prg, Pattern):
     group_cache_init(Prg)
-    if Pattern in Prg["Cache"]["Start"]:
-        return Prg["Cache"]["Start"][Pattern]
+    if Pattern in Prg["CacheWordGroups"]["Start"]:
+        return Prg["CacheWordGroups"]["Start"][Pattern]
 
     Selecteds = word_selecting(Prg, selector_word_start, Pattern)
-    Prg["Cache"]["Start"][Pattern] = Selecteds
+    Prg["CacheWordGroups"]["Start"][Pattern] = Selecteds
     return Selecteds
 
 # TESTED
 def groups_of_word_include(Prg, Pattern):
     group_cache_init(Prg)
-    if Pattern in Prg["Cache"]["Include"]:
-        return Prg["Cache"]["Include"][Pattern]
+    if Pattern in Prg["CacheWordGroups"]["Include"]:
+        return Prg["CacheWordGroups"]["Include"][Pattern]
 
     Selecteds = word_selecting(Prg, selector_word_include, Pattern)
 
-    Prg["Cache"]["Include"][Pattern] = Selecteds
+    Prg["CacheWordGroups"]["Include"][Pattern] = Selecteds
     return Selecteds

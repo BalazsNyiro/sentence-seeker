@@ -18,7 +18,7 @@ class EngTests(util_test.SentenceSeekerTest):
                                                                    "writing": [44, 4444],
                                                                    "any": [1, 2]})
                 },
-                "Cache": dict()
+                "CacheWordGroups": dict()
             }
             Selector = eng.selector_word_include
             Received = eng.word_selecting(PrgFake, Selector, "ead")

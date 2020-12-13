@@ -397,6 +397,7 @@ class TokenObj():
             Selector, SelectorData = KeyWord.split(":")
 
             if   KeyWord == "be:all":             self.load_from_docindex(eng.BeAll)
+            if   KeyWord == "do:all":             self.load_from_docindex(eng.DoAll)
             elif KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
             elif KeyWord == "pronouns:subject":   self.load_from_docindex(eng.PronounsSubject)
             elif KeyWord == "pronouns:object":    self.load_from_docindex(eng.PronounsObject)
@@ -404,6 +405,7 @@ class TokenObj():
             elif KeyWord == "iverb:ps":           self.load_from_docindex(eng.IrregularVerbsPresentSimple)
             elif KeyWord == "iverb:pp":           self.load_from_docindex(eng.IrregularVerbsPastParticiple)
             elif KeyWord == "iverb:inf":          self.load_from_docindex(eng.IrregularVerbsInfinitive)
+            elif KeyWord == "questionwords:all":  self.load_from_docindex(eng.QuestionWordsAll)
 
             elif KeyWord.startswith("end:"):
                 self.load_from_docindex(eng.groups_of_word_ending(self.Prg, SelectorData))

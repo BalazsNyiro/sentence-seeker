@@ -80,10 +80,12 @@ Examples:
 
 ## Other selectors: ##
 - be:all (be,was,were,been,wasn,weren,am,are,is,aren,isn)
+- do:all (do,did,done,does,don,didn,doesn)  
 - have:all (have,has,had,haven,hasn,hadn,ve)
-- pronouns:subject (i,you,he,she,it,we,they)
+- pronouns:subject (i,you,he,she,it,we,they,anybody,nobody,somebody,anything,something,anyone,someone,nothing)
 - pronouns:object (me,you,him,her,it,we,us)
 - pronouns:personal (pronouns:subject + pronouns:object)
+- questionwords:all (who,where,when,why,what,which,whose,whom,how)
 
 ## Complex examples: ##
 - pronouns:personal AND have:all AND iverb:pp  *They've written*
@@ -190,4 +192,11 @@ https://www.python.org/downloads/windows/
      
 # Interesting request collection - for a separated youtube video #
  - (sack OR bag) > of
- 
+
+# Branches #
+ - master: tested/offered for end users
+ - dev: it work generally, sometime tests are failed/missing/under repair,
+        smaller issues can appear.
+ - sandbox: I try out ideas, refactors here - maybe works, maybe not.  
+
+Merge order: sandbox -> dev -> master

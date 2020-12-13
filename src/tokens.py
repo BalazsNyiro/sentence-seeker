@@ -397,7 +397,8 @@ class TokenObj():
             Selector, SelectorData = KeyWord.split(":")
 
             if   KeyWord == "be:all":             self.load_from_docindex(eng.BeAll)
-            if   KeyWord == "do:all":             self.load_from_docindex(eng.DoAll)
+            elif KeyWord == "count:all":          self.load_from_docindex(eng.CountAll)
+            elif KeyWord == "do:all":             self.load_from_docindex(eng.DoAll)
             elif KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
             elif KeyWord == "pronouns:subject":   self.load_from_docindex(eng.PronounsSubject)
             elif KeyWord == "pronouns:object":    self.load_from_docindex(eng.PronounsObject)

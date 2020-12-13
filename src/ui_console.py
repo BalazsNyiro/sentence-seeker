@@ -61,7 +61,6 @@ def seek_and_display(Prg, Wanted):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
         WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
     else:
-        ReturnType = "separated_subsentences"
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
 
         TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)

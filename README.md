@@ -27,6 +27,11 @@ Text analyzer program to find examples from real texts
   and the program chooses console mode if you use it from virtual
   console from example or starts Tkinter if you have Window manager.
 
+### Seeking ###
+example: 'dog AND cat' 
+the program create a lowercase based index about texts from documents dir, and search the lowercase version of keywords in the indexes.
+Please use operators in ALL CAPS.
+
 ## Quick Tour - Documents dir: ##
 The program searches sentences in documents of this dir.
 
@@ -80,12 +85,13 @@ Examples:
 
 ## Other selectors: ##
 - be:all (be,was,were,been,wasn,weren,am,are,is,aren,isn)
+- count:all (much,many,little,few,lot,plenty)  
 - do:all (do,did,done,does,don,didn,doesn)  
 - have:all (have,has,had,haven,hasn,hadn,ve)
-- pronouns:subject (i,you,he,she,it,we,they,anybody,nobody,somebody,anything,something,anyone,someone,nothing)
-- pronouns:object (me,you,him,her,it,we,us)
+- pronouns:subject (i,you,he,she,it,we,they,anybody,somebody,nobody,nothing,anything,something,anyone,someone)
+- pronouns:object (me,you,him,her,it,we,us,them,whom)
 - pronouns:personal (pronouns:subject + pronouns:object)
-- questionwords:all (who,where,when,why,what,which,whose,whom,how)
+- questionwords:all (who,where,when,why,what,which,whose,how)
 
 ## Complex examples: ##
 - pronouns:personal AND have:all AND iverb:pp  *They've written*
@@ -191,7 +197,8 @@ https://www.python.org/downloads/windows/
    - move.. > (from OR to) > ..where 
      
 # Interesting request collection - for a separated youtube video #
- - (sack OR bag) > of
+- (sack OR bag) > of
+- questionwords:all AND count:all 
 
 # Branches #
  - master: tested/offered for end users

@@ -21,7 +21,7 @@ class WordObj():
     def __str__(self):
         return self.Txt
 
-    def __init__(self, Txt, WordsDetected=set(), ColorBasic=None, ColorAfter=None, InResultSubsentence=False, ColorDetected=None):
+    def __init__(self, Txt, WordsDetected=set(), ColorBasic=None, ColorAfter=None, ColorDetected=None):
         self.Txt = Txt
         self.ColorBefore = ColorBasic
         self.ColorAfter = ColorAfter
@@ -36,7 +36,6 @@ class WordObj():
             self.Detected = True
 
         self.Len = len(Txt)
-        self.InResultSubsentence = InResultSubsentence
 
     def render(self, ColorSentence):
         Out = []
@@ -108,7 +107,7 @@ class SentenceObj():
         # print(RowsRendered)
         return RowsRendered
 
-    def add_word(self, Txt, ColorBasic=None, ColorAfter=None, ColorDetected=None, InResultSubsentence=False):
+    def add_word(self, Txt, ColorBasic=None, ColorAfter=None, ColorDetected=None):
         Txt = Txt.strip()
         if not Txt: return # be sure, insert only real words, not empty strings or whitespaces
 
@@ -116,14 +115,14 @@ class SentenceObj():
                     WordsDetected=self.WordsDetected,
                     ColorBasic=ColorBasic,
                     ColorAfter=ColorAfter,
-                    InResultSubsentence=InResultSubsentence,
                     ColorDetected=ColorDetected)
         self.Words.append(W)
 
     # "more word in one big string"
-    def add_big_string(self, BigString, InResultSubsentence=False):
-        for WordTxt in BigString.split(" "):
-            self.add_word(WordTxt, InResultSubsentence=InResultSubsentence, ColorDetected=self.ColorDetected)
+    def add_big_string(self, BigString):
+        if BigString.strip():
+            for WordTxt in BigString.split(" "):
+                self.add_word(WordTxt, ColorDetected=self.ColorDetected)
 
     def __init__(self, Sentence=None,
                  ColorBasic=None, ColorAfter=None,
@@ -140,12 +139,10 @@ class SentenceObj():
         self.Url = Url
         self.Source = Source
 
-        if Sentence:
-            for Txt in Sentence.split(" "):
-                self.add_word(Txt, ColorDetected=ColorDetected)
+        self.add_big_string(Sentence)
 
 def sentence_get_from_result_oop(Prg, Result,
-                                 ReturnType="complete_sentence",
+                                 ReturnType="separated_subsentences",
                                  ColorBefore=None,
                                  ColorAfter=None,
                                  ColorDetected=None,
@@ -164,7 +161,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                WordsDetected=WordsDetected,
                                Url=Url, Source=Source)
         Sentence.add_big_string(Txt["subsentences_before"])
-        Sentence.add_big_string(Txt["subsentence_result"], InResultSubsentence=True)
+        Sentence.add_big_string(Txt["subsentence_result"])
         Sentence.add_big_string(Txt["subsentences_after"])
         return Sentence
     else:
@@ -177,7 +174,7 @@ def sentence_get_from_result_oop(Prg, Result,
                            WordsDetected=WordsDetected,
                            Url=Url, Source=Source)
 
-def sentence_text_from_obj(Prg, SentenceObj, ReturnType="complete_sentence"):
+def sentence_text_from_obj(Prg, SentenceObj, ReturnType="separated_subsentences"):
     Source = SentenceObj.FileSourceBaseName
 
     # if sentence obj knows the sentence, use that, for example in help info

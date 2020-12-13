@@ -172,12 +172,13 @@ IrregularVerbsPastParticiple = list()
 # is and has can be represented with 's but I don't insert it into the sets
 # because from 's I can't define exactly the word
 BeAll = "be,was,were,been,wasn,weren,am,are,is,aren,isn".split(",")
+CountAll = "much,many,little,few,lot,plenty".split(",")
 DoAll = "do,did,done,does,don,didn,doesn".split(",")
 HaveAll = "have,has,had,haven,hasn,hadn,ve".split(",")
-PronounsSubject = "i,you,he,she,it,we,they,anybody,nobody,somebody,anything,something,anyone,someone,nothing".split(",")
-PronounsObject = "me,you,him,her,it,we,us".split(",")
+PronounsSubject = "i,you,he,she,it,we,they,anybody,somebody,nobody,nothing,anything,something,anyone,someone".split(",")
+PronounsObject = "me,you,him,her,it,we,us,them,whom".split(",")
 PronounsPersonal = list(set(PronounsObject).union(set(PronounsSubject)))
-QuestionWordsAll = "who,where,when,why,what,which,whose,whom,how".split(",")
+QuestionWordsAll = "who,where,when,why,what,which,whose,how".split(",")
 
 for Elem in verbs_irregular: #
     Form1, Form2, Form3 = Elem

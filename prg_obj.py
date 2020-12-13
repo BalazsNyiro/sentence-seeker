@@ -3,6 +3,7 @@
 import config, document, seeker, ui_console, ui_html, util
 import ui_tkinter_boot_progress_bar, ui_tkinter, ui_json
 from http.server import HTTPServer
+import os
 
 # prg start is important because I import/start sentence-seeker
 # from ssp program planner and this is a simple executable interface
@@ -14,6 +15,13 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
         input("press ENTER to start program")
 
     # sys.setprofile(util.TraceFunc)
+
+    # check: can we start gui?
+    if Ui == "tkinter" and Prg["OsIsLinux"]:
+        if "DISPLAY" not in os.environ:
+            print("Can't start tkinter ui because DISPLAY environment variable is not available -> switch to console ui")
+            Ui = "console"
+
     print(f"\nUI start: {Ui}")
     Prg["Ui"] = Ui
 

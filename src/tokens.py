@@ -354,13 +354,16 @@ class TokenObj():
 
         if len(Words) == 1:
             Word = Words[0]
+
             if is_operator(Word):
                 self.IsOperator = True
                 self.OperatorName = Word
 
             elif util.is_str(Word):
+                # the word can be written with uppercase/lowercase too,
+                # in the db I use lowercase version
                 self.IsKeyword = True
-                self.load_from_docindex([Word])
+                self.load_from_docindex([Word.lower()])
 
                 if not self.Results:
                     self.group_words_collect(Word)
@@ -391,6 +394,8 @@ class TokenObj():
         KeyWord = quick_form_convert_to_special_form(KeyWord, "..")
         if ":" in KeyWord:  # : means: special token
 
+            Selector, SelectorData = KeyWord.split(":")
+
             if   KeyWord == "be:all":             self.load_from_docindex(eng.BeAll)
             elif KeyWord == "have:all":           self.load_from_docindex(eng.HaveAll)
             elif KeyWord == "pronouns:subject":   self.load_from_docindex(eng.PronounsSubject)
@@ -401,16 +406,13 @@ class TokenObj():
             elif KeyWord == "iverb:inf":          self.load_from_docindex(eng.IrregularVerbsInfinitive)
 
             elif KeyWord.startswith("end:"):
-                End = KeyWord.split(":")[1]
-                self.load_from_docindex(eng.groups_of_word_ending(self.Prg, End))
+                self.load_from_docindex(eng.groups_of_word_ending(self.Prg, SelectorData))
 
             elif KeyWord.startswith("start:"):
-                Start = KeyWord.split(":")[1]
-                self.load_from_docindex(eng.groups_of_word_starting(self.Prg, Start))
+                self.load_from_docindex(eng.groups_of_word_starting(self.Prg, SelectorData))
 
             elif KeyWord.startswith("in:"):
-                In = KeyWord.split(":")[1]
-                self.load_from_docindex(eng.groups_of_word_include(self.Prg, In))
+                self.load_from_docindex(eng.groups_of_word_include(self.Prg, SelectorData))
             else:
                 print("unknown special group selector:", KeyWord)
 

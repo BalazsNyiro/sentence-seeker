@@ -28,7 +28,7 @@ def bar_display(Prg, FunBehindBar, FunParams=(), Title=""):
 
     # start a function after mainloop
     # https://stackoverflow.com/questions/459083/how-do-you-run-your-own-code-alongside-tkinters-event-loop
-    Root.after(10, FunBehindBar, Prg)
+    Root.after(200, FunBehindBar, Prg)
 
     mainloop()
 

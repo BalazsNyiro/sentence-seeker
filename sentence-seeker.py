@@ -7,7 +7,7 @@ DirPrgParent = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(DirPrgParent, "src"))
 sys.path.append(os.path.join(DirPrgParent, "test"))
 
-import config, util_test, argparse, separated_prg_launcher, util
+import config, util_test, argparse, prg_obj, util
 ##########################################################
 
 import seeker, ui_console
@@ -30,7 +30,7 @@ def main():
     if TestExecution:
         test_exec(Args)
     else: # separated program start because of ssp program planner import
-        separated_prg_launcher.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
+        prg_obj.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
 
 def test_exec(Args):
     Prg = config.prg_config_create(TestExecution=True, PrintForDeveloper=False)

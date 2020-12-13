@@ -471,8 +471,9 @@ def web_get_pack_wikipedia(Prg, DirTarget, WikiPagesUse=None):
                 WikiPagesUse = Prg["SettingsSaved"]["DefaultWikiTextPackageUsage"]
 
         elif Prg["Ui"] == "tkinter":
-            if independent_yes_no_window("Wikipedia interesting articles collection",
-                                         "Do you want to download articles from Sentence Seker site?\nIt takes about 24-26 sec, then program starts."):
+            Title = "Wikipedia interesting articles collection",
+            Question = "Do you want to download articles from Sentence Seker site?\nIt takes about 24-26 sec, then program starts."
+            if independent_yes_no_window(Title, Question):
                 WikiPagesUse = "Y"
 
     if str(WikiPagesUse).strip().lower() == "y":

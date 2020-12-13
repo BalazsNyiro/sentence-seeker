@@ -13,57 +13,62 @@ def sentence_builder(Prg, Sentence, FileSourceBaseName=""):
     return text.sentence_obj_from_memory(Prg, FileSourceBaseName, 0, 0, 0,
                                          SentenceFromOutside=Sentence, SentenceFillInResult=True)
 
+
+def cmd_back_to_tty_console(Prg, Wanted):
+    # this is a special command but really USEFUL
+    # if you use sentence-seeker.py from virtual-console mode where
+    # you can change between consoles with Alt+F1, ALT+F2, you can use
+    # and editor in one terminal (I use vim) and sentence-seeker.py in
+    # another virtual terminal.
+    # when you type :back,  the program switch back into the given terminal without
+    # any magic with ALT+Fn
+
+    Cmd = Prg["ChangeVirtualConsoleCmd"]
+    TerminalNum = "1"
+    if " " in Wanted:
+        TerminalNum = Wanted.split(" ")[2]
+        # SECURITY: allow only these chars
+        # Linux has only six virtual consoles
+        if TerminalNum not in list('123456'):
+            TerminalNum = "1"
+
+    os.system(f"{Cmd} {TerminalNum}")
+    #################################################
+
 def seek_and_display(Prg, Wanted):
+
+    ##################################################################
+    if Wanted == "b":         # this one char conversion works only in console mode because
+        Wanted = ":back"        # you can use back only in virtual console
+    # 'b 1', 'b 2' switch to given virtual console is working, too
+    elif len(Wanted) == 3 and Wanted[:2] == "b ":
+        Wanted = ":back " + Wanted[2]
+    if ":back" == Wanted[:5] and Prg["CommandBackToTtyConsoleAvailable"]:
+        cmd_back_to_tty_console(Prg, Wanted)
+        return
+    ##################################################################
+
     TimeLogicStart = time.time()
 
     Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
     ReturnType = "complete_sentence" # in separated_subsentence case the non-alphabhet chars become separators.
 
     if Wanted == ":help" or Wanted == ":h" or Wanted == "h":
+        Wanted = ":help"
         MatchNums__ResultInfo = []
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
         WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
-
-    # this one char conversion works only in console mode because
-    # you can use back only in virtual console
-    elif Wanted == "b":
-        Wanted = ":back"
-    # 'b 1', 'b 2' switch to given virtual console is working, too
-    elif len(Wanted) == 3 and Wanted[:2] == "b ":
-        Wanted = ":back " + Wanted[2]
-
-    if ":back" == Wanted[:5] and Prg["CommandBackToTtyConsoleAvailable"]:
-        # this is a special command but really USEFUL
-        # if you use sentence-seeker.py from virtual-console mode where
-        # you can change between consoles with Alt+F1, ALT+F2, you can use
-        # and editor in one terminal (I use vim) and sentence-seeker.py in
-        # another virtual terminal.
-        # when you type :back,  the program switch back into the given terminal without
-        # any magic with ALT+Fn
-
-        Cmd = Prg["ChangeVirtualConsoleCmd"]
-        TerminalNum = "1"
-        if " " in Wanted:
-            TerminalNum = Wanted.split(" ")[2]
-            # SECURITY: allow only these chars
-            # Linux has only six virtual consoles
-            if TerminalNum not in list('123456'):
-                TerminalNum = "1"
-
-        os.system(f"{Cmd} {TerminalNum}")
-        #################################################
-
     else:
         ReturnType = "separated_subsentences"
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
+
         TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+    TimeLogicUsed = time.time() - TimeLogicStart
 
-        TimeLogicUsed = time.time() - TimeLogicStart
-
-        sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
-        # print(f"Results Total: {ResultsTotalNum}")
-        # print("Time logic: ", TimeLogicUsed)
+    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
+    # print(f"Results Total: {ResultsTotalNum}")
+    # print("Time logic: ", TimeLogicUsed)
 
 def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     # On Linux and I hope on Mac, we can use history in console

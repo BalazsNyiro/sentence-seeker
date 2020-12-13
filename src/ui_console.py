@@ -49,6 +49,7 @@ def seek_and_display(Prg, Wanted):
     ##################################################################
 
     TimeLogicStart = time.time()
+    ResultsTotalNum = 0
 
     Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
     ReturnType = "complete_sentence" # in separated_subsentence case the non-alphabhet chars become separators.
@@ -64,9 +65,18 @@ def seek_and_display(Prg, Wanted):
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
 
         TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+        ExplainLimit = 24
+        TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
+
+        SentencesExplain = []
+        for Line in (TokenExplain+"\n").split("\n"):
+            SentencesExplain.append(sentence_builder(Prg, Line))
+        SentencesExplain.extend(MatchNums__ResultInfo)
+        MatchNums__ResultInfo = SentencesExplain
+
     TimeLogicUsed = time.time() - TimeLogicStart
 
-    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType)
+    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType, ResultsTotalNum=ResultsTotalNum)
     # print(f"Results Total: {ResultsTotalNum}")
     # print("Time logic: ", TimeLogicUsed)
 
@@ -146,13 +156,13 @@ def user_welcome_message(Prg, UserInterface):
         print(f"{color('Yellow')}Documents dir: {AllowedOutput}{color_reset()}")
 
 
-def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separated_subsentences"):
+def sentence_result_one(Prg, Result, WordsDetected, RowNumDisplayed, ReturnType="separated_subsentences"):
     ColorDefault = color("Default")
 
     if Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"]:
         ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
     else:
-        ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if ResultNum % 2 == 0 \
+        ColorBefore = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowEven"]) if RowNumDisplayed % 2 == 0 \
             else      color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOdd"])
 
     ColorDetected = color(Prg["SettingsSaved"]["Ui"]["Console"]["ColorWordDetected"])
@@ -164,10 +174,10 @@ def sentence_result_one(Prg, Result, WordsDetected, ResultNum, ReturnType="separ
                                                 ColorAfter=ColorDefault,
                                                 ColorDetected=ColorDetected,
                                                 ColorResultNum=ColorResultNum,
-                                                ResultNum=ResultNum,
+                                                RowNumDisplayed=RowNumDisplayed,
                                                 WordsDetected=WordsDetected)
 
-def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="separated_subsentences"):
+def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="separated_subsentences", ResultsTotalNum=0):
     CharEnter = chr(13)
     CharEscape = chr(27) # it's a problem because some special key's code starts with 27, too
 
@@ -187,8 +197,8 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
     PageTopSentenceId = dict() # pagenum, sentenceId
     PageTopSentenceId[PageNum] = IdNow
 
-    ResultsNum = len(SentenceStruct)
-    NoResult = ResultsNum == 0
+    RowNumDisplayed = len(SentenceStruct)
+    NoResult = RowNumDisplayed == 0
 
     Step = 0
 
@@ -206,11 +216,11 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
         IdNow = PageTopSentenceId[PageNum]
         print("")
         while FreeLines:
-            LastResultDisplayed = (IdNow >= ResultsNum)
+            LastResultDisplayed = (IdNow >= RowNumDisplayed)
             if NoResult or LastResultDisplayed: break
 
             SentenceObject = sentence_result_one(Prg, SentenceStruct[IdNow], WordsDetected, IdNow, ReturnType=ReturnType)
-            RowsRendered = SentenceObject.render_console(ScreenWidth, AlignRight=2) #len(str(ResultsNum)))
+            RowsRendered = SentenceObject.render_console(ScreenWidth, AlignRight=2) #len(str(RowNumDisplayed)))
             RowsRenderedLen = len(RowsRendered)
 
             if RowsRenderedLen <= FreeLines:
@@ -236,11 +246,11 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
             if Prg["CommandBackToTtyConsoleAvailable"]:
                 TextBack = f"{ColorInfo}[{high('b')}]ackTty"
 
-            TextTotal = f"{ColorInfo}total: {high(ResultsNum)}"
+            TextTotal = f"{ColorInfo}total: {high(ResultsTotalNum)}"
             TextVim = f"{ColorInfo}VIM keys: {high('j')}, {high('k')} {color('Default')}"
             UserInfo = f"{TextPrev} {TextNext} {TextQuery} {TextBack}  {TextTotal}    {TextVim} {color('Default')}"
 
-            if ResultsNum == 0: # return to new search if no result
+            if RowNumDisplayed == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")
                 break
 
@@ -266,7 +276,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
                 Prg["UserInputHistory"].event_new(Location, "KeyPageFirst", UserReply)
 
             if UserReply == "KeyEnd":
-                Step = ResultsNum
+                Step = RowNumDisplayed
                 # theoretically it's wrong because lot of results can be on a page
                 # but I guess one result will be smaller than one page so it's a good upper limit
                 util_ui.clear_screen(ScreenHeight)
@@ -274,7 +284,7 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
 
         if Step > 0:
             if PageNum+1 in PageTopSentenceId:
-                NextIdInResults = PageTopSentenceId[PageNum + 1] < ResultsNum
+                NextIdInResults = PageTopSentenceId[PageNum + 1] < RowNumDisplayed
                 if NextIdInResults:
                     PageNum += 1
                 else:

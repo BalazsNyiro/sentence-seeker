@@ -68,11 +68,11 @@ class SentenceObj():
                 CharNum += W.Len
             return SpaceNum + CharNum
 
-        if self.ResultNum is not None:
+        if self.RowNumDisplayed is not None:
             if AlignRight is None:
-                HumanResultNum = str(self.ResultNum + 1)
+                HumanResultNum = str(self.RowNumDisplayed + 1)
             else:
-                HumanResultNum = f"{self.ResultNum + 1: <{AlignRight}}"
+                HumanResultNum = f"{self.RowNumDisplayed + 1: <{AlignRight}}"
 
             Rows = [[WordObj(HumanResultNum, ColorBasic=self.ColorResultNum, ColorAfter=self.ColorBasic)]]
         else:
@@ -128,13 +128,13 @@ class SentenceObj():
     def __init__(self, Sentence=None,
                  ColorBasic=None, ColorAfter=None,
                  ColorDetected=None, ColorResultNum=None,
-                 ResultNum=None, WordsDetected=set(),
+                 RowNumDisplayed=None, WordsDetected=set(),
                  Url=None, Source=None):
         self.ColorBasic = ColorBasic
         self.ColorAfter = ColorAfter
         self.ColorDetected = ColorDetected
         self.ColorResultNum = ColorResultNum
-        self.ResultNum = ResultNum
+        self.RowNumDisplayed = RowNumDisplayed
         self.Words = []
         self.WordsDetected = WordsDetected
         self.Url = Url
@@ -150,7 +150,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                  ColorAfter=None,
                                  ColorDetected=None,
                                  ColorResultNum=None,
-                                 ResultNum=None,
+                                 RowNumDisplayed=None,
                                  WordsDetected=set()):
 
     Url, Txt, Source = sentence_text_from_obj(Prg, Result, ReturnType=ReturnType)
@@ -160,7 +160,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                ColorAfter=ColorAfter,
                                ColorDetected=ColorDetected,
                                ColorResultNum=ColorResultNum,
-                               ResultNum=ResultNum,
+                               RowNumDisplayed=RowNumDisplayed,
                                WordsDetected=WordsDetected,
                                Url=Url, Source=Source)
         Sentence.add_big_string(Txt["subsentences_before"])
@@ -173,7 +173,7 @@ def sentence_get_from_result_oop(Prg, Result,
                            ColorAfter=ColorAfter,
                            ColorDetected=ColorDetected,
                            ColorResultNum=ColorResultNum,
-                           ResultNum=ResultNum,
+                           RowNumDisplayed=RowNumDisplayed,
                            WordsDetected=WordsDetected,
                            Url=Url, Source=Source)
 
@@ -237,7 +237,7 @@ def ui_json_answer(Prg,
     return Reply
 
 def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainLimit=64):
-    TokenExplainText = ["Same sentences can be counted more than once from different results!"]
+    TokenExplainText = ["Sentence duplications will be removed so displayed result num can be different from Explained!"]
 
     if len(TokenProcessExplainSumma) > ExplainLimit:
         return "Too complex Token explaining"

@@ -199,7 +199,7 @@ def get_operator_positions(Tokens):
             OperatorPositions[Token.OperatorName].append(Position)
     return OperatorPositions
 
-def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositionMulti=100, CallLevel=0, ProgressBarConsole=None):
+def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositionMulti=100, CallLevel=0, ProgressBarConsole=None, ProgressBarChange=3):
 
     for Position in range(0, len(Tokens)): # expand all groups in all levels first
         Token = Tokens[Position]
@@ -216,8 +216,11 @@ def operator_exec(Tokens, Scope="subsentence", SubSentenceMulti=100, WordPositio
         # if operator exist in the position lists and it has any open position
         while (Operator in OperatorPositions) and OperatorPositions[Operator]:
 
-            if ProgressBarConsole:                  # I work with 3 tokens in same time:
-                ProgressBarConsole.update(Change=3) # the operators and two operands
+            # The first progress bar change = 2 because at caller position I updated the bar with 1.
+            # but later the change has to be 3, it's the default value
+            if ProgressBarConsole:                                   # I work with 3 tokens in same time:
+                ProgressBarConsole.update(Change= ProgressBarChange) # the operators and two operands
+                                                                     # but 1 ProgressBar update happened before operator_exec
 
             OperatorPositionLast = OperatorPositions[Operator].pop()
             ParamLeft  = Tokens[OperatorPositionLast - 1]

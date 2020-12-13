@@ -49,8 +49,13 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
             Tokens = TxtToObj(TokenGroups, DocIndex, FileSourceBaseName)
             #print(">>> time end TxtToObj", time.time() - TimeStart)
 
+            # if we haven't got any operator, then change==1.
+            # if we have an operator, change = 1+(Op+1 in operator_exec) = 3.
+            if ProgressBarConsole:
+                ProgressBarConsole.update(Change=1)
+
             #TimeStart = time.time()
-            tokens.operator_exec(Tokens, ProgressBarConsole=ProgressBarConsole)
+            tokens.operator_exec(Tokens, ProgressBarConsole=ProgressBarConsole, ProgressBarChange=2)
             #print(">>> time end opExec  ", time.time() - TimeStart)
             #print()
 

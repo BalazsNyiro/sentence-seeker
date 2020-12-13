@@ -225,14 +225,14 @@ def document_obj(FileOrigPathAbs="", FileTextAbsPath="", FileIndex="", FileSente
             }
 
 
-def docs_copy_samples_into_dir_if_necessary(Prg):
+def docs_copy_samples_into_dir_if_necessary(Prg, LoadDefaultsForced=False):
     util.dir_create_if_necessary(Prg, Prg["DirDocuments"])
     # print(f'Program dir documents: {Prg["DirDocuments"]}', flush=True)
 
     DirTextSamples = os.path.join(Prg["DirDocuments"], "text_samples")
     util.dir_create_if_necessary(Prg, DirTextSamples)
     FilesTxt = util.files_abspath_collect_from_dir(DirTextSamples, WantedExtensions=ExtensionsConvertable + [".txt"])
-    if not FilesTxt:
+    if (not FilesTxt) or LoadDefaultsForced:
         util.web_get_pack_wikipedia(Prg, DirTextSamples)
         docs_copy_samples_into_dir(Prg, DirTextSamples)
 

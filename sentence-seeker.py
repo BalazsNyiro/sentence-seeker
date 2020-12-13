@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--test", help="execute only tests", action='store_true')
     parser.add_argument("--usage", help="display sort usage info", action='store_true')
     parser.add_argument("--query", help="pass query as param. Program exits after display result", action='store', default="")
-
+    parser.add_argument("--docs_load_defaults_forced", help="reload sample texts into document directory anyway - useful after git pull to load new books", action='store_true', default=False)
     parser.add_argument("--ui", help="select user interface. (console, tkinter, html)", action='store', default='tkinter')
     Args = parser.parse_args()
 
@@ -30,7 +30,7 @@ def main():
     if TestExecution:
         test_exec(Args)
     else: # separated program start because of ssp program planner import
-        prg_obj.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query)
+        prg_obj.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query, DocsLoadDefaultsForced=Args.docs_load_defaults_forced)
 
 def test_exec(Args):
     Prg = config.prg_config_create(TestExecution=True, PrintForDeveloper=False)

@@ -234,7 +234,7 @@ def ui_json_answer(Prg,
     return Reply
 
 def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainLimit=64):
-    TokenExplainText = ["Sentence duplications will be removed so displayed result num can be different from Explained!"]
+    TokenExplainText = ["Sentence duplications are removed so displayed result num can be different from Explained!"]
 
     if len(TokenProcessExplainSumma) > ExplainLimit:
         return "Too complex Token explaining"

@@ -6,7 +6,7 @@ from http.server import HTTPServer
 
 # prg start is important because I import/start sentence-seeker
 # from ssp program planner and this is a simple executable interface
-def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdlineParam=""):
+def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdlineParam="", DocsLoadDefaultsForced=False):
     Prg = config.prg_config_create(TestExecution, PrintForDeveloper=False)
 
     if Usage:
@@ -20,7 +20,7 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
     # not only console mode but gui/tkinter can print to the terminal
     util.if_win__set_windows_console_enable_ansi_escapes(Prg)
 
-    document.docs_copy_samples_into_dir_if_necessary(Prg)
+    document.docs_copy_samples_into_dir_if_necessary(Prg, LoadDefaultsForced=DocsLoadDefaultsForced)
 
     if Ui == "tkinter":
         try: # test: do we have graphical environment or we run in native console?

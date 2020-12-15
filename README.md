@@ -199,6 +199,8 @@ https://www.python.org/downloads/windows/
 # Interesting request collection - for a separated youtube video #
 - (sack OR bag) > of
 - questionwords:all AND count:all 
+- look.. back
+- have:all yet
 
 # Branches #
  - master: tested/offered for end users

@@ -13,7 +13,7 @@ while true
 do
   PID=$(ps aux | grep "sentence-seeker.py" | grep -v "grep" | awk '{print $2}')
   kill -9 $PID
-  ./sentence-seeker.py --ui html &
+  ./sentence-seeker.py --docs_load_defaults_forced --ui html &
 
   date
   echo "sleep..."

@@ -31,9 +31,53 @@ class WordObj():
 
         # the case-insensivity is important because words can start with upper/lower case
         # chars, too
-        if util.word_only_abc_chars(Txt).lower() in WordsDetected or Txt in WordsDetected:
+
+        # if util.word_only_abc_chars(Txt).lower() in WordsDetected or Txt in WordsDetected:
+        TxtLow = Txt.lower()
+        if TxtLow in WordsDetected:
             # if it's exactly in detected: special signs, for help documentation, = sign for example
             self.Detected = True
+
+        else:
+
+            # TODO: refactor it to a separated fun and create tests
+            # seek: (elephant AND horse)
+            # one result: ...  for neither horse nor mule can bear to listen to an elephant’s voice
+            # here the elephant wasn't highlighted
+            # and (elephant not, too
+            # so solve this problem: what happens if this is a word plus some extra char.  example: elephant!
+            for WordDetected in WordsDetected:
+                if len(WordDetected) > len(TxtLow):
+                    continue # don't check if Detected can't be the part of Txt
+
+                if TxtLow.startswith(WordDetected):
+                    # elephant's -> elephant is matching
+                    NextCharAfterWordDetected = TxtLow[len(WordDetected)]
+                    if not util.abc_char(NextCharAfterWordDetected):
+                        self.Detected = True
+                        break
+
+                elif TxtLow.endswith(WordDetected):
+                    # non-elephant  in this case '-' is the prev char
+                    PrevCharBeforeWordDetected = TxtLow[-1-len(WordDetected)]
+                    if not util.abc_char(PrevCharBeforeWordDetected):
+                        self.Detected = True
+                        break
+
+                # non-elephant!  here the elephant is surrounded by non-alpha chars
+                elif WordDetected in TxtLow:
+                    Fragments = TxtLow.split(WordDetected)
+                    CharPos = -1 # check the first, then the last char, then first again, then last. -1, 0, -1, 0
+                    SurroundedWithNonAbc = True
+                    for Elem in Fragments:
+                        if util.abc_char(Elem[CharPos]):
+                            SurroundedWithNonAbc = False
+                            break
+                        if CharPos == -1: CharPos =  0
+                        else:             CharPos = -1
+                    if SurroundedWithNonAbc:
+                        self.Detected = True
+                        break
 
         self.Len = len(Txt)
 

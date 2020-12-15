@@ -80,6 +80,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
 
     Prg = {
             "SettingsSaved": {
+                "Scope": "subsentence",
                 "Ui":{
                     "CommandsExit": [":q", ":quit", ":exit", "q"],
                     "DisplaySourceFileNameBelowSentences": True,

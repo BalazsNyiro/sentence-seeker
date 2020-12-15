@@ -19,7 +19,7 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
+    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
 
     TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")

@@ -33,11 +33,9 @@ def bar_display(Prg, FunBehindBar, FunParams=(), Title=""):
     mainloop()
 
 def progressbar_refresh_if_displayed(Prg, TotalNum, ActualNum):
-    ProgressPercent = int((ActualNum * 100.0) / TotalNum)
     if "ProgressBar" in Prg:
-        Prg["ProgressBar"]["TtkProgressbar"]["value"] = ProgressPercent
+        Prg["ProgressBar"]["TtkProgressbar"]["value"] = int((ActualNum * 100.0) / TotalNum)
         Prg["ProgressBar"]["Root"].update_idletasks()
-    return ProgressPercent
 
 def progressbar_close(Prg):
     if "ProgressBar" in Prg:

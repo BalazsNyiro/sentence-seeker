@@ -5,6 +5,7 @@ import time, tokens
 import ui_console_progress_bar
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=None):
+    DisplaySeekResultLater = True
     util.log(Prg, f"Query: {Query}")
 
     Location = "seeker_logic"
@@ -13,6 +14,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     CommandDetected = tokens.run_commands_in_query(Prg, Query)
     if CommandDetected:
         Query = "special_command_executed"
+        DisplaySeekResultLater = False
     Query = Query.strip()
     print(Query)
 
@@ -55,7 +57,7 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
                 ProgressBarConsole.update(Change=1)
 
             #TimeStart = time.time()
-            tokens.operator_exec(Tokens, ProgressBarConsole=ProgressBarConsole, ProgressBarChange=2)
+            tokens.operator_exec(Tokens, ProgressBarConsole=ProgressBarConsole, ProgressBarChange=2, Scope=Prg["SettingsSaved"]["Scope"])
             #print(">>> time end opExec  ", time.time() - TimeStart)
             #print()
 
@@ -109,6 +111,6 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     ResultsSelected = util.list_flat_embedded_lists(ResultsSelectedGroups)
     #########################################################
 
-    return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected)
+    return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected), DisplaySeekResultLater
 
 

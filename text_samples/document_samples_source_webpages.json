@@ -1,6 +1,768 @@
 {
   "docs": {
 
+    "EncyclopaediaBritannica__gutenberg_org__13600": {
+      "url": "http://www.gutenberg.org/ebooks/13600",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34018": {
+      "url": "http://www.gutenberg.org/ebooks/34018",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34047": {
+      "url": "http://www.gutenberg.org/ebooks/34047",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34082": {
+      "url": "http://www.gutenberg.org/ebooks/34082",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34116": {
+      "url": "http://www.gutenberg.org/ebooks/34116",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34162": {
+      "url": "http://www.gutenberg.org/ebooks/34162",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34209": {
+      "url": "http://www.gutenberg.org/ebooks/34209",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34312": {
+      "url": "http://www.gutenberg.org/ebooks/34312",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__27478": {
+      "url": "http://www.gutenberg.org/ebooks/27478",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__27479": {
+      "url": "http://www.gutenberg.org/ebooks/27479",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__27480": {
+      "url": "http://www.gutenberg.org/ebooks/27480",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34405": {
+      "url": "http://www.gutenberg.org/ebooks/34405",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34533": {
+      "url": "http://www.gutenberg.org/ebooks/34533",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34612": {
+      "url": "http://www.gutenberg.org/ebooks/34612",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34702": {
+      "url": "http://www.gutenberg.org/ebooks/34702",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33550": {
+      "url": "http://www.gutenberg.org/ebooks/33550",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33614": {
+      "url": "http://www.gutenberg.org/ebooks/33614",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33698": {
+      "url": "http://www.gutenberg.org/ebooks/33698",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33750": {
+      "url": "http://www.gutenberg.org/ebooks/33750",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__19699": {
+      "url": "http://www.gutenberg.org/ebooks/19699",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__19846": {
+      "url": "http://www.gutenberg.org/ebooks/19846",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32975": {
+      "url": "http://www.gutenberg.org/ebooks/32975",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33052": {
+      "url": "http://www.gutenberg.org/ebooks/33052",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33127": {
+      "url": "http://www.gutenberg.org/ebooks/33127",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33189": {
+      "url": "http://www.gutenberg.org/ebooks/33189",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33239": {
+      "url": "http://www.gutenberg.org/ebooks/33239",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33295": {
+      "url": "http://www.gutenberg.org/ebooks/33295",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33365": {
+      "url": "http://www.gutenberg.org/ebooks/33365",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__33427": {
+      "url": "http://www.gutenberg.org/ebooks/33427",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31156": {
+      "url": "http://www.gutenberg.org/ebooks/31156",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31329": {
+      "url": "http://www.gutenberg.org/ebooks/31329",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31447": {
+      "url": "http://www.gutenberg.org/ebooks/31447",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31641": {
+      "url": "http://www.gutenberg.org/ebooks/31641",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31793": {
+      "url": "http://www.gutenberg.org/ebooks/31793",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31855": {
+      "url": "http://www.gutenberg.org/ebooks/31855",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__31950": {
+      "url": "http://www.gutenberg.org/ebooks/31950",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32063": {
+      "url": "http://www.gutenberg.org/ebooks/32063",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__30935": {
+      "url": "http://www.gutenberg.org/ebooks/30935",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32097": {
+      "url": "http://www.gutenberg.org/ebooks/32097",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32182": {
+      "url": "http://www.gutenberg.org/ebooks/32182",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32294": {
+      "url": "http://www.gutenberg.org/ebooks/32294",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32423": {
+      "url": "http://www.gutenberg.org/ebooks/32423",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38622": {
+      "url": "http://www.gutenberg.org/ebooks/38622",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38709": {
+      "url": "http://www.gutenberg.org/ebooks/38709",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38799": {
+      "url": "http://www.gutenberg.org/ebooks/38799",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38892": {
+      "url": "http://www.gutenberg.org/ebooks/38892",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__30685": {
+      "url": "http://www.gutenberg.org/ebooks/30685",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__30073": {
+      "url": "http://www.gutenberg.org/ebooks/30073",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32607": {
+      "url": "http://www.gutenberg.org/ebooks/32607",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32689": {
+      "url": "http://www.gutenberg.org/ebooks/32689",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32758": {
+      "url": "http://www.gutenberg.org/ebooks/32758",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32783": {
+      "url": "http://www.gutenberg.org/ebooks/32783",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34751": {
+      "url": "http://www.gutenberg.org/ebooks/34751",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34878": {
+      "url": "http://www.gutenberg.org/ebooks/34878",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__34992": {
+      "url": "http://www.gutenberg.org/ebooks/34992",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32860": {
+      "url": "http://www.gutenberg.org/ebooks/32860",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35092": {
+      "url": "http://www.gutenberg.org/ebooks/35092",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35169": {
+      "url": "http://www.gutenberg.org/ebooks/35169",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__32940": {
+      "url": "http://www.gutenberg.org/ebooks/32940",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35236": {
+      "url": "http://www.gutenberg.org/ebooks/35236",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35306": {
+      "url": "http://www.gutenberg.org/ebooks/35306",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35398": {
+      "url": "http://www.gutenberg.org/ebooks/35398",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35473": {
+      "url": "http://www.gutenberg.org/ebooks/35473",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__36735": {
+      "url": "http://www.gutenberg.org/ebooks/36735",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__36452": {
+      "url": "http://www.gutenberg.org/ebooks/36452",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35561": {
+      "url": "http://www.gutenberg.org/ebooks/35561",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35606": {
+      "url": "http://www.gutenberg.org/ebooks/35606",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35747": {
+      "url": "http://www.gutenberg.org/ebooks/35747",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__35925": {
+      "url": "http://www.gutenberg.org/ebooks/35925",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__36104": {
+      "url": "http://www.gutenberg.org/ebooks/36104",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__36226": {
+      "url": "http://www.gutenberg.org/ebooks/36226",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37806": {
+      "url": "http://www.gutenberg.org/ebooks/37806",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37736": {
+      "url": "http://www.gutenberg.org/ebooks/37736",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37064": {
+      "url": "http://www.gutenberg.org/ebooks/37064",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37282": {
+      "url": "http://www.gutenberg.org/ebooks/37282",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37461": {
+      "url": "http://www.gutenberg.org/ebooks/37461",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37523": {
+      "url": "http://www.gutenberg.org/ebooks/37523",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37610": {
+      "url": "http://www.gutenberg.org/ebooks/37610",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38539": {
+      "url": "http://www.gutenberg.org/ebooks/38539",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37880": {
+      "url": "http://www.gutenberg.org/ebooks/37880",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37984": {
+      "url": "http://www.gutenberg.org/ebooks/37984",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38143": {
+      "url": "http://www.gutenberg.org/ebooks/38143",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38202": {
+      "url": "http://www.gutenberg.org/ebooks/38202",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38304": {
+      "url": "http://www.gutenberg.org/ebooks/38304",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__37160": {
+      "url": "http://www.gutenberg.org/ebooks/37160",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38401": {
+      "url": "http://www.gutenberg.org/ebooks/38401",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38454": {
+      "url": "http://www.gutenberg.org/ebooks/38454",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39632": {
+      "url": "http://www.gutenberg.org/ebooks/39632",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39521": {
+      "url": "http://www.gutenberg.org/ebooks/39521",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39435": {
+      "url": "http://www.gutenberg.org/ebooks/39435",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39353": {
+      "url": "http://www.gutenberg.org/ebooks/39353",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39232": {
+      "url": "http://www.gutenberg.org/ebooks/39232",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39127": {
+      "url": "http://www.gutenberg.org/ebooks/39127",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39029": {
+      "url": "http://www.gutenberg.org/ebooks/39029",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__38964": {
+      "url": "http://www.gutenberg.org/ebooks/38964",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40538": {
+      "url": "http://www.gutenberg.org/ebooks/40538",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40370": {
+      "url": "http://www.gutenberg.org/ebooks/40370",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40156": {
+      "url": "http://www.gutenberg.org/ebooks/40156",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40096": {
+      "url": "http://www.gutenberg.org/ebooks/40096",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40009": {
+      "url": "http://www.gutenberg.org/ebooks/40009",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39908": {
+      "url": "http://www.gutenberg.org/ebooks/39908",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39775": {
+      "url": "http://www.gutenberg.org/ebooks/39775",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__39700": {
+      "url": "http://www.gutenberg.org/ebooks/39700",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41343": {
+      "url": "http://www.gutenberg.org/ebooks/41343",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41264": {
+      "url": "http://www.gutenberg.org/ebooks/41264",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41156": {
+      "url": "http://www.gutenberg.org/ebooks/41156",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41055": {
+      "url": "http://www.gutenberg.org/ebooks/41055",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40956": {
+      "url": "http://www.gutenberg.org/ebooks/40956",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40863": {
+      "url": "http://www.gutenberg.org/ebooks/40863",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40769": {
+      "url": "http://www.gutenberg.org/ebooks/40769",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__40641": {
+      "url": "http://www.gutenberg.org/ebooks/40641",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41773": {
+      "url": "http://www.gutenberg.org/ebooks/41773",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41685": {
+      "url": "http://www.gutenberg.org/ebooks/41685",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42048": {
+      "url": "http://www.gutenberg.org/ebooks/42048",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41567": {
+      "url": "http://www.gutenberg.org/ebooks/41567",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41472": {
+      "url": "http://www.gutenberg.org/ebooks/41472",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42173": {
+      "url": "http://www.gutenberg.org/ebooks/42173",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42342": {
+      "url": "http://www.gutenberg.org/ebooks/42342",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__43427": {
+      "url": "http://www.gutenberg.org/ebooks/43427",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__41902": {
+      "url": "http://www.gutenberg.org/ebooks/41902",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__43254": {
+      "url": "http://www.gutenberg.org/ebooks/43254",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42854": {
+      "url": "http://www.gutenberg.org/ebooks/42854",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42736": {
+      "url": "http://www.gutenberg.org/ebooks/42736",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42638": {
+      "url": "http://www.gutenberg.org/ebooks/42638",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42552": {
+      "url": "http://www.gutenberg.org/ebooks/42552",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__42473": {
+      "url": "http://www.gutenberg.org/ebooks/42473",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
+    "EncyclopaediaBritannica__gutenberg_org__43060": {
+      "url": "http://www.gutenberg.org/ebooks/43060",
+      "source_name": "gutenberg",
+      "license": "public_domain"
+    },
+
     "CatharineParrStricklandTraill__BackwoodsOfCanada__gutenberg_org_pg13559": {
       "url": "http://www.gutenberg.org/ebooks/13559",
       "source_name": "gutenberg",

@@ -255,3 +255,9 @@ def groups_of_word_include(Prg, Pattern):
 
     Prg["CacheWordGroups"]["Include"][Pattern] = Selecteds
     return Selecteds
+
+
+############# QUERY MACROS ###########
+# cond:if
+# TODO: CONDITIONALS:
+# (if OR when OR (as > soon > as) OR unless)

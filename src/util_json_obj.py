@@ -6,10 +6,14 @@ FileNameConfig = ".sentence-seeker.config"
 ############ JSON #############################
 
 # Tested
-def obj_from_file(JsonFileName):
+def obj_from_file(JsonFileName, UseFilePointer=False):
     try:
-        _ReadStatus, FileContent = util.file_read_all(Prg={}, Fname=JsonFileName)
-        return "ok", json.loads(FileContent)
+        if UseFilePointer:
+            with open(JsonFileName) as Fp:
+                return "ok", json.load(Fp)
+        else:
+            _ReadStatus, FileContent = util.file_read_all(Prg={}, Fname=JsonFileName)
+            return "ok", json.loads(FileContent)
 
     except json.decoder.JSONDecodeError:
         FileContent = util.file_read_all_simple(JsonFileName)

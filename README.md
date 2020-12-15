@@ -96,10 +96,17 @@ Examples:
 ## Complex examples: ##
 - pronouns:personal AND have:all AND iverb:pp  *They've written*
 
-## On/Off commands, turn on/off some settings: ##
-- :urlOn/Off *show/hide url of the result*
-- :sourceOn/Off *show/hide source doc name of the result*
-- :displayPersonalInfoOn/Off *hide/show your document directory path in gui title*
+## Settings, On/Off commands ##
+- url:On/Off *show/hide url of the result*
+- source:On/Off *show/hide source doc name of the result*
+- displayPersonalInfo:On/Off *hide/show your document directory path in gui title*
+
+## Plain help display ##
+ - help:plain display this documentation without any formatting/coloring
+  
+## Scopes ##
+- scope:sentence  * search words in whole sentences*
+- scope:subsentence *search words in subsentences only: a comma, a dot, a questionmark or other non-alphanumeric chars limits the range of search* 
 
 ## Console mode pager keys if you received results: ##
 - page next: *n, Space, ArrowRight, ArrowDown, Enter, j (from vim)*
@@ -201,6 +208,7 @@ https://www.python.org/downloads/windows/
 - questionwords:all AND count:all 
 - look.. back
 - have:all yet
+- touch hair head
 
 # Branches #
  - master: tested/offered for end users

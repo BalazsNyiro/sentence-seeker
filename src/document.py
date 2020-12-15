@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import util, os
-import util_json_obj, ui_tkinter_boot_progress_bar
+import util, os, json
+import util_json_obj, ui_tkinter_boot_progress_bar, ui_console_progress_bar
 from os.path import isfile
 import array
 import concurrent.futures
@@ -85,7 +85,8 @@ def word_pos_in_line_load(FileIndexAbsPath):
     WordPositionInLines = dict()
     MessageForUser = None
     if isfile(FileIndexAbsPath):
-        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
+        # unfortunately the json parsing is slow. array.array is relatively fast
+        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath, UseFilePointer=True)
 
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():
@@ -128,6 +129,8 @@ def document_objects_collect_from_dir_documents(Prg,
     FileEndIndex = f"_wordindex_{VersionSeeker}"
     FileEndSentence = f"_sentence_separator_{VersionSeeker}"
 
+    ProgressBarConsole = ui_console_progress_bar.progress_bar_console(ValueTo=LenFiles*2, Title="indexing...",  DisplayDifferencePercent=1)
+
     ################# sentence / index creation #############################
     if FunSentenceCreate and FunIndexCreate:
         MultiCore = True
@@ -152,20 +155,22 @@ def document_objects_collect_from_dir_documents(Prg,
                                     Prg["SubSentenceMultiplier"], Prg["WordPositionMultiplier"],
                                     FileSentencesAbsPath, FileTextAbsPath, FileIndexAbsPath))
 
-                DonePrevLen = -1
+                PrevCheckedLen = -1
                 while True:
-                    Done, NotDone = concurrent.futures.wait(Futures, return_when=FIRST_COMPLETED)
-                    if len(Done) != DonePrevLen:
-                        DonePrevLen = len(Done)
-                        print("indexed:", len(Done), "  waiting:", len(NotDone))
-                    ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(Done))
-                    if not NotDone:
+                    FilesIdxSenChecked, Remain = concurrent.futures.wait(Futures, return_when=FIRST_COMPLETED)
+                    if len(FilesIdxSenChecked) != PrevCheckedLen:
+                        ProgressBarConsole.update(Title=f"{len(FilesIdxSenChecked)} indexing...", Change=len(FilesIdxSenChecked)-PrevCheckedLen)  # the operators and two operands
+                        PrevCheckedLen = len(FilesIdxSenChecked)
+                        # print("indexed:", len(FilesIdxSenChecked), "  waiting:", len(Remain))
+                        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, len(FilesIdxSenChecked))
+                    if not Remain:
                         break
 
         else: # on windows I use one Core to index files
             for FileNum, FileTextAbsPath in enumerate(FilesTxt,
                                                       start=1):  # All files recursively collected from DirDocuments
                 ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles * 2, FileNum)
+                ProgressBarConsole.update(Title=f"{FileNum} indexing...", Change=1)  # the operators and two operands
 
                 # this document object describe infos about the document
                 # for example the version of index algorithm
@@ -175,8 +180,7 @@ def document_objects_collect_from_dir_documents(Prg,
                 FunSentenceCreate(Prg, FileSentencesAbsPath, FileTextAbsPath=FileTextAbsPath)
                 FunIndexCreate(Prg, FileIndexAbsPath, FileSentencesAbsPath)
 
-
-                print("indexed:", FileNum, "  waiting:", len(FilesTxt) - FileNum)
+                #print("indexed:", FileNum, "  waiting:", len(FilesTxt) - FileNum)
 
     ################### parallel index loading ###############
     ######  the parallel solution is slower
@@ -197,10 +201,12 @@ def document_objects_collect_from_dir_documents(Prg,
     #         else:
     #             WordPositionAll[FileIndexAbsPath] = WordPositionInLines
 
+
     ################# document obj create  #############################
     # start = 1:  if we have 10 elems, last FileNum has to reach 10
     for FileNum, FileTextAbsPath in enumerate(FilesTxt, start=1): # All files recursively collected from DirDocuments
-        ProgressPercent = ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum+LenFiles)
+        ui_tkinter_boot_progress_bar.progressbar_refresh_if_displayed(Prg, LenFiles*2, FileNum+LenFiles)
+        ProgressBarConsole.update(Title=f"{FileNum} index loading...",  Change=1)  # the operators and two operands
 
         FileIndexAbsPath = FileTextAbsPath + FileEndIndex
         FileSentencesAbsPath = FileTextAbsPath + FileEndSentence

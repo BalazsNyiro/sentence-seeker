@@ -16,33 +16,41 @@ def run_commands_in_query(Prg, Query):
     CommandDetected = False
 
     if ":" in Query:
-        if ":help_plain" in Query:
+        if "scope:sentence" in Query:
+            Prg["SettingsSaved"]["Scope"] = "sentence"
+            CommandDetected = True
+
+        if "scope:subsentence" in Query:
+            Prg["SettingsSaved"]["Scope"] = "subsentence"
+            CommandDetected = True
+
+        if "help:plain" in Query:
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True
 
-        if ":displayPersonalInfoOff" in Query:
+        if "displayPersonalInfo:Off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"] = False
             util_ui.title_refresh(Prg)
             CommandDetected = True
 
-        if ":displayPersonalInfoOn" in Query:
+        if "displayPersonalInfo:On" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"] = True
             util_ui.title_refresh(Prg)
             CommandDetected = True
 
-        if ":urlOff" in Query:
+        if "url:Off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
             CommandDetected = True
 
-        if ":urlOn" in Query:
+        if "url:On" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
             CommandDetected = True
 
-        if ":sourceOff" in Query:
+        if "source:Off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
             CommandDetected = True
 
-        if ":sourceOn" in Query:
+        if "source:On" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
             CommandDetected = True
 

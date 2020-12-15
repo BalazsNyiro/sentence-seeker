@@ -4,8 +4,9 @@ import sys
 from ui_console import AnsiControlInit
 # originally it's place was in util_ui
 class progress_bar_console():
-    def __init__(self, BarLen=30, ValueFrom=0, ValueTo=100, ValueNow=0, DisplayDifferencePercent=4):
+    def __init__(self, BarLen=30, ValueFrom=0, ValueTo=100, ValueNow=0, DisplayDifferencePercent=4, Title=""):
 
+        self.Title = Title + " " if Title else ""
         self.ValueFrom = ValueFrom
         self.ValueTo = ValueTo
         if ValueFrom > ValueTo: # ValueFrom < ValueTo!!! if not, replace them to guarantee it.
@@ -22,7 +23,8 @@ class progress_bar_console():
         self.OneHundredPercentDisplayed = False
         print("") # to be sure that display starts from first char
 
-    def update(self, Change=1, Msg=""):
+    def update(self, Change=1, Msg="", Title=""):
+        self.Title = Title + " " if Title else ""
         self.ValueNow += Change
         Progress = self.ValueNow - self.ValueFrom
         self.Percent = (Progress / self.ValueRange) * 100
@@ -49,7 +51,7 @@ class progress_bar_console():
         BarEmptyLen = self.BarLen - BarFilledLen
         BarFilled = "=" * BarFilledLen
         BarEmpty = "." * BarEmptyLen
-        sys.stdout.write(f"{CharBack}[{BarFilled}{BarEmpty}] {int(self.Percent)}%")
+        sys.stdout.write(f"{CharBack}{self.Title}[{BarFilled}{BarEmpty}] {int(self.Percent)}%")
         sys.stdout.flush()
 
         if self.Percent == 100:

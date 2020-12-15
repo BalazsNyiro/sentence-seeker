@@ -54,16 +54,18 @@ def seek_and_display(Prg, Wanted):
     Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = True
     ReturnType = "complete_sentence" # in separated_subsentence case the non-alphabhet chars become separators.
 
+    DisplaySeekResult = False
+
     if Wanted == ":help" or Wanted == ":h" or Wanted == "h":
-        Wanted = ":help"
         MatchNums__ResultInfo = []
         for Line in Prg["UsageInfo"].split("\n"):
             MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
         WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
+        DisplaySeekResult = True
     else:
         Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
 
-        TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum = seeker_logic.seek(Prg, Wanted)
+        TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult = seeker_logic.seek(Prg, Wanted)
         ExplainLimit = 24
         TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
 
@@ -73,9 +75,9 @@ def seek_and_display(Prg, Wanted):
         SentencesExplain.extend(MatchNums__ResultInfo)
         MatchNums__ResultInfo = SentencesExplain
 
-    TimeLogicUsed = time.time() - TimeLogicStart
-
-    sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType, ResultsTotalNum=ResultsTotalNum)
+    # TimeLogicUsed = time.time() - TimeLogicStart
+    if DisplaySeekResult:
+        sentence_result_all_display(Prg, MatchNums__ResultInfo, WordsDetected, ReturnType=ReturnType, ResultsTotalNum=ResultsTotalNum)
     # print(f"Results Total: {ResultsTotalNum}")
     # print("Time logic: ", TimeLogicUsed)
 
@@ -110,7 +112,8 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
                 else: # the user wants to display battey info but module is missing
                     print(msg_errors.ModuleMissingPsutil)
 
-            print(f"\n{BatteryInfo}{ColorWanted}>>>{color_reset()}", end="")
+            Scope = Prg["SettingsSaved"]["Scope"]
+            print(f"\n{BatteryInfo}{ColorWanted}scope {Scope} >>>{color_reset()}", end="")
             # if user uses backspace in console, the space stops it to go back to the '...wanted>>' part
             # of the line. Without input('display') param, the backspace has side effect on the line
             # and colorful part disappears

@@ -110,7 +110,6 @@ class TokenTests(util_test.SentenceSeekerTest):
                 ResultsCollected = Tokens[0].get_results()
                 self.assertEqual(ResultWanted, ResultsCollected)
 
-
             Doc = "bird"
             Tokens = [token("nightingale"), token("THEN"), token("blackbird")]
             tokens.operator_exec(Tokens)

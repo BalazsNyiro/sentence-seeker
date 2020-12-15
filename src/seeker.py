@@ -19,7 +19,7 @@ def be_ready_to_seeking(Prg, Verbose=True, LoadOnlyThese=None):
     # it's only an interesting stat
     #Prg["DocumentObjectsLoadedWordsCounterGlobal"] = text.words_count_in_all_document(Prg)
 
-    util.time_spent("Time Be ready to seeking:", TimeStart)
+    # util.time_spent("Time Be ready to seeking:", TimeStart)
     if Prg.get("MessagesForUser", []):
         print("\n\n Messages for user:")
         for Msg in Prg["MessagesForUser"]:

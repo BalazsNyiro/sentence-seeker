@@ -1,7 +1,13 @@
 Under development:
- - write a lot of tests for Tokens")
- - check: where and why you use list() or set()")
+1. - selector: where distance between selected words is small
+
+ - util_ui, word detected refactor: # TODO: refactor it to a separated fun and create tests
+ - write a lot of tests for Tokens
+ - check: where and why you use list() or set()
   https://devblogs.microsoft.com/commandline/updating-the-windows-console-colors/
+
+gutenberg, encyclopaedia:
+http://www.gutenberg.org/ebooks/search/?query=encyclopaedia+britannica&submit_search=Go%21&sort_order=title
 
 Install from Debian/Ubuntu repo when program is stable
   - https://askubuntu.com/questions/16446/how-to-get-my-software-into-ubuntu

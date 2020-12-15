@@ -343,7 +343,7 @@ def print_dev(Prg, *args):
 
 # wrapper, not tested
 def int_list_to_array(L):
-    return array.array("Q", L) # int, 8 byte
+    return array.array("Q", L)
 
 def list_flat_embedded_lists(L):
     Flat = []
@@ -657,6 +657,9 @@ def count_words_with_num(Sentence):
         else:
             WordsWithoutNum += 1
     return WordsHasNum, WordsWithoutNum
+
+def abc_char(Char):
+    return Char.lower().isalpha()
 
 def word_only_abc_chars(Txt):
     Pure = []

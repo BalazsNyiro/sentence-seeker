@@ -96,10 +96,10 @@ Examples:
 ## Complex examples: ##
 - pronouns:personal AND have:all AND iverb:pp  *They've written*
 
-## Settings, On/Off commands ##
-- url:On/Off *show/hide url of the result*
-- source:On/Off *show/hide source doc name of the result*
-- displayPersonalInfo:On/Off *hide/show your document directory path in gui title*
+## Settings, on/off commands ##
+- url:on/off *show/hide url of the result*
+- source:o/off *show/hide source doc name of the result*
+- privacy:on/off *hide/show your document directory path in gui title*
 
 ## Plain help display ##
  - help:plain display this documentation without any formatting/coloring

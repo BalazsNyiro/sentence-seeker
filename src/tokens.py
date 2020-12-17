@@ -28,29 +28,29 @@ def run_commands_in_query(Prg, Query):
             print("\n\n" + Prg["UsageInfo"] + "\n")
             CommandDetected = True
 
-        if "displayPersonalInfo:Off" in Query:
+        if "privacy:on" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"] = False
             util_ui.title_refresh(Prg)
             CommandDetected = True
 
-        if "displayPersonalInfo:On" in Query:
+        if "privacy:off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplayPersonalInfo"] = True
             util_ui.title_refresh(Prg)
             CommandDetected = True
 
-        if "url:Off" in Query:
+        if "url:off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = False
             CommandDetected = True
 
-        if "url:On" in Query:
+        if "url:on" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] = True
             CommandDetected = True
 
-        if "source:Off" in Query:
+        if "source:off" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = False
             CommandDetected = True
 
-        if "source:On" in Query:
+        if "source:on" in Query:
             Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
             CommandDetected = True
 

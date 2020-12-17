@@ -7,8 +7,13 @@ import os
 
 # prg start is important because I import/start sentence-seeker
 # from ssp program planner and this is a simple executable interface
-def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdlineParam="", DocsLoadDefaultsForced=False):
-    Prg = config.prg_config_create(TestExecution, PrintForDeveloper=False)
+def run(Ui="ssp_program_planner",
+        Usage=False,
+        TestExecution=False,
+        QueryAsCmdlineParam="",
+        DocsLoadDefaultsForced=False,
+        DirDocuments=""):
+    Prg = config.prg_config_create(TestExecution, PrintForDeveloper=False, DirDocuments=DirDocuments)
 
     if Usage:
         print(Prg["UsageInfo"])
@@ -29,14 +34,6 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
     util.if_win__set_windows_console_enable_ansi_escapes(Prg)
 
     document.docs_copy_samples_into_dir_if_necessary(Prg, LoadDefaultsForced=DocsLoadDefaultsForced)
-
-    if Ui == "tkinter":
-        try: # test: do we have graphical environment or we run in native console?
-            from tkinter import Tk
-            _RootUnused = Tk() # here we have an exception in native Linux terminal
-            _RootUnused.destroy()
-        except: # use console ui if gui is not available
-            Ui = "console"
 
     # the program planner analyses one execution
     if Ui == "ssp_program_planner":
@@ -64,6 +61,7 @@ def run(Ui="ssp_program_planner", Usage=False, TestExecution=False, QueryAsCmdli
         seeker.be_ready_to_seeking(Prg)
         ui_html.SimpleHTTPRequestHandler.Prg = Prg
         httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)
+        print("httpd server start...")
         httpd.serve_forever()
 
     # print("Statistics", Prg["Statistics"])

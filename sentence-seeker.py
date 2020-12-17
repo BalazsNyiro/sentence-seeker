@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--test", help="execute only tests", action='store_true')
     parser.add_argument("--usage", help="display sort usage info", action='store_true')
     parser.add_argument("--query", help="pass query as param. Program exits after display result", action='store', default="")
+    parser.add_argument("--dir_document", help="Abs path of a specified dir. Create a /text_samples dir in it and fill it with your docs.", action='store', default="")
     parser.add_argument("--docs_load_defaults_forced", help="reload sample texts into document directory anyway - useful after git pull to load new books", action='store_true', default=False)
     parser.add_argument("--ui", help="select user interface. (console, tkinter, html)", action='store', default='tkinter')
     Args = parser.parse_args()
@@ -27,13 +28,34 @@ def main():
     # SysArgvOrig = sys.argv
     sys.argv = sys.argv[:1] # the testing environment gives a warning when I use a prg param so I hide it, temporary solution
 
+    if Args.dir_document:
+        DirTextSamples = os.path.join(Args.dir_document, "text_samples")
+        if not os.path.isdir(DirTextSamples):
+            print("You passed a specific Document dir:", Args.dir_document)
+            print("but text_samples dir doesn't exist in your document dir.")
+            print("Please create a 'text_samples' subdirectory and fill your text/html/pdf files into it.")
+            print("If you don't create and fill 'YourDocDir/text_samples' then the program load sample files into it")
+            Answer = input("Press Enter to continue... or 'quit' to finish execution")
+            if Answer.strip():
+                print("Thank you!")
+                sys.exit(1)
+
     if TestExecution:
         test_exec(Args)
     else: # separated program start because of ssp program planner import
-        prg_obj.run(Usage=Usage, Ui=Ui, TestExecution=False, QueryAsCmdlineParam=Args.query, DocsLoadDefaultsForced=Args.docs_load_defaults_forced)
+        prg_obj.run(Usage=Usage, Ui=Ui,
+                    TestExecution=False,
+                    QueryAsCmdlineParam=Args.query,
+                    DocsLoadDefaultsForced=Args.docs_load_defaults_forced,
+                    DirDocuments=Args.dir_document)
 
 def test_exec(Args):
-    Prg = config.prg_config_create(TestExecution=True, PrintForDeveloper=False)
+    DirPrgExecRoot = config.get_dir_prg_exec_root()
+    DirDocuments = os.path.join(DirPrgExecRoot, "test_files", "documents_user_dir_simulator")
+    Prg = config.prg_config_create(TestExecution=True,
+                                   PrintForDeveloper=False,
+                                   DirDocuments=DirDocuments
+    )
 
     print("\n" * 22)
     print("##################### TEST BEGIN #####################################")

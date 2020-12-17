@@ -10,10 +10,6 @@ try:
 except:
     PsutilAvailable = False
 
-def sentence_builder(Prg, Sentence, FileSourceBaseName=""):
-    return text.sentence_obj_from_memory(Prg, FileSourceBaseName, 0, 0, 0,
-                                         SentenceFromOutside=Sentence, SentenceFillInResult=True)
-
 def cmd_back_to_tty_console(Prg, Wanted):
     # this is a special command but really USEFUL
     # if you use sentence-seeker.py from virtual-console mode where
@@ -36,7 +32,7 @@ def cmd_back_to_tty_console(Prg, Wanted):
     #################################################
 
 def seek_and_display(Prg, Wanted):
-
+    # Wanted = ":info"
     ##################################################################
     if Wanted == "b":         # this one char conversion works only in console mode because
         Wanted = ":back"        # you can use back only in virtual console
@@ -56,22 +52,23 @@ def seek_and_display(Prg, Wanted):
 
     DisplaySeekResult = False
 
-    if Wanted == ":help" or Wanted == ":h" or Wanted == "h":
-        MatchNums__ResultInfo = []
-        for Line in Prg["UsageInfo"].split("\n"):
-            MatchNums__ResultInfo.append(sentence_builder(Prg, Line))
-        WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
-        DisplaySeekResult = True
+    ## THIS IS A GOOD EXAMPLE FOR A CONSOLE SPECIFIC COMMAND ###
+    if Wanted == ":console_specific_command" or Wanted == ":console_specific_command" or Wanted == "console_specific_command":
+        pass
+        # MatchNums__ResultInfo = []
+        # MatchNums__ResultInfo.append(text.sentence_builder_from_spec_command(Prg, "display something"))
+        # MatchNums__ResultInfo.append(text.sentence_builder_from_spec_command(Prg, "second row"))
+        # WordsDetected = {"highlighted", "important", "words"}
+        # DisplaySeekResult = True
     else:
-        Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
-
-        TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult = seeker_logic.seek(Prg, Wanted)
+        TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult, _TextFromCommandResult = seeker_logic.seek(Prg, Wanted)
         ExplainLimit = 24
         TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
 
         SentencesExplain = []
-        for Line in (TokenExplain+"\n").split("\n"):
-            SentencesExplain.append(sentence_builder(Prg, Line))
+        if TokenExplain:
+            for Line in (TokenExplain+"\n").split("\n"):
+                SentencesExplain.append(text.sentence_builder_from_spec_command(Prg, Line))
         SentencesExplain.extend(MatchNums__ResultInfo)
         MatchNums__ResultInfo = SentencesExplain
 
@@ -240,17 +237,17 @@ def sentence_result_all_display(Prg, SentenceStruct, WordsDetected, ReturnType="
             def high(T) :
                 return f"{ColorHigh}{T}{ColorInfo}"
 
-            TextPrev  = f"{ColorInfo}[{high('p')}]rev"
-            TextNext  = f"{ColorInfo}[{high('n')}]ext"
-            TextQuery = f"{ColorInfo}[{high('q')}]uery"
+            TextPrev  = f"{high('p')}rev"
+            TextNext  = f"{high('n')}ext"
+            TextQuery = f"{high('q')}uery"
 
             TextBack = ""
             if Prg["CommandBackToTtyConsoleAvailable"]:
-                TextBack = f"{ColorInfo}[{high('b')}]ackTty"
+                TextBack = f"{high('b')}ackTty"
 
-            TextTotal = f"{ColorInfo}total: {high(ResultsTotalNum)}"
-            TextVim = f"{ColorInfo}VIM keys: {high('j')}, {high('k')} {color('Default')}"
-            UserInfo = f"{TextPrev} {TextNext} {TextQuery} {TextBack}  {TextTotal}    {TextVim} {color('Default')}"
+            TextTotal = f"{ColorInfo}#{high(ResultsTotalNum)}"
+            TextVim = f"{ColorInfo}vim: {high('j')}, {high('k')} {color('Default')}"
+            UserInfo = f"{TextPrev} {TextNext} {TextQuery} {TextBack}  {TextTotal}    {TextVim}{color('Default')}"
 
             if RowNumDisplayed == 0: # return to new search if no result
                 print(f"{ColorHigh}No result!{color('Default')}")

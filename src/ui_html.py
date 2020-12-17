@@ -32,7 +32,7 @@ def file_local_read(File, EncodeUtf8=True, Mode="r"):
 
 # separated fun for test reasons
 def one_search(Prg, WordsInOneString, ExplainOnly=False):
-    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, _ResultsTotalNum, DisplaySeekResult = \
+    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, _ResultsTotalNum, DisplaySeekResult, _TextFromCommandResult = \
         seeker_logic.seek(Prg, WordsInOneString, SentenceFillInResult=True, ExplainOnly=ExplainOnly)
 
     Reply = util_ui.ui_json_answer(Prg,

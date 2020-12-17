@@ -56,7 +56,7 @@ def document_obj_create_in_document_objects(Prg, DocumentObjects, ConvertedFileO
         else:
             DocObj = {"url": "url_unknown",
                       "source_name": "source_unknown",
-                      "license": "license_unknown"}
+                      "license": "unknown license"}
 
         util_json_obj.doc_source_webpages_update_in_Prg(Prg, BaseNameNoExt, DocObj)  # and reload the updated db
 

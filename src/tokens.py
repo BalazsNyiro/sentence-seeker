@@ -14,6 +14,9 @@ def run_commands_in_query(Prg, Query):
     # it's not a problem if these commands stay in Query,
     # The token processor skips them
     CommandDetected = False
+    MatchNums__ResultInfo = []
+    DisplaySeekResultLater = False
+    WordsDetected = set()
 
     if ":" in Query:
         if "scope:sentence" in Query:
@@ -54,10 +57,29 @@ def run_commands_in_query(Prg, Query):
             Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] = True
             CommandDetected = True
 
+        if ":info" in Query:
+            Lines = [  f"doc path: {Prg['DirDocuments']}",
+                       f"url show: {util_ui.on_off(Prg['SettingsSaved']['Ui']['DisplaySourceUrlBelowSentences'] )}",
+                       f"src show: {util_ui.on_off(Prg['SettingsSaved']['Ui']['DisplaySourceFileNameBelowSentences'] )}"
+                    ]
+            for Line in Lines:
+                MatchNums__ResultInfo.append(text.sentence_builder_from_spec_command(Prg, Line))
+            WordsDetected = {"doc", "dir"}
+            DisplaySeekResultLater = True
+            CommandDetected = True
+
+        if Query == ":help" or Query == ":h" or Query == "h":
+
+            for Line in Prg["UsageInfo"].split("\n"):
+                MatchNums__ResultInfo.append(text.sentence_builder_from_spec_command(Prg, Line))
+            WordsDetected = {"or", "and", "then", "example", "examples", "commands", "operator", "#", "##", "###", "####"}
+            DisplaySeekResultLater = True
+            CommandDetected = True
+
         if CommandDetected:
             util_json_obj.config_set(Prg, "SettingsSaved")
 
-    return CommandDetected
+    return CommandDetected, MatchNums__ResultInfo, DisplaySeekResultLater, WordsDetected
 
 # TESTED
 def token_group_finder(Tokens):
@@ -428,7 +450,8 @@ class TokenObj():
             elif KeyWord.startswith("in:"):
                 self.load_from_docindex(eng.groups_of_word_include(self.Prg, SelectorData))
             else:
-                print("unknown special group selector:", KeyWord)
+                pass
+                # print("unknown special group selector:", KeyWord)
 
 def quick_form_convert_to_special_form(Token, Sign):
     LenSign = len(Sign)

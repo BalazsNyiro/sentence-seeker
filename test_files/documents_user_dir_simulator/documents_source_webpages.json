@@ -6,22 +6,22 @@
             "url": "http://www.gutenberg.org/ebooks/100"
         },
         "apple_tree": {
-            "license": "license_unknown",
+            "license": "unknown license",
             "source_name": "source_unknown",
             "url": "url_unknown"
         },
         "bird": {
-            "license": "license_unknown",
+            "license": "unknown license",
             "source_name": "source_unknown",
             "url": "url_unknown"
         },
         "test_document_bird": {
-            "license": "license_unknown",
+            "license": "unknown license",
             "source_name": "source_unknown",
             "url": "url_unknown"
         },
         "test_file_document_example": {
-            "license": "license_unknown",
+            "license": "unknown license",
             "source_name": "source_unknown",
             "url": "url_unknown"
         }

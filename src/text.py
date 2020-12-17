@@ -309,7 +309,10 @@ class sentence_obj_from_memory():
                  }
 
 
-    def __init__(self, Prg, FileSourceBaseName, LineNumInSentenceFile, SubSentenceNum, WordNum, SentenceFillInResult=False, SentenceFromOutside=None, SubSentenceFromTest=""):
+    def __init__(self, Prg, FileSourceBaseName,
+                 LineNumInSentenceFile, SubSentenceNum, WordNum,
+                 SentenceFillInResult=False, SentenceFromOutside=None,
+                 SubSentenceFromTest=""):
 
         if SentenceFromOutside is not None:
             StatusSentenceFromMemory = True
@@ -354,4 +357,12 @@ def words_count_in_all_document(Prg):
                 WordsCounter[Word] = 0
             WordsCounter[Word] += len(LineNums)
     return WordsCounter
+
+def sentence_builder_from_spec_command(Prg, Sentence, FileSourceBaseName=""):
+    # if SubsentenceNum == -1, then tkinter can't highlight any subsentence,
+    # here I don't have real sentences but a text output for the user
+    return sentence_obj_from_memory(Prg, FileSourceBaseName, 0, -1, 0,
+                                    SentenceFromOutside=Sentence,
+                                    SentenceFillInResult=True
+                                    )
 

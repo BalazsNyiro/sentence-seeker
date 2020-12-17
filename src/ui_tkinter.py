@@ -19,7 +19,7 @@ def seek_and_display(KeypressEvent=""):
     Words = WordsEntry.get()
     # msg_box(Words)
     SentencesArea.delete('1.0', tk.END)
-    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
+    TokenProcessExplainSumma, WordsDetected, MatchNums__ResultInfo, ResultsTotalNum, DisplaySeekResult, TextFromCommandResult = seeker_logic.seek(PrgGlob, Words, ExplainOnly=(ExplainOnly.get()==1))
 
     TokenExplain = util_ui.token_explain_summa_to_text(TokenProcessExplainSumma, ExplainLimit=ExplainLimit)
     SentencesArea.insert(tk.END, f"Token explanation: \n{TokenExplain}\n\n", "SentenceDisplayed")
@@ -28,9 +28,11 @@ def seek_and_display(KeypressEvent=""):
 
     ##############################################################
     for DisplayedCounter, SentenceObj in enumerate(MatchNums__ResultInfo, start=1):
-        sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea, DisplayedCounter)
-        if DisplayedCounter >= PrgGlob["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]:
-            break
+        sentence_result_one_display(PrgGlob, SentenceObj, SentencesArea, DisplayedCounter, TextFromCommandResult)
+
+        if not TextFromCommandResult:
+            if DisplayedCounter >= PrgGlob["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]:
+                break
 
     Theme = util_ui.theme_actual(PrgGlob)
     SentencesArea.insert(tk.END, f"Total:{ResultsTotalNum}\n", "follow")
@@ -95,7 +97,7 @@ def show_arrow_cursor(event):
     #print("<Leave> show hand cursor")
     event.widget.configure(cursor="")
 
-def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
+def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter, TextFromCommandResult):
     Url, Sentence, Source = util_ui.sentence_text_from_obj(Prg, Result, ReturnType="separated_subsentences")
 
     # SentencesArea.insert(tk.END, Sentence + "\n", "SentenceDisplayed")
@@ -104,7 +106,7 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
     SentencesArea.insert(tk.END, Sentence["subsentences_after"] + "\n", "SentenceDisplayed")
 
 
-    if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"] and Source:
         SentencesArea.insert(tk.END, f"Source: {Source}\n", "SourceDisplayed")
 
     #######################################################
@@ -114,14 +116,17 @@ def sentence_result_one_display(Prg, Result, SentencesArea, DisplayedCounter):
                                 underline=1,
                                 font=('Tempus Sans ITC', 9, 'normal'),
                                 lmargin1=LeftMarginOtherLines)
-    if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
+    if Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"] and Url:
         SentencesArea.tag_bind(TagName, "<1>",
                                lambda e, UrlToOpen=Url: webbrowser.open_new_tab(UrlToOpen)
                               )
         SentencesArea.tag_bind(TagName, "<Enter>", show_hand_cursor)
         SentencesArea.tag_bind(TagName, "<Leave>", show_arrow_cursor)
         SentencesArea.insert(tk.END, Url, TagName)
-    SentencesArea.insert(tk.END, "\n\n", TagName)
+
+    # CommandResults are plain texts, don't insert extra newlines
+    if not TextFromCommandResult:
+        SentencesArea.insert(tk.END, "\n\n", TagName)
 
 def win_main(Prg):
     global PrgGlob

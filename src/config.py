@@ -7,7 +7,17 @@ from sys import platform
 
 from html.parser import HTMLParser
 
-def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoot="", Os="", PrintForDeveloper=False):
+def get_dir_prg_exec_root():
+    PathConfigModule = os.path.realpath(__file__)
+    DirSrc = os.path.dirname(PathConfigModule)
+    DirPrgExecRoot = os.path.realpath(os.path.join(DirSrc, ".."))
+    return DirPrgExecRoot
+
+def prg_config_create(TestExecution=False,
+                      DirWorkFromUserHome="",
+                      DirPrgExecRoot="", Os="",
+                      PrintForDeveloper=False,
+                      DirDocuments=""):
 
     if not Os: # "Linux", "Windows" "Darwin"
 
@@ -21,9 +31,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
             Os = "Windows"
 
     if not DirPrgExecRoot:
-        PathConfigModule = os.path.realpath(__file__)
-        DirSrc = os.path.dirname(PathConfigModule)
-        DirPrgExecRoot = os.path.realpath(os.path.join(DirSrc, ".."))
+        DirPrgExecRoot = get_dir_prg_exec_root()
 
     if not DirWorkFromUserHome:
         DirWorkFromUserHome = util_json_obj.config_get("DirWorkFromUserHome", DirPrgExecRoot)
@@ -42,10 +50,9 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
 
     Time = int(time.time())
     FileLog = f"log_{Time}"
-    DirDocuments = os.path.join(DirWorkAbsPath, "documents")
 
-    if TestExecution:
-        DirDocuments = os.path.join(DirPrgExecRoot, "test_files", "documents_user_dir_simulator")
+    if not DirDocuments:
+        DirDocuments = os.path.join(DirWorkAbsPath, "documents")
 
     if not os.path.isdir(DirDocuments):
         # debugger dies at Path(...) lines so I guard it with if
@@ -86,7 +93,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                     "DisplaySourceFileNameBelowSentences": True,
                     "DisplaySourceUrlBelowSentences": True,
                     "DisplayPersonalInfo": True,
-                    "LimitDisplayedSentences": 100,
+                    "LimitDisplayedSentences": 200,
                     "Console": {"NewlineBetweenSentences": False,
                                 "BatteryInfoShow": True,
                                 "ColorBattery": "Red",

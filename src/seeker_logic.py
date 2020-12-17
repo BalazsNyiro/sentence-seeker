@@ -3,18 +3,30 @@ import text, util
 import result_selectors
 import time, tokens
 import ui_console_progress_bar
+from ui_color import *
 
 def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelectors=None):
-    DisplaySeekResultLater = True
     util.log(Prg, f"Query: {Query}")
+    TextFromCommandResult = False
+    DisplaySeekResultLater = True
+    Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
 
     Location = "seeker_logic"
     Prg["UserInputHistory"].event_new(Location, "seek()", Query)
 
-    CommandDetected = tokens.run_commands_in_query(Prg, Query)
+    ## don't give back any real text result in result viewer ##
+    CommandDetected, MatchNums__ResultInfo, ResultDisplay, WordsDetectedCmd = tokens.run_commands_in_query(Prg, Query)
     if CommandDetected:
-        Query = "special_command_executed"
-        DisplaySeekResultLater = False
+        TextFromCommandResult = True
+        ExplainSumma = dict()
+        if not ResultDisplay:
+            print(color("Blue") + f"{Query}  executed" + color_reset())
+        else:
+            # if after a command basically we display anything without row coloring
+            Prg["SettingsSaved"]["Ui"]["Console"]["ColorRowOddOnly"] = False
+
+        return ExplainSumma, WordsDetectedCmd, MatchNums__ResultInfo, len(MatchNums__ResultInfo), ResultDisplay, TextFromCommandResult
+
     Query = Query.strip()
     print(Query)
 
@@ -111,6 +123,6 @@ def seek(Prg, Query, SentenceFillInResult=False, ExplainOnly=False, ResultSelect
     ResultsSelected = util.list_flat_embedded_lists(ResultsSelectedGroups)
     #########################################################
 
-    return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected), DisplaySeekResultLater
+    return TokenProcessExplainSumma, WordsDetected, ResultsSelected, len(ResultsSelected), DisplaySeekResultLater, TextFromCommandResult
 
 

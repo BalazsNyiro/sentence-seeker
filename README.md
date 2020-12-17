@@ -100,6 +100,7 @@ Examples:
 - url:on/off *show/hide url of the result*
 - source:o/off *show/hide source doc name of the result*
 - privacy:on/off *hide/show your document directory path in gui title*
+- :info * show informations about current program settings
 
 ## Plain help display ##
  - help:plain display this documentation without any formatting/coloring
@@ -203,12 +204,15 @@ https://www.python.org/downloads/windows/
    - (be:all) > ..ible
    - move.. > (from OR to) > ..where 
      
-# Interesting request collection - for a separated youtube video #
+# Personal examples - request collection #
 - (sack OR bag) > of
+- (take OR took) off
 - questionwords:all AND count:all 
 - look.. back
 - have:all yet
 - touch hair head
+- fell argument
+
 
 # Branches #
  - master: tested/offered for end users
@@ -217,3 +221,7 @@ https://www.python.org/downloads/windows/
  - sandbox: I try out ideas, refactors here - maybe works, maybe not.  
 
 Merge order: sandbox -> dev -> master
+
+## Memory usage ## 
+If you load the Encyclopaedia Britannica (~120 volume) and all other samples into your document dir, then the program uses about 1 Gigabyte memory. 
+

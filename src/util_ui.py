@@ -269,6 +269,7 @@ def sentence_text_from_obj(Prg, SentenceObj, ReturnType="separated_subsentences"
                     "subsentences_after" : " ".join(SubSentencesAfter)}
 
     return Url, Sentence, Source
+
 ########################################################################################################################
 
 def theme_actual(Prg):
@@ -282,7 +283,6 @@ def ui_json_answer(Prg,
                    SentenceObjects,
                    NewLine="\n"):
 
-
     MaximizedSentences = SentenceObjects[:Prg["SettingsSaved"]["Ui"]["LimitDisplayedSentences"]]
     SentencesToJson = [Sen.to_json() for Sen in MaximizedSentences]
 
@@ -294,7 +294,9 @@ def ui_json_answer(Prg,
     return Reply
 
 def token_explain_summa_to_text(TokenProcessExplainSumma, NewLine="\n", ExplainLimit=64):
-    TokenExplainText = ["Sentence duplications are removed so displayed result num can be different from Explained!"]
+    TokenExplainText = []
+    if TokenProcessExplainSumma: # show warning if there is something in ExplainSumma
+        TokenExplainText.append("Sentence duplications are removed so displayed result num can be different from Explained!")
 
     if len(TokenProcessExplainSumma) > ExplainLimit:
         return "Too complex Token explaining"
@@ -476,4 +478,7 @@ def press_key_in_console(Msg, MsgEnd=""):
 def clear_screen(ScreenHeight):
     print("\n"*ScreenHeight) # clear screen
 
-
+def on_off(BooleVal): # convert True/False to On/Off to display config values
+    if BooleVal:
+        return "On"
+    return "Off"

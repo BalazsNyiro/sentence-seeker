@@ -93,8 +93,8 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                                 "ColorUserInfo": "Blue",
                                 "ColorUserInfoHigh": "Cyan",
 
-                                "ColorSentenceUrl": "Cyan",
-                                "ColorSentenceSource": "Cyan",
+                                "ColorSentenceUrl": "Bright Black",
+                                "ColorSentenceSource": "Bright Black",
 
                                 "ColorRowOddOnly": False, # if True, no switch color at Even rows
                                 "ColorRowOdd": "Default",
@@ -168,7 +168,7 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
 
                         , 'khaki1'
                         , 'gold'
-                        ,'pale green'
+                        , 'pale green'
                         , 'sandy brown'
                         , 'spring green'
                         , 'lawn green'

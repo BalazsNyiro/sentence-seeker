@@ -2,6 +2,8 @@
 import text, json, shutil, util
 import sys
 
+from ui_color import *
+
 try:
     import tty
     import termios
@@ -153,11 +155,12 @@ class SentenceObj():
             Indent = " " * (HumanResultNumLen+1)  # indentation instead of row numbers, plus ONE space
             if self.Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
                 if self.Url: # the help lines for example don't have source/Url
-                    #ColorUrl = color(self.Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
-                    RowsRendered.append(Indent + self.Url)
+                    ColorUrl = color(self.Prg["SettingsSaved"]["Ui"]["Console"]["ColorSentenceUrl"])
+                    RowsRendered.append(Indent + ColorUrl + self.Url + color_reset())
             if self.Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
                 if self.Source:
-                    RowsRendered.append(Indent + self.Source)
+                    ColorSource = color(self.Prg["SettingsSaved"]["Ui"]["Console"]["ColorSentenceSource"])
+                    RowsRendered.append(Indent + ColorSource + self.Source + color_reset())
 
         #######################################
         # print(RowsRendered)

@@ -147,6 +147,18 @@ class SentenceObj():
 
         if self.ColorAfter:
             RowsRendered[-1] += self.ColorAfter
+
+        if self.Prg:
+            HumanResultNumLen = len(str(HumanResultNum))
+            Indent = " " * (HumanResultNumLen+1)  # indentation instead of row numbers, plus ONE space
+            if self.Prg["SettingsSaved"]["Ui"]["DisplaySourceUrlBelowSentences"]:
+                if self.Url: # the help lines for example don't have source/Url
+                    #ColorUrl = color(self.Prg["SettingsSaved"]["Ui"]["Console"]["ColorUserInfo"])
+                    RowsRendered.append(Indent + self.Url)
+            if self.Prg["SettingsSaved"]["Ui"]["DisplaySourceFileNameBelowSentences"]:
+                if self.Source:
+                    RowsRendered.append(Indent + self.Source)
+
         #######################################
         # print(RowsRendered)
         return RowsRendered
@@ -172,7 +184,8 @@ class SentenceObj():
                  ColorBasic=None, ColorAfter=None,
                  ColorDetected=None, ColorResultNum=None,
                  RowNumDisplayed=None, WordsDetected=set(),
-                 Url=None, Source=None):
+                 Url=None, Source=None, Prg=dict()):
+        self.Prg = Prg
         self.ColorBasic = ColorBasic
         self.ColorAfter = ColorAfter
         self.ColorDetected = ColorDetected
@@ -203,7 +216,7 @@ def sentence_get_from_result_oop(Prg, Result,
                                ColorResultNum=ColorResultNum,
                                RowNumDisplayed=RowNumDisplayed,
                                WordsDetected=WordsDetected,
-                               Url=Url, Source=Source)
+                               Url=Url, Source=Source, Prg=Prg)
         Sentence.add_big_string(Txt["subsentences_before"])
         Sentence.add_big_string(Txt["subsentence_result"])
         Sentence.add_big_string(Txt["subsentences_after"])
@@ -216,7 +229,7 @@ def sentence_get_from_result_oop(Prg, Result,
                            ColorResultNum=ColorResultNum,
                            RowNumDisplayed=RowNumDisplayed,
                            WordsDetected=WordsDetected,
-                           Url=Url, Source=Source)
+                           Url=Url, Source=Source, Prg=Prg)
 
 def sentence_text_from_obj(Prg, SentenceObj, ReturnType="separated_subsentences"):
     Source = SentenceObj.FileSourceBaseName

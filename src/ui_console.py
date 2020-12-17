@@ -105,7 +105,7 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
                     Plugged = Battery.power_plugged
                     Percent = int(Battery.percent)
 
-                    #Plugged = " <-" if Plugged else ""
+                    Plugged = " <-" if Plugged else ""
                     Plugged = ""
 
                     BatteryInfo = f"{ColorBattery}{Percent}%{Plugged} "

@@ -93,6 +93,9 @@ def prg_config_create(TestExecution=False, DirWorkFromUserHome="", DirPrgExecRoo
                                 "ColorUserInfo": "Blue",
                                 "ColorUserInfoHigh": "Cyan",
 
+                                "ColorSentenceUrl": "Cyan",
+                                "ColorSentenceSource": "Cyan",
+
                                 "ColorRowOddOnly": False, # if True, no switch color at Even rows
                                 "ColorRowOdd": "Default",
                                 "ColorRowEven": "Green",

@@ -1,6 +1,7 @@
 Under development:
 1. - selector: where distance between selected words is small
 
+ - check document names standards: all files are available? Url/source is displayed correctly?
  - util_ui, word detected refactor: # TODO: refactor it to a separated fun and create tests
  - write a lot of tests for Tokens
  - check: where and why you use list() or set()

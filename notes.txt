@@ -1,7 +1,12 @@
 Under development:
 1. - selector: where distance between selected words is small
 
+ ####### High prio: ####################################
+ - unicode conversion error in windows:
+   memoirs of sherlock holmes: ArthurConanDoyle__MemoirsSherlockHolmes__gutenberg_org_834.html
+
  - display sentences-after: +1, 2   display extra sentences after the current result?
+ #######################################################
 
  - check document names standards: all files are available? Url/source is displayed correctly?
  - util_ui, word detected refactor: # TODO: refactor it to a separated fun and create tests

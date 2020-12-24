@@ -61,7 +61,7 @@ def run(Ui="ssp_program_planner",
         seeker.be_ready_to_seeking(Prg)
         ui_html.SimpleHTTPRequestHandler.Prg = Prg
         httpd = HTTPServer((Prg["ServerHost"], Prg["ServerPort"]), ui_html.SimpleHTTPRequestHandler)
-        print("httpd server start...")
+        print("httpd server starts...")
         httpd.serve_forever()
 
     # print("Statistics", Prg["Statistics"])

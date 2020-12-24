@@ -86,7 +86,8 @@ def word_pos_in_line_load(FileIndexAbsPath):
     MessageForUser = None
     if isfile(FileIndexAbsPath):
         # unfortunately the json parsing is slow. array.array is relatively fast
-        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath, UseFilePointer=True)
+        # but FilePointer can't handle unicode errors.
+        Status, JsonObjReply = util_json_obj.obj_from_file(FileIndexAbsPath)
 
         if Status == "ok":
             for Word, IndexList in JsonObjReply.items():

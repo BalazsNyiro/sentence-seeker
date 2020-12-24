@@ -86,6 +86,7 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
     user_welcome_message(Prg, Ui)
     # neverending cycle :-)
 
+    WarningDisplayedOnce__MissingPsutil = False
     while True:
         if QueryAsCmdlineParam:
             Wanted = QueryAsCmdlineParam.strip()
@@ -107,7 +108,9 @@ def user_interface_start(Prg, Ui, QueryAsCmdlineParam=""):
 
                     BatteryInfo = f"{ColorBattery}{Percent}%{Plugged} "
                 else: # the user wants to display battey info but module is missing
-                    print(msg_errors.ModuleMissingPsutil)
+                    if not WarningDisplayedOnce__MissingPsutil:
+                        print(msg_errors.ModuleMissingPsutil)
+                        WarningDisplayedOnce__MissingPsutil = True
 
             Scope = Prg["SettingsSaved"]["Scope"]
             print(f"\n{BatteryInfo}{ColorWanted}scope {Scope} >>>{color_reset()}", end="")

@@ -377,11 +377,11 @@ def display_groups_matchnum_resultinfo(GroupsObj):
 # YOU CAN USE IT with empty PRG, if it's necessary
 # of course somehow I have to test it, it's a magic :-)
 # TODO: test it with texts
-def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="fun caller is unknown"):
+def utf8_conversion_with_warning(Prg, Bytes, Source, FunCaller="-"):
     try:
         Content = str(Bytes, 'utf-8')
     except:
-        print(f"WARNING: one or more char not convertable to utf-8 in: {Source}")
+        print(f"\nWARNING: one or more char not convertable to utf-8 in: {Source}  {FunCaller}")
         if Prg:
             log(Prg, f"utf8 conversion error: {Source}")
         #Content = str(Bytes, 'utf-8', 'ignore')  # errors can be ignored

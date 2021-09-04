@@ -45,6 +45,12 @@ def one_search(Prg, WordsInOneString, ExplainOnly=False):
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        try:
+            return self.do_GET_real()
+        except: # if request is wrong, don't die.
+            pass
+
+    def do_GET_real(self):
 
         Req = urllib.parse.urlparse(self.path)
         QueryParams = urllib.parse.parse_qs(Req.query)
@@ -115,6 +121,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         self.end_headers()
         self.wfile.write(Reply)
+
 
 
     def content_type(self, Type):

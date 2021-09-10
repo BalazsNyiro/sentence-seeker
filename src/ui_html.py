@@ -74,17 +74,22 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         FilesJpg = {"/img/bg.jpg": "img/bg.jpg", "/favicon.ico": "img/bg.jpg"}
 
         if Req.path.split("?")[0] == "/seek":
+            print("\n=== Req.path.split /seek ====")
             if "words" in QueryParams:
                 WordsInOneString = QueryParams["words"][0]
                 ExplainOnly = "explain_only" in QueryParams
 
+                print("\ndebug 1")
                 Reply = one_search(self.Prg, WordsInOneString, ExplainOnly)
 
+                print("\ndebug 2")
                 self.send_response(200)
+                print("\ndebug 3")
                 self.content_type("text/plain")
 
         elif Req.path in FilesHtml:
             #if "index.html" in File:
+            print("\n=== Req.path in FilesHtml ====")
 
             File = FilesHtml[Req.path]
             Reply = file_local_read(File, EncodeUtf8=False)
@@ -100,18 +105,29 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 Reply = text.replace_pairs(Reply, Replaces)
 
             Reply = Reply.encode("UTF-8")
+            print("\ndebug 2b")
             self.send_response(200)
+            print("\ndebug 3b")
             self.content_type("html")
+            print("\ndebug 3c")
 
         elif Req.path in FilesJs:
+            print("\ndebug 4a")
             Reply = file_local_read(FilesJs[Req.path])
+            print("\ndebug 4b")
             self.send_response(200)
+            print("\ndebug 4c")
             self.content_type("javascript")
+            print("\ndebug 4d")
 
         elif Req.path in FilesJpg:
+            print("\ndebug 5a")
             Reply = file_local_read(FilesJpg[Req.path], EncodeUtf8=False, Mode="rb")
+            print("\ndebug 5b")
             self.send_response(200)
+            print("\ndebug 5c")
             self.content_type("jpg")
+            print("\ndebug 5d")
 
         else:
             Reply = "unknown request".encode("UTF-8")
@@ -119,10 +135,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.content_type("html")
 
+        print("\ndebug end 1")
         self.end_headers()
+        print("\ndebug end 2")
         self.wfile.write(Reply)
-
-
+        print("\ndebug end 3")
 
     def content_type(self, Type):
         if Type == "html":
@@ -135,4 +152,3 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
         elif Type == "text":
             self.send_header('Content-type', 'text/plain')
-
